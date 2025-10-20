@@ -1,0 +1,19 @@
+{
+  "name": "git-commit-helper",
+  "version": "1.0.0",
+  "description": "Plugin para realizar commits Git com validações completas, conventional commits e integração com CI/CD",
+  "author": {
+    "name": "Claude Code Community",
+    "email": "plugins@claudecode.dev"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "conventional-commits",
+    "ci",
+    "validation",
+    "security"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://api.claude.ai/schemas/marketplace-v1.json",
+  "name": "claudecode-plugins",
+  "version": "1.0.0",
+  "description": "Marketplace de plugins da comunidade para Claude Code",
+  "owner": {
+    "name": "Carlos Araujo",
+    "email": "carlosaraujo@example.com"
+  },
+  "plugins": [
+    {
+      "name": "git-commit-helper",
+      "description": "Automatiza commits Git com validações completas, conventional commits e integração com CI/CD",
+      "source": "./plugins/git-commit-helper",
+      "version": "1.0.0",
+      "author": {
+        "name": "Claude Code Community"
+      },
+      "category": "development",
+      "tags": ["git", "commit", "conventional-commits", "ci", "validation", "security"]
+    }
+  ]
+}
