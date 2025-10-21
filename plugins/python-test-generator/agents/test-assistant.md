@@ -403,6 +403,457 @@ def test_create_resource_correct():
 - **Variável MODULE-LEVEL** (topo do arquivo): `@patch("module.VARIABLE", "valor")`
 - **Variável RUNTIME** (dentro de função): `@patch.dict(os.environ, {...})`
 
+#### 🔄 Gerenciamento de Variáveis Globais e Cache
+
+**REGRA**: NUNCA use reset manual de variáveis globais/cache. SEMPRE use fixtures com `autouse=True` para isolamento adequado!
+
+**Problema Comum**:
+```python
+# Código real com cache global
+_CACHE = None
+_CONFIG = None
+
+def get_config():
+    global _CONFIG
+    if _CONFIG is None:
+        _CONFIG = load_from_api()
+    return _CONFIG
+```
+
+**❌ ABORDAGEM ERRADA (cleanup manual)**:
+```python
+def test_get_config_first_call():
+    # Reset manual
+    import module
+    module._CONFIG = None
+
+    result = get_config()
+    assert result is not None
+
+    # Cleanup manual - PODE FALHAR se teste gerar exceção!
+    module._CONFIG = None
+```
+
+**Por quê não funciona?**
+- **Testes paralelos**: Múltiplos testes modificam mesma variável global simultaneamente
+- **Cleanup falha**: Se teste gera exceção, cleanup manual não executa
+- **Vazamento de estado**: Estado vaza para próximos testes, causando falhas intermitentes
+
+**✅ SOLUÇÃO CORRETA (fixture com autouse)**:
+```python
+import pytest
+
+class TestGetConfig:
+    """Testes para função com cache global"""
+
+    @pytest.fixture(autouse=True)
+    def reset_global_cache(self):
+        """Reseta cache antes e depois de CADA teste automaticamente"""
+        import module
+
+        # Salvar valores originais
+        original_cache = module._CACHE
+        original_config = module._CONFIG
+
+        # Reset antes do teste
+        module._CACHE = None
+        module._CONFIG = None
+
+        yield  # Teste executa aqui
+
+        # Restaurar valores originais (SEMPRE executa, mesmo se teste falhar)
+        module._CACHE = original_cache
+        module._CONFIG = original_config
+
+    def test_get_config_first_call(self):
+        """Teste: Primeira chamada carrega da API"""
+        # Não precisa reset manual - fixture cuida disso!
+        result = get_config()
+        assert result is not None
+
+    def test_get_config_cached(self):
+        """Teste: Segunda chamada usa cache"""
+        # Não precisa reset manual - fixture cuida disso!
+        first = get_config()
+        second = get_config()
+        assert first is second
+```
+
+**Benefícios da fixture autouse**:
+- ✅ Reset automático antes de CADA teste
+- ✅ Cleanup SEMPRE executa (mesmo se teste falhar)
+- ✅ Testes isolados (sem vazamento de estado)
+- ✅ Seguro para execução paralela (pytest-xdist)
+- ✅ Menos código repetitivo nos testes
+
+**Quando usar este padrão**:
+- Módulo tem variáveis globais que mudam durante execução
+- Funções usam cache global (memoização)
+- Singletons que precisam ser resetados entre testes
+- Estado compartilhado entre funções
+- Conexões/recursos que precisam ser limpos
+
+**Variações do padrão**:
+
+```python
+# Fixture em conftest.py (aplicar a TODOS os testes)
+@pytest.fixture(autouse=True, scope="function")
+def reset_all_caches():
+    """Reset global para todos os módulos com cache"""
+    import module_a
+    import module_b
+
+    # Salvar originais
+    orig_a = module_a._CACHE
+    orig_b = module_b._GLOBAL_STATE
+
+    # Reset
+    module_a._CACHE = None
+    module_b._GLOBAL_STATE = {}
+
+    yield
+
+    # Restaurar
+    module_a._CACHE = orig_a
+    module_b._GLOBAL_STATE = orig_b
+
+# Fixture específica para uma classe
+class TestWithSpecificCache:
+    @pytest.fixture(autouse=True)
+    def setup_cache(self):
+        """Setup específico para esta classe"""
+        import module
+        module._CACHE = {"initial": "state"}
+        yield
+        module._CACHE = None
+```
+
+#### 🧹 Mock de Cleanup de Recursos
+
+**REGRA**: SEMPRE valide que recursos são limpos corretamente (close, cleanup, disconnect)!
+
+**Problema Comum**:
+```python
+# Código real com cleanup
+class DatabaseConnection:
+    def __init__(self, url):
+        self.conn = connect(url)
+
+    def query(self, sql):
+        return self.conn.execute(sql)
+
+    def close(self):
+        self.conn.close()
+
+def process_data():
+    db = DatabaseConnection("postgresql://...")
+    try:
+        result = db.query("SELECT * FROM users")
+        return result
+    finally:
+        db.close()  # IMPORTANTE: cleanup deve ser validado!
+```
+
+**❌ ABORDAGEM ERRADA (não valida cleanup)**:
+```python
+@patch("module.DatabaseConnection")
+def test_process_data(mock_db_class):
+    # Arrange
+    mock_db = Mock()
+    mock_db.query.return_value = [{"id": 1}]
+    mock_db_class.return_value = mock_db
+
+    # Act
+    result = process_data()
+
+    # Assert
+    assert result == [{"id": 1}]
+    # ❌ NÃO VALIDOU se db.close() foi chamado!
+```
+
+**Por quê é importante?**
+- **Vazamento de recursos**: Conexões não fechadas esgotam pool
+- **Locks não liberados**: Arquivos ficam travados
+- **Memory leaks**: Recursos não são liberados pelo GC
+- **Timeouts**: Conexões abertas causam timeouts em outros testes
+
+**✅ SOLUÇÃO CORRETA (validar cleanup)**:
+```python
+@patch("module.DatabaseConnection")
+def test_process_data_validates_cleanup(mock_db_class):
+    """Teste: process_data fecha conexão mesmo com sucesso"""
+    # Arrange
+    mock_db = MagicMock()  # Importante: MagicMock para métodos automáticos
+    mock_db.query.return_value = [{"id": 1}]
+    mock_db_class.return_value = mock_db
+
+    # Act
+    result = process_data()
+
+    # Assert - validar resultado
+    assert result == [{"id": 1}]
+
+    # Assert - validar cleanup!
+    mock_db.close.assert_called_once()
+
+@patch("module.DatabaseConnection")
+def test_process_data_cleanup_on_error(mock_db_class):
+    """Teste: process_data fecha conexão mesmo com erro"""
+    # Arrange
+    mock_db = MagicMock()
+    mock_db.query.side_effect = Exception("Database error")
+    mock_db_class.return_value = mock_db
+
+    # Act & Assert
+    with pytest.raises(Exception):
+        process_data()
+
+    # Assert - cleanup DEVE acontecer mesmo com erro!
+    mock_db.close.assert_called_once()
+```
+
+**Padrão para Context Managers**:
+```python
+# Código real
+class FileHandler:
+    def __enter__(self):
+        self.file = open("data.txt", "r")
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+
+    def read_data(self):
+        return self.file.read()
+
+def process_file():
+    with FileHandler() as handler:
+        return handler.read_data()
+```
+
+```python
+# Teste correto
+@patch("module.FileHandler")
+def test_process_file_context_manager(mock_handler_class):
+    """Teste: FileHandler cleanup via context manager"""
+    # Arrange
+    mock_handler = MagicMock()
+    mock_handler.read_data.return_value = "file content"
+    mock_handler_class.return_value.__enter__.return_value = mock_handler
+
+    # Act
+    result = process_file()
+
+    # Assert - resultado
+    assert result == "file content"
+
+    # Assert - context manager foi usado corretamente
+    mock_handler_class.return_value.__enter__.assert_called_once()
+    mock_handler_class.return_value.__exit__.assert_called_once()
+```
+
+**Checklist de Cleanup**:
+- ✅ Mockau o recurso (DB, File, Socket, etc.)
+- ✅ Validou que método de cleanup foi chamado (.close(), .disconnect(), etc.)
+- ✅ Testou cleanup em caso de SUCESSO
+- ✅ Testou cleanup em caso de ERRO/EXCEÇÃO
+- ✅ Se usa context manager, validou `__enter__` e `__exit__`
+- ✅ Usou `assert_called_once()` para garantir cleanup único
+
+**Métodos comuns de cleanup por tipo de recurso**:
+```python
+# Database
+mock_connection.close.assert_called_once()
+mock_session.commit.assert_called_once()
+mock_session.rollback.assert_called_once()  # em caso de erro
+
+# Files
+mock_file.close.assert_called_once()
+
+# HTTP/API
+mock_client.disconnect.assert_called_once()
+mock_session.close.assert_called_once()
+
+# Sockets
+mock_socket.close.assert_called_once()
+
+# Threads/Processes
+mock_thread.join.assert_called_once()
+mock_process.terminate.assert_called_once()
+
+# Locks
+mock_lock.release.assert_called_once()
+```
+
+#### ✅ Validação Completa de Parâmetros
+
+**REGRA**: SEMPRE valide estrutura + tipo + valor dos parâmetros, não apenas presença de chaves!
+
+**Problema Comum (Bug Silencioso)**:
+```python
+# Código real transforma input em lista de mensagens
+from langchain_core.messages import HumanMessage
+
+def node_processar(state):
+    current_messages = state.get("messages", []) + [
+        HumanMessage(content=state.get("input", ""))
+    ]
+
+    response = chain.invoke({
+        "input": current_messages,  # Não é string! É lista de HumanMessage!
+        "context": state.get("context")
+    })
+    return response
+```
+
+**❌ VALIDAÇÃO SUPERFICIAL (esconde bugs)**:
+```python
+@patch("module.chain")
+def test_node_processar_superficial(mock_chain):
+    # Arrange
+    mock_chain.invoke.return_value = {"output": "resultado"}
+
+    state = {
+        "input": "Input Usuário",
+        "messages": [],
+        "context": "contexto"
+    }
+
+    # Act
+    result = node_processar(state)
+
+    # Assert - VALIDAÇÃO SUPERFICIAL
+    call_args = mock_chain.invoke.call_args[0][0]
+    assert "input" in call_args  # ❌ Apenas verifica presença da chave!
+    assert "context" in call_args
+    # ❌ NÃO validou tipo, estrutura ou valor!
+```
+
+**Por quê é perigoso?**
+Este teste passaria mesmo se:
+- `input` fosse lista vazia `[]`
+- `input` contivesse tipo errado (`AIMessage` em vez de `HumanMessage`)
+- `input` tivesse conteúdo corrompido
+- `input` tivesse mensagens duplicadas ou faltando
+
+**✅ VALIDAÇÃO COMPLETA (detecta bugs)**:
+```python
+from langchain_core.messages import HumanMessage
+
+@patch("module.chain")
+def test_node_processar_completo(mock_chain):
+    """Teste: Valida estrutura + tipo + valor dos parâmetros"""
+    # Arrange
+    mock_chain.invoke.return_value = {"output": "resultado"}
+
+    state = {
+        "input": "Input Usuário",
+        "messages": [],
+        "context": "contexto"
+    }
+
+    # Act
+    result = node_processar(state)
+
+    # Assert - VALIDAÇÃO COMPLETA EM 3 CAMADAS
+    call_args = mock_chain.invoke.call_args[0][0]
+
+    # Camada 1: ESTRUTURA
+    assert "input" in call_args
+    assert isinstance(call_args["input"], list)
+    assert len(call_args["input"]) == 1  # Exatamente 1 mensagem
+
+    # Camada 2: TIPO
+    assert isinstance(call_args["input"][0], HumanMessage)
+
+    # Camada 3: CONTEÚDO
+    assert call_args["input"][0].content == "Input Usuário"
+
+    # Validar outros parâmetros também
+    assert call_args["context"] == "contexto"
+```
+
+**Benefícios da Validação Completa**:
+- ✅ Detecta bugs silenciosos que validação superficial esconde
+- ✅ Documenta transformações de dados do código real
+- ✅ Previne regressões quando código muda
+- ✅ Garante que tipos complexos estão corretos (não apenas presentes)
+
+**Padrões de Validação por Tipo**:
+
+**1. Listas/Arrays**:
+```python
+# Validar estrutura
+assert isinstance(params["items"], list)
+assert len(params["items"]) == 3
+
+# Validar tipo dos elementos
+assert all(isinstance(item, ExpectedType) for item in params["items"])
+
+# Validar conteúdo
+assert params["items"][0].field == "expected_value"
+```
+
+**2. Dicts/Objects**:
+```python
+# Validar estrutura
+assert isinstance(params["config"], dict)
+assert set(params["config"].keys()) == {"key1", "key2", "key3"}
+
+# Validar tipos dos valores
+assert isinstance(params["config"]["key1"], str)
+assert isinstance(params["config"]["key2"], int)
+
+# Validar conteúdo
+assert params["config"]["key1"] == "expected"
+```
+
+**3. Objetos Complexos (Pydantic, dataclasses)**:
+```python
+# Validar tipo
+assert isinstance(params["user"], User)
+
+# Validar campos obrigatórios
+assert hasattr(params["user"], "name")
+assert hasattr(params["user"], "email")
+
+# Validar valores
+assert params["user"].name == "John Doe"
+assert params["user"].email == "john@example.com"
+```
+
+**4. Mensagens LangChain**:
+```python
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
+# Validar estrutura (lista de mensagens)
+assert isinstance(params["messages"], list)
+assert len(params["messages"]) == 2
+
+# Validar tipos (ordem importa!)
+assert isinstance(params["messages"][0], SystemMessage)
+assert isinstance(params["messages"][1], HumanMessage)
+
+# Validar conteúdo
+assert params["messages"][0].content == "You are a helpful assistant"
+assert params["messages"][1].content == "User question"
+```
+
+**Quando usar validação completa**:
+- ✅ Sempre que código transforma tipos simples em complexos
+- ✅ Quando parâmetros são listas ou objetos aninhados
+- ✅ Quando tipos personalizados são usados (Pydantic, dataclasses)
+- ✅ Quando ordem ou estrutura dos dados importa
+- ✅ Em testes de integração entre componentes
+
+**Checklist de Validação Completa**:
+- [ ] Validou PRESENÇA da chave/parâmetro?
+- [ ] Validou TIPO do parâmetro (str, list, dict, objeto)?
+- [ ] Validou ESTRUTURA (tamanho da lista, chaves do dict)?
+- [ ] Validou TIPO dos elementos internos (se lista/dict)?
+- [ ] Validou VALOR/CONTEÚDO final?
+- [ ] Documentou transformação de dados no docstring?
+
 #### ⚠️ Base de Conhecimento de Erros Comuns
 
 **Erro 1**: `ValidationError: Input should be a valid string`
@@ -443,6 +894,69 @@ mock_chain_final.invoke.return_value = "resultado"
 mock_chain_intermediate.__or__ = Mock(return_value=mock_chain_final)
 ```
 
+**Erro 4**: `AssertionError: expected X but got Y` (estado vazou de teste anterior)
+
+**Causa**: Variável global/cache não foi resetada entre testes
+```python
+# ❌ ERRADO (reset manual pode falhar)
+def test_function():
+    module._CACHE = None  # Reset manual
+    result = function()
+    assert result == "expected"
+    module._CACHE = None  # Se teste falhar antes, cache não é limpo!
+
+# ✅ CORRETO (fixture autouse)
+@pytest.fixture(autouse=True)
+def reset_cache(self):
+    import module
+    original = module._CACHE
+    module._CACHE = None
+    yield
+    module._CACHE = original  # SEMPRE executa, mesmo se teste falhar
+```
+
+**Erro 5**: `Too many open connections/files` (vazamento de recursos)
+
+**Causa**: Testes não validam cleanup de recursos
+```python
+# ❌ ERRADO (não valida cleanup)
+@patch("module.DatabaseConnection")
+def test_function(mock_db_class):
+    mock_db = Mock()
+    result = function()
+    assert result == "expected"
+    # ❌ Não verificou se mock_db.close() foi chamado!
+
+# ✅ CORRETO (valida cleanup)
+@patch("module.DatabaseConnection")
+def test_function(mock_db_class):
+    mock_db = MagicMock()
+    mock_db_class.return_value = mock_db
+    result = function()
+    assert result == "expected"
+    mock_db.close.assert_called_once()  # Valida cleanup!
+```
+
+**Erro 6**: `Test passes but production fails` (validação superficial)
+
+**Causa**: Teste apenas verifica presença de chave, não tipo/estrutura/valor
+```python
+# ❌ ERRADO (validação superficial - bug silencioso)
+call_args = mock_func.call_args[0][0]
+assert "input" in call_args  # Passa mesmo se input for None, [], tipo errado!
+
+# ✅ CORRETO (validação completa em 3 camadas)
+call_args = mock_func.call_args[0][0]
+# Camada 1: Estrutura
+assert "input" in call_args
+assert isinstance(call_args["input"], list)
+assert len(call_args["input"]) == 1
+# Camada 2: Tipo
+assert isinstance(call_args["input"][0], HumanMessage)
+# Camada 3: Conteúdo
+assert call_args["input"][0].content == "expected"
+```
+
 #### ✅ Checklist de Validação de Mocks
 
 **Antes de gerar cada teste, SEMPRE verificar**:
@@ -464,6 +978,31 @@ mock_chain_intermediate.__or__ = Mock(return_value=mock_chain_final)
 - [ ] Mockau TODAS as operações usadas (describe_table, get_item, etc.)?
 - [ ] Retorna estruturas de dados realistas (formato AWS)?
 - [ ] Verificou que o mock não vaza para outros testes (isolamento)?
+
+**Para Variáveis Globais/Cache**:
+- [ ] Identificou se módulo usa variáveis globais ou cache?
+- [ ] Criou fixture `autouse=True` para reset automático?
+- [ ] Fixture salva valores originais antes de resetar?
+- [ ] Fixture restaura valores originais após yield?
+- [ ] Removeu resets manuais dos testes individuais?
+- [ ] Verificou que fixture funciona com testes paralelos?
+
+**Para Cleanup de Recursos**:
+- [ ] Identificou recursos que precisam cleanup (DB, files, sockets)?
+- [ ] Mockau o recurso com MagicMock?
+- [ ] Validou que método de cleanup foi chamado (.close(), .disconnect(), etc.)?
+- [ ] Testou cleanup em caso de sucesso?
+- [ ] Testou cleanup em caso de erro/exceção?
+- [ ] Se usa context manager, validou `__enter__` e `__exit__`?
+
+**Para Validação de Parâmetros**:
+- [ ] Validou PRESENÇA das chaves/parâmetros?
+- [ ] Validou TIPO dos parâmetros (str, list, dict, objeto)?
+- [ ] Validou ESTRUTURA (tamanho da lista, chaves do dict, ordem)?
+- [ ] Validou TIPO dos elementos internos (se lista/dict/objeto)?
+- [ ] Validou VALOR/CONTEÚDO final?
+- [ ] Documentou transformações de dados no docstring?
+- [ ] Evitou validação superficial (apenas presença de chave)?
 
 **Para Assertions**:
 - [ ] Verificou retorno de valores corretos?
