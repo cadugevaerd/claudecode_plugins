@@ -301,6 +301,178 @@ mock_llm_responses.py
 
 ---
 
+### PASSO 3.4: Padrões Avançados de Mock (CRÍTICO)
+
+**IMPORTANTE: Esta seção contém padrões essenciais para evitar erros comuns na criação de mocks.**
+
+#### 🎯 Mock de LangChain Chains com Pipe Operators
+
+**REGRA**: Para cada operador `|` no código real, você precisa de um mock `__or__`!
+
+**Problema Comum**:
+```python
+# Código real usa múltiplos pipes
+chain = prompt | llm | StrOutputParser()
+
+# ❌ MOCK ERRADO (não funciona!)
+mock_chain = Mock()
+mock_chain.invoke.return_value = "Resposta"
+mock_prompt_template.from_template.return_value.__or__ = Mock(return_value=mock_chain)
+```
+
+**Por quê não funciona?**
+- `prompt | llm` → chama `prompt.__or__(llm)` → retorna `chain_intermediate`
+- `chain_intermediate | StrOutputParser()` → chama `chain_intermediate.__or__(...)` → retorna `chain_final`
+- Precisamos mockar AMBOS os níveis de pipe!
+
+**✅ MOCK CORRETO (funciona!)**:
+```python
+@patch("module.ChatOpenAI")
+@patch("module.ChatPromptTemplate")
+def test_langchain_chain_correct(mock_prompt_template, mock_chat_openai):
+    # Mock do LLM
+    mock_llm = Mock()
+    mock_chat_openai.return_value = mock_llm
+
+    # Mock do prompt template
+    mock_prompt = Mock()
+    mock_prompt_template.from_template.return_value = mock_prompt
+
+    # Mock do PRIMEIRO pipe: prompt | llm
+    mock_chain_intermediate = Mock()
+    mock_prompt.__or__ = Mock(return_value=mock_chain_intermediate)
+
+    # Mock do SEGUNDO pipe: chain_intermediate | StrOutputParser()
+    mock_chain_final = Mock()
+    mock_chain_final.invoke.return_value = "Resposta esperada"
+    mock_chain_intermediate.__or__ = Mock(return_value=mock_chain_final)
+
+    # Agora o código real funcionará corretamente
+    result = function_using_chain(state)
+
+    assert result is not None
+```
+
+**Regra Geral**:
+- `prompt | llm` → 1 mock `__or__`
+- `prompt | llm | parser` → 2 mocks `__or__`
+- `prompt | llm | parser | output` → 3 mocks `__or__`
+
+#### 🔒 Mock de Variáveis Module-Level
+
+**REGRA**: Se a variável é definida no TOPO do módulo, use `@patch("module.VARIABLE")` em vez de `@patch.dict(os.environ)`!
+
+**Problema Comum**:
+```python
+# Código real (topo do módulo Python)
+PROJECT_NAME = os.environ.get("PROJECT_NAME", "my-project")
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
+
+def create_resource():
+    bucket_name = f"{PROJECT_NAME}-{ENVIRONMENT}-data"
+    # ...
+```
+
+```python
+# ❌ MOCK ERRADO (não funciona!)
+@patch.dict(os.environ, {"PROJECT_NAME": "custom", "ENVIRONMENT": "prd"})
+def test_create_resource_wrong():
+    from module import create_resource
+    # As variáveis PROJECT_NAME e ENVIRONMENT já foram definidas
+    # quando o módulo foi importado pela primeira vez!
+    create_resource()  # Usa valores antigos (my-project-dev)
+```
+
+**Por quê não funciona?**
+1. Módulo é importado → Variáveis module-level são definidas com valores padrão
+2. `@patch.dict` é aplicado → **Tarde demais!** Variáveis já foram definidas
+3. Teste executa → Usa valores antigos
+
+**✅ MOCK CORRETO (funciona!)**:
+```python
+@patch("module.PROJECT_NAME", "custom")
+@patch("module.ENVIRONMENT", "prd")
+def test_create_resource_correct():
+    from module import create_resource
+
+    # Agora as variáveis module-level foram mockadas diretamente
+    create_resource()  # Usa valores corretos (custom-prd)
+```
+
+**Quando usar cada abordagem**:
+- **Variável MODULE-LEVEL** (topo do arquivo): `@patch("module.VARIABLE", "valor")`
+- **Variável RUNTIME** (dentro de função): `@patch.dict(os.environ, {...})`
+
+#### ⚠️ Base de Conhecimento de Erros Comuns
+
+**Erro 1**: `ValidationError: Input should be a valid string`
+
+**Causa**: Mock retorna objeto Mock em vez de tipo esperado
+```python
+# ❌ ERRADO
+mock_chain.invoke.return_value = Mock()  # Retorna objeto Mock!
+
+# ✅ CORRETO
+mock_chain.invoke.return_value = "string válida"
+```
+
+**Erro 2**: `AssertionError: assert 'my-project-dev' == 'custom-prd'`
+
+**Causa**: Usando `@patch.dict` para variáveis module-level
+```python
+# ❌ ERRADO
+@patch.dict(os.environ, {"PROJECT_NAME": "custom"})
+
+# ✅ CORRETO
+@patch("module.PROJECT_NAME", "custom")
+```
+
+**Erro 3**: `AttributeError: Mock object has no attribute 'invoke'`
+
+**Causa**: Mock incompleto de LangChain chain (faltou mock de pipe intermediário)
+```python
+# ❌ ERRADO (faltou mock do segundo pipe)
+mock_prompt.__or__ = Mock(return_value=mock_chain)
+# O segundo pipe falha!
+
+# ✅ CORRETO (todos os pipes mockados)
+mock_chain_intermediate = Mock()
+mock_prompt.__or__ = Mock(return_value=mock_chain_intermediate)
+mock_chain_final = Mock()
+mock_chain_final.invoke.return_value = "resultado"
+mock_chain_intermediate.__or__ = Mock(return_value=mock_chain_final)
+```
+
+#### ✅ Checklist de Validação de Mocks
+
+**Antes de gerar cada teste, SEMPRE verificar**:
+
+**Para LangChain Chains**:
+- [ ] Contou quantos operadores `|` existem no código real?
+- [ ] Criou um mock `__or__` para CADA operador `|`?
+- [ ] O mock final `.invoke()` retorna o TIPO correto (string, dict, objeto)?
+- [ ] Adicionou assertions para verificar chamadas do mock?
+
+**Para Variáveis de Ambiente**:
+- [ ] Identificou se as variáveis são MODULE-LEVEL (topo do arquivo)?
+- [ ] Se MODULE-LEVEL, usou `@patch("module.VARIABLE")` em vez de `@patch.dict`?
+- [ ] Se RUNTIME (dentro de função), usou `@patch.dict(os.environ)`?
+- [ ] Verificou que o mock acontece ANTES da importação do módulo?
+
+**Para Mocks de AWS/Boto3**:
+- [ ] Mockau `boto3.client` ou `boto3.resource`?
+- [ ] Mockau TODAS as operações usadas (describe_table, get_item, etc.)?
+- [ ] Retorna estruturas de dados realistas (formato AWS)?
+- [ ] Verificou que o mock não vaza para outros testes (isolamento)?
+
+**Para Assertions**:
+- [ ] Verificou retorno de valores corretos?
+- [ ] Verificou efeitos colaterais (chamadas de funções, mensagens adicionadas)?
+- [ ] Testou casos de erro (exceções, valores inválidos)?
+- [ ] Validou estrutura de dados (tipos, campos obrigatórios)?
+
+---
+
 ### PASSO 4: Criar Testes Automaticamente
 
 **4.1 Template Base - Pytest (Padrão)**
