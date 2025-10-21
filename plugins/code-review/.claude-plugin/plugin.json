@@ -1,15 +1,11 @@
 {
   "name": "code-review",
   "version": "1.1.0",
-  "displayName": "Code Review & Technical Debt",
   "description": "Revisa o código em busca de bugs, vulnerabilidades de segurança e melhorias, com gerenciamento de débito técnico integrado",
   "author": {
     "name": "Carlos Araujo",
-    "email": "cadu.gevaerd@gmail.com",
-    "github": "cadugevaerd"
+    "email": "cadu.gevaerd@gmail.com"
   },
-  "repository": "claudecode_plugins",
-  "license": "MIT",
   "keywords": [
     "code-review",
     "security",
@@ -22,96 +18,6 @@
     "tracking",
     "metrics"
   ],
-  "commands": [
-    {
-      "name": "review",
-      "description": "Executa code review completo identificando bugs, vulnerabilidades e melhorias",
-      "path": "commands/review.md"
-    },
-    {
-      "name": "tech-debt",
-      "description": "Gerencia débito técnico (adicionar, atualizar, resolver, listar)",
-      "path": "commands/tech-debt.md"
-    }
-  ],
-  "agents": [
-    {
-      "name": "code-reviewer",
-      "description": "Especialista em análise de código para identificar bugs, vulnerabilidades e melhorias",
-      "path": "agents/code-reviewer.md"
-    },
-    {
-      "name": "debt-manager",
-      "description": "Especialista em gerenciamento de débito técnico com rastreamento e priorização",
-      "path": "agents/debt-manager.md"
-    }
-  ],
-  "features": [
-    "Análise de segurança (credenciais, SQL injection, XSS, input sanitization)",
-    "Análise de qualidade (estrutura, nomenclatura, type safety, performance)",
-    "Análise de testes (cobertura, mocks, fixtures, frameworks)",
-    "Análise de documentação (docstrings, README, comentários)",
-    "Identificação de débito técnico (DRY, complexidade, acoplamento)",
-    "Gerenciamento de débito técnico em docs/TECHNICAL_DEBT.md",
-    "IDs únicos e incrementais (TD-001, TD-002, etc.)",
-    "Rastreamento de status (Open → In Progress → Resolved)",
-    "Categorização (Security, Performance, Refactoring, Testing, Documentation, Architecture)",
-    "Priorização (🔴 Critical, 🟡 Important, 🟢 Improvement)",
-    "Estatísticas e métricas de débito técnico",
-    "Relatório estruturado com problemas priorizados",
-    "Suporte a qualquer linguagem de programação"
-  ],
-  "supportedLanguages": [
-    "Python",
-    "JavaScript",
-    "TypeScript",
-    "Java",
-    "Go",
-    "Rust",
-    "C++",
-    "C#",
-    "Ruby",
-    "PHP",
-    "Kotlin",
-    "Swift",
-    "Scala"
-  ],
-  "changelog": {
-    "1.1.0": {
-      "date": "2025-10-21",
-      "changes": [
-        "Adiciona agente debt-manager para gerenciar débito técnico",
-        "Adiciona comando /tech-debt (add, list, update, resolve, stats)",
-        "Integra code-reviewer com debt-manager (registro automático de débitos)",
-        "Cria/atualiza docs/TECHNICAL_DEBT.md automaticamente",
-        "Suporte a IDs únicos incrementais (TD-XXX)",
-        "Rastreamento de status (Open → In Progress → Resolved)",
-        "6 categorias de débito (Security, Performance, Refactoring, Testing, Documentation, Architecture)",
-        "3 níveis de prioridade (Critical, Important, Improvement)",
-        "Estatísticas e métricas de débito técnico",
-        "Modo interativo para gerenciamento de débitos",
-        "Extração automática de débitos do relatório de code review",
-        "10 campos essenciais por débito (ID, Status, Category, Created, Owner, Location, Effort, Impact, Description, Plan)"
-      ]
-    },
-    "1.0.0": {
-      "date": "2025-10-21",
-      "changes": [
-        "Lançamento inicial do plugin",
-        "Análise de segurança (credenciais, SQL injection, XSS)",
-        "Análise de qualidade (estrutura, nomenclatura, performance)",
-        "Análise de testes (cobertura, mocks, fixtures)",
-        "Análise de documentação (docstrings, README)",
-        "Identificação de débito técnico (DRY, complexidade)",
-        "Relatório estruturado com priorização",
-        "Suporte a múltiplas linguagens"
-      ]
-    }
-  },
-  "documentation": {
-    "readme": "README.md",
-    "examples": [
-      "docs/TECHNICAL_DEBT.md (template)"
-    ]
-  }
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
 }
