@@ -6,6 +6,20 @@
     "name": "Claude Code Community",
     "email": "plugins@claudecode.dev"
   },
+  "commands": [
+    {
+      "name": "commit",
+      "description": "Realiza commit no repositório com validações completas",
+      "path": "commands/commit.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "commit-assistant",
+      "description": "Agente especializado em automatizar commits Git com validações completas",
+      "path": "agents/commit-assistant.md"
+    }
+  ],
   "keywords": [
     "git",
     "commit",
