@@ -18,6 +18,17 @@
       },
       "category": "development",
       "tags": ["git", "commit", "conventional-commits", "ci", "validation", "security"]
+    },
+    {
+      "name": "python-test-generator",
+      "description": "Gerador automático de testes unitários Python com análise de cobertura e criação paralela de testes seguindo padrões do projeto",
+      "source": "./plugins/python-test-generator",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "testing",
+      "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "automation", "generator", "parallel", "quality"]
     }
   ]
 }

@@ -1,0 +1,37 @@
+{
+  "name": "python-test-generator",
+  "version": "1.0.0",
+  "description": "Gerador automático de testes unitários Python com análise de cobertura e criação paralela de testes seguindo padrões do projeto",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins",
+  "license": "MIT",
+  "category": "testing",
+  "tags": [
+    "python",
+    "testing",
+    "unit-tests",
+    "coverage",
+    "pytest",
+    "automation",
+    "generator",
+    "parallel",
+    "quality"
+  ],
+  "commands": [
+    {
+      "name": "py-test",
+      "description": "Gera testes unitários Python automaticamente com análise de cobertura",
+      "path": "commands/py-test.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "test-assistant",
+      "description": "Especialista em criar testes unitários Python com mocks, fixtures e criação paralela",
+      "path": "agents/test-assistant.md"
+    }
+  ]
+}
