@@ -1,0 +1,12 @@
+{
+  "name": "code-review",
+  "version": "1.0.0",
+  "description": "Revisa o código em busca de bugs, vulnerabilidades de segurança e melhorias",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": ["code-review", "security", "quality", "testing", "best-practices", "static-analysis"],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}

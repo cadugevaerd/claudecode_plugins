@@ -29,6 +29,17 @@
       },
       "category": "testing",
       "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "automation", "generator", "parallel", "quality", "mock", "langchain", "fixtures", "isolation", "cleanup", "resources"]
+    },
+    {
+      "name": "code-review",
+      "description": "Revisa o código em busca de bugs, vulnerabilidades de segurança e melhorias",
+      "source": "./plugins/code-review",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "development",
+      "tags": ["code-review", "security", "quality", "testing", "best-practices", "static-analysis"]
     }
   ]
 }
