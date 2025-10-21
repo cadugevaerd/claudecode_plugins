@@ -656,6 +656,271 @@ Formato final em markdown estruturado:
 
 ```
 
+### 9. Registro de Débito Técnico
+
+Após gerar o relatório de code review, ofereço a opção de registrar os débitos técnicos identificados em `docs/TECHNICAL_DEBT.md`.
+
+**Processo**:
+
+1. **Após completar seção 8** (Geração de Relatório)
+
+2. **Perguntar ao usuário**:
+
+```text
+📊 Foram identificados X débitos técnicos nesta análise.
+
+Deseja registrá-los em docs/TECHNICAL_DEBT.md? (s/n)
+```
+
+3. **Se usuário responder 's'**:
+   - Invocar agente `debt-manager`
+   - Extrair débitos do relatório gerado
+   - Categorizar automaticamente
+   - Adicionar em batch ao arquivo
+
+4. **Se usuário responder 'n'**:
+   - Apenas informar: "Débitos não registrados. Você pode registrá-los depois com /tech-debt add"
+
+**Extração Automática de Débitos**:
+
+Cada problema encontrado nas seções 🔴 Críticos, 🟡 Importantes e 🟢 Sugestões é convertido em débito técnico:
+
+**Mapeamento de Prioridade**:
+
+- 🔴 Críticos → Priority: Critical
+- 🟡 Importantes → Priority: Important
+- 🟢 Sugestões → Priority: Improvement
+
+**Categorização Automática**:
+
+Analiso o problema e atribuo categoria:
+
+**Security**:
+
+- Credenciais hardcoded → Security
+- SQL Injection → Security
+- XSS vulnerability → Security
+- Input sem sanitização → Security
+- Dependências vulneráveis → Security
+- Weak authentication → Security
+
+**Performance**:
+
+- N+1 queries → Performance
+- Loops desnecessários → Performance
+- Chamadas síncronas → Performance
+- Cache ausente → Performance
+- Queries não otimizadas → Performance
+
+**Refactoring**:
+
+- Código duplicado → Refactoring
+- Função muito longa → Refactoring
+- Complexidade alta → Refactoring
+- Acoplamento forte → Refactoring
+- Magic numbers → Refactoring
+- Nomes genéricos → Refactoring
+
+**Testing**:
+
+- Falta cobertura de testes → Testing
+- Mocks inadequados → Testing
+- Testes dependentes → Testing
+- Apenas happy path → Testing
+
+**Documentation**:
+
+- Funções sem docstrings → Documentation
+- README desatualizado → Documentation
+- Missing type hints → Documentation
+- TODOs sem contexto → Documentation
+
+**Architecture**:
+
+- Violação SOLID → Architecture
+- Estrutura desorganizada → Architecture
+- Dependências circulares → Architecture
+
+**Extração de Metadados**:
+
+Para cada problema, extraio:
+
+1. **Title**: Título do problema do relatório
+2. **Category**: Detectada automaticamente (vide acima)
+3. **Priority**: Baseada no nível (🔴🟡🟢)
+4. **Location**: Campo "Arquivo" do relatório
+5. **Description**: Campo "Problema" do relatório
+6. **Impact**: Campo "Risco/Impacto" do relatório
+7. **Resolution Plan**: Campo "Solução" do relatório (passos extraídos)
+8. **Estimated Effort**: Estimado baseado na complexidade
+   - Critical + Security: 2-4 hours
+   - Important + Refactoring: 4-8 hours
+   - Improvement: 1-2 hours
+9. **Owner**: @dev-team (padrão)
+10. **Created**: Data atual
+
+**Exemplo de Conversão**:
+
+**Do relatório**:
+
+```markdown
+#### 🔴 Críticos
+
+**1. Credencial hardcoded**
+
+- **Arquivo**: `src/config.py:15`
+- **Problema**: API key exposta no código
+- **Risco**: Segurança - credencial pode vazar no Git
+- **Solução**:
+  - Usar variável de ambiente
+  - Validar se está configurada
+  - Atualizar documentação
+```
+
+**Para débito técnico**:
+
+```markdown
+### [TD-015] Credencial hardcoded
+
+- **Status**: Open
+- **Category**: Security
+- **Created**: 2025-10-21
+- **Owner**: @dev-team
+- **Location**: `src/config.py:15`
+- **Estimated Effort**: 2 hours
+- **Impact**: Segurança - credencial pode vazar no Git
+
+**Description**:
+API key exposta diretamente no código, violando práticas de segurança.
+
+**Resolution Plan**:
+1. Migrar credencial para variável de ambiente (API_KEY)
+2. Adicionar validação no código: `if not API_KEY: raise ValueError`
+3. Atualizar .env.example e documentação
+4. Verificar outras credenciais no código
+
+**Code Location**:
+\`\`\`python
+# ❌ Current
+API_KEY = "sk-1234567890abcdef"
+
+# ✅ Fixed
+import os
+API_KEY = os.getenv("API_KEY")
+if not API_KEY:
+    raise ValueError("API_KEY não configurada")
+\`\`\`
+```
+
+**Adição em Batch**:
+
+Após converter todos os problemas:
+
+```text
+Processando débitos técnicos...
+
+🔴 Critical:
+- TD-015: Credencial hardcoded (src/config.py:15)
+- TD-016: SQL Injection vulnerability (src/database.py:42)
+
+🟡 Important:
+- TD-017: Long function with high complexity (src/processor.py:30)
+- TD-018: Missing test coverage (src/utils.py:calculate_discount)
+
+🟢 Improvement:
+- TD-019: Add type hints to public API (src/api.py)
+
+✅ 5 débitos técnicos adicionados a docs/TECHNICAL_DEBT.md!
+
+📊 Resumo:
+- Critical: 2
+- Important: 2
+- Improvement: 1
+- Total: 5 novos débitos
+```
+
+**Confirmação Final**:
+
+Após adicionar os débitos, informo:
+
+```text
+✅ Débitos técnicos registrados com sucesso!
+
+📁 Arquivo: docs/TECHNICAL_DEBT.md
+📊 Total adicionado: X débitos (Y críticos, Z importantes, W melhorias)
+
+💡 Próximos passos:
+- Visualizar: cat docs/TECHNICAL_DEBT.md
+- Gerenciar: /tech-debt list
+- Atualizar status: /tech-debt update TD-XXX
+```
+
+**Quando NÃO Perguntar**:
+
+❌ Se não houver problemas detectados (relatório limpo)
+❌ Se todos os problemas forem triviais (<5 min)
+❌ Se o usuário executou com flag `--no-debt-tracking`
+
+**Quando SEMPRE Perguntar**:
+
+✅ Se houver ao menos 1 problema 🔴 Crítico
+✅ Se houver 3 ou mais problemas 🟡 Importantes
+✅ Se houver vulnerabilidades de segurança
+✅ Se código review normal (sem flags especiais)
+
+**Integração com debt-manager**:
+
+Invoco o agente `debt-manager` passando a lista de débitos:
+
+```json
+{
+  "operation": "add_batch",
+  "debts": [
+    {
+      "title": "Credencial hardcoded",
+      "category": "Security",
+      "priority": "Critical",
+      "location": "src/config.py:15",
+      "description": "API key exposta no código",
+      "impact": "Segurança - credencial pode vazar no Git",
+      "resolution_plan": "1. Usar env var\n2. Validar\n3. Documentar",
+      "estimated_effort": "2 hours",
+      "owner": "@dev-team"
+    }
+  ]
+}
+```
+
+O agente `debt-manager` cuida de:
+
+- Gerar IDs únicos (TD-XXX)
+- Criar/atualizar arquivo TECHNICAL_DEBT.md
+- Inserir nas seções corretas
+- Atualizar header com totais
+- Validar formato
+
+**Resumo do Fluxo Completo**:
+
+1. Executar análise de código (seções 1-7)
+2. Gerar relatório estruturado (seção 8)
+3. **NOVA** → Perguntar se quer registrar débitos (seção 9)
+4. Se sim:
+   - Extrair débitos do relatório
+   - Categorizar automaticamente
+   - Invocar debt-manager
+   - Adicionar em batch
+   - Confirmar sucesso
+5. Finalizar code review
+
+**Benefícios**:
+
+✅ Rastreamento automático de problemas
+✅ Histórico de débito técnico
+✅ Priorização clara
+✅ Facilita planejamento de sprints
+✅ Métricas ao longo do tempo
+✅ Sem esforço manual do desenvolvedor
+
 ## Adaptação por Linguagem
 
 Adapto automaticamente a análise:
