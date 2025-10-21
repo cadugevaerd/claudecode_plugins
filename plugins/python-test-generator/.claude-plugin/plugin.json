@@ -6,10 +6,7 @@
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
   },
-  "homepage": "https://github.com/cadugevaerd/claudecode_plugins",
-  "license": "MIT",
-  "category": "testing",
-  "tags": [
+  "keywords": [
     "python",
     "testing",
     "unit-tests",
@@ -20,18 +17,6 @@
     "parallel",
     "quality"
   ],
-  "commands": [
-    {
-      "name": "py-test",
-      "description": "Gera testes unitários Python automaticamente com análise de cobertura",
-      "path": "commands/py-test.md"
-    }
-  ],
-  "agents": [
-    {
-      "name": "test-assistant",
-      "description": "Especialista em criar testes unitários Python com mocks, fixtures e criação paralela",
-      "path": "agents/test-assistant.md"
-    }
-  ]
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
 }
