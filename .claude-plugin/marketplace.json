@@ -40,6 +40,17 @@
       },
       "category": "development",
       "tags": ["code-review", "security", "quality", "testing", "best-practices", "static-analysis", "technical-debt", "debt-management", "tracking", "metrics", "refactoring", "performance"]
+    },
+    {
+      "name": "langchain-langgraph-specialist",
+      "description": "Especialista completo em LangChain v1 e LangGraph v1 com acesso à documentação oficial via MCP - desenvolvimento, debugging e melhores práticas para chains, agentes e grafos",
+      "source": "./plugins/langchain-langgraph-specialist",
+      "version": "1.1.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "development",
+      "tags": ["langchain", "langgraph", "lcel", "agents", "ai-frameworks", "llm", "mcp", "documentation"]
     }
   ]
 }

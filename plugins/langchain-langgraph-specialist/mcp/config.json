@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "docs-langchain": {
+      "transport": "http",
+      "url": "https://docs.langchain.com/mcp"
+    }
+  }
+}
