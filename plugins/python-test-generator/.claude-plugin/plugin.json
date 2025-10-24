@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "1.0.0",
-  "description": "Gerador automático de testes unitários Python com análise de cobertura e criação paralela de testes seguindo padrões do projeto",
+  "version": "1.3.0",
+  "description": "Gerador automático de testes unitários Python com análise de cobertura, criação paralela e skills especializadas para LangChain/LangGraph testing",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
@@ -15,7 +15,12 @@
     "automation",
     "generator",
     "parallel",
-    "quality"
+    "quality",
+    "langchain",
+    "langgraph",
+    "agentevals",
+    "trajectory",
+    "llm-testing"
   ],
   "license": "MIT",
   "homepage": "https://github.com/cadugevaerd/claudecode_plugins"

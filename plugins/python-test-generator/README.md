@@ -329,6 +329,143 @@ def test_lambda_handler_processa_s3_event(self, mock_env, mock_boto):
 
 ---
 
+## 🎯 Skills Especializadas
+
+### LangChain Test Specialist
+
+**Nova em v1.3.0**: Skill especializada para criar testes unitários e de integração para aplicações LangChain e LangGraph.
+
+#### Recursos da Skill
+
+Esta skill detecta automaticamente código LangChain/LangGraph e aplica **7 padrões de teste especializados**:
+
+1. **Basic LangGraph Test**: Testes state-based com `MemorySaver` checkpointer
+2. **Individual Node Testing**: Testar nodes isoladamente via `graph.nodes["node_name"]`
+3. **Partial Execution**: Uso de `update_state()` e `interrupt_after` para testes parciais
+4. **Mocking LLM**: `GenericFakeChatModel` para testes unitários sem API calls
+5. **Trajectory Match**: Validação de sequência de ações com `agentevals`
+6. **LLM-as-Judge**: Avaliação de qualidade usando LLM como juiz
+7. **VCR Recording**: Gravar/replay HTTP calls com `pytest-recording`
+
+#### Quando a Skill é Ativada
+
+A skill é invocada automaticamente pelo Claude quando detecta:
+- Imports de `langchain`, `langgraph`, ou `langchain_core`
+- Uso de `StateGraph`, `MessageGraph`, chains LCEL
+- LLM calls (`ChatOpenAI`, `ChatAnthropic`, etc.)
+- Agents, tools, ou trajectories
+- Pedidos como: "testar chain", "testar grafo", "mock LLM", "trajectory validation"
+
+#### Exemplos de Testes Criados
+
+**Teste de Grafo LangGraph**:
+```python
+def test_basic_graph_execution():
+    """Teste: Grafo executa corretamente com estado inicial"""
+    # Arrange
+    checkpointer = MemorySaver()
+    graph = create_graph()
+    compiled_graph = graph.compile(checkpointer=checkpointer)
+
+    # Act
+    result = compiled_graph.invoke(
+        {"my_key": "initial"},
+        config={"configurable": {"thread_id": "1"}}
+    )
+
+    # Assert
+    assert result["my_key"] == "expected_value"
+```
+
+**Teste com Mocked LLM**:
+```python
+from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
+
+def test_node_with_mocked_llm():
+    """Teste: Node com LLM mockado retorna respostas esperadas"""
+    # Arrange
+    mock_llm = GenericFakeChatModel(messages=iter([
+        AIMessage(content="Primeira resposta"),
+        AIMessage(content="Segunda resposta")
+    ]))
+
+    # Act
+    result = node_with_llm({"messages": [...]})
+
+    # Assert
+    assert result["response"] == "Primeira resposta"
+```
+
+**Trajectory Validation com AgentEvals**:
+```python
+from agentevals.trajectory.match import create_trajectory_match_evaluator
+
+def test_trajectory_strict_match():
+    """Teste: Trajectory corresponde exatamente à esperada"""
+    # Arrange
+    evaluator = create_trajectory_match_evaluator(
+        trajectory_match_mode="strict"
+    )
+
+    # Act
+    evaluation = evaluator(
+        outputs=actual_trajectory,
+        reference_outputs=reference_trajectory
+    )
+
+    # Assert
+    assert evaluation["score"] is True
+```
+
+**VCR Recording para Integration Tests**:
+```python
+@pytest.mark.vcr()
+def test_agent_with_real_llm_vcr():
+    """Teste: Grava chamadas LLM reais na primeira execução, replay depois"""
+    # PRIMEIRA EXECUÇÃO: Faz chamadas reais e grava
+    # PRÓXIMAS EXECUÇÕES: Replay sem API calls (100% determinístico)
+
+    agent = create_agent()
+    result = agent.invoke({"input": "What's the capital of France?"})
+
+    assert "Paris" in result["output"]
+```
+
+#### Dependencies Adicionais
+
+Para usar os padrões LangChain/LangGraph, certifique-se de ter:
+
+```bash
+# Principais
+pip install langchain langchain-core langgraph
+
+# Testing
+pip install pytest pytest-asyncio agentevals vcrpy pytest-recording
+```
+
+Ou com poetry:
+```toml
+[tool.poetry.group.test.dependencies]
+agentevals = "^0.1.0"      # Trajectory validation
+vcrpy = "^6.0.0"            # HTTP recording
+pytest-recording = "^0.13.0"  # pytest-vcr integration
+```
+
+#### Modos de Trajectory Matching
+
+- **strict**: Ordem e conteúdo idênticos
+- **unordered**: Mesmo conteúdo, ordem irrelevante
+- **subset**: Trajectory real contém pelo menos as ações esperadas
+- **superset**: Trajectory real é subconjunto das ações esperadas
+
+#### LLM-as-Judge Models
+
+Suportados:
+- `openai:gpt-4o-mini`, `openai:o3-mini`
+- `anthropic:claude-3-5-sonnet`, `anthropic:claude-3-5-haiku`
+
+---
+
 ## 📝 Padrões de Teste Criados
 
 ### AAA Pattern (Arrange-Act-Assert)
