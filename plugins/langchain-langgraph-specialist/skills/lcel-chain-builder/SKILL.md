@@ -10,12 +10,30 @@ Skill para construir chains usando LangChain Expression Language (LCEL) v1 com p
 
 ## Instructions
 
-1. **Analisar requisitos** da chain solicitada
-   - Identificar passos sequenciais vs paralelos
-   - Determinar componentes necessários (LLM, prompts, parsers, retrievers)
-   - Verificar se LCEL é apropriado (se precisa state complexo/loops, sugerir LangGraph)
+### STEP 0: Consultar Documentação via MCP (OBRIGATÓRIO)
 
-2. **Escolher padrão de composição**:
+**SEMPRE comece usando ferramentas MCP para validar abordagem**:
+
+- Use `fetch_docs` para buscar exemplos similares de LCEL chains
+- Busque por padrões relacionados (ex: "RAG chain", "parallel execution", "conditional routing")
+- Valide sintaxe de componentes que você planeja usar
+- Verifique se há exemplos oficiais de padrões similares
+
+**Exemplo**:
+```
+User: "Criar chain RAG com retrieval"
+→ ANTES de gerar: Use fetch_docs para buscar "RAG tutorial" ou "retrieval chain"
+→ Analise exemplos oficiais retornados
+→ ENTÃO gere chain baseada em padrões oficiais
+```
+
+### STEP 1: Analisar requisitos da chain solicitada
+
+- Identificar passos sequenciais vs paralelos
+- Determinar componentes necessários (LLM, prompts, parsers, retrievers)
+- Verificar se LCEL é apropriado (se precisa state complexo/loops, sugerir LangGraph)
+
+### STEP 2: Escolher padrão de composição
    - Sequential: Use pipe operator (`|`)
    - Parallel: Use `RunnableParallel`
    - Conditional: Use `RunnableBranch`

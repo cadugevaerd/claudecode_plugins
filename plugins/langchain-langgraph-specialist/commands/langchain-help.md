@@ -6,6 +6,26 @@ description: Ajuda rápida e referência sobre LangChain v1 - LCEL, chains, comp
 
 Forneço ajuda rápida e referência sobre LangChain v1, incluindo LCEL (LangChain Expression Language), chains, componentes e guias de migração.
 
+## 🔧 Ferramentas MCP Disponíveis
+
+**IMPORTANTE**: Este plugin fornece acesso à documentação oficial via MCP server `langchain-docs`.
+
+**Use as seguintes ferramentas MCP quando disponíveis**:
+
+1. **`list_doc_sources`** - Liste as fontes de documentação disponíveis (LangChain, LangGraph)
+2. **`fetch_docs`** - Busque conteúdo específico da documentação oficial
+
+**Quando usar MCP**:
+- ✅ Sempre que o usuário perguntar sobre APIs, métodos, ou funcionalidades específicas
+- ✅ Para verificar sintaxe correta e exemplos atualizados
+- ✅ Quando precisar de informações sobre recursos recentes
+- ✅ Para validar informações antes de responder
+
+**Workflow recomendado**:
+1. Se a pergunta é sobre funcionalidade específica → use `fetch_docs` para buscar na documentação oficial
+2. Se a resposta já está no seu conhecimento base → responda e **opcionalmente** use `fetch_docs` para validar
+3. Se não tiver certeza → **sempre** use `fetch_docs` primeiro
+
 ## Como usar:
 
 ```bash

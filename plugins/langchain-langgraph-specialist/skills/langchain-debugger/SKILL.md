@@ -10,13 +10,37 @@ Skill para debugar chains LangChain e grafos LangGraph identificando e resolvend
 
 ## Instructions
 
-1. **Identificar tipo de erro**:
-   - LCEL composition errors (pipe operator, type mismatch)
-   - LangGraph state errors (corruption, reducer issues)
-   - Integration errors (LLM providers, API keys)
-   - Runtime errors (timeouts, rate limits)
+### STEP 0: Consultar Documentação via MCP (PRIORITÁRIO)
 
-2. **Analisar contexto**:
+**SEMPRE use MCP para verificar se erro já foi resolvido em docs oficiais**:
+
+- Use `fetch_docs` para buscar sobre o tipo de erro específico
+- Busque por troubleshooting guides relacionados
+- Verifique se há breaking changes ou deprecations relacionadas
+- Consulte migration guides se erro envolve versões diferentes
+
+**Exemplo**:
+```
+User: "Erro: TypeError with pipe operator"
+→ PRIMEIRO: Use fetch_docs para buscar "pipe operator errors" ou "TypeError LCEL"
+→ Verifique se há solução oficial documentada
+→ ENTÃO: diagnostique baseado em docs + conhecimento base
+```
+
+**Prioridade MCP para**:
+- ✅ Migration errors (v0 → v1) - busque "migration guide"
+- ✅ API deprecations - busque nome da API/método deprecated
+- ✅ Erros de sintaxe específicos - busque mensagem de erro
+- ✅ Integration issues - busque nome do provider + "integration"
+
+### STEP 1: Identificar tipo de erro
+
+- LCEL composition errors (pipe operator, type mismatch)
+- LangGraph state errors (corruption, reducer issues)
+- Integration errors (LLM providers, API keys)
+- Runtime errors (timeouts, rate limits)
+
+### STEP 2: Analisar contexto
    - Ler código relevante
    - Identificar componentes envolvidos
    - Verificar versões (v0 vs v1)

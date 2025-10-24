@@ -10,12 +10,30 @@ Skill para gerenciar estado em grafos LangGraph v1 com TypedDict, Annotated redu
 
 ## Instructions
 
-1. **Analisar necessidades de estado**:
-   - Identificar dados que precisam ser compartilhados entre nodes
-   - Determinar se valores devem ser substituídos ou acumulados
-   - Verificar se há execução concorrente (precisa de reducers)
+### STEP 0: Consultar Documentação via MCP (OBRIGATÓRIO)
 
-2. **Design do State Schema**:
+**SEMPRE use MCP para validar padrões de state management**:
+
+- Use `fetch_docs` para buscar "StateGraph reducers", "Annotated state", ou "state management"
+- Busque exemplos oficiais de padrões similares ao caso de uso
+- Valide sintaxe de reducers (add, custom reducers)
+- Verifique padrões multi-agent state se aplicável
+
+**Exemplo**:
+```
+User: "Criar state para multi-agent system"
+→ ANTES: Use fetch_docs para buscar "multi-agent state" ou "shared scratchpad"
+→ Analise padrões oficiais (shared vs private scratchpads)
+→ ENTÃO implemente state schema baseado em docs oficiais
+```
+
+### STEP 1: Analisar necessidades de estado
+
+- Identificar dados que precisam ser compartilhados entre nodes
+- Determinar se valores devem ser substituídos ou acumulados
+- Verificar se há execução concorrente (precisa de reducers)
+
+### STEP 2: Design do State Schema
    - Use `TypedDict` para estrutura de estado
    - Use `Annotated[type, reducer]` para campos que acumulam
    - Campos sem Annotated: override (último valor prevalece)

@@ -6,6 +6,26 @@ description: Ajuda rápida e referência sobre LangGraph v1 - grafos, state mana
 
 Forneço ajuda rápida e referência sobre LangGraph v1, incluindo construção de grafos, state management, agentes e padrões de multi-agent workflows.
 
+## 🔧 Ferramentas MCP Disponíveis
+
+**IMPORTANTE**: Este plugin fornece acesso à documentação oficial via MCP server `langchain-docs`.
+
+**Use as seguintes ferramentas MCP quando disponíveis**:
+
+1. **`list_doc_sources`** - Liste as fontes de documentação disponíveis (LangChain, LangGraph)
+2. **`fetch_docs`** - Busque conteúdo específico da documentação oficial do LangGraph
+
+**Quando usar MCP**:
+- ✅ Sempre que o usuário perguntar sobre state management, graph construction, ou padrões específicos
+- ✅ Para verificar sintaxe correta de StateGraph, nodes, edges
+- ✅ Quando precisar de exemplos atualizados de multi-agent patterns
+- ✅ Para validar implementações de checkpointing e persistence
+
+**Workflow recomendado**:
+1. Pergunta sobre funcionalidade específica → use `fetch_docs` para buscar na documentação LangGraph
+2. Dúvida sobre padrões (ReAct, multi-agent) → busque exemplos oficiais via MCP
+3. Implementação de state management → valide com docs oficiais
+
 ## Como usar:
 
 ```bash
