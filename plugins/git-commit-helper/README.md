@@ -11,6 +11,7 @@ Plugin para Claude Code que automatiza o processo completo de commit Git seguind
 - ✅ **Conventional Commits** - Gera mensagens seguindo padrões
 - ✅ **Push Seguro** - Gerencia conflitos e push opcional
 - ✅ **Multi-linguagem** - Suporta Node.js, Python, Go, Rust, Java, PHP, Ruby, Terraform
+- ✅ **Suporte UV Python** - Detecção automática e uso de uv (universal virtualenv) em projetos Python
 
 ## 📦 Instalação
 
@@ -102,6 +103,14 @@ flake8 .
 mypy .
 ```
 
+**Com UV (detecção automática)**:
+```bash
+uv run pytest --cov
+uv run black . --check
+uv run flake8 .
+uv run mypy .
+```
+
 ### Go
 ```bash
 go test
@@ -134,6 +143,44 @@ docker build -t test .
 python ci.py
 make test
 ```
+
+## 🐍 Suporte para UV (Universal Virtualenv)
+
+O plugin detecta automaticamente projetos Python que usam **uv** (gerenciador de pacotes extremamente rápido da Astral) e executa comandos usando `uv run`:
+
+### Detecção Automática
+
+O plugin detecta uv quando encontra:
+- Arquivo `pyproject.toml` com seção `[tool.uv]`
+- Arquivo `uv.lock` na raiz do projeto
+- Diretório `.venv` criado por uv
+
+### Benefícios
+
+- 🚀 **80x mais rápido** que python -m venv
+- 🔒 **Lockfile cross-platform** para dependências consistentes
+- 🔄 **Sincronização automática** de dependências antes de executar
+- ✅ **Sem ativação manual** de virtualenv necessária
+- 🎯 **Resolução determinística** de dependências
+
+### Exemplo de Uso
+
+**Projeto com uv**:
+```bash
+$ /commit
+
+🧪 Executando testes...
+→ uv run pytest --cov  # Executado automaticamente
+✅ Testes: 45 passed (cobertura: 87%)
+
+→ uv run black . --check  # Linting com uv
+✅ Linting: passed
+
+→ uv run mypy .  # Type checking com uv
+✅ Type checking: passed
+```
+
+**Documentação completa**: Veja `skills/uv-python-runner.md` para detalhes.
 
 ## 🛡️ Segurança
 
