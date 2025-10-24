@@ -15,24 +15,39 @@ Este plugin fornece assistência abrangente para desenvolvimento com LangChain e
 
 ## Instalação
 
-### 1. Instalar Plugin
+### 1. Pré-requisito: Instalar uv/uvx
+
+O plugin requer `uvx` para executar o MCP server de documentação:
+
+```bash
+# Instalar uv (inclui uvx)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### 2. Instalar Plugin
 
 ```bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install langchain-langgraph-specialist
 ```
 
-### 2. Instalar MCP Server (Recomendado)
+### 3. MCP Server (Automático) ✨
 
-Para acesso à documentação oficial em tempo real:
+**O MCP Server é instalado automaticamente quando você habilita o plugin!**
+
+O arquivo `.mcp.json` configura automaticamente o servidor `langchain-docs` que usa [mcpdoc](https://github.com/langchain-ai/mcpdoc) para acessar:
+
+- 📚 **LangChain Python**: <https://python.langchain.com/llms.txt>
+- 🔄 **LangGraph**: <https://langchain-ai.github.io/langgraph/llms.txt>
+
+Verifique se está ativo:
 
 ```bash
-claude mcp add --transport http docs-langchain https://docs.langchain.com/mcp
+claude mcp list
+# Deve mostrar: langchain-docs
 ```
 
-O MCP Server permite que Claude acesse a documentação mais atualizada do LangChain/LangGraph automaticamente. **Altamente recomendado** para garantir informações precisas.
-
-📖 **Mais detalhes**: Veja `mcp/README.md` no plugin para troubleshooting e configuração avançada.
+📖 **Troubleshooting**: Veja `mcp/README.md` no plugin para solução de problemas.
 
 ## Funcionalidades
 

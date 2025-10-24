@@ -1,6 +1,6 @@
 {
   "name": "langchain-langgraph-specialist",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Especialista em LangChain v1 e LangGraph v1 com acesso à documentação oficial via MCP - assistência completa para desenvolvimento, debugging e implementação de chains, agentes e grafos",
   "author": {
     "name": "Carlos Araujo",
