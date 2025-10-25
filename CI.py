@@ -284,7 +284,31 @@ class JSONValidator:
         if "plugins" not in marketplace:
             return True
 
-        # Verificar se versões batem
+        # Coletar plugins registrados no marketplace
+        marketplace_plugins = {}
+        for plugin_entry in marketplace["plugins"]:
+            plugin_name = plugin_entry.get("name")
+            if plugin_name:
+                marketplace_plugins[plugin_name] = plugin_entry
+
+        # Coletar plugins existentes no diretório
+        plugins_dir = self.root / "plugins"
+        filesystem_plugins = set()
+        if plugins_dir.exists():
+            for plugin_dir in plugins_dir.iterdir():
+                if plugin_dir.is_dir() and not plugin_dir.name.startswith('.'):
+                    filesystem_plugins.add(plugin_dir.name)
+
+        # Validação bidirecional: verificar plugins no diretório que não estão no marketplace
+        unregistered = filesystem_plugins - set(marketplace_plugins.keys())
+        if unregistered:
+            for plugin_name in sorted(unregistered):
+                self.log_warning(
+                    f"{plugin_name}: plugin existe em plugins/ mas NÃO está "
+                    f"registrado no marketplace.json"
+                )
+
+        # Verificar se versões batem e se paths existem
         for plugin_entry in marketplace["plugins"]:
             plugin_name = plugin_entry.get("name")
             marketplace_version = plugin_entry.get("version")
@@ -293,8 +317,16 @@ class JSONValidator:
             if not plugin_name or not marketplace_version:
                 continue
 
-            # Encontrar plugin.json
+            # Verificar se path existe
             plugin_path = self.root / source.lstrip("./")
+            if not plugin_path.exists():
+                self.log_error(
+                    f"{plugin_name}: registrado no marketplace.json mas "
+                    f"diretório '{source}' NÃO EXISTE"
+                )
+                continue
+
+            # Encontrar plugin.json
             possible_paths = [
                 plugin_path / ".claude-plugin" / "plugin.json",
                 plugin_path / "plugin.json"
@@ -328,6 +360,13 @@ class JSONValidator:
 
             except Exception as e:
                 self.log_warning(f"{plugin_name}: erro ao ler plugin.json: {e}")
+
+        # Resumo da validação bidirecional
+        if unregistered:
+            self.log_info(
+                f"\n💡 Dica: {len(unregistered)} plugin(s) não registrado(s). "
+                f"Execute: /update-plugin para registrá-los automaticamente"
+            )
 
         return len(self.errors) == 0
 
