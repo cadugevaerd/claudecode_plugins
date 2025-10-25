@@ -67,6 +67,44 @@ Mostra padrões comuns de código para:
 
 ## 📋 Comandos Disponíveis
 
+### `/setup-project-eval`
+
+**Configura CLAUDE.md do projeto** com padrões de LLM evaluation.
+
+**O que faz**:
+- ✅ Cria ou atualiza `CLAUDE.md` na raiz do projeto
+- ✅ Adiciona padrões de evaluators (LLM-as-judge, similarity, rule-based)
+- ✅ Configura frameworks detectados (OpenEvals, LangSmith, custom)
+- ✅ Documenta estrutura de evaluation suites
+- ✅ Orienta sobre dataset management (golden datasets, synthetic)
+- ✅ Preserva conteúdo existente (não sobrescreve)
+- ✅ Detecta stack de evaluation automaticamente
+
+**Uso**:
+```bash
+# Setup básico (detecta stack automaticamente)
+/setup-project-eval
+
+# Ou com descrição do tipo de evaluation
+/setup-project-eval "RAG system evaluation com LangSmith + OpenAI"
+```
+
+**Resultado**:
+Claude ficará automaticamente orientado a:
+- Desenvolver evaluators customizados
+- Estruturar evaluation suites adequadamente
+- Implementar métricas corretas (LLM-as-judge, similarity, rule-based)
+- Gerenciar datasets de evaluation (golden datasets, synthetic)
+- Testar evaluators com pytest
+- Configurar CI/CD para regression testing
+
+**Quando usar**:
+- ✅ No início de projetos de evaluation de LLMs
+- ✅ Ao adicionar este plugin em projetos existentes
+- ✅ Quando quiser padronizar evaluations no time
+
+---
+
 ### `/create-evaluator`
 
 Gera código de evaluator customizado.

@@ -1,6 +1,6 @@
 {
   "name": "llm-eval-developer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation",
   "author": {
     "name": "Carlos Araujo",

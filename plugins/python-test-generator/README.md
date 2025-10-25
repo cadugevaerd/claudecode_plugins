@@ -39,6 +39,43 @@ git pull origin main
 
 ## 📖 Uso
 
+### `/setup-project-tests`
+
+**Configura CLAUDE.md do projeto** com padrões de testes Python.
+
+**O que faz**:
+- ✅ Cria ou atualiza `CLAUDE.md` na raiz do projeto
+- ✅ Adiciona padrões de testes Python (AAA pattern, mocks, fixtures)
+- ✅ Configura frameworks detectados (pytest, unittest, nose)
+- ✅ Documenta padrões de mock (LangChain, FastAPI, Django, AWS)
+- ✅ Orienta sobre fixtures reutilizáveis (conftest.py)
+- ✅ Preserva conteúdo existente (não sobrescreve)
+- ✅ Detecta stack Python automaticamente
+
+**Uso**:
+```bash
+# Setup básico (detecta stack automaticamente)
+/setup-project-tests
+
+# Ou com descrição da stack
+/setup-project-tests "API FastAPI com LangChain + PostgreSQL"
+```
+
+**Resultado**:
+Claude ficará automaticamente orientado a:
+- Gerar testes Python seguindo padrões do projeto
+- Reutilizar fixtures existentes (conftest.py)
+- Criar mocks adequados (LangChain chains, FastAPI, AWS boto3)
+- Aplicar AAA pattern consistentemente
+- Garantir testes paralelos seguros (pytest-xdist)
+
+**Quando usar**:
+- ✅ No início de novos projetos Python
+- ✅ Ao adicionar este plugin em projetos existentes
+- ✅ Quando quiser padronizar testes no time
+
+---
+
 ### Comando Principal: `/py-test`
 
 Analisa cobertura e **cria testes Python em paralelo** automaticamente:

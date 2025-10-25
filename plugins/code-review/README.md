@@ -21,7 +21,43 @@ Plugin genérico de análise estática de código que identifica bugs, vulnerabi
 
 ## Comandos Disponíveis
 
-### /review
+### `/setup-project-review`
+
+**Configura CLAUDE.md do projeto** com padrões de code review e débito técnico.
+
+**O que faz**:
+- ✅ Cria ou atualiza `CLAUDE.md` na raiz do projeto
+- ✅ Adiciona checklist completo de code review
+- ✅ Configura padrões de segurança, qualidade e testes
+- ✅ Orienta Claude sobre débito técnico
+- ✅ Preserva conteúdo existente (não sobrescreve)
+- ✅ Detecta stack automaticamente (Python/JS/Java/Go/etc.)
+
+**Uso**:
+```bash
+# Setup básico (detecta stack automaticamente)
+/setup-project-review
+
+# Ou com descrição da stack
+/setup-project-review "API REST Python com FastAPI + PostgreSQL + Redis"
+```
+
+**Resultado**:
+Claude ficará automaticamente orientado a:
+- Executar code reviews com padrões do projeto
+- Identificar vulnerabilidades de segurança específicas da stack
+- Aplicar checklist customizado de qualidade
+- Gerenciar débito técnico em docs/TECHNICAL_DEBT.md
+- Priorizar problemas (🔴 Críticos / 🟡 Importantes / 🟢 Sugestões)
+
+**Quando usar**:
+- ✅ No início de novos projetos
+- ✅ Ao adicionar este plugin em projetos existentes
+- ✅ Quando quiser padronizar code review no time
+
+---
+
+### `/review`
 
 Executa análise completa e automática do código modificado.
 

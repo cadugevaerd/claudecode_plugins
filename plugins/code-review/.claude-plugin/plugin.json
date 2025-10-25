@@ -1,6 +1,6 @@
 {
   "name": "code-review",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Revisa o código em busca de bugs, vulnerabilidades de segurança e melhorias, com gerenciamento de débito técnico integrado",
   "author": {
     "name": "Carlos Araujo",
@@ -19,5 +19,34 @@
     "metrics"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins",
+  "changelog": {
+    "1.2.0": {
+      "date": "2025-10-25",
+      "changes": [
+        "Adiciona comando /setup-project-review para configurar CLAUDE.md",
+        "Configura padrões de code review automaticamente no projeto",
+        "Adiciona checklist completo de segurança, qualidade e testes",
+        "Documenta workflow de review antes de commits",
+        "Detecta stack automaticamente (Python/JS/Java/Go/etc.)"
+      ]
+    },
+    "1.1.0": {
+      "date": "2025-10-21",
+      "changes": [
+        "Adiciona agente debt-manager para gerenciar débito técnico",
+        "Adiciona comando /tech-debt (add, list, update, resolve, stats)",
+        "Integra code-reviewer com debt-manager",
+        "Gerenciamento de débito técnico em docs/TECHNICAL_DEBT.md"
+      ]
+    },
+    "1.0.0": {
+      "date": "2025-10-21",
+      "changes": [
+        "Lançamento inicial do plugin",
+        "Análise de segurança, qualidade e testes",
+        "Suporte a múltiplas linguagens"
+      ]
+    }
+  }
 }

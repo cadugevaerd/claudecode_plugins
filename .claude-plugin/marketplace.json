@@ -34,7 +34,7 @@
       "name": "code-review",
       "description": "Análise estática de código com gerenciamento integrado de débito técnico, identificando bugs, vulnerabilidades e melhorias em qualquer linguagem",
       "source": "./plugins/code-review",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "Carlos Araujo"
       },
@@ -56,12 +56,23 @@
       "name": "llm-eval-developer",
       "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation",
       "source": "./plugins/llm-eval-developer",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
       "tags": ["evaluation", "llm", "development", "openevals", "langsmith", "metrics", "testing", "scaffolding", "code-generation"]
+    },
+    {
+      "name": "incremental-dev",
+      "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade",
+      "source": "./plugins/incremental-dev",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "development",
+      "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering"]
     }
   ]
 }
