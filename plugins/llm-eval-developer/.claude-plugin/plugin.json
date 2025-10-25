@@ -1,0 +1,22 @@
+{
+  "name": "llm-eval-developer",
+  "version": "1.0.0",
+  "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": [
+    "evaluation",
+    "llm",
+    "development",
+    "openevals",
+    "langsmith",
+    "metrics",
+    "testing",
+    "scaffolding",
+    "code-generation"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
