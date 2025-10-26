@@ -73,6 +73,17 @@
       },
       "category": "development",
       "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering", "prd", "requirements", "documentation", "product-management", "notebooks", "spikes", "legacy", "retrofit", "adoption", "code-analysis"]
+    },
+    {
+      "name": "github-actions-cicd",
+      "description": "Plugin especializado em CI/CD usando GitHub Actions com implementação incremental seguindo princípio YAGNI - cria, mantém e evolui workflows com segurança e boas práticas",
+      "source": "./plugins/github-actions-cicd",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "automation",
+      "tags": ["cicd", "github-actions", "automation", "devops", "incremental", "workflows", "yagni", "security", "testing", "deployment", "best-practices"]
     }
   ]
 }

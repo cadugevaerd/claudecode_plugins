@@ -1,0 +1,12 @@
+{
+  "name": "github-actions-cicd",
+  "version": "1.0.0",
+  "description": "Plugin especializado em CI/CD usando GitHub Actions com implementação incremental, seguindo princípio YAGNI",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": ["cicd", "github-actions", "automation", "devops", "incremental", "workflows", "yagni"],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
