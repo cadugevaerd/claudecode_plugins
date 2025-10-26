@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "1.4.0",
-  "description": "Gerador automático de testes unitários Python com configuração automática de pytest, análise de cobertura e criação paralela",
+  "version": "1.4.1",
+  "description": "Gerador automático de testes unitários Python com configuração automática de pytest, sugestão inteligente de atualização de testes e análise de cobertura",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"

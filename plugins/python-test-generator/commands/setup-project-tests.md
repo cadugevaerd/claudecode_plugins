@@ -16,6 +16,7 @@ Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
 - Siga estrutura de diretórios de testes do projeto
 - Aplique AAA pattern (Arrange-Act-Assert)
 - Garanta testes paralelos seguros (pytest-xdist)
+- **IMPORTANTE**: Sugira atualização de testes após modificações em código Python (≥80% coverage)
 
 ## 📋 Como usar
 
@@ -509,6 +510,140 @@ Este projeto usa o plugin `python-test-generator` com os seguintes recursos:
 ---
 
 **Filosofia**: Testes Rápidos > Testes Lentos | Mocks > Chamadas Reais | AAA Pattern > Código Confuso
+
+## 🔄 Acionamento Automático de Testes (IMPORTANTE)
+
+**REGRA CRÍTICA**: Após QUALQUER modificação em código Python (features, refactoring, bug fixes), Claude DEVE sugerir atualização de testes.
+
+### Quando Sugerir Atualização de Testes
+
+Claude deve detectar automaticamente quando código Python foi modificado e sugerir:
+
+```
+═══════════════════════════════════════════
+🧪 ATUALIZAÇÃO DE TESTES RECOMENDADA
+═══════════════════════════════════════════
+
+Detectei modificações em código Python:
+- [arquivo1.py] - Nova funcionalidade adicionada
+- [arquivo2.py] - Refatoração de lógica existente
+
+📊 Meta de Cobertura: ≥80%
+
+Deseja atualizar os testes agora? (s/n)
+
+Opções:
+s - Executar /py-test para gerar/atualizar testes
+n - Pular atualização de testes (não recomendado)
+
+Recomendação: ✅ Atualizar testes para garantir cobertura
+═══════════════════════════════════════════
+```
+
+### Gatilhos para Sugerir Testes
+
+Claude deve sugerir atualização de testes quando detectar:
+
+1. **Nova Funcionalidade**:
+   - Novas funções/classes criadas
+   - Novos métodos adicionados
+   - Novos módulos criados
+
+2. **Modificação de Funcionalidade Existente**:
+   - Lógica alterada em funções/métodos
+   - Assinaturas modificadas (parâmetros, retornos)
+   - Comportamento alterado
+
+3. **Refatoração**:
+   - Código movido entre arquivos
+   - Classes/funções renomeadas
+   - Estrutura reorganizada
+
+4. **Correção de Bugs**:
+   - Bugs corrigidos (precisa teste de regressão)
+   - Edge cases identificados
+
+### Como Sugerir (NÃO Executar Automaticamente)
+
+**IMPORTANTE**: Claude NUNCA deve executar `/py-test` automaticamente. SEMPRE perguntar primeiro.
+
+**Fluxo correto**:
+
+```
+1. Detectar modificação em código Python
+2. Informar usuário sobre mudanças detectadas
+3. Mostrar meta de cobertura (≥80%)
+4. Perguntar: "Deseja atualizar os testes agora? (s/n)"
+5. SE usuário responder "s" → Executar /py-test
+6. SE usuário responder "n" → Registrar e continuar
+```
+
+**Exemplo prático**:
+
+```markdown
+Você (Claude): Implementei a nova função `calculate_discount()` em src/services/pricing.py
+
+🧪 ATUALIZAÇÃO DE TESTES RECOMENDADA
+
+Detectei nova funcionalidade:
+- src/services/pricing.py → calculate_discount()
+
+Esta função precisa de testes para:
+- Validar cálculo de desconto válido
+- Testar percentuais limites (0%, 100%)
+- Testar valores negativos (erro esperado)
+- Garantir ≥80% cobertura
+
+Deseja gerar testes agora? (s/n)
+```
+
+### Quando NÃO Sugerir Testes
+
+Não sugerir testes para:
+- Mudanças em documentação (README, docstrings)
+- Mudanças em configuração (requirements.txt, .gitignore)
+- Mudanças em arquivos não-Python
+- Mudanças apenas em comentários
+
+### Mensagem de Sugestão (Template)
+
+```markdown
+═══════════════════════════════════════════
+🧪 ATUALIZAÇÃO DE TESTES RECOMENDADA
+═══════════════════════════════════════════
+
+Detectei modificações em:
+{{LISTA_DE_ARQUIVOS_MODIFICADOS}}
+
+Tipo de mudança: {{TIPO}} (nova feature/refactoring/bugfix)
+
+📊 Meta de Cobertura: ≥80%
+🎯 Plugin: python-test-generator (/py-test)
+
+Deseja atualizar os testes agora? (s/n)
+
+- s: Executar /py-test automaticamente
+- n: Pular (você pode executar manualmente depois)
+
+💡 Recomendação: Atualizar testes garante que suas mudanças
+   estão cobertas e previne regressões futuras.
+═══════════════════════════════════════════
+
+Sua escolha:
+```
+
+### Benefícios desta Abordagem
+
+✅ **Garante Cobertura**: Lembra usuário de criar testes
+✅ **Não é Invasivo**: Pergunta antes de executar
+✅ **Educativo**: Explica por que testes são importantes
+✅ **Flexível**: Usuário decide quando executar
+✅ **Previne Regressões**: Testes atualizados com código
+
+### Configuração no CLAUDE.md
+
+Esta seção será adicionada automaticamente ao CLAUDE.md do projeto pelo comando `/setup-project-tests`.
+
 ```
 
 ### 3. Adicionar Contexto do Projeto (Se Fornecido)

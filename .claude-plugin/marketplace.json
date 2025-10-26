@@ -21,9 +21,9 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Gerador automático de testes unitários Python com configuração automática de pytest (pyproject.toml/pytest.ini), criação paralela, skills LangChain/LangGraph e trajectory validation",
+      "description": "Gerador automático de testes unitários Python com configuração automática de pytest, sugestão inteligente de atualização de testes após modificações em código e criação paralela",
       "source": "./plugins/python-test-generator",
-      "version": "1.4.0",
+      "version": "1.4.1",
       "author": {
         "name": "Carlos Araujo"
       },

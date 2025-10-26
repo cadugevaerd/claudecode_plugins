@@ -5,6 +5,20 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.4.1] - 2025-10-26
+
+### Adicionado
+- Seção "Acionamento Automático de Testes" no comando `/setup-project-tests`
+- Claude agora sugere automaticamente atualização de testes após modificações em código Python
+- Template de mensagem para sugerir testes (com meta de ≥80% coverage)
+- Gatilhos automáticos para detectar: novas funcionalidades, refatorações, bug fixes
+- Documentação clara: Claude PERGUNTA antes de executar, nunca executa automaticamente
+
+### Modificado
+- Comando `/setup-project-tests` adiciona instruções de acionamento automático ao CLAUDE.md
+- Descrição do plugin menciona "sugestão inteligente de atualização de testes"
+- Objetivo do comando expandido para incluir sugestão automática de testes
+
 ## [1.4.0] - 2025-10-26
 
 ### Adicionado
