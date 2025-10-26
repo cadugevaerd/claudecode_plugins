@@ -21,14 +21,14 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Gerador automático de testes unitários Python com criação paralela, skills especializadas para LangChain/LangGraph, trajectory validation com agentevals e VCR recording",
+      "description": "Gerador automático de testes unitários Python com configuração automática de pytest (pyproject.toml/pytest.ini), criação paralela, skills LangChain/LangGraph e trajectory validation",
       "source": "./plugins/python-test-generator",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "testing",
-      "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "automation", "generator", "parallel", "quality", "mock", "langchain", "langgraph", "agentevals", "trajectory", "llm-testing", "vcr", "skills"]
+      "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "pytest-config", "pyproject-toml", "automation", "generator", "parallel", "quality", "mock", "langchain", "langgraph", "agentevals", "trajectory", "llm-testing", "vcr", "skills"]
     },
     {
       "name": "code-review",

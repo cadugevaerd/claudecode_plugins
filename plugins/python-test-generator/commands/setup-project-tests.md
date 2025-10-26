@@ -408,12 +408,84 @@ addopts =
     -v
 ```
 
+## ⚙️ Configuração Pytest
+
+**RECOMENDAÇÃO**: Após configurar CLAUDE.md, execute `/setup-pytest-config` para configurar pytest automaticamente.
+
+```bash
+# Configurar pytest (pyproject.toml ou pytest.ini)
+/setup-pytest-config
+```
+
+Este comando:
+- ✅ Cria/atualiza `[tool.pytest.ini_options]` em pyproject.toml (preferencial)
+- ✅ Cria `pytest.ini` se pyproject.toml não existir
+- ✅ Configura coverage, parallel, markers automaticamente
+- ✅ Detecta stack Python e customiza configuração
+
+**Exemplo de configuração gerada**:
+
+```toml
+# pyproject.toml (PREFERENCIAL)
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+addopts = [
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=80",
+    "-v",
+    "-n auto",  # Parallel com pytest-xdist
+]
+
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow tests",
+]
+
+asyncio_mode = "auto"  # Se async detectado
+```
+
+```ini
+# pytest.ini (FALLBACK - só se pyproject.toml não existir)
+[pytest]
+testpaths = tests
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+
+addopts =
+    --cov=src
+    --cov-report=term-missing
+    --cov-fail-under=80
+    -v
+    -n auto
+
+markers =
+    unit: Unit tests
+    integration: Integration tests
+
+asyncio_mode = auto
+```
+
+**Ordem de Prioridade**:
+1. ✅ **pyproject.toml** (recomendado - padrão moderno Python PEP 518)
+2. pytest.ini (fallback - só se pyproject.toml não existir)
+3. setup.cfg (legado)
+
 ## 🎯 Plugin Python Test Generator
 
 Este projeto usa o plugin `python-test-generator` com os seguintes recursos:
 
-**Comando**:
+**Comandos**:
 - `/py-test` - Gera testes Python automaticamente em paralelo
+- `/setup-pytest-config` - Configura pytest (pyproject.toml ou pytest.ini)
+- `/setup-project-tests` - Configura CLAUDE.md com padrões de testes
 
 **Agente**:
 - `test-assistant` - Especialista em testes Python com mocks avançados

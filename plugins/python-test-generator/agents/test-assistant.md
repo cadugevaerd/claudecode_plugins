@@ -114,6 +114,39 @@ conftest.py presente  # → pytest
 test_*.py ou *_test.py  # → pytest ou unittest
 ```
 
+**⚠️ IMPORTANTE - Configuração Pytest**:
+
+Se **NÃO** houver configuração pytest (pyproject.toml ou pytest.ini):
+```
+⚠️  Configuração pytest não encontrada
+
+📝 Recomendação: Executar /setup-pytest-config
+
+Este comando cria automaticamente:
+- [tool.pytest.ini_options] em pyproject.toml (preferencial)
+- pytest.ini (fallback)
+
+Configurações incluídas:
+✓ Coverage habilitado
+✓ Testes paralelos (pytest-xdist)
+✓ Markers customizados
+✓ Async support (se detectado)
+
+Executar /setup-pytest-config agora? (s/n)
+```
+
+Se usuário confirmar, invocar `/setup-pytest-config` automaticamente.
+
+**Respeitar configuração existente**:
+
+Se configuração pytest existe, SEMPRE respeitar:
+- `testpaths` → usar para localizar/criar testes
+- `python_files` → seguir pattern ao nomear arquivos
+- `python_classes` → seguir pattern ao nomear classes
+- `python_functions` → seguir pattern ao nomear funções
+- `markers` → usar markers existentes nos testes criados
+- `addopts` → considerar coverage e parallel config
+
 **1.2 Identificar Gerenciador de Pacotes**
 
 ```bash
