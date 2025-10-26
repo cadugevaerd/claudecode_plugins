@@ -777,6 +777,274 @@ Continue ciclo de adicionar → testar → próximo.
 → Identifica complexidade desnecessária
 → Simplifica código
 
+---
+
+## 📄 Gerenciamento de PRD (Product Requirements Document)
+
+Este plugin inclui gerenciamento completo de PRD - um **documento vivo** que evolui junto com o projeto.
+
+### 🎯 O Que é PRD?
+
+**PRD (Product Requirements Document)** é a documentação central do projeto que registra:
+- Problema que o projeto resolve
+- Objetivos e KPIs
+- MVP e roadmap de incrementos
+- Decisões arquiteturais (ADRs)
+- Aprendizados de cada incremento
+- Timeline de evolução
+
+### 🔄 Fases do PRD
+
+O PRD evolui em fases conforme projeto avança:
+
+```mermaid
+graph TB
+    Start([🚀 Início do Projeto]) --> Descoberta
+
+    subgraph Descoberta[📊 FASE 1: DESCOBERTA]
+        D1[Entender o Problema]
+        D2[Pesquisar Soluções]
+        D3[Definir Objetivos/KPIs]
+        D1 --> D2 --> D3
+    end
+
+    Descoberta --> PRD_V1[📄 PRD v0.1<br/>Visão Inicial]
+
+    PRD_V1 --> Planejamento
+
+    subgraph Planejamento[📋 FASE 2: PLANEJAMENTO]
+        P1[Criar Product Vision]
+        P2[Quebrar em Épicos]
+        P3[Definir MVP/Incrementos]
+        P4[Escrever User Stories]
+        P1 --> P2 --> P3 --> P4
+    end
+
+    Planejamento --> PRD_V2[📄 PRD v1.0<br/>Completo + Roadmap]
+
+    PRD_V2 --> Design
+
+    subgraph Design[🎨 FASE 3: DESIGN]
+        DS1[Arquitetura Alto Nível]
+        DS2[Stack Tecnológica]
+        DS3[Modelagem de Dados]
+        DS4[Definir APIs/Contratos]
+        DS1 --> DS2 --> DS3 --> DS4
+    end
+
+    Design --> PRD_V3[📄 PRD v1.1<br/>+ Decisões Técnicas]
+
+    PRD_V3 --> Dev
+
+    subgraph Dev[💻 FASE 4: DESENVOLVIMENTO]
+        DV1[Setup Ambiente]
+        DV2[Implementar Features]
+        DV3[Code Review]
+        DV4[Documentar]
+        DV1 --> DV2 --> DV3 --> DV4
+    end
+
+    Dev --> Validacao
+
+    subgraph Validacao[✅ FASE 5: VALIDAÇÃO]
+        V1[Testes Integração]
+        V2[Testes Performance]
+        V3[Validar Acceptance Criteria]
+        V4[Demo Pessoal]
+        V1 --> V2 --> V3 --> V4
+    end
+
+    Validacao --> Deploy
+
+    subgraph Deploy[🚀 FASE 6: DEPLOY]
+        DP1[Preparar Ambiente]
+        DP2[CI/CD Pipeline]
+        DP3[Deploy Produção]
+        DP4[Monitoramento]
+        DP1 --> DP2 --> DP3 --> DP4
+    end
+
+    Deploy --> Retrospectiva{Incremento<br/>Completo?}
+
+    Retrospectiva -->|Aprendizados| PRD_UPDATE[📄 Atualizar PRD<br/>Lições Aprendidas]
+
+    PRD_UPDATE --> ProximoIncremento[📦 Próximo Incremento]
+
+    Retrospectiva -->|Bug/Ajuste| Dev
+
+    ProximoIncremento --> Planejamento
+
+    ProximoIncremento -->|Projeto Finalizado| PRD_FINAL[📄 PRD Final<br/>As-Built]
+
+    PRD_FINAL --> End([✨ Fim])
+
+    style Start fill:#4CAF50,color:#fff
+    style End fill:#2196F3,color:#fff
+    style PRD_V1 fill:#FF6B6B,color:#fff,stroke:#C92A2A,stroke-width:3px
+    style PRD_V2 fill:#FF6B6B,color:#fff,stroke:#C92A2A,stroke-width:3px
+    style PRD_V3 fill:#FF6B6B,color:#fff,stroke:#C92A2A,stroke-width:3px
+    style PRD_UPDATE fill:#FF6B6B,color:#fff,stroke:#C92A2A,stroke-width:3px
+    style PRD_FINAL fill:#FF6B6B,color:#fff,stroke:#C92A2A,stroke-width:3px
+    style Descoberta fill:#FFE082
+    style Planejamento fill:#BCAAA4
+    style Design fill:#CE93D8
+    style Dev fill:#90CAF9
+    style Validacao fill:#A5D6A7
+    style Deploy fill:#EF9A9A
+```
+
+### 📦 Comandos de PRD
+
+#### `/setup-project-incremental`
+Cria PRD v0.1 inicial junto com CLAUDE.md
+
+```bash
+/setup-project-incremental "Sistema de processamento de documentos"
+```
+
+**Cria**:
+- `CLAUDE.md` - Instruções de desenvolvimento incremental
+- `docs/PRD.md v0.1` - Problema, objetivos, KPIs
+
+---
+
+#### `/prd-update [fase]`
+Atualiza PRD conforme fase do projeto
+
+```bash
+# Após definir MVP
+/prd-update planejamento
+
+# Após definir arquitetura
+/prd-update design
+
+# Após completar incremento
+/prd-update incremento
+
+# Ao finalizar projeto
+/prd-update final
+```
+
+**Fases**:
+- `descoberta` → PRD v0.1 (Problema + Objetivos)
+- `planejamento` → PRD v1.0 (+ MVP + Roadmap)
+- `design` → PRD v1.1 (+ Arquitetura + Stack)
+- `incremento` → PRD v1.x (+ Funcionalidades + Aprendizados)
+- `final` → PRD v2.0 (Documento as-built)
+
+---
+
+#### `/prd-view`
+Visualiza resumo do PRD atual
+
+```bash
+/prd-view
+```
+
+**Exibe**:
+- Versão e status atual
+- Fase do projeto
+- Incrementos implementados
+- ADRs (Decisões arquiteturais)
+- Próximos passos recomendados
+- Timeline de evolução
+
+**Visualizações específicas**:
+```bash
+/prd-view incrementos  # Apenas incrementos
+/prd-view adrs         # Apenas ADRs
+/prd-view timeline     # Timeline de evolução
+```
+
+---
+
+### 🏗️  ADRs (Architectural Decision Records)
+
+PRD registra automaticamente decisões arquiteturais importantes.
+
+**Quando criar ADR**:
+- Escolha de framework/biblioteca
+- Padrão de design extraído em refatoração
+- Decisão de estrutura de dados
+- Mudança significativa de arquitetura
+
+**Exemplo de ADR**:
+```markdown
+#### ADR-001: Usar FastAPI FileUpload
+- **Data**: 2025-01-15
+- **Status**: Aceito
+- **Contexto**: Precisávamos upload eficiente de PDFs
+- **Decisão**: FastAPI FileUpload ao invés de base64
+- **Consequências**:
+  - ✅ Melhor performance
+  - ❌ Requer multipart/form-data
+```
+
+**Comandos que sugerem ADRs**:
+- `/refactor-now` - Após refatoração importante
+- `/prd-update incremento` - Se decisão técnica foi tomada
+
+---
+
+### 📈 Versionamento do PRD
+
+| Fase | Versão | Gatilho |
+|------|--------|---------|
+| Descoberta | 0.1 | `/setup-project-incremental` |
+| Planejamento | 1.0 | `/prd-update planejamento` |
+| Design | 1.1 | `/prd-update design` |
+| Incremento 1 | 1.2 | `/prd-update incremento` |
+| Incremento 2 | 1.3 | `/prd-update incremento` |
+| Incremento N | 1.N | `/prd-update incremento` |
+| Final | 2.0 | `/prd-update final` |
+
+---
+
+### 💡 Benefícios do PRD
+
+✅ **Documentação Viva**: Evolui junto com o código
+✅ **Registro de Decisões**: Entende POR QUE escolheu determinada solução
+✅ **Lições Aprendidas**: Captura aprendizados de cada incremento
+✅ **Alinhamento**: Garante código reflete objetivos definidos
+✅ **Retrospectivas**: Facilita revisões e melhorias
+✅ **Onboarding**: Novos desenvolvedores entendem histórico
+
+---
+
+### 🎯 Workflow Completo com PRD
+
+```
+1. /setup-project-incremental
+   → Cria CLAUDE.md + PRD v0.1
+
+2. /prd-update planejamento
+   → Define MVP e roadmap (PRD v1.0)
+
+3. /prd-update design
+   → Documenta arquitetura (PRD v1.1)
+
+4. /start-incremental
+   → Consulta PRD e define MVP
+
+5. [Implementar incremento 1]
+
+6. /prd-update incremento
+   → Registra funcionalidades e aprendizados (PRD v1.2)
+
+7. [Repetir passos 5-6 para cada incremento]
+
+8. /refactor-now
+   → Registra ADRs se decisão arquitetural
+
+9. /prd-update final
+   → Finaliza PRD como as-built (PRD v2.0)
+
+10. /prd-view
+    → Visualiza evolução completa do projeto
+```
+
+---
+
 ## 📊 Métricas de Sucesso
 
 Ao usar este plugin, espere:

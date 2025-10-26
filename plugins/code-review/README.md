@@ -507,6 +507,10 @@ npm list jest
 # .eslintrc, .pylintrc, etc.
 ```
 
+## Changelog
+
+Veja [CHANGELOG.md](./CHANGELOG.md) para o histórico completo de mudanças.
+
 ## Autor
 
 Carlos Araujo - cadu.gevaerd@gmail.com

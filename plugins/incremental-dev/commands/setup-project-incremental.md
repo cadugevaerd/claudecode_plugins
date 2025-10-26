@@ -1,19 +1,27 @@
 ---
-description: Configura CLAUDE.md do projeto para usar desenvolvimento incremental e orientar Claude a seguir princípios YAGNI
+description: Configura CLAUDE.md do projeto para usar desenvolvimento incremental e orientar Claude a seguir princípios YAGNI, além de criar PRD v0.1 inicial
 ---
 
 # Setup Project for Incremental Development
 
-Este comando configura o arquivo `CLAUDE.md` do projeto atual com instruções para Claude seguir desenvolvimento incremental, YAGNI e Evolutionary Architecture.
+Este comando configura o projeto para desenvolvimento incremental:
+1. Cria/atualiza `CLAUDE.md` com instruções YAGNI
+2. Cria `docs/PRD.md v0.1` (Product Requirements Document inicial)
 
 ## 🎯 Objetivo
 
-Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
+**CLAUDE.md**: Instruções para Claude seguir desenvolvimento incremental
 - Comece sempre com MVP mínimo
 - Questione funcionalidades prematuras
 - Evite over-engineering
 - Adicione complexidade apenas quando necessário
 - Refatore quando padrões emergirem (Regra dos 3)
+
+**PRD v0.1**: Documento vivo de requisitos
+- Registrar problema que o projeto resolve
+- Definir objetivos iniciais
+- Estabelecer KPIs para medir sucesso
+- Evoluir junto com o projeto
 
 ## 📋 Como usar
 
@@ -267,7 +275,7 @@ Conteúdo a ser adicionado:
 Adicionar ao CLAUDE.md? (s/n)
 ```
 
-### 5. Criar/Atualizar Arquivo
+### 5. Criar/Atualizar CLAUDE.md
 
 Se usuário confirmar:
 - Criar ou atualizar CLAUDE.md
@@ -278,17 +286,113 @@ Se usuário confirmar:
 ✅ CLAUDE.md configurado com sucesso!
 
 Instruções de desenvolvimento incremental adicionadas.
+```
 
-Próximos passos:
-1. Revisar CLAUDE.md
-2. Executar: /start-incremental "seu objetivo"
-3. Seguir workflow incremental
+---
+
+### 6. Criar PRD v0.1 (Product Requirements Document)
+
+Após configurar CLAUDE.md, criar documento PRD inicial:
+
+```
+📄 CRIANDO PRD INICIAL...
+
+Localização: docs/PRD.md
+Versão: 0.1 (Descoberta)
+```
+
+**Perguntar ao usuário**:
+```
+📋 INFORMAÇÕES INICIAIS DO PRD
+
+Para criar o PRD v0.1, preciso de algumas informações:
+
+1. Nome do projeto:
+   > [usuário responde]
+
+2. Qual problema este projeto resolve?
+   > [usuário responde]
+
+3. Quais os objetivos principais? (separe por vírgula)
+   > [usuário responde]
+
+4. Como medirá sucesso? (KPIs - opcional)
+   > [usuário responde ou pula]
+```
+
+**Criar diretório docs/**:
+```bash
+mkdir -p docs
+```
+
+**Popular PRD v0.1**:
+Usar template de `${CLAUDE_PLUGIN_ROOT}/templates/PRD.md` e preencher:
+- Nome do projeto
+- Problema identificado
+- Objetivos (checklist)
+- KPIs (se fornecidos)
+- Data atual em "Última Atualização"
+
+```
+✅ PRD v0.1 CRIADO!
+
+Arquivo: docs/PRD.md
+Versão: 0.1 (Descoberta)
+
+Seções preenchidas:
+├─ ✅ Problema
+├─ ✅ Objetivos ([N] objetivos)
+└─ ✅ KPIs
+
+Próximas fases do PRD:
+- v1.0: /prd-update planejamento
+- v1.1: /prd-update design
+- v1.x: /prd-update incremento (após cada incremento)
+```
+
+---
+
+### 7. Resumo Final
+
+```
+═══════════════════════════════════════════
+✅ SETUP COMPLETO!
+═══════════════════════════════════════════
+
+Arquivos criados/atualizados:
+├─ ✅ CLAUDE.md - Instruções de desenvolvimento incremental
+└─ ✅ docs/PRD.md v0.1 - Product Requirements Document inicial
 
 Claude agora está orientado a:
 ✓ Começar com MVP
 ✓ Questionar over-engineering
 ✓ Refatorar no momento certo
 ✓ Evitar YAGNI violations
+
+PRD criado e pronto para evoluir com o projeto!
+
+═══════════════════════════════════════════
+PRÓXIMOS PASSOS
+═══════════════════════════════════════════
+
+1. Revisar arquivos criados:
+   - cat CLAUDE.md
+   - cat docs/PRD.md
+
+2. Iniciar desenvolvimento incremental:
+   /start-incremental "descrição do objetivo"
+
+3. Conforme projeto evolui:
+   - /prd-update planejamento  (após definir MVP)
+   - /prd-update design        (após definir arquitetura)
+   - /prd-update incremento    (após cada incremento)
+
+4. Visualizar PRD a qualquer momento:
+   /prd-view
+
+═══════════════════════════════════════════
+
+Projeto configurado para desenvolvimento incremental! 🚀
 ```
 
 ## 📚 Exemplos de Uso

@@ -616,6 +616,43 @@ Aplicar todas as simplificações? (s/n)
 Ou revisar uma por uma? (r)
 ```
 
+## 📄 Após Simplificação
+
+Se simplificações significativas foram feitas:
+
+```
+✅ SIMPLIFICAÇÃO COMPLETA!
+
+Código simplificado com sucesso.
+
+Registrar aprendizado no PRD? (s/n)
+```
+
+**Se SIM**:
+```
+Adicionando à seção "Lições Aprendidas" do PRD:
+
+📝 Retrospectiva - Simplificação YAGNI
+**Data**: [data]
+- **O que foi simplificado**:
+  - [lista de simplificações]
+- **Impacto**:
+  - Linhas removidas: [N]
+  - Complexidade reduzida: [%]
+  - Manutenibilidade: Melhorada
+- **Lição aprendida**:
+  - [aprendizado sobre over-engineering detectado]
+
+✅ Aprendizado registrado em docs/PRD.md
+```
+
+**Exemplos de lições aprendidas**:
+- "Abstrações prematuras adicionaram complexidade sem benefício"
+- "ConfigurationManager com 200 linhas era desnecessário - dict simples suficiente"
+- "Padrões devem emergir, não serem planejados antecipadamente"
+
+---
+
 ## ⚡ Lembre-se
 
 - YAGNI = Delete código desnecessário
@@ -625,3 +662,4 @@ Ou revisar uma por uma? (r)
 - Se não é usado, provavelmente não é necessário
 - Código "feio mas funcional" > Código "bonito mas complexo"
 - Refatorar = Simplificar, não complicar
+- **Registre aprendizados sobre over-engineering no PRD**

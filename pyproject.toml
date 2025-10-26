@@ -1,0 +1,35 @@
+[project]
+name = "claudecode-plugins-ci"
+version = "1.0.0"
+description = "CI validation for claudecode plugins marketplace"
+requires-python = ">=3.8"
+dependencies = [
+    "pymarkdownlnt>=0.9.18",
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+]
+
+[project.scripts]
+ci = "CI:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=. --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "tests/*",
+    ".venv/*",
+    "venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+]

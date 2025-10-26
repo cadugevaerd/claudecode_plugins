@@ -552,6 +552,48 @@ Quando refatorar:
 4. **Incremental**: Refatore aos poucos, não tudo de uma vez
 5. **Seguro**: Sempre com testes
 
+## 📄 Após Refatoração Bem-Sucedida
+
+Se refatoração envolveu **decisão arquitetural importante**:
+
+```
+✅ REFATORAÇÃO COMPLETA!
+
+Esta refatoração envolveu decisão arquitetural? (s/n)
+```
+
+**Se SIM**:
+```
+💡 Registrar como ADR (Architectural Decision Record) no PRD
+
+Detalhes da decisão:
+1. Contexto: Por que essa decisão foi necessária?
+   > [usuário responde]
+
+2. Decisão: O que foi decidido?
+   > [padrão extraído / classe base criada / etc]
+
+3. Consequências positivas:
+   > [reduz duplicação / facilita extensão / etc]
+
+4. Consequências negativas:
+   > [adiciona complexidade / requer manutenção / etc]
+
+Registrando ADR no PRD...
+
+✅ ADR-[N] registrado em docs/PRD.md!
+```
+
+**Exemplos de decisões arquiteturais**:
+- ✅ Criar classe base para eliminar duplicação
+- ✅ Extrair pattern que emergiu (Strategy, Template Method)
+- ✅ Escolher biblioteca/framework
+- ✅ Mudar estrutura de dados
+- ❌ Renomear variável (não é decisão arquitetural)
+- ❌ Extrair função simples (não é decisão arquitetural)
+
+---
+
 ## ⚡ Lembre-se
 
 - Padrões emergem com o tempo, não no design inicial
@@ -560,3 +602,4 @@ Quando refatorar:
 - Refatoração tardia = Technical debt
 - Momento certo = Quando padrão ÓBVIO emergir
 - Refatore para facilitar PRÓXIMA mudança, não "código bonito"
+- **Registre decisões arquiteturais importantes como ADRs no PRD**

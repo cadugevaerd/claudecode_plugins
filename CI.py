@@ -1,16 +1,32 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.8"
+# dependencies = [
+#     "pymarkdownlnt>=0.9.18",
+# ]
+# ///
 """
-CI.py - Validador de JSON para claudecode_plugins
+CI.py - Validador completo para claudecode_plugins
 
-Valida todos os arquivos JSON do repositório de plugins:
+Valida todos os arquivos do repositório de plugins:
 - marketplace.json (campos obrigatórios, estrutura)
 - plugin.json de cada plugin (campos obrigatórios, estrutura)
 - Verifica paths e consistência entre arquivos
+- Valida arquivos Markdown (estrutura, formatação, links)
 
 Uso:
-    python CI.py
-    python CI.py --verbose
-    python CI.py --fix  # Auto-corrige problemas quando possível
+    ./CI.py                     # Valida JSON + Markdown
+    ./CI.py --verbose           # Logs detalhados
+    ./CI.py --skip-markdown     # Valida apenas JSON
+    ./CI.py --only-markdown     # Valida apenas Markdown
+    ./CI.py --markdown-strict   # Trata warnings MD como erros
+
+    # Com UV (recomendado):
+    uv run CI.py
+
+    # Testes:
+    uv run pytest test_ci.py
+    uv run pytest test_ci.py --cov
 """
 
 import json

@@ -20,12 +20,46 @@ Definir o menor escopo possível que entrega valor, evitando funcionalidades pre
 
 Quando este comando for executado, você DEVE:
 
-### 1. Questionar o Objetivo
+### 1. Verificar Existência do PRD
+
+```
+🔍 VERIFICANDO PRD...
+
+Procurando docs/PRD.md...
+```
+
+**Se PRD NÃO existe**:
+```
+⚠️  PRD não encontrado
+
+💡 Recomendação: Executar /setup-project-incremental primeiro
+   Isso cria CLAUDE.md + PRD v0.1 com informações iniciais
+
+Continuar sem PRD? (s/n)
+```
+
+**Se PRD existe**:
+```
+✅ PRD encontrado (versão [versão])
+
+Consultando objetivos e MVP definidos no PRD...
+```
+
+Extrair do PRD:
+- Objetivos do projeto
+- MVP definido (se fase >= Planejamento)
+- Funcionalidades fora do MVP (YAGNI)
+
+---
+
+### 2. Questionar o Objetivo
 
 Perguntar ao usuário:
 - Qual o problema REAL que precisa resolver AGORA?
 - Quem é o usuário final?
 - Qual a ação mínima que entrega valor?
+
+**Se PRD existe**: Alinhar com objetivos documentados no PRD
 
 ### 2. Definir MVP (Iteração 1)
 

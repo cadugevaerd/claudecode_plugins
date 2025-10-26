@@ -378,6 +378,31 @@ Após cada incremento:
 
 **Use** `/refactor-now` após alguns incrementos, não durante.
 
+## 📄 Após Implementar Incremento
+
+Ao completar implementação do incremento:
+
+```
+✅ INCREMENTO IMPLEMENTADO!
+
+Deseja registrar este incremento no PRD? (s/n)
+```
+
+**Se SIM**:
+```
+Executando: /prd-update incremento
+
+[Fluxo do comando /prd-update incremento]
+```
+
+**Se NÃO**:
+```
+💡 Lembrete: Você pode registrar depois com:
+   /prd-update incremento
+```
+
+---
+
 ## ⚡ Lembre-se
 
 - Incremento = MÍNIMO necessário
@@ -386,3 +411,4 @@ Após cada incremento:
 - Agora > Futuro
 - Adicione apenas o que foi PEDIDO
 - Refatore depois, não durante
+- **Registre aprendizados no PRD** após cada incremento
