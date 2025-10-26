@@ -82,7 +82,7 @@ Escolha (0-7):
 🚀 COMEÇAR A USAR
 ═══════════════════════════════════════════
 
-## Fluxo Recomendado
+## Fluxo para PROJETOS NOVOS
 
 1️⃣ **Configurar Projeto**
    /setup-project-incremental
@@ -103,6 +103,25 @@ Escolha (0-7):
 5️⃣ **Refatorar Quando Necessário**
    /refactor-now
    └─ Identifica momento de refatorar
+
+---
+
+## Fluxo para PROJETOS EXISTENTES (Legacy)
+
+🔄 **Adotar Desenvolvimento Incremental**
+   /adopt-incremental
+   └─ Analisa projeto existente
+   └─ Cria PRD retroativo
+   └─ Identifica over-engineering
+   └─ Gera roadmap de simplificação
+
+   OU (se só quer criar PRD):
+
+📋 **Criar Apenas PRD Retroativo**
+   /prd-retrofit
+   └─ Analisa código existente
+   └─ Gera PRD a partir do código
+   └─ Útil para documentar projeto sem código
 
 ═══════════════════════════════════════════
 
@@ -129,22 +148,27 @@ Product Requirements Document - documento vivo que define:
 
 ## Comandos de PRD
 
-┌─────────────────────────────────────────┐
-│ Comando              │ Quando Usar      │
-├─────────────────────────────────────────┤
-│ /start-incremental   │ Criar PRD novo   │
-│ /prd-view           │ Visualizar PRD   │
-│ /prd-update         │ Atualizar completo│
-│ /prd-fix            │ Ajuste cirúrgico │
-│ /prd-help           │ Ajuda (você está │
-│                     │ aqui!)           │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│ Comando              │ Quando Usar           │
+├──────────────────────────────────────────────┤
+│ /start-incremental   │ Criar PRD novo        │
+│ /prd-retrofit        │ PRD retroativo (legacy)│
+│ /prd-view           │ Visualizar PRD        │
+│ /prd-update         │ Atualizar completo    │
+│ /prd-fix            │ Ajuste cirúrgico      │
+│ /prd-help           │ Ajuda (você está aqui)│
+└──────────────────────────────────────────────┘
 
 ## Perguntas Comuns
 
 Q: Quando criar um PRD?
 A: No início do projeto, antes de escrever código.
    Use: /start-incremental
+
+Q: E se meu projeto já existe?
+A: Use /prd-retrofit para criar PRD retroativo
+   a partir do código existente. Analisa estrutura,
+   funcionalidades e gera documentação.
 
 Q: Como atualizar uma seção do PRD?
 A: Para mudanças pequenas: /prd-fix "mudança"
@@ -180,6 +204,12 @@ Voltar: Digite 'voltar'
 └─ Inicia desenvolvimento incremental + cria PRD
    Uso: /start-incremental [objetivo]
 
+/adopt-incremental
+└─ Adota YAGNI em projeto existente (legacy)
+   Analisa código, cria PRD retroativo, identifica
+   over-engineering e gera roadmap de simplificação
+   Uso: /adopt-incremental
+
 /add-increment
 └─ Adiciona próximo incremento
    Uso: /add-increment "funcionalidade"
@@ -197,6 +227,11 @@ Voltar: Digite 'voltar'
 /prd-view
 └─ Visualiza PRD completo
    Uso: /prd-view [seção]
+
+/prd-retrofit
+└─ Cria PRD retroativo a partir de código existente
+   Analisa projeto legacy e gera documentação PRD
+   Uso: /prd-retrofit
 
 /prd-update
 └─ Atualiza PRD completo
@@ -358,6 +393,24 @@ Voltar: Digite 'voltar'
 4. PRD será criado
 5. Comece pelo MVP do PRD
 
+---
+
+## Problema 6: Projeto já existe, como adotar YAGNI?
+
+💡 Projeto legacy sem documentação?
+
+✅ Solução completa:
+   /adopt-incremental
+   └─ Analisa código automaticamente
+   └─ Cria PRD retroativo
+   └─ Identifica over-engineering
+   └─ Gera roadmap de simplificação
+
+✅ Solução rápida (só PRD):
+   /prd-retrofit
+   └─ Cria apenas o PRD retroativo
+   └─ Útil para documentar projeto existente
+
 ═══════════════════════════════════════════
 
 Mais problemas: Digite sua dúvida
@@ -459,6 +512,37 @@ Implementar: Envio de email via SMTP
 # Passo 5: Quando refatorar?
 /refactor-now
 > Se template pattern repetir 3x, refatore
+
+---
+
+## Exemplo 4: Projeto Legacy (Adotar YAGNI)
+
+Objetivo: Adotar YAGNI em projeto existente
+
+# Passo 1: Analisar projeto e criar PRD retroativo
+/adopt-incremental
+> Detecta código automaticamente
+> Analisa estrutura e funcionalidades
+> Identifica over-engineering
+> Cria PRD.md retroativo
+> Gera roadmap de simplificação
+
+# Passo 2: Revisar over-engineering detectado
+> Claude apresenta relatório:
+  - Abstrações com 1 implementação
+  - Código não usado
+  - Complexidade desnecessária
+
+# Passo 3: Aplicar roadmap incremental
+> Seguir roadmap gerado:
+  1. Remover código não usado
+  2. Simplificar abstrações
+  3. Refatorar incrementalmente
+
+# Passo 4 (Alternativa): Só criar PRD
+/prd-retrofit
+> Se só precisa do PRD retroativo
+> Sem análise completa de over-engineering
 
 ═══════════════════════════════════════════
 
@@ -564,10 +648,12 @@ O comando deve ter respostas prontas para perguntas comuns:
 
 ### Perguntas sobre PRD
 - "Como criar PRD?" → `/start-incremental`
+- "Como criar PRD retroativo?" → `/prd-retrofit` (projeto legacy)
 - "Como atualizar PRD?" → `/prd-update` ou `/prd-fix`
 - "Como ver PRD?" → `/prd-view`
 - "PRD é obrigatório?" → Não, mas recomendado
 - "Onde fica o PRD?" → `PRD.md` na raiz ou `docs/PRD.md`
+- "Projeto já existe, como criar PRD?" → `/prd-retrofit`
 
 ### Perguntas sobre YAGNI
 - "O que é YAGNI?" → Explicação completa
@@ -579,6 +665,8 @@ O comando deve ter respostas prontas para perguntas comuns:
 - "Quais comandos existem?" → Lista completa
 - "Como usar X?" → Ajuda específica do comando
 - "Diferença entre X e Y?" → Comparação
+- "Projeto legacy, qual comando usar?" → `/adopt-incremental` (completo) ou `/prd-retrofit` (só PRD)
+- "Diferença entre /adopt-incremental e /prd-retrofit?" → `/adopt-incremental` = análise completa + PRD + roadmap; `/prd-retrofit` = só PRD
 
 ### Perguntas sobre Conceitos
 - "O que é MVP?" → Explicação

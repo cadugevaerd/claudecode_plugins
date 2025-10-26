@@ -37,7 +37,54 @@ Ou com descrição do projeto:
 
 ## 🔍 Processo de Execução
 
-### 1. Detectar ou Criar CLAUDE.md
+### 1. Detectar Tipo de Projeto (Novo vs Legacy)
+
+**IMPORTANTE**: Antes de configurar, detectar se é projeto novo ou existente.
+
+**Detectar projeto LEGACY se**:
+- Existem arquivos de código (.py, .js, .ts, etc.)
+- Estrutura de diretórios já existe (src/, lib/, app/)
+- Arquivo de dependências existe (package.json, pyproject.toml, requirements.txt)
+- Git history existe (commits anteriores)
+
+**Se projeto LEGACY detectado**:
+```
+⚠️  PROJETO EXISTENTE DETECTADO
+═══════════════════════════════════════════
+
+Detectei que este projeto já possui código existente.
+
+Para projetos legacy, recomendo usar comandos especializados:
+
+🔄 Opção 1: Adoção Completa de YAGNI
+   /adopt-incremental
+   └─ Analisa código existente
+   └─ Identifica over-engineering
+   └─ Cria PRD retroativo
+   └─ Gera roadmap de simplificação
+   └─ Configura CLAUDE.md
+
+📋 Opção 2: Apenas Criar PRD Retroativo
+   /prd-retrofit
+   └─ Analisa código existente
+   └─ Gera PRD a partir do código
+   └─ Útil para documentar projeto sem mudanças
+
+⚙️  Opção 3: Configurar CLAUDE.md e Continuar
+   Continuar com /setup-project-incremental
+   └─ Configura CLAUDE.md apenas
+   └─ Útil se já conhece o projeto
+
+Escolha (1, 2 ou 3):
+```
+
+**Se usuário escolher 1**: Redirecionar para `/adopt-incremental`
+**Se usuário escolher 2**: Redirecionar para `/prd-retrofit`
+**Se usuário escolher 3**: Continuar com o setup normalmente
+
+---
+
+### 2. Detectar ou Criar CLAUDE.md
 
 **Se CLAUDE.md existe**:
 - Ler arquivo atual
@@ -215,10 +262,20 @@ Se você detectar estes padrões, QUESTIONE:
 
 Este projeto usa o plugin `incremental-dev` com os seguintes comandos:
 
+### Comandos para Projetos Novos
 - `/start-incremental` - Definir MVP inicial
 - `/add-increment` - Adicionar próxima funcionalidade
 - `/refactor-now` - Verificar se é hora de refatorar
 - `/review-yagni` - Revisar código removendo over-engineering
+
+### Comandos para Projetos Legacy
+- `/adopt-incremental` - Adotar YAGNI em projeto existente (análise completa)
+- `/prd-retrofit` - Criar PRD retroativo a partir de código existente
+
+### Comandos de Gestão de PRD
+- `/prd-view` - Visualizar PRD
+- `/prd-update` - Atualizar PRD completo
+- `/prd-fix` - Ajuste cirúrgico em seção do PRD
 
 ## 🔍 Skills Auto-Invocadas
 
@@ -405,8 +462,14 @@ PRÓXIMOS PASSOS
    - cat CLAUDE.md
    - cat docs/PRD.md
 
-2. Iniciar desenvolvimento incremental:
+2. PROJETO NOVO - Iniciar desenvolvimento incremental:
    /start-incremental "descrição do objetivo"
+
+   OU
+
+   PROJETO EXISTENTE - Adotar YAGNI:
+   /adopt-incremental       (análise completa)
+   /prd-retrofit           (só PRD retroativo)
 
 3. Conforme projeto evolui:
    - /prd-update planejamento  (após definir MVP)
@@ -415,6 +478,12 @@ PRÓXIMOS PASSOS
 
 4. Visualizar PRD a qualquer momento:
    /prd-view
+
+5. Revisar over-engineering:
+   /review-yagni
+
+6. Verificar momento de refatorar:
+   /refactor-now
 
 ═══════════════════════════════════════════
 
@@ -481,10 +550,20 @@ Este arquivo contém instruções para Claude Code sobre como trabalhar neste pr
 
 ## Comandos Úteis
 
+### Projetos Novos
 - `/start-incremental` - Definir MVP inicial
 - `/add-increment` - Adicionar funcionalidade incremental
 - `/refactor-now` - Verificar momento de refatorar
 - `/review-yagni` - Remover over-engineering
+
+### Projetos Legacy
+- `/adopt-incremental` - Adotar YAGNI em projeto existente
+- `/prd-retrofit` - Criar PRD retroativo
+
+### Gestão de PRD
+- `/prd-view` - Visualizar PRD
+- `/prd-update` - Atualizar PRD
+- `/prd-fix` - Ajuste cirúrgico
 
 ---
 

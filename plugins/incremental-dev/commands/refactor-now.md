@@ -93,18 +93,50 @@ Padrão 2: Processamento de dados
 💡 Espere aparecer 3ª vez para confirmar padrão
 ```
 
-### 4. Sugerir Refatorações
+### 4. Priorizar por Impacto
 
-Para cada padrão validado (3+):
+**Para projetos legacy**: Priorizar refatorações por impacto.
 
 ```
-✅ REFATORAÇÕES RECOMENDADAS:
+📊 PRIORIZAÇÃO POR IMPACTO
+
+Calculando impacto de cada refatoração:
+
+1. Número de ocorrências (mais = maior impacto)
+2. Complexidade reduzida (LOC removidas)
+3. Facilidade de implementação (risco)
+4. Benefício de manutenibilidade
+
+Ordenando por impacto (maior → menor)...
+```
+
+**Fórmula de Impacto**:
+```
+Impacto = (Ocorrências × 2) + (LOC_Reduzidas / 10) - Risco
+
+Risco:
+- Baixo (1): Só mover código, sem alteração lógica
+- Médio (3): Refatorar + pequenos ajustes
+- Alto (5): Mudança significativa de arquitetura
+```
+
+### 5. Sugerir Refatorações
+
+Para cada padrão validado (3+), ordenado por impacto:
+
+```
+✅ REFATORAÇÕES RECOMENDADAS (por prioridade):
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1. Extrair validate_email para utils
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Padrão: Validação de email duplicada 3x
+
+📊 Impacto: 7 pontos (ALTO)
+   ├─ Ocorrências: 3 (6 pontos)
+   ├─ LOC Reduzidas: 12 (1.2 pontos)
+   └─ Risco: Baixo (-1 ponto)
 
 Antes:
 # email_processor.py

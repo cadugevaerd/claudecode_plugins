@@ -43,6 +43,20 @@ Analisar arquivos identificando sinais de over-engineering:
 Analisando...
 ```
 
+**Para projetos com git history**:
+```
+🔍 ANÁLISE GIT BLAME (Projeto Legacy)
+
+Analisando histórico de commits para entender quando
+código foi adicionado e se ainda está em uso:
+
+- Código antigo (>6 meses) sem alterações → Pode estar obsoleto
+- Abstrações adicionadas recentemente → Possivelmente prematura
+- Código nunca referenciado em commits recentes → Candidato à remoção
+
+Executando git blame em arquivos suspeitos...
+```
+
 ### 2. Detectar Anti-Patterns
 
 Identificar padrões comuns de over-engineering:
@@ -56,6 +70,9 @@ Identificar padrões comuns de over-engineering:
 
 Arquivo: processors/base.py
 Problema: AbstractProcessorFactory usado apenas 1 vez
+📅 Adicionado: 3 meses atrás (git blame)
+👤 Por: dev@example.com
+💬 Commit: "add factory for future processors"
 
 Código atual:
 class AbstractProcessorFactory:
@@ -68,6 +85,7 @@ class AbstractProcessorFactory:
 processor = factory.create_processor("email")
 
 💡 YAGNI: Factory com 1 produto é over-engineering
+⚠️  "future processors" nunca foram adicionados (3 meses)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 2. ⚠️  Configuração Excessiva

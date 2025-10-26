@@ -20,7 +20,54 @@ Definir o menor escopo possível que entrega valor, evitando funcionalidades pre
 
 Quando este comando for executado, você DEVE:
 
-### 1. Verificar Existência do PRD
+### 1. Detectar Tipo de Projeto (Novo vs Legacy)
+
+**IMPORTANTE**: Este comando é para NOVOS projetos. Se o projeto já existe, recomende comandos apropriados.
+
+**Detectar projeto LEGACY se**:
+- Existem arquivos de código (.py, .js, .ts, etc.) além de configuração
+- Estrutura de diretórios já existe (src/, lib/, app/)
+- Arquivo de dependências existe (package.json, pyproject.toml, requirements.txt)
+- Git history com múltiplos commits
+
+**Se projeto LEGACY detectado**:
+```
+⚠️  PROJETO EXISTENTE DETECTADO
+═══════════════════════════════════════════
+
+Detectei que este projeto já possui código existente.
+
+O comando /start-incremental é para NOVOS projetos.
+
+Para projetos legacy, use:
+
+🔄 Opção 1: Análise Completa + PRD Retroativo
+   /adopt-incremental
+   └─ Analisa código existente
+   └─ Identifica over-engineering
+   └─ Cria PRD retroativo
+   └─ Gera roadmap de simplificação
+   └─ Configura CLAUDE.md
+
+📋 Opção 2: Apenas Criar PRD Retroativo
+   /prd-retrofit
+   └─ Analisa código existente
+   └─ Gera PRD a partir do código
+   └─ Útil para documentar projeto sem mudanças
+
+⚙️  Opção 3: Continuar com /start-incremental
+   (Se quiser criar PRD do zero ignorando código existente)
+
+Escolha (1, 2 ou 3):
+```
+
+**Se usuário escolher 1**: Executar `/adopt-incremental`
+**Se usuário escolher 2**: Executar `/prd-retrofit`
+**Se usuário escolher 3**: Continuar normalmente (projeto será tratado como novo)
+
+---
+
+### 2. Verificar Existência do PRD
 
 ```
 🔍 VERIFICANDO PRD...
