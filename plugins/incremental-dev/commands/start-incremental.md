@@ -52,16 +52,252 @@ Extrair do PRD:
 
 ---
 
-### 2. Questionar o Objetivo
+### 2. Questionar o Objetivo - MODO INTERATIVO
 
-Perguntar ao usuário:
-- Qual o problema REAL que precisa resolver AGORA?
-- Quem é o usuário final?
-- Qual a ação mínima que entrega valor?
+**IMPORTANTE**: Se nenhuma descrição foi fornecida como argumento, ou se PRD não existe, SEMPRE fazer perguntas interativas para criar um PRD completo.
 
-**Se PRD existe**: Alinhar com objetivos documentados no PRD
+```
+═══════════════════════════════════════════
+🎯 CRIAÇÃO DE PRD INTERATIVA
+═══════════════════════════════════════════
 
-### 2. Definir MVP (Iteração 1)
+Vou fazer algumas perguntas para criar um PRD completo
+e bem estruturado para o seu projeto.
+
+Responda de forma clara e objetiva. Você pode pular
+perguntas digitando "pular" ou "skip".
+
+═══════════════════════════════════════════
+```
+
+#### Pergunta 1: Contexto do Projeto
+
+```
+1️⃣ CONTEXTO DO PROJETO
+
+O que você quer construir?
+(Descreva em 1-2 frases o que é o projeto)
+
+Exemplo: "Uma API REST para gerenciar tarefas de um time"
+Exemplo: "Um dashboard web para visualizar métricas de vendas"
+Exemplo: "Um CLI tool para automatizar deploys"
+
+Sua resposta:
+```
+
+**Armazenar**: `projeto_descricao`
+
+---
+
+#### Pergunta 2: Problema a Resolver
+
+```
+2️⃣ PROBLEMA A RESOLVER
+
+Que problema REAL você está tentando resolver?
+(Seja específico sobre a dor/necessidade atual)
+
+Exemplo: "Times perdem tarefas porque usam planilhas Excel desorganizadas"
+Exemplo: "Gerentes perdem 2h/dia consolidando relatórios manualmente"
+Exemplo: "Deploy manual está causando erros e downtime"
+
+Sua resposta:
+```
+
+**Armazenar**: `problema`
+
+---
+
+#### Pergunta 3: Usuário Final
+
+```
+3️⃣ USUÁRIO FINAL
+
+Quem vai usar este sistema?
+(Seja específico sobre persona/papel)
+
+Exemplo: "Desenvolvedores do time de produto"
+Exemplo: "Gerentes de vendas regionais"
+Exemplo: "DevOps engineers da empresa"
+
+Sua resposta:
+```
+
+**Armazenar**: `usuario_final`
+
+---
+
+#### Pergunta 4: Funcionalidade Principal
+
+```
+4️⃣ FUNCIONALIDADE PRINCIPAL
+
+Qual a ÚNICA funcionalidade mais importante?
+(Se você pudesse ter apenas UMA coisa funcionando, qual seria?)
+
+Exemplo: "Criar e listar tarefas"
+Exemplo: "Gráfico de vendas totais do mês"
+Exemplo: "Deploy com um comando"
+
+Sua resposta:
+```
+
+**Armazenar**: `funcionalidade_principal`
+
+---
+
+#### Pergunta 5: Outras Funcionalidades (Opcional)
+
+```
+5️⃣ OUTRAS FUNCIONALIDADES
+
+Que outras funcionalidades você imagina?
+(Liste outras features que PODEM ser úteis - vamos priorizar depois)
+
+Digite uma por linha, ou "pronto" quando terminar:
+
+Exemplo:
+- Atribuir tarefas a pessoas
+- Filtrar tarefas por status
+- Notificações de tarefas atrasadas
+- Exportar para CSV
+
+Suas respostas (digite "pronto" para finalizar):
+```
+
+**Armazenar**: `funcionalidades_extras` (lista)
+
+---
+
+#### Pergunta 6: O que NÃO Fazer (YAGNI)
+
+```
+6️⃣ O QUE NÃO FAZER AGORA
+
+Tem algo que você SABE que NÃO deve fazer na v1?
+(Features complexas, integrações, otimizações prematuras...)
+
+Exemplo: "Autenticação OAuth (usar apenas API key v1)"
+Exemplo: "Exportar para PDF (só CSV por enquanto)"
+Exemplo: "Cache Redis (começar sem cache)"
+
+Digite uma por linha, ou "pular" se não tiver:
+```
+
+**Armazenar**: `fora_de_escopo` (lista)
+
+---
+
+#### Pergunta 7: Prioridade #1 para MVP
+
+```
+7️⃣ PRIORIDADE #1 PARA MVP
+
+Revisando suas respostas, qual funcionalidade deve
+estar pronta PRIMEIRO para considerar um MVP?
+
+Funcionalidades mencionadas:
+1. [funcionalidade_principal]
+2. [funcionalidades_extras[0]] (se houver)
+3. [funcionalidades_extras[1]] (se houver)
+...
+
+Qual o mínimo absoluto para ter valor? (número ou descrever)
+
+Sua resposta:
+```
+
+**Armazenar**: `mvp_prioridade`
+
+---
+
+#### Pergunta 8: Como Medir Sucesso (Opcional)
+
+```
+8️⃣ MÉTRICA DE SUCESSO
+
+Como você vai saber se o projeto está funcionando bem?
+(Métrica mensurável, não apenas "funcionar")
+
+Exemplo: "Time usa o sistema para 80%+ das tarefas"
+Exemplo: "Gerentes reduzem tempo de relatório de 2h para 15min"
+Exemplo: "Zero deploys falhados em 1 mês"
+
+Sua resposta (ou "pular"):
+```
+
+**Armazenar**: `metrica_sucesso`
+
+---
+
+#### Pergunta 9: Prazo/Urgência (Opcional)
+
+```
+9️⃣ PRAZO / URGÊNCIA
+
+Tem algum prazo ou deadline?
+(Ajuda a definir escopo realista)
+
+Exemplo: "Preciso de MVP em 2 semanas"
+Exemplo: "Sem prazo fixo, mas quanto antes melhor"
+Exemplo: "Apresentação para stakeholders em 1 mês"
+
+Sua resposta (ou "pular"):
+```
+
+**Armazenar**: `prazo`
+
+---
+
+#### Resumo e Confirmação
+
+```
+═══════════════════════════════════════════
+📋 RESUMO DO SEU PRD
+═══════════════════════════════════════════
+
+Projeto: [projeto_descricao]
+Problema: [problema]
+Usuário: [usuario_final]
+
+🎯 MVP (Prioridade #1):
+- [mvp_prioridade]
+
+⚙️ Outras Funcionalidades (priorizadas depois):
+- [funcionalidades_extras]
+
+❌ Fora de Escopo (YAGNI - não fazer v1):
+- [fora_de_escopo]
+
+📊 Métrica de Sucesso:
+- [metrica_sucesso]
+
+🗓️ Prazo:
+- [prazo]
+
+═══════════════════════════════════════════
+
+Este resumo está correto? (s/n/editar)
+
+- s: Criar PRD.md com estas informações
+- n: Cancelar e recomeçar
+- editar: Ajustar uma resposta específica
+```
+
+**Se usuário escolher "editar"**:
+```
+Qual pergunta deseja ajustar? (1-9)
+```
+Permitir reresponder a pergunta escolhida.
+
+**Se usuário confirmar (s)**:
+Prosseguir para criar PRD.md completo usando o template em `templates/PRD.md` e preenchendo com as respostas coletadas.
+
+**Se PRD existe**: Alinhar novas respostas com objetivos documentados no PRD existente
+
+---
+
+### 3. Definir MVP (Iteração 1)
 
 Identificar apenas o ESSENCIAL:
 

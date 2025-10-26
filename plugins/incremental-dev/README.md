@@ -958,6 +958,101 @@ Visualiza resumo do PRD atual
 
 ---
 
+#### `/prd-fix`
+Corrige ou ajusta seções específicas do PRD de forma cirúrgica
+
+```bash
+# Ajuste direto
+/prd-fix "Adicionar OAuth2 como método de autenticação obrigatório"
+
+# Modo interativo (sem argumentos)
+/prd-fix
+```
+
+**O que faz**:
+- ✅ Modifica UMA seção específica do PRD
+- ✅ Preserva resto do documento intacto
+- ✅ Atualiza histórico de mudanças automaticamente
+- ✅ Modo interativo com menu de seções
+
+**Quando usar**:
+- Adicionar/remover um requisito
+- Mudar prioridade de uma funcionalidade
+- Atualizar métrica de sucesso
+- Adicionar novo risco
+- Ajustar cronograma
+
+**Modo Interativo**:
+```
+═══════════════════════════════════════════
+📝 AJUSTAR PRD
+═══════════════════════════════════════════
+
+Seções disponíveis:
+1. 📋 Visão Geral
+2. 🎯 Objetivos
+3. ⚙️ Requisitos Funcionais
+4. 🔒 Requisitos Não-Funcionais
+5. 👥 Personas e Casos de Uso
+6. 📊 Métricas de Sucesso
+...
+
+Qual seção deseja ajustar?
+```
+
+**Diferença /prd-update vs /prd-fix**:
+- `/prd-update`: Atualiza PRD **COMPLETO** (todas seções)
+- `/prd-fix`: Ajusta **UMA seção específica** (cirúrgico)
+
+---
+
+#### `/prd-help`
+Central de ajuda interativa sobre YAGNI, PRD e uso do plugin
+
+```bash
+# Pergunta direta
+/prd-help "Como criar um PRD inicial?"
+/prd-help "O que é YAGNI?"
+/prd-help "Diferença entre /prd-update e /prd-fix?"
+
+# Modo interativo (sem argumentos)
+/prd-help
+```
+
+**O que faz**:
+- ✅ Explica conceitos (YAGNI, MVP, Incremental, Evolutionary Architecture)
+- ✅ Documenta todos os comandos do plugin
+- ✅ Resolve dúvidas sobre PRD
+- ✅ Troubleshooting de problemas comuns
+- ✅ Exemplos práticos de uso
+
+**Menu Interativo**:
+```
+═══════════════════════════════════════════
+❓ AJUDA - INCREMENTAL DEV
+═══════════════════════════════════════════
+
+📚 CATEGORIAS:
+1. 🚀 Começar a Usar
+2. 📋 Gestão de PRD
+3. ⚙️ Comandos Disponíveis
+4. 💡 Conceitos (YAGNI, MVP, etc.)
+5. 🔧 Troubleshooting
+6. 📖 Exemplos Práticos
+
+Escolha (1-6):
+```
+
+**Perguntas Comuns Respondidas**:
+- "O que é YAGNI?"
+- "Como criar PRD?"
+- "Quando refatorar?"
+- "Diferença entre comandos X e Y?"
+- "PRD é obrigatório?"
+- "Como começar projeto novo?"
+
+---
+
 ### 🏗️  ADRs (Architectural Decision Records)
 
 PRD registra automaticamente decisões arquiteturais importantes.
@@ -1171,6 +1266,10 @@ Dia 5: Refatorar (padrões emergiram)
 - 1 dia até funcionar
 - Código simples
 - Arquitetura emerge naturalmente
+
+## 📜 Changelog
+
+Veja [CHANGELOG.md](./CHANGELOG.md) para o histórico completo de mudanças.
 
 ## 🤝 Autor
 
