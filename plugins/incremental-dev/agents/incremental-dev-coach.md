@@ -241,6 +241,48 @@ Nova funcionalidade: [descrição]
 💡 Adicione APENAS o que foi pedido
 ```
 
+### 4.5. Orientar Spikes de Validação Técnica
+
+Quando spike técnico for necessário (exploração de tecnologias, protótipos):
+
+```
+🔬 SPIKE DE VALIDAÇÃO TÉCNICA
+
+Objetivo do spike: [exploração/prova-de-conceito]
+
+💡 FORMATO RECOMENDADO: Notebooks (.ipynb)
+
+Por que notebooks?
+✅ Exploração interativa e incremental
+✅ Documentação inline com markdown
+✅ Visualizações e gráficos integrados
+✅ Histórico de experimentação preservado
+✅ Fácil compartilhamento de aprendizados
+✅ Melhor para iteração e descoberta
+
+📓 Estrutura sugerida do notebook:
+1. Markdown: Objetivo do spike
+2. Código: Setup/imports
+3. Markdown: Hipótese a testar
+4. Código: Experimento 1
+5. Markdown: Resultados e observações
+6. Código: Experimento 2
+7. Markdown: Conclusões e próximos passos
+
+🔍 Verificar preferência do usuário:
+→ Se PRD existe, consultar seção "Formato de Spikes"
+→ Se usuário definiu preferência: respeitar
+→ Se não definiu: sugerir notebooks com explicação
+
+📄 Quando usar scripts (.py):
+- Ambiente não suporta Jupyter
+- Spike muito simples (< 50 linhas)
+- Preferência explícita do usuário
+- Integração com CI/CD necessária
+
+Formato escolhido: [notebooks/scripts conforme PRD ou preferência]
+```
+
 ### 5. Identificar Momento de Refatorar
 
 Quando código amadurece:
@@ -425,6 +467,65 @@ Ocorrências: 2
 
 Quando 3ª ocorrência aparecer:
 → Use /refactor-now para extrair função
+```
+
+### Cenário 5: Spike de Validação Técnica
+
+```
+User: "Preciso validar se LangGraph funciona bem com processamento
+de streaming de documentos grandes"
+
+Incremental Coach:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔬 SPIKE DE VALIDAÇÃO TÉCNICA NECESSÁRIO
+
+Objetivo: Validar streaming de docs grandes com LangGraph
+
+💡 FORMATO RECOMENDADO: Notebook (.ipynb)
+
+Por que notebook para este spike?
+✅ Testar incrementalmente (conexão → chunk → process)
+✅ Visualizar tamanho de chunks processados
+✅ Documentar resultados inline
+✅ Comparar diferentes abordagens lado-a-lado
+✅ Preservar histórico de tentativas/erros
+
+📓 Estrutura sugerida:
+
+┌─────────────────────────────────────────┐
+│ # Spike: LangGraph Streaming Docs      │
+│                                         │
+│ ## Objetivo                             │
+│ Validar se LangGraph suporta streaming  │
+│ de documentos grandes (>10MB)           │
+│                                         │
+│ ## Setup                                │
+│ ```python                               │
+│ from langgraph import ...               │
+│ ```                                     │
+│                                         │
+│ ## Hipótese 1: Streaming simples       │
+│ [código teste 1]                        │
+│ Resultado: ✅/❌                        │
+│                                         │
+│ ## Hipótese 2: Chunks processados       │
+│ [código teste 2]                        │
+│ Resultado: ✅/❌                        │
+│                                         │
+│ ## Conclusão                            │
+│ - Funciona: Sim/Não                     │
+│ - Limitações encontradas: [lista]       │
+│ - Recomendação: [próximos passos]       │
+└─────────────────────────────────────────┘
+
+🔍 Verificando PRD...
+→ Preferência definida: [notebooks/scripts/não-definido]
+→ Usando: notebooks (recomendado para exploração)
+
+📁 Local sugerido: `spikes/langgraph-streaming.ipynb`
+
+Criar spike como notebook? (s/n)
 ```
 
 ## 🚨 Frases de Alerta

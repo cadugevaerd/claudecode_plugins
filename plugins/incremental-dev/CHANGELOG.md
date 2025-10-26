@@ -5,6 +5,30 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.3.0] - 2025-10-25
+
+### Adicionado
+- Preferência por notebooks (.ipynb) para Spikes de Validação Técnica
+- Pergunta 10 em `/start-incremental` sobre formato preferido de spikes (notebooks vs scripts)
+- Pergunta 5 em `/setup-project-incremental` sobre formato de spikes
+- Seção "Formato de Spikes de Validação Técnica" no template PRD.md
+- Cenário 5 no agente `incremental-dev-coach` demonstrando uso de notebooks para spikes
+- Orientação sobre quando usar notebooks vs scripts
+- Keywords "notebooks" e "spikes" no plugin.json
+
+### Modificado
+- Agente `incremental-dev-coach` agora recomenda notebooks primeiro para exploração técnica
+- Coach verifica preferência do usuário no PRD antes de sugerir formato de spike
+- Template PRD.md inclui seção "Configurações de Desenvolvimento" com formato de spikes
+- Descrição do plugin no marketplace.json menciona preferência por notebooks
+
+### Benefícios dos Notebooks para Spikes
+- Exploração interativa e incremental
+- Documentação inline com markdown
+- Visualizações e gráficos integrados
+- Histórico de experimentação preservado
+- Fácil compartilhamento de aprendizados
+
 ## [1.2.0] - 2025-10-25
 
 ### Adicionado

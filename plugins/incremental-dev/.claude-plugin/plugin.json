@@ -1,6 +1,6 @@
 {
   "name": "incremental-dev",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade",
   "author": {
     "name": "Carlos Araujo",
@@ -18,7 +18,9 @@
     "prd",
     "requirements",
     "documentation",
-    "product-management"
+    "product-management",
+    "notebooks",
+    "spikes"
   ],
   "license": "MIT",
   "homepage": "https://github.com/cadugevaerd/claudecode_plugins"

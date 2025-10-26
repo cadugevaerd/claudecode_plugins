@@ -41,6 +41,26 @@
 - ❌ Feature prematura 1
 - ❌ Feature prematura 2
 
+### Configurações de Desenvolvimento
+
+#### Formato de Spikes de Validação Técnica
+**Preferência**: [notebooks (.ipynb) / scripts (.py) / não-definido]
+
+**Quando usar Notebooks**:
+- Exploração de tecnologias novas
+- Prototipagem interativa
+- Validação de hipóteses técnicas
+- Necessidade de visualizações
+- Documentação de aprendizados inline
+
+**Quando usar Scripts**:
+- Spikes muito simples (< 50 linhas)
+- Ambiente sem suporte a Jupyter
+- Integração com CI/CD necessária
+- Preferência do time
+
+**Localização de Spikes**: `spikes/` ou `docs/spikes/`
+
 ### Roadmap
 ```mermaid
 gantt

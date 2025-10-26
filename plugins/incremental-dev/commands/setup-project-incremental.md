@@ -318,6 +318,32 @@ Para criar o PRD v0.1, preciso de algumas informações:
 
 4. Como medirá sucesso? (KPIs - opcional)
    > [usuário responde ou pula]
+
+5. Formato preferido para Spikes de Validação Técnica:
+
+🔬 FORMATO DE SPIKES DE VALIDAÇÃO
+
+Quando precisar fazer Spikes de Validação Técnica (exploração de tecnologias,
+protótipos, provas de conceito), qual formato você prefere?
+
+📓 Opção 1: Notebooks (.ipynb)
+   ✅ Exploração interativa e incremental
+   ✅ Documentação inline com markdown
+   ✅ Visualizações e gráficos integrados
+   ✅ Histórico de experimentação preservado
+   ✅ Fácil compartilhamento de aprendizados
+   ⚠️  Requer Jupyter/VS Code com suporte
+
+📄 Opção 2: Scripts Python (.py)
+   ✅ Mais leve e simples
+   ✅ Funciona em qualquer editor
+   ✅ Mais fácil versionamento
+   ⚠️  Menos interativo
+
+💡 Recomendação: Notebooks são melhores para exploração técnica
+
+Sua escolha (1=notebooks, 2=scripts, ou "pular" para decidir depois):
+   > [usuário responde: 1, 2, ou "pular"]
 ```
 
 **Criar diretório docs/**:

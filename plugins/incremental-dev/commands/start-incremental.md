@@ -249,6 +249,42 @@ Sua resposta (ou "pular"):
 
 ---
 
+#### Pergunta 10: Formato de Spikes de Validação Técnica
+
+```
+🔟 FORMATO DE SPIKES DE VALIDAÇÃO
+
+Quando precisar fazer Spikes de Validação Técnica (exploração de tecnologias,
+protótipos, provas de conceito), qual formato você prefere?
+
+📓 Opção 1: Notebooks (.ipynb)
+   ✅ Exploração interativa e incremental
+   ✅ Documentação inline com markdown
+   ✅ Visualizações e gráficos integrados
+   ✅ Histórico de experimentação preservado
+   ✅ Fácil compartilhamento de aprendizados
+   ⚠️  Requer Jupyter/VS Code com suporte
+
+📄 Opção 2: Scripts Python (.py)
+   ✅ Mais leve e simples
+   ✅ Funciona em qualquer editor
+   ✅ Mais fácil versionamento
+   ⚠️  Menos interativo
+
+💡 Recomendação: Notebooks são melhores para exploração técnica
+
+Sua escolha (1=notebooks, 2=scripts, ou "pular" para decidir depois):
+```
+
+**Armazenar**: `formato_spikes`
+
+**Valores possíveis**:
+- `"notebooks"` - se usuário escolher 1
+- `"scripts"` - se usuário escolher 2
+- `"nao-definido"` - se usuário pular
+
+---
+
 #### Resumo e Confirmação
 
 ```
@@ -275,6 +311,9 @@ Usuário: [usuario_final]
 🗓️ Prazo:
 - [prazo]
 
+🔬 Formato de Spikes de Validação:
+- [formato_spikes] (notebooks/scripts/não-definido)
+
 ═══════════════════════════════════════════
 
 Este resumo está correto? (s/n/editar)
@@ -286,7 +325,7 @@ Este resumo está correto? (s/n/editar)
 
 **Se usuário escolher "editar"**:
 ```
-Qual pergunta deseja ajustar? (1-9)
+Qual pergunta deseja ajustar? (1-10)
 ```
 Permitir reresponder a pergunta escolhida.
 
