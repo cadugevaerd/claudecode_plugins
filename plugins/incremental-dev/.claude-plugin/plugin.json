@@ -1,6 +1,6 @@
 {
   "name": "incremental-dev",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade. Suporta projetos novos e legacy com PRD retroativo",
   "author": {
     "name": "Carlos Araujo",

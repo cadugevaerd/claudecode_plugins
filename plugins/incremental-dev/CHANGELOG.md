@@ -5,6 +5,55 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.5.0] - 2025-10-27
+
+### Adicionado
+- Validação automática de tamanho de CLAUDE.md e README.md em `/setup-project-incremental`
+  - Limite recomendado: 40,000 caracteres (40KB)
+  - Detecção automática de arquivos grandes após criação/atualização
+- Progressive disclosure automático para CLAUDE.md quando > 40k caracteres
+  - Extração de conteúdo para `docs/development/` com arquivos separados:
+    - `INCREMENTAL_DEV.md` (workflow completo)
+    - `YAGNI_PRINCIPLES.md` (regras detalhadas)
+    - `EXAMPLES.md` (exemplos práticos)
+  - Redução de CLAUDE.md para versão concisa (~2,500 caracteres)
+  - Manutenção de overview + links + 3-5 regras críticas
+- Progressive disclosure automático para README.md quando > 40k caracteres
+  - Extração de conteúdo para `docs/` com arquivos separados:
+    - `INSTALLATION.md` (instalação detalhada)
+    - `USAGE.md` (guia de uso completo)
+    - `API.md` (referência de API)
+    - `CONTRIBUTING.md` (guia de contribuição)
+    - `ARCHITECTURE.md` (arquitetura do projeto)
+    - `EXAMPLES.md` (exemplos avançados)
+    - `FAQ.md` (perguntas frequentes)
+    - `TROUBLESHOOTING.md` (solução de problemas)
+  - Redução de README.md para versão concisa (~1,500 caracteres)
+  - Manutenção de overview + quick start + links para documentação
+- Confirmação interativa antes de aplicar progressive disclosure
+  - Usuário pode aceitar ou recusar reestruturação automática
+  - Estatísticas de redução de tamanho após aplicação
+- Validação e status reportados no resumo final
+  - Status de tamanho: ✅ Dentro do limite / ⚠️ Grande
+  - Tamanho em caracteres exibido
+  - Indicação de progressive disclosure aplicado
+
+### Modificado
+- Comando `/setup-project-incremental` agora sempre valida tamanhos de arquivos
+  - Validação executada automaticamente após criação/atualização
+  - Melhoria na performance e legibilidade dos projetos
+  - Orientação automática para melhores práticas
+- Descrição do plugin no marketplace menciona progressive disclosure
+- Tags adicionadas: "progressive-disclosure", "performance"
+
+### Benefícios
+- Melhora performance do Claude ao carregar contexto inicial
+- CLAUDE.md e README.md sempre otimizados automaticamente
+- Documentação completa acessível via Read tool quando necessário
+- Redução de até 80-95% no tamanho de arquivos grandes
+- Melhor legibilidade e organização de documentação
+- Aplicação automática de best practices de progressive disclosure
+
 ## [1.4.0] - 2025-10-26
 
 ### Adicionado

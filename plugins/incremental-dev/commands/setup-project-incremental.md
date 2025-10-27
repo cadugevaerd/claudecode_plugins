@@ -435,7 +435,293 @@ Próximas fases do PRD:
 
 ---
 
-### 7. Resumo Final
+### 7. Validar Tamanho do CLAUDE.md
+
+**CRÍTICO**: Após criar/atualizar CLAUDE.md, SEMPRE validar tamanho do arquivo.
+
+**Executar validação**:
+```bash
+wc -c CLAUDE.md
+```
+
+**Limite recomendado**: 40,000 caracteres (40KB)
+
+**Se CLAUDE.md > 40k caracteres**:
+
+```
+⚠️  CLAUDE.md MUITO GRANDE DETECTADO
+═══════════════════════════════════════════
+
+Tamanho atual: [N] caracteres
+Limite recomendado: 40,000 caracteres
+
+Arquivos grandes podem impactar performance e contexto.
+
+🔄 APLICAR PROGRESSIVE DISCLOSURE AUTOMATICAMENTE?
+
+Ações propostas:
+1. Criar diretório docs/development/
+2. Mover conteúdo detalhado para arquivos separados:
+   - docs/development/INCREMENTAL_DEV.md
+   - docs/development/YAGNI_PRINCIPLES.md
+   - docs/development/EXAMPLES.md
+3. Manter em CLAUDE.md apenas:
+   - Overview (3-5 linhas)
+   - Links para documentação detalhada
+   - 3-5 regras críticas
+
+Aplicar progressive disclosure? (s/n)
+```
+
+**Se usuário responder "s" (SIM)**:
+
+1. Criar estrutura:
+```bash
+mkdir -p docs/development
+```
+
+2. Extrair conteúdo para arquivos separados:
+
+**docs/development/INCREMENTAL_DEV.md**:
+- Seção completa "Desenvolvimento Incremental"
+- Todos os exemplos, workflows e princípios
+
+**docs/development/YAGNI_PRINCIPLES.md**:
+- Regras detalhadas (SEMPRE/NUNCA)
+- Exemplos de MVP vs Over-Engineering
+- Sinais de alerta
+
+**docs/development/EXAMPLES.md**:
+- Exemplos práticos completos
+- Casos de uso por linguagem/framework
+
+3. Reduzir CLAUDE.md para versão concisa:
+
+```markdown
+# Desenvolvimento Incremental
+
+**IMPORTANTE**: Este projeto segue desenvolvimento incremental com princípios YAGNI e Evolutionary Architecture.
+
+## 📚 Documentação Completa
+
+- **[Guia Completo](./docs/development/INCREMENTAL_DEV.md)** - Workflow, iterações e processo
+- **[Princípios YAGNI](./docs/development/YAGNI_PRINCIPLES.md)** - Regras, anti-patterns e sinais de alerta
+- **[Exemplos Práticos](./docs/development/EXAMPLES.md)** - Casos de uso e código de exemplo
+
+## ⚡ Regras Críticas (Quick Reference)
+
+### ✅ SEMPRE
+- Começar com MVP mínimo (menor escopo que entrega valor)
+- Questionar: "Isso é necessário AGORA?"
+- Aplicar "Regra dos 3": 1-2 ocorrências OK, 3+ refatorar
+
+### ❌ NUNCA
+- Over-engineering (abstrações no MVP)
+- Antecipação de requisitos ("preparar para o futuro")
+- Complexidade desnecessária (otimização prematura)
+
+## 🎯 Plugin Incremental-Dev
+
+Comandos disponíveis: `/start-incremental`, `/add-increment`, `/refactor-now`, `/review-yagni`, `/adopt-incremental`, `/prd-view`
+
+**Skills auto-invocadas**: yagni-enforcer, refactor-advisor
+
+---
+
+**Filosofia**: Funcionar > Perfeição | Simples > Complexo | Agora > Futuro
+```
+
+4. Confirmar resultado:
+```
+✅ PROGRESSIVE DISCLOSURE APLICADO!
+
+Estrutura criada:
+├─ ✅ CLAUDE.md (reduzido: ~2,500 caracteres)
+└─ ✅ docs/development/
+    ├─ INCREMENTAL_DEV.md (workflow completo)
+    ├─ YAGNI_PRINCIPLES.md (regras detalhadas)
+    └─ EXAMPLES.md (exemplos práticos)
+
+Tamanho anterior: [N] caracteres
+Tamanho atual: ~2,500 caracteres
+Redução: [N]%
+
+Claude terá acesso à documentação completa quando necessário
+via Read tool, mas contexto inicial otimizado!
+```
+
+**Se usuário responder "n" (NÃO)**:
+```
+⚠️  Mantendo CLAUDE.md atual.
+
+Nota: Arquivo grande pode impactar performance.
+Considere aplicar progressive disclosure manualmente quando necessário.
+```
+
+**Se CLAUDE.md <= 40k caracteres**:
+```
+✅ Tamanho do CLAUDE.md validado!
+
+Tamanho: [N] caracteres
+Status: ✅ Dentro do limite recomendado (40k)
+```
+
+---
+
+### 8. Validar Tamanho do README.md (Se Existir)
+
+**Verificar se README.md existe no projeto**:
+```bash
+test -f README.md && echo "README.md encontrado"
+```
+
+**Se README.md existe, validar tamanho**:
+```bash
+wc -c README.md
+```
+
+**Limite recomendado**: 40,000 caracteres (40KB)
+
+**Se README.md > 40k caracteres**:
+
+```
+⚠️  README.md MUITO GRANDE DETECTADO
+═══════════════════════════════════════════
+
+Tamanho atual: [N] caracteres
+Limite recomendado: 40,000 caracteres
+
+READMEs grandes impactam legibilidade e performance.
+
+🔄 APLICAR PROGRESSIVE DISCLOSURE AUTOMATICAMENTE?
+
+Ações propostas:
+1. Criar diretório docs/ (se não existir)
+2. Mover conteúdo detalhado para arquivos separados:
+   - docs/INSTALLATION.md (instalação detalhada)
+   - docs/USAGE.md (guia de uso completo)
+   - docs/API.md (referência de API)
+   - docs/CONTRIBUTING.md (guia de contribuição)
+   - docs/ARCHITECTURE.md (arquitetura do projeto)
+3. Manter em README.md apenas:
+   - Overview do projeto (2-3 parágrafos)
+   - Quick start (instalação básica + exemplo mínimo)
+   - Links para documentação detalhada
+
+Aplicar progressive disclosure? (s/n)
+```
+
+**Se usuário responder "s" (SIM)**:
+
+1. Criar estrutura:
+```bash
+mkdir -p docs
+```
+
+2. Analisar conteúdo atual do README.md e identificar seções
+
+3. Extrair conteúdo para arquivos separados:
+
+**Identificar seções comuns**:
+- Instalação detalhada → docs/INSTALLATION.md
+- Guia de uso completo → docs/USAGE.md
+- Referência de API → docs/API.md
+- Guia de contribuição → docs/CONTRIBUTING.md
+- Arquitetura/Design → docs/ARCHITECTURE.md
+- Exemplos avançados → docs/EXAMPLES.md
+- FAQ → docs/FAQ.md
+- Troubleshooting → docs/TROUBLESHOOTING.md
+
+4. Reduzir README.md para versão concisa:
+
+**Template do novo README.md**:
+```markdown
+# [Nome do Projeto]
+
+[Descrição concisa em 2-3 parágrafos sobre o que o projeto faz e por que existe]
+
+## 📚 Documentação
+
+- **[Installation Guide](./docs/INSTALLATION.md)** - Instalação detalhada e configuração
+- **[Usage Guide](./docs/USAGE.md)** - Guia completo de uso
+- **[API Reference](./docs/API.md)** - Referência de API
+- **[Architecture](./docs/ARCHITECTURE.md)** - Arquitetura e design
+- **[Contributing](./docs/CONTRIBUTING.md)** - Como contribuir
+- **[Examples](./docs/EXAMPLES.md)** - Exemplos práticos
+- **[FAQ](./docs/FAQ.md)** - Perguntas frequentes
+
+## ⚡ Quick Start
+
+### Installation
+```bash
+[comando de instalação mais básico]
+```
+
+### Basic Usage
+```[linguagem]
+[exemplo mínimo que funciona em 5-10 linhas]
+```
+
+## 📖 Next Steps
+
+1. Read the [Usage Guide](./docs/USAGE.md) for detailed examples
+2. Check [API Reference](./docs/API.md) for full API documentation
+3. See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) to contribute
+
+## 📄 License
+
+[Licença]
+
+---
+
+**Full documentation**: [docs/](./docs/)
+```
+
+5. Confirmar resultado:
+```
+✅ PROGRESSIVE DISCLOSURE APLICADO NO README.md!
+
+Estrutura criada:
+├─ ✅ README.md (reduzido: ~1,500 caracteres)
+└─ ✅ docs/
+    ├─ INSTALLATION.md
+    ├─ USAGE.md
+    ├─ API.md
+    ├─ ARCHITECTURE.md
+    ├─ CONTRIBUTING.md
+    ├─ EXAMPLES.md
+    └─ FAQ.md
+
+Tamanho anterior: [N] caracteres
+Tamanho atual: ~1,500 caracteres
+Redução: [N]%
+
+README.md agora é conciso e focado em quick start!
+Documentação completa disponível em docs/
+```
+
+**Se usuário responder "n" (NÃO)**:
+```
+⚠️  Mantendo README.md atual.
+
+Nota: README grande pode impactar legibilidade.
+Considere aplicar progressive disclosure manualmente:
+- Mover instalação detalhada para docs/INSTALLATION.md
+- Mover API reference para docs/API.md
+- Manter apenas overview + quick start no README.md
+```
+
+**Se README.md <= 40k caracteres**:
+```
+✅ Tamanho do README.md validado!
+
+Tamanho: [N] caracteres
+Status: ✅ Dentro do limite recomendado (40k)
+```
+
+---
+
+### 9. Resumo Final
 
 ```
 ═══════════════════════════════════════════
@@ -444,7 +730,11 @@ Próximas fases do PRD:
 
 Arquivos criados/atualizados:
 ├─ ✅ CLAUDE.md - Instruções de desenvolvimento incremental
-└─ ✅ docs/PRD.md v0.1 - Product Requirements Document inicial
+│   └─ Tamanho: [N] caracteres ([STATUS])
+├─ ✅ docs/PRD.md v0.1 - Product Requirements Document inicial
+└─ [Se aplicável]
+    └─ ✅ README.md validado/otimizado
+        └─ Tamanho: [N] caracteres ([STATUS])
 
 Claude agora está orientado a:
 ✓ Começar com MVP

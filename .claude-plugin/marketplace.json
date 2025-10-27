@@ -65,14 +65,14 @@
     },
     {
       "name": "incremental-dev",
-      "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade. Suporta projetos novos e legacy com análise retroativa, PRD retroativo e roadmap de simplificação",
+      "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade. Suporta projetos novos e legacy com análise retroativa, PRD retroativo e roadmap de simplificação. NOVO: Progressive disclosure automático para CLAUDE.md e README.md",
       "source": "./plugins/incremental-dev",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering", "prd", "requirements", "documentation", "product-management", "notebooks", "spikes", "legacy", "retrofit", "adoption", "code-analysis"]
+      "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering", "prd", "requirements", "documentation", "product-management", "notebooks", "spikes", "legacy", "retrofit", "adoption", "code-analysis", "progressive-disclosure", "performance"]
     },
     {
       "name": "github-actions-cicd",
