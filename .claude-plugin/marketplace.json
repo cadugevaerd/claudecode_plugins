@@ -54,14 +54,14 @@
     },
     {
       "name": "llm-eval-developer",
-      "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation",
+      "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation - NOVO: Benchmarking comparativo com LangChain/LangGraph",
       "source": "./plugins/llm-eval-developer",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["evaluation", "llm", "development", "openevals", "langsmith", "metrics", "testing", "scaffolding", "code-generation"]
+      "tags": ["evaluation", "llm", "development", "openevals", "langsmith", "metrics", "testing", "scaffolding", "code-generation", "benchmarking", "comparative-evaluation", "langchain", "langgraph"]
     },
     {
       "name": "incremental-dev",

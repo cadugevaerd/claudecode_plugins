@@ -56,7 +56,33 @@ Lista e documenta métricas de evaluation disponíveis, com:
 - Exemplos de código completos
 - Trade-offs e limitações
 
-### 4. Padrões de Desenvolvimento
+### 4. Benchmarking Comparativo de LLMs (NOVO! v1.2.0)
+
+Cria suites completas de **comparative evaluation** usando **LangChain/LangGraph** e **LangSmith**:
+
+**Usando LangChain/LCEL**:
+- Chains LCEL para comparação de modelos
+- Batch processing paralelo (`runnable.batch`)
+- LangSmith `evaluate()` API para tracking automático
+- Evaluators nativos (qa, context_qa, criteria)
+
+**Usando LangGraph**:
+- Workflows paralelos para benchmark
+- State management entre múltiplos LLMs
+- Execução concorrente otimizada
+
+**Métricas trackadas**:
+- ✅ **Qualidade**: accuracy, relevance, hallucination (via LangSmith evaluators)
+- ✅ **Performance**: latency P50/P95/P99, TTFT (via LangChain callbacks)
+- ✅ **Custo**: token usage e costs (via LangSmith automatic tracking)
+
+**Vantagens de usar LangChain/LangSmith**:
+- Tracking automático de tokens, custos e traces
+- Evaluators prontos (sem código manual)
+- Comparison view no LangSmith UI
+- Dataset management centralizado
+
+### 5. Padrões de Desenvolvimento
 
 Mostra padrões comuns de código para:
 - Dataset creation (manual, synthetic, sampling)
@@ -257,6 +283,81 @@ evaluations/
 ```
 
 **Cada arquivo é gerado com código funcional completo!**
+
+---
+
+### `/benchmark-llms` (NOVO! v1.2.0)
+
+**Cria suite de benchmark comparativo** para múltiplos LLMs usando LangChain/LangGraph.
+
+**O que faz**:
+- ✅ Gera código completo usando **LCEL chains** ou **LangGraph workflows**
+- ✅ Integra com **LangSmith evaluate()** API para tracking automático
+- ✅ Usa **LangSmith evaluators** nativos (qa, context_qa, criteria, custom)
+- ✅ Implementa **callbacks** para métricas de latência (P95, P99, TTFT)
+- ✅ Trackeia **custos automaticamente** via LangSmith
+- ✅ Gera relatórios comparativos (JSON, Markdown, HTML, CSV, LangSmith UI)
+
+**Uso**:
+```bash
+/benchmark-llms
+```
+
+O comando pergunta interativamente:
+1. **Modelos**: gpt-4o, claude-3.5-sonnet, gemini-1.5-pro, etc.
+2. **Dataset**: LangSmith dataset, MMLU, HumanEval, TruthfulQA, custom
+3. **Métricas**: accuracy, relevance, latency, cost, robustness, safety
+4. **Formato output**: json, markdown, html, csv, langsmith
+5. **Execução**: paralela (LCEL batch) ou sequencial
+
+**Output**: Estrutura completa de benchmark:
+
+```
+benchmarks/
+├── config/
+│   ├── benchmark_config.py          # Config de modelos
+│   └── langsmith_config.py          # Config LangSmith
+├── datasets/
+│   ├── dataset_loader.py            # Loader de datasets
+│   └── dataset_uploader.py          # Upload para LangSmith
+├── benchmarking/
+│   ├── langchain_benchmark.py       # Benchmark LCEL
+│   ├── langgraph_benchmark.py       # Benchmark LangGraph (parallel)
+│   ├── callbacks/
+│   │   └── latency_callback.py      # Callback P95/P99/TTFT
+│   ├── evaluators/
+│   │   └── langsmith_evaluators.py  # Evaluators LangSmith
+│   └── reporters/
+│       └── markdown_reporter.py     # Relatórios comparativos
+├── run_benchmark.py                 # Script principal
+└── README.md
+```
+
+**Cada arquivo é gerado com código funcional usando LangChain/LangSmith!**
+
+**Exemplo de output**:
+```markdown
+# 📊 LLM Benchmark Report
+
+## Winners
+🎯 **Best Quality**: gpt-4o (QA: 0.872)
+⚡ **Fastest (P95)**: claude-3.5-sonnet (891ms)
+💰 **Best Value**: gemini-1.5-pro (196 qa/$)
+
+## Metrics Comparison
+| Model | Accuracy | P95 Latency | Total Cost | Cost-Efficiency |
+|-------|----------|-------------|------------|-----------------|
+| gpt-4o | 87.2% | 1456ms | $1.15 | 75.8 qa/$ |
+| claude-3.5-sonnet | 85.8% | 891ms | $0.87 | 98.6 qa/$ |
+| gemini-1.5-pro | 84.3% | 1034ms | $0.43 | 196 qa/$ |
+```
+
+**Vantagens de LangChain/LangSmith**:
+- Tracking automático de tokens, custos, traces
+- Evaluators prontos (qa, context_qa, criteria)
+- Comparison view no LangSmith UI
+- Dataset management centralizado
+- Não precisa implementar tracking manual!
 
 ---
 
