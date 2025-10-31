@@ -78,7 +78,7 @@
       "name": "github-actions-cicd",
       "description": "Plugin especializado em CI/CD usando GitHub Actions com implementação incremental seguindo princípio YAGNI - cria, mantém e evolui workflows com segurança e boas práticas",
       "source": "./plugins/github-actions-cicd",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Carlos Araujo"
       },

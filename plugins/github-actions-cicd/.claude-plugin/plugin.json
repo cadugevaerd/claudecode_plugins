@@ -1,6 +1,6 @@
 {
   "name": "github-actions-cicd",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Plugin especializado em CI/CD usando GitHub Actions com implementação incremental, seguindo princípio YAGNI",
   "author": {
     "name": "Carlos Araujo",

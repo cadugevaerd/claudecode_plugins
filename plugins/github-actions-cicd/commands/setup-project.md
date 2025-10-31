@@ -155,33 +155,163 @@ deploy:
 - `docker/build-push-action@v5` - Build e push de imagens
 - `docker/setup-buildx-action@v3` - Setup BuildKit
 
+## 🤖 Agentes Especializados Disponíveis
+
+Este plugin fornece **2 agentes especializados** que Claude pode invocar automaticamente:
+
+### 1. cicd-assistant
+**Responsabilidade**: Criar e evoluir workflows GitHub Actions incrementalmente seguindo YAGNI
+
+**Quando Claude deve usar**:
+- Criar novos workflows MVP
+- Adicionar features a workflows existentes (cache, matrix, deploy)
+- Evoluir workflows incrementalmente
+- Aplicar "Regra dos 3" para refatoração
+
+**Invocação automática por contexto**:
+```python
+# Usuário: "criar workflow CI para este projeto"
+Task("Usar cicd-assistant para criar workflow MVP para projeto Python com uv")
+
+# Usuário: "adicionar cache ao workflow"
+Task("Usar cicd-assistant para adicionar cache ao workflow quando necessário")
+
+# Usuário: "evoluir workflow para produção"
+Task("Usar cicd-assistant para analisar e sugerir próximo passo incremental")
+```
+
+**Conhecimento especializado**:
+- Detecção automática de linguagem/framework
+- Templates para Python (uv, poetry), Node.js, Go, Rust
+- Aplicação de princípios YAGNI e Incremental Development
+- Validação de workflows com boas práticas de segurança
+
+### 2. workflow-analyzer
+**Responsabilidade**: Analisar workflows existentes, auditar segurança e sugerir melhorias
+
+**Quando Claude deve usar**:
+- Revisar workflows existentes
+- Auditar segurança (permissions, secrets, versões)
+- Verificar se actions estão atualizadas
+- Detectar oportunidades de otimização
+- Identificar anti-patterns
+
+**Invocação automática por contexto**:
+```python
+# Usuário: "revisar meus workflows"
+Task("Usar workflow-analyzer para analisar .github/workflows/ci.yml")
+
+# Usuário: "verificar se actions estão atualizadas"
+Task("Usar workflow-analyzer para verificar versões de actions")
+
+# Usuário: "analisar segurança dos workflows"
+Task("Usar workflow-analyzer para auditoria de segurança completa")
+```
+
+**Conhecimento especializado**:
+- Validação de sintaxe YAML
+- Auditoria de permissions e secrets
+- Comparação de versões (MAJOR/MINOR/PATCH)
+- Detecção de duplicação entre workflows
+- Score de qualidade (segurança, atualização, otimização)
+
 ## Comandos Disponíveis
 
-- `/cicd-init` - Inicializa CI/CD com workflow MVP
-- `/cicd-check` - Verifica workflows e versões de actions
+- `/cicd-init` - Inicializa CI/CD com workflow MVP (invoca cicd-assistant)
+- `/cicd-check` - Verifica workflows e versões de actions (invoca workflow-analyzer)
 - `/cicd-update` - Atualiza actions para últimas versões
 - `/cicd-setup-project` - Atualiza este CLAUDE.md
 
 ## Workflow de Desenvolvimento CI/CD
 
-1. **Iniciar Simples**
+### 1. **Iniciar Simples** (Agente: cicd-assistant)
    - Use `/cicd-init` para criar workflow MVP
    - Apenas checkout → install → test
+   - Agente aplica YAGNI automaticamente
 
-2. **Evoluir Incrementalmente**
+### 2. **Evoluir Incrementalmente** (Agente: cicd-assistant)
    - Adicione cache quando installs ficarem lentos
    - Adicione matrix quando precisar múltiplas versões
    - Adicione linting quando ferramentas estiverem configuradas
    - Adicione deploy quando ambiente estiver pronto
+   - Agente sugere próximos passos baseado em evidências
 
-3. **Manter Atualizado**
+### 3. **Manter Atualizado** (Agente: workflow-analyzer)
    - Use `/cicd-check` semanalmente
    - Use `/cicd-update` para atualizar actions
+   - Agente identifica actions desatualizadas automaticamente
 
-4. **Revisar Segurança**
+### 4. **Revisar Segurança** (Agente: workflow-analyzer)
    - Sempre revisar third-party actions
    - Usar SHA pinning em produção
    - Configurar permissions mínimas
+   - Agente audita segurança e gera relatório completo
+
+## Orientações para Claude Code
+
+### Detecção Automática de Contexto
+
+Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
+
+1. **Identificar tipo de solicitação**:
+   - Criação/evolução → Usar **cicd-assistant**
+   - Análise/auditoria → Usar **workflow-analyzer**
+
+2. **Invocar agente apropriado via Task tool**:
+   ```python
+   Task("Usar cicd-assistant para criar workflow básico de CI para projeto Python com uv")
+   Task("Usar workflow-analyzer para analisar workflow e sugerir próximo passo incremental")
+   ```
+
+3. **Seguir princípios dos agentes**:
+   - YAGNI: Não adicionar complexidade prematura
+   - Incremental: Evoluir baseado em evidências
+   - Security First: Sempre aplicar boas práticas
+
+4. **Documentar decisões tomadas pelo agente**
+
+### Exemplos de Invocação por Contexto
+
+| Solicitação do Usuário | Agente | Motivo |
+|------------------------|--------|--------|
+| "criar workflow CI" | cicd-assistant | Criar novo workflow |
+| "adicionar cache" | cicd-assistant | Evoluir workflow existente |
+| "revisar workflows" | workflow-analyzer | Análise completa |
+| "verificar segurança" | workflow-analyzer | Auditoria de segurança |
+| "actions atualizadas?" | workflow-analyzer | Análise de versões |
+| "otimizar workflow" | workflow-analyzer → cicd-assistant | Análise + Implementação |
+
+### Fluxo Típico de Trabalho
+
+```
+┌─────────────────────────────────────────┐
+│ Usuário: "melhorar meu workflow CI"     │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│ Claude detecta: análise + melhorias     │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│ Passo 1: Invocar workflow-analyzer      │
+│ → Analisar workflow atual               │
+│ → Identificar problemas e oportunidades │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│ Passo 2: Invocar cicd-assistant         │
+│ → Implementar melhorias sugeridas       │
+│ → Aplicar YAGNI e boas práticas         │
+└──────────────┬──────────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────────┐
+│ Resultado: Workflow otimizado e seguro  │
+└─────────────────────────────────────────┘
+```
 
 ## Scripts Python para CI/CD
 
