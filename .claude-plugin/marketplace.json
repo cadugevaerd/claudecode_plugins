@@ -10,14 +10,14 @@
   "plugins": [
     {
       "name": "git-commit-helper",
-      "description": "Automatiza commits Git com validações completas, conventional commits e integração com CI/CD. Suporte automático para projetos Python com uv (universal virtualenv)",
+      "description": "Automatiza commits Git com validações completas, conventional commits e integração com CI/CD. Suporte automático para projetos Python com uv (universal virtualenv). NOVO: /quick-commit para commits rápidos sem validações extensivas",
       "source": "./plugins/git-commit-helper",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["git", "commit", "conventional-commits", "ci", "validation", "security", "python", "uv"]
+      "tags": ["git", "commit", "conventional-commits", "ci", "validation", "security", "python", "uv", "quick-commit", "fast"]
     },
     {
       "name": "python-test-generator",

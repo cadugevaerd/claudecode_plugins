@@ -12,6 +12,7 @@ Plugin para Claude Code que automatiza o processo completo de commit Git seguind
 - ✅ **Push Seguro** - Gerencia conflitos e push opcional
 - ✅ **Multi-linguagem** - Suporta Node.js, Python, Go, Rust, Java, PHP, Ruby, Terraform
 - ✅ **Suporte UV Python** - Detecção automática e uso de uv (universal virtualenv) em projetos Python
+- ⚡ **Quick Commit** - Comando rápido `/quick-commit` para commits urgentes sem validações extensivas
 
 ## 📦 Instalação
 
