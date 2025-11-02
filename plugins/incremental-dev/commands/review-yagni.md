@@ -225,220 +225,30 @@ Simplificar? (s/n)
 
 ## 📚 Sinais de Over-Engineering
 
-### 🚨 Categoria 1: Abstrações Prematuras
+> **📘 Complete Reference**: See `docs/YAGNI_REFERENCE.md` for comprehensive list of over-engineering patterns, anti-patterns, and simplification strategies.
 
-**Detectar**:
+### Quick Reference - Common Patterns:
 
-❌ **Classe abstrata com 1 implementação**
-```python
-class AbstractProcessor(ABC):  # ← Desnecessário!
-    @abstractmethod
-    def process(self): pass
+**🚨 Categoria 1: Abstrações Prematuras**
+- Abstract class with 1 implementation → Use direct function
+- Interface for 1-2 implementations → Use simple functions
+- Factory without variation → Use direct instantiation
 
-class EmailProcessor(AbstractProcessor):  # Única implementação
-    def process(self): ...
-```
+**🚨 Categoria 2: Configuração Excessiva**
+- ConfigurationManager for < 10 values → Use dict/constants
+- Environment variables wrapper class → Use direct os.getenv
 
-✅ **Simplificar para**:
-```python
-def process_email(data):  # Função direta
-    ...
-```
+**🚨 Categoria 3: Patterns Desnecessários**
+- Singleton for stateless object → Use function
+- Observer Pattern without dynamic switching → Use direct call
+- Strategy Pattern without runtime variation → Use simple implementation
 
----
+**🚨 Categoria 4: Código Não Utilizado**
+- Functions/classes never called → DELETE
+- Unused parameters → REMOVE
+- Unused imports → DELETE
 
-❌ **Interface para 1-2 implementações**
-```python
-class IValidator(Protocol):  # ← Over-engineering
-    def validate(self, data) -> bool: ...
-
-# Apenas 2 implementações
-```
-
-✅ **Simplificar para**:
-```python
-def validate_email(email): ...
-def validate_phone(phone): ...
-```
-
----
-
-❌ **Factory sem variação**
-```python
-class ProcessorFactory:  # ← Desnecessário
-    def create(self):
-        return EmailProcessor()  # Sempre retorna o mesmo!
-```
-
-✅ **Simplificar para**:
-```python
-processor = EmailProcessor()  # Direto!
-```
-
-### 🚨 Categoria 2: Configuração Excessiva
-
-**Detectar**:
-
-❌ **ConfigurationManager complexo**
-```python
-class ConfigurationManager:
-    def __init__(self):
-        self.config = {}
-
-    def load_from_yaml(self, path):
-        # 50 linhas carregando YAML
-
-    def validate_schema(self):
-        # 30 linhas validando
-
-    def get(self, key, default=None):
-        # 20 linhas com cache/observers
-
-    # Total: 150+ linhas para 3 configs!
-```
-
-✅ **Simplificar para**:
-```python
-CONFIG = {
-    "max_retries": 3,
-    "timeout": 30,
-    "debug": False
-}
-```
-
----
-
-❌ **Environment variables com classe gerenciadora**
-```python
-class EnvManager:
-    def get_api_key(self):
-        return os.getenv("API_KEY")
-
-    def get_timeout(self):
-        return int(os.getenv("TIMEOUT", "30"))
-
-    # 10+ métodos para envs
-```
-
-✅ **Simplificar para**:
-```python
-API_KEY = os.getenv("API_KEY")
-TIMEOUT = int(os.getenv("TIMEOUT", "30"))
-```
-
-### 🚨 Categoria 3: Patterns Desnecessários
-
-**Detectar**:
-
-❌ **Singleton para objeto stateless**
-```python
-class EmailSender:
-    _instance = None
-
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-
-    def send(self, email):
-        # Função stateless - não precisa singleton!
-```
-
-✅ **Simplificar para**:
-```python
-def send_email(email):
-    # Função simples!
-```
-
----
-
-❌ **Observer Pattern sem necessidade**
-```python
-class Subject:
-    def __init__(self):
-        self.observers = []
-
-    def attach(self, observer): ...
-    def notify(self): ...
-
-class ConcreteObserver:
-    def update(self): ...
-
-# Usado apenas em 1 lugar, sem troca dinâmica
-```
-
-✅ **Simplificar para**:
-```python
-def on_event_happened():
-    handle_event()  # Chamada direta!
-```
-
----
-
-❌ **Strategy Pattern sem variação runtime**
-```python
-class SortStrategy(ABC):
-    @abstractmethod
-    def sort(self, data): pass
-
-class QuickSort(SortStrategy): ...
-class MergeSort(SortStrategy): ...
-
-# Sempre usa QuickSort, nunca troca
-sorter = QuickSort()
-```
-
-✅ **Simplificar para**:
-```python
-data.sort()  # Usa default do Python!
-```
-
-### 🚨 Categoria 4: Código Não Utilizado
-
-**Detectar**:
-
-❌ **Funções/classes nunca chamadas**
-```python
-# Buscar no codebase:
-# - Definição existe
-# - Nenhuma chamada encontrada
-
-class LegacyProcessor:  # ← Ninguém usa
-    def process(self): ...
-```
-
-✅ **Ação**:
-```
-REMOVER completamente
-```
-
----
-
-❌ **Parâmetros não utilizados**
-```python
-def process_email(email, retry=3, timeout=30, debug=False):
-    # retry, timeout, debug nunca usados no código
-    send(email)
-```
-
-✅ **Simplificar para**:
-```python
-def process_email(email):
-    send(email)
-```
-
----
-
-❌ **Imports não usados**
-```python
-import requests  # ← Não usado
-from typing import Dict, List, Optional  # ← Apenas Dict usado
-```
-
-✅ **Simplificar para**:
-```python
-from typing import Dict
-```
+**For detailed examples and code snippets**, refer to `docs/YAGNI_REFERENCE.md`.
 
 ## 📊 Análise de Complexidade
 
@@ -497,94 +307,29 @@ Arquivo: email_processor.py
 
 ## 🎯 Estratégias de Simplificação
 
-### 1. Replace Class with Function
+> **📘 Complete Guide**: See `docs/YAGNI_REFERENCE.md` sections:
+> - "Simplification Strategies" - Detailed refactoring patterns
+> - "Core YAGNI Principles" - Fundamental guidelines
 
-**Quando**: Classe sem estado (stateless)
+### Quick Reference:
 
-```python
-# Antes
-class EmailValidator:
-    def validate(self, email):
-        return "@" in email
+1. **Replace Class with Function** - When class is stateless
+2. **Inline Complex Abstraction** - When abstraction used only once
+3. **Replace Configuration Class with Constants** - For < 10 config values
+4. **Remove Unused Code** - Delete code not called
 
-validator = EmailValidator()
-result = validator.validate(email)
-
-# Depois
-def validate_email(email):
-    return "@" in email
-
-result = validate_email(email)
-```
-
-### 2. Inline Complex Abstraction
-
-**Quando**: Abstração usada 1 vez
-
-```python
-# Antes
-class AbstractProcessor(ABC):
-    @abstractmethod
-    def process(self): pass
-
-class EmailProcessor(AbstractProcessor):
-    def process(self):
-        return send_email()
-
-processor = EmailProcessor()
-result = processor.process()
-
-# Depois
-result = send_email()  # Direto!
-```
-
-### 3. Replace Configuration Class with Constants
-
-**Quando**: Configuração simples (< 10 valores)
-
-```python
-# Antes (50 linhas)
-class Config:
-    def __init__(self):
-        self._config = self._load()
-
-    def _load(self):
-        # complexidade...
-
-    def get(self, key):
-        # mais complexidade...
-
-config = Config()
-max_retries = config.get("max_retries")
-
-# Depois (3 linhas)
-MAX_RETRIES = 3
-TIMEOUT = 30
-```
-
-### 4. Remove Unused Code
-
-**Quando**: Código não chamado
-
-```python
-# Antes
-class LegacyProcessor:  # Ninguém usa
-    def process(self): ...
-
-def old_function():  # Ninguém chama
-    ...
-
-# Depois
-# [DELETADO]
-```
+**For code examples**, see `docs/YAGNI_REFERENCE.md`.
 
 ## 💡 Princípios YAGNI
 
-1. **Delete > Refactor**: Se não é usado, delete (não "melhore")
-2. **Simple > Elegant**: Código simples > Código "bem arquitetado"
-3. **Direct > Abstract**: Chamada direta > Abstração complexa
-4. **Now > Future**: Resolva problema atual, não futuro hipotético
-5. **Measure Use**: Se não é usado há 3+ meses, provavelmente não é necessário
+> **📘 Core Principles**: Full list in `docs/YAGNI_REFERENCE.md`
+
+Quick mantras:
+- **Delete > Refactor** - Delete unused code, don't improve it
+- **Simple > Elegant** - Simple code > "Well-architected" code
+- **Direct > Abstract** - Direct call > Complex abstraction
+- **Now > Future** - Solve current problem, not hypothetical
+- **Measure Use** - Unused 3+ months = probably unnecessary
 
 ## 📊 Relatório Final
 

@@ -522,70 +522,25 @@ Implementar este MVP? (s/n)
 
 ## ⚠️ Sinais de Over-Engineering
 
-Se você detectar estes padrões, ALERTE o usuário:
+> **📘 Complete Guide**: See `docs/YAGNI_REFERENCE.md` section "Signs of Over-Engineering in MVP"
 
-❌ **Classes abstratas no MVP**
-```python
-# OVER-ENGINEERING
-class AbstractProcessor(ABC):
-    @abstractmethod
-    def process(self): pass
-```
+Quick MVP anti-patterns:
+- ❌ **Abstract classes in MVP** → Use simple function
+- ❌ **Factory Pattern in MVP** → Use direct call
+- ❌ **Complex configuration in MVP** → Use hardcoded constants (OK for MVP!)
 
-✅ **Função simples no MVP**
-```python
-# MVP CORRETO
-def process_email(email):
-    return "processed"
-```
-
----
-
-❌ **Factory Pattern no MVP**
-```python
-# OVER-ENGINEERING
-class ProcessorFactory:
-    def create_processor(self, type): ...
-```
-
-✅ **Chamada direta no MVP**
-```python
-# MVP CORRETO
-result = process_email(email)
-```
-
----
-
-❌ **Configuração complexa no MVP**
-```python
-# OVER-ENGINEERING
-config = ConfigManager()
-config.load_from_yaml()
-config.validate_schema()
-```
-
-✅ **Hardcode no MVP**
-```python
-# MVP CORRETO
-MAX_RETRIES = 3  # OK para MVP!
-```
+**For detailed examples**, refer to `docs/YAGNI_REFERENCE.md`.
 
 ## 🎓 Princípios a Seguir
 
-### 1. YAGNI (You Aren't Gonna Need It)
-Não implemente funcionalidades até que sejam REALMENTE necessárias.
+> **📘 Core Principles**: Full list in `docs/YAGNI_REFERENCE.md`
 
-### 2. Simplicidade Primeiro
-Código simples e direto é melhor que abstrações prematuras.
-
-### 3. Evolutionary Architecture
-A arquitetura evolui conforme novos requisitos surgem, não antes.
-
-### 4. Feedback Rápido
-MVP permite testar hipóteses rapidamente com menos código.
-
-### 5. Refatoração no Momento Certo
-Refatore quando PADRÕES EMERGIREM, não antecipadamente.
+Quick principles:
+1. **YAGNI** - Don't implement until REALLY necessary
+2. **Simplicity First** - Simple code > Premature abstractions
+3. **Evolutionary Architecture** - Architecture evolves with requirements
+4. **Fast Feedback** - MVP tests hypotheses quickly
+5. **Right-Time Refactoring** - Refactor when patterns EMERGE
 
 ## 🚀 Próximos Passos Após MVP
 

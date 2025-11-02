@@ -359,89 +359,26 @@ Implementar? (s/n)
 
 ## ⚠️ Detectar Over-Engineering no Incremento
 
-Se você detectar estes padrões ao adicionar incremento, ALERTE:
+> **📘 Complete Guide**: See `docs/YAGNI_REFERENCE.md` section "Detecting Over-Engineering During Increments" for comprehensive anti-patterns and examples.
 
-### ❌ Padrão 1: Criar Classe para Função Simples
+### Quick Warning Signs:
 
-```python
-# OVER-ENGINEERING ao adicionar validação
-class EmailValidator:
-    def __init__(self):
-        self.rules = []
+**❌ Pattern 1**: Creating class for simple function → Use function instead
+**❌ Pattern 2**: Adding complex configuration → Use simple constant
+**❌ Pattern 3**: Creating premature abstraction → Use direct functions (wait for 3+ cases)
 
-    def add_rule(self, rule):
-        self.rules.append(rule)
-
-    def validate(self, email):
-        for rule in self.rules:
-            if not rule.check(email):
-                return False
-        return True
-
-validator = EmailValidator()
-validator.add_rule(HasAtSymbolRule())
-```
-
-**✅ Incremental correto**:
-```python
-def validate_email(email):
-    return "@" in email  # Função simples!
-```
-
----
-
-### ❌ Padrão 2: Adicionar Configuração Complexa
-
-```python
-# OVER-ENGINEERING ao adicionar retry
-config = {
-    "retry": {
-        "max_attempts": 3,
-        "backoff": "exponential",
-        "initial_delay": 1,
-        "max_delay": 60,
-        "exceptions": [NetworkError, TimeoutError]
-    }
-}
-```
-
-**✅ Incremental correto**:
-```python
-MAX_RETRIES = 1  # Constante simples!
-```
-
----
-
-### ❌ Padrão 3: Criar Abstração Prematura
-
-```python
-# OVER-ENGINEERING ao adicionar segundo processador
-class AbstractProcessor(ABC):
-    @abstractmethod
-    def process(self, data): pass
-
-class EmailProcessor(AbstractProcessor):
-    def process(self, data): ...
-
-class SMSProcessor(AbstractProcessor):
-    def process(self, data): ...
-```
-
-**✅ Incremental correto**:
-```python
-def process_email(email): ...
-def process_sms(sms): ...  # Duas funções por enquanto!
-```
-
-**Quando criar abstração?**: Quando tiver 3+ processadores E padrão claro emergir.
+**For detailed code examples**, refer to `docs/YAGNI_REFERENCE.md`.
 
 ## 🎯 Estratégia de Incremento
 
 ### 1. Regra dos 3
-Espere ter **3 casos similares** antes de criar abstração:
-- 1 caso: função direta
-- 2 casos: duas funções (repetição OK!)
-- 3 casos: AGORA abstrair (padrão emergiu)
+
+> **📘 The Rule of 3**: Complete guide in `docs/YAGNI_REFERENCE.md`
+
+Quick reference:
+- **1 case**: Direct function
+- **2 cases**: Two functions (duplication OK!)
+- **3 cases**: NOW abstract (pattern emerged)
 
 ### 2. Add, Don't Modify (quando possível)
 Prefira adicionar código novo a modificar existente:
@@ -487,20 +424,25 @@ Após cada incremento:
 
 ## 💡 Princípios do Incremento
 
-1. **Um incremento por vez**: Não adicionar múltiplas features juntas
-2. **Simples primeiro**: Código direto antes de abstrações
-3. **Funcionar > Perfeição**: Incremente funciona > Código "bonito"
-4. **Reversível**: Incremento pequeno é fácil de reverter
-5. **Testável**: Incremente pequeno é fácil de testar
+> **📘 Full Guide**: See `docs/YAGNI_REFERENCE.md` section "Incremental Development Strategy"
+
+Quick principles:
+1. **One at a time** - Don't add multiple features together
+2. **Simple first** - Direct code before abstractions
+3. **Working > Perfect** - Working increment > "Beautiful" code
+4. **Reversible** - Small increment is easy to revert
+5. **Testable** - Small increment is easy to test
 
 ## 🔄 Quando Refatorar?
 
-**NÃO refatore durante incremento** a menos que:
-- ✅ Padrão claro emergiu (3+ casos similares)
-- ✅ Duplicação óbvia (copy-paste exato)
-- ✅ Código impossível de adicionar incremento sem refatorar
+> **📘 When to Refactor**: Complete guide in `docs/YAGNI_REFERENCE.md`
 
-**Use** `/refactor-now` após alguns incrementos, não durante.
+**DO NOT refactor during increment** unless:
+- ✅ Clear pattern emerged (3+ similar cases)
+- ✅ Obvious duplication (exact copy-paste)
+- ✅ Impossible to add increment without refactoring
+
+**Use** `/refactor-now` after several increments, not during.
 
 ## 📄 Após Implementar Incremento
 

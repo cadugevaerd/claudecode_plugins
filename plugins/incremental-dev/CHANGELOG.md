@@ -5,6 +5,62 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.6.0] - 2025-11-01
+
+### Adicionado (MINOR - New Features)
+
+#### Nova Documentação de Referência Centralizada
+- **YAGNI_REFERENCE.md**: Novo arquivo de referência centralizado em `docs/` contendo:
+  - Todos os princípios YAGNI completos
+  - Padrões comuns de over-engineering (4 categorias)
+  - Anti-patterns detalhados com exemplos de código
+  - Estratégias de simplificação
+  - Regra dos 3 explicada
+  - Checklist de revisão YAGNI
+  - Guia de incremento ideal
+  - Quando refatorar
+
+### Modificado (Progressive Disclosure Applied)
+
+#### Eliminação de Duplicações com Progressive Disclosure
+- **review-yagni.md**: Reduzido de 682 para 427 linhas (-255 linhas, -37%)
+  - Seções de over-engineering patterns substituídas por referências ao YAGNI_REFERENCE.md
+  - Mantidas quick references para navegação rápida
+  - Detalhes movidos para documentação centralizada
+
+- **add-increment.md**: Reduzido de 537 para 479 linhas (-58 linhas, -11%)
+  - Padrões de over-engineering em incremento consolidados
+  - Princípios de incremento simplificados com referências
+  - Regra dos 3 mantida como quick reference
+
+- **start-incremental.md**: Reduzido de 607 para 562 linhas (-45 linhas, -7%)
+  - Sinais de over-engineering em MVP simplificados
+  - Princípios a seguir consolidados
+  - Referências ao documento central adicionadas
+
+#### Análise de Outros Problemas
+- **prd-update.md**: Já estava otimizado em 507 linhas (target: ~600) ✅
+- **PRD template**: Já estava ótimo em 172 linhas (target: <500) ✅
+- Comandos restantes verificados: sem duplicações significativas
+
+### Benefícios
+
+- ✅ **~358 linhas totais removidas** através de progressive disclosure
+- ✅ **Manutenção centralizada**: Atualizar YAGNI em um único lugar
+- ✅ **Consistência**: Todas as referências apontam para documentação canônica
+- ✅ **Performance**: Comandos mais enxutos carregam mais rápido
+- ✅ **Navegabilidade**: Quick references + documentação detalhada on-demand
+- ✅ **Escalabilidade**: Fácil adicionar novos padrões no YAGNI_REFERENCE.md
+
+### Estatísticas Finais
+
+```
+Arquivos modificados: 3 comandos
+Novo arquivo criado: docs/YAGNI_REFERENCE.md (462 linhas)
+Linhas removidas: ~358 linhas
+Redução total: ~18% de código duplicado
+```
+
 ## [1.5.2] - 2025-11-01
 
 ### Modificado (Usability Improvements - PATCH)
