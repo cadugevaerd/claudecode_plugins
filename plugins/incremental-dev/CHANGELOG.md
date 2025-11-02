@@ -5,6 +5,81 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.7.0] - 2025-11-01
+
+### Adicionado (MINOR - New Feature)
+
+#### Novo Comando: `/update-claude-md`
+- Comando dedicado para atualizar arquivo CLAUDE.md do projeto com configuração do plugin
+- **Funcionalidades**:
+  - ✅ Verifica se CLAUDE.md existe no projeto
+  - ✅ Cria arquivo básico se não existir
+  - ✅ Detecta se seção incremental-dev já existe
+  - ✅ Pergunta se deseja sobrescrever seção existente
+  - ✅ Adiciona/atualiza seção seguindo boas práticas (≤40 linhas)
+  - ✅ Valida arquivo após atualização
+- **Boas práticas aplicadas** (conforme plugin-creator agent):
+  - ✅ Seção ≤40 linhas (limite estrito)
+  - ✅ Menciona APENAS agent (incremental-dev-coach)
+  - ✅ NÃO menciona skills (auto-descobertas quando plugin instalado)
+  - ✅ NÃO menciona comandos (auto-descobertos na inicialização)
+  - ✅ Inclui 3-5 regras críticas mais importantes
+  - ✅ Link para README.md do plugin para documentação completa
+  - ✅ Nota sobre auto-discovery de skills e comandos
+  - ✅ Progressive disclosure (detalhes em README.md)
+- **Casos de uso**:
+  - CLAUDE.md não tem configuração do plugin
+  - CLAUDE.md foi corrompido ou deletado
+  - Reconfigurar após atualização do plugin
+  - Garantir CLAUDE.md segue práticas atuais
+- **Workflow detalhado** com 7 passos:
+  1. Verificar existência de CLAUDE.md
+  2. Ler arquivo atual ou criar básico
+  3. Detectar seção incremental-dev
+  4. Perguntar overwrite se existir
+  5. Adicionar/atualizar seção (≤40 linhas)
+  6. Escrever CLAUDE.md atualizado
+  7. Validar e reportar sucesso
+- **Error handling robusto**:
+  - Permissão de leitura/escrita negada
+  - CLAUDE.md corrompido
+  - Detecção de project root falhou
+- **Exemplos práticos**:
+  - Fresh project (sem CLAUDE.md)
+  - Existing CLAUDE.md sem plugin config
+  - Existing CLAUDE.md com config antiga
+  - Usuário declina overwrite
+- **Documentação técnica**:
+  - Progressive disclosure pattern explicado
+  - Mecanismo de auto-discovery documentado
+  - Performance notes incluídas
+  - Troubleshooting completo
+
+### Modificado
+
+#### Marketplace Description
+- Atualizada descrição da versão 1.7.0 mencionando `/update-claude-md`
+- Tags adicionadas: "claude-md", "setup"
+
+### Benefícios
+
+- ✅ **Facilita setup**: Usuários podem atualizar CLAUDE.md sem usar `/setup-project-incremental` (que cria PRD também)
+- ✅ **Segue best practices**: Garante CLAUDE.md sempre conforme plugin-creator agent guidelines
+- ✅ **Progressive disclosure**: ≤40 linhas em CLAUDE.md, docs completas em README.md
+- ✅ **Auto-discovery**: Documenta que skills/comandos são auto-descobertos (não precisa copiar manualmente)
+- ✅ **Flexibilidade**: Permite atualizar apenas CLAUDE.md sem afetar PRD ou resto do projeto
+- ✅ **Manutenibilidade**: Fácil reconfigurar após updates do plugin
+- ✅ **Robustez**: Error handling completo com soluções claras
+- ✅ **Educacional**: Usuários aprendem boas práticas de CLAUDE.md via exemplos
+
+### Comparação com Comandos Relacionados
+
+| Comando | Use When |
+|---------|----------|
+| `/setup-project-incremental` | Starting new project (creates PRD + CLAUDE.md) |
+| `/update-claude-md` | Only need to update/fix CLAUDE.md configuration |
+| `/start-incremental` | Define MVP after CLAUDE.md is configured |
+
 ## [1.6.0] - 2025-11-01
 
 ### Adicionado (MINOR - New Features)
