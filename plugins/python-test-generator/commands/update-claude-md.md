@@ -1,15 +1,16 @@
 ---
 name: update-claude-md
-description: Update project's CLAUDE.md with python-test-generator plugin configuration following best practices
+description: Update project's CLAUDE.md with python-test-generator plugin configuration following best practices (imperative - no prompts)
 ---
 
 # Update CLAUDE.md with Python-Test-Generator Configuration
 
-This command updates the project's CLAUDE.md file with the python-test-generator plugin configuration, following best practices:
+This command **automatically updates** the project's CLAUDE.md file with the python-test-generator plugin configuration, following best practices:
 - ≤40 lines of content
 - Progressive disclosure (link to README.md for complete docs)
 - Mentions ONLY agent (test-assistant) - skills and commands are auto-discovered
 - 3-5 critical rules about Python testing
+- **Imperative execution**: No interactive prompts - simply executes the update
 
 ## When to Use This Command
 
@@ -24,7 +25,7 @@ Use `/update-claude-md` when:
 1. ✅ Checks if CLAUDE.md exists in project root
 2. ✅ Creates basic CLAUDE.md if it doesn't exist
 3. ✅ Detects if python-test-generator section already exists
-4. ✅ Asks to overwrite if section exists
+4. ✅ **Automatically overwrites section if exists** (no prompts)
 5. ✅ Adds/updates section following best practices:
    - ≤40 lines
    - Agent available (test-assistant)
@@ -73,7 +74,7 @@ Use `/update-claude-md` when:
         ↓                       ↓
 ┌───────────────┐    ┌─────────────────────┐
 │ Step 4a:      │    │ Step 4b:            │
-│ Ask to        │    │ Prepare to Add      │
+│ Auto          │    │ Prepare to Add      │
 │ Overwrite     │    │ Section             │
 └───────────────┘    └─────────────────────┘
         │                       │
@@ -156,31 +157,22 @@ Check if content contains:
 ```
 
 **Result**:
-- **Section FOUND**: Proceed to Step 4a (ask to overwrite)
+- **Section FOUND**: Proceed to Step 4a (automatically overwrite)
 - **Section NOT FOUND**: Proceed to Step 4b (prepare to add)
 
 ---
 
-## Step 4a: Ask to Overwrite Existing Section
+## Step 4a: Automatically Overwrite Existing Section
 
-If python-test-generator section already exists, ask user if they want to overwrite it.
+If python-test-generator section already exists, **automatically overwrite it** without asking.
 
 **Inform user**:
 ```
 ⚠️  CLAUDE.md already has Python Test Generator section
-
-Do you want to overwrite it with updated configuration? (y/n)
+✅ Automatically updating with latest configuration...
 ```
 
-**User response**:
-- **y (yes)**: Proceed to Step 5 (replace section)
-- **n (no)**: ABORT command with message:
-  ```
-  ❌ Aborted - CLAUDE.md not modified
-
-  If you want to manually edit, the section is located at:
-  CLAUDE.md (search for "Python Test Generator")
-  ```
+**Action**: Proceed to Step 5 (replace section)
 
 ---
 
@@ -239,8 +231,8 @@ Create the python-test-generator section following best practices.
 
 All commands are auto-discovered on Claude startup. Key commands:
 - `/py-test` - Analyze coverage and generate Python tests (respects 80% threshold v2.0+)
-- `/setup-project-tests` - Configure CLAUDE.md with testing standards
 - `/setup-pytest-config` - Create pytest configuration automatically
+- `/update-claude-md` - Update CLAUDE.md with plugin configuration
 
 **Skills**: Auto-discovered when plugin is installed via `/plugin install` - no manual setup needed.
 
@@ -459,7 +451,7 @@ cd /path/to/project
 
 ---
 
-### Example 3: Existing CLAUDE.md With Old Plugin Config
+### Example 3: Existing CLAUDE.md With Old Plugin Config (Automatic Overwrite)
 
 **Scenario**: CLAUDE.md has old python-test-generator section that needs updating
 
@@ -471,15 +463,7 @@ cd /path/to/project
 **Agent output**:
 ```
 ⚠️  CLAUDE.md already has Python Test Generator section
-
-Do you want to overwrite it with updated configuration? (y/n)
-```
-
-**User responds**: `y`
-
-**Agent output**:
-```
-✅ Updating Python Test Generator section in CLAUDE.md
+✅ Automatically updating with latest configuration...
 
 ═══════════════════════════════════════════
 ✅ CLAUDE.md UPDATED SUCCESSFULLY
@@ -496,49 +480,10 @@ Do you want to overwrite it with updated configuration? (y/n)
 
 ---
 
-### Example 4: User Declines Overwrite
-
-**Scenario**: User doesn't want to overwrite existing section
-
-**User command**:
-```
-/update-claude-md
-```
-
-**Agent output**:
-```
-⚠️  CLAUDE.md already has Python Test Generator section
-
-Do you want to overwrite it with updated configuration? (y/n)
-```
-
-**User responds**: `n`
-
-**Agent output**:
-```
-❌ Aborted - CLAUDE.md not modified
-
-If you want to manually edit, the section is located at:
-CLAUDE.md (search for "Python Test Generator")
-
-To update in the future, run: /update-claude-md
-```
-
----
-
 ## Related Commands
 
-- `/setup-project-tests` - Full project setup (creates CLAUDE.md with testing standards)
 - `/py-test` - Analyze coverage and generate tests
 - `/setup-pytest-config` - Create pytest configuration
-
-**When to use which command:**
-
-| Command | Use When |
-|---------|----------|
-| `/setup-project-tests` | Starting new project (creates full CLAUDE.md testing config) |
-| `/update-claude-md` | Only need to update/fix CLAUDE.md configuration |
-| `/py-test` | Generate Python tests after CLAUDE.md is configured |
 
 ---
 
