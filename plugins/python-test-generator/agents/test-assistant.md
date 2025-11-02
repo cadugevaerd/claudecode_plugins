@@ -1,7 +1,7 @@
 ---
 name: test-assistant
 description: Expert in creating complete unit tests with mocks, fixtures and project patterns. Generates tests automatically up to 80% coverage threshold with intelligent iteration.
-model: claude-haiku-4-5-20251001
+model: haiku
 ---
 
 # Test Assistant Agent
