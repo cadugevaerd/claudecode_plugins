@@ -1607,6 +1607,77 @@ print(f"""
 """)
 ```
 
+**Step 1.5: Detect and Analyze Available Fixtures (v3.1.0+)**
+
+**Nova em v3.1.0**: Antes de criar novos testes, detectar e analisar fixtures disponíveis.
+
+```python
+# ✅ NEW STEP 1.5: Detect fixtures from conftest.py and fixtures/ directory
+fixtures_available = detect_fixtures(project_root)
+
+print(f"""
+🏗️ Fixtures Architecture Detection (v3.1.0+):
+
+conftest.py Location: {fixtures_available['conftest_path']}
+Fixtures Directory: {fixtures_available['fixtures_dir']}
+
+📋 Available Fixtures:
+""")
+
+# List fixtures by type
+for fixture_type, fixtures in fixtures_available['by_type'].items():
+    print(f"  {fixture_type.upper()}:")
+    for fixture_name, fixture_info in fixtures.items():
+        print(f"    - {fixture_name}: {fixture_info['description']}")
+
+print(f"""
+✅ Total fixtures available: {len(fixtures_available['all_fixtures'])}
+
+STRATEGY: Reutilizar fixtures existentes ao criar novos testes
+- Fixtures detectadas serão reutilizadas automaticamente
+- Novos testes pedirão fixtures detectadas como parâmetros
+- Apenas criar NOVAS fixtures se necessário (gaps específicos)
+""")
+
+# Store fixtures for use in test generation
+test_context['available_fixtures'] = fixtures_available
+```
+
+**Exemplo de Detecção**:
+
+```
+🏗️ Fixtures Architecture Detection (v3.1.0+):
+
+conftest.py Location: tests/conftest.py
+Fixtures Directory: tests/fixtures
+
+📋 Available Fixtures:
+
+  DATABASE:
+    - db_engine: Create in-memory SQLite database for testing
+    - db_session: Provide database session with automatic cleanup
+    - sample_user: Create sample user in database
+
+  API:
+    - api_client: FastAPI test client for endpoint testing
+    - auth_headers: Authentication headers for authenticated endpoints
+
+  MOCKS:
+    - mock_aws_s3: Mock AWS S3 client for storage tests
+    - mock_llm: Mock LLM for LangChain/LangGraph tests
+
+  DATA:
+    - user_factory: Factory for creating test users
+    - sample_users: Create multiple sample users (5 users)
+
+✅ Total fixtures available: 10
+
+STRATEGY: Reutilizar fixtures existentes ao criar novos testes
+- Fixtures detectadas serão reutilizadas automaticamente
+- Novos testes pedirão fixtures detectadas como parâmetros
+- Apenas criar NOVAS fixtures se necessário (gaps específicos)
+```
+
 **Step 2: Criar Novos Testes para Gaps (PRIORIZANDO POR MAIOR MISS)**
 
 **⚠️ CRÍTICO**: Ordenar gaps por MAIOR MISS primeiro (100% - cobertura%)

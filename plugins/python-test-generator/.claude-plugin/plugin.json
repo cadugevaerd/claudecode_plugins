@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "3.0.0",
-  "description": "Automatic Python unit test generator with three-phase intelligent strategy: analyze existing tests, maintain quality, then create new tests. Reaches 80% coverage with zero test duplication.",
+  "version": "3.1.0",
+  "description": "Automatic Python unit test generator with three-phase intelligent strategy: analyze existing tests, maintain quality, then create new tests. Smart fixtures architecture support with automatic reuse. Reaches 80% coverage with zero test duplication.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
@@ -14,6 +14,8 @@
     "pytest",
     "pytest-config",
     "pyproject-toml",
+    "fixtures",
+    "conftest",
     "automation",
     "generator",
     "parallel",

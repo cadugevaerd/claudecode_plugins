@@ -21,14 +21,14 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Intelligent Python test generator with three-phase strategy (analyze → maintain → create). Zero test duplication, automatic optimization of existing tests, guaranteed 80% coverage.",
+      "description": "Intelligent Python test generator with three-phase strategy (analyze → maintain → create). Smart fixtures architecture support with automatic reuse. Zero test duplication, guaranteed 80% coverage.",
       "source": "./plugins/python-test-generator",
-      "version": "3.0.0",
+      "version": "3.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "testing",
-      "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "pytest-config", "pyproject-toml", "automation", "generator", "parallel", "quality", "mock", "langchain", "langgraph", "agentevals", "trajectory", "llm-testing", "vcr", "skills", "threshold", "coverage-enforcement", "claude-md", "setup", "imperative", "haiku", "performance"]
+      "tags": ["python", "testing", "unit-tests", "coverage", "pytest", "pytest-config", "pyproject-toml", "fixtures", "conftest", "automation", "generator", "parallel", "quality", "mock", "langchain", "langgraph", "agentevals", "trajectory", "llm-testing", "vcr", "skills", "threshold", "coverage-enforcement", "claude-md", "setup", "imperative", "haiku", "performance"]
     },
     {
       "name": "code-review",

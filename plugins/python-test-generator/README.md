@@ -606,6 +606,294 @@ def test_lambda_handler_processa_s3_event(self, mock_env, mock_boto):
 
 ---
 
+## 🏗️ Fixtures Architecture (v3.1.0+)
+
+### Recommended Project Structure
+
+O python-test-generator detecta automaticamente e suporta a seguinte arquitetura de fixtures:
+
+```
+tests/
+├── conftest.py                    # Setup global + imports de fixtures
+├── fixtures/
+│   ├── __init__.py               # Package marker
+│   ├── database.py               # Database fixtures (SQLAlchemy, Django ORM, etc)
+│   ├── api.py                    # API/HTTP fixtures (FastAPI, requests, httpx, etc)
+│   ├── mocks.py                  # Mock objects fixtures (AWS, external APIs, etc)
+│   └── data.py                   # Data factories and sample data (factory-boy, etc)
+├── unit/
+│   ├── test_calculator.py
+│   ├── test_validator.py
+│   └── ...
+├── integration/
+│   ├── test_api_endpoints.py
+│   ├── test_database_operations.py
+│   └── ...
+└── e2e/
+    ├── test_workflow.py
+    └── ...
+```
+
+### Por Que Usar Esta Arquitetura?
+
+1. **Separação de Responsabilidades**: Fixtures organizadas por tipo
+2. **Reutilização**: Fixtures definidas uma vez, usadas em múltiplos testes
+3. **Manutenibilidade**: Mudanças em uma fixture afetam todos os testes
+4. **Escalabilidade**: Fácil adicionar novas fixtures sem bagunçar conftest.py
+5. **Documentação**: Clara distinção entre tipos de fixtures
+
+### conftest.py - Central Setup
+
+```python
+# tests/conftest.py
+import pytest
+from fixtures.database import *      # Database fixtures
+from fixtures.api import *           # API fixtures
+from fixtures.mocks import *         # Mock fixtures
+from fixtures.data import *          # Data factories
+
+# Global pytest configuration
+pytest_plugins = [
+    "pytest-asyncio",
+    "pytest-mock",
+    "pytest-cov",
+]
+
+# Hooks compartilhados entre testes
+@pytest.fixture(scope="session")
+def test_config():
+    """Global test configuration"""
+    return {
+        "environment": "test",
+        "timeout": 30,
+    }
+```
+
+### fixtures/database.py - Database Fixtures
+
+```python
+# tests/fixtures/database.py
+import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+@pytest.fixture
+def db_engine():
+    """Create in-memory SQLite database for testing"""
+    engine = create_engine("sqlite:///:memory:")
+    # Create tables
+    from models import Base
+    Base.metadata.create_all(engine)
+    yield engine
+    engine.dispose()
+
+@pytest.fixture
+def db_session(db_engine):
+    """Provide database session"""
+    Session = sessionmaker(bind=db_engine)
+    session = Session()
+    yield session
+    session.close()
+
+@pytest.fixture
+def sample_user(db_session):
+    """Create sample user in database"""
+    from models import User
+    user = User(name="Test User", email="test@example.com")
+    db_session.add(user)
+    db_session.commit()
+    return user
+```
+
+### fixtures/api.py - API/HTTP Fixtures
+
+```python
+# tests/fixtures/api.py
+import pytest
+from fastapi.testclient import TestClient
+
+@pytest.fixture
+def api_client():
+    """FastAPI test client"""
+    from main import app
+    return TestClient(app)
+
+@pytest.fixture
+def mock_external_api(mocker):
+    """Mock external HTTP API calls"""
+    return mocker.patch("requests.get")
+
+@pytest.fixture
+def auth_headers():
+    """Authentication headers for API tests"""
+    return {
+        "Authorization": "Bearer test-token",
+        "Content-Type": "application/json",
+    }
+```
+
+### fixtures/mocks.py - Mock Objects
+
+```python
+# tests/fixtures/mocks.py
+import pytest
+from unittest.mock import Mock, patch
+
+@pytest.fixture
+def mock_aws_s3(mocker):
+    """Mock AWS S3 client"""
+    return mocker.patch("boto3.client")
+
+@pytest.fixture
+def mock_llm(mocker):
+    """Mock LLM for LangChain/LangGraph tests"""
+    from unittest.mock import AsyncMock
+    return mocker.patch(
+        "langchain.chat_models.ChatOpenAI",
+        new_callable=AsyncMock
+    )
+
+@pytest.fixture
+def mock_env_vars(mocker):
+    """Mock environment variables"""
+    mocker.patch.dict("os.environ", {
+        "API_KEY": "test-key",
+        "DATABASE_URL": "sqlite:///:memory:",
+    })
+```
+
+### fixtures/data.py - Data Factories
+
+```python
+# tests/fixtures/data.py
+import pytest
+from factory import Factory, Sequence
+
+class UserFactory(Factory):
+    """Factory for creating test users"""
+    class Meta:
+        model = "models.User"
+
+    id = Sequence(lambda n: n)
+    name = Sequence(lambda n: f"User {n}")
+    email = Sequence(lambda n: f"user{n}@example.com")
+
+@pytest.fixture
+def user_factory():
+    """Factory for creating users"""
+    return UserFactory
+
+@pytest.fixture
+def sample_users(db_session):
+    """Create multiple sample users"""
+    users = [
+        UserFactory(name=f"User {i}", email=f"user{i}@example.com")
+        for i in range(5)
+    ]
+    db_session.add_all(users)
+    db_session.commit()
+    return users
+```
+
+### Como o Plugin Suporta Esta Arquitetura
+
+O python-test-generator automaticamente:
+
+1. **Detecta** estrutura de fixtures em `conftest.py` e pasta `fixtures/`
+2. **Lê** fixtures disponíveis antes de criar novos testes
+3. **Reutiliza** fixtures existentes ao criar testes
+4. **Sugere** novas fixtures se necessário
+5. **Mantém** organização de fixtures limpa e escalável
+
+#### Exemplo: Teste que Reutiliza Fixtures
+
+```python
+# tests/unit/test_user_service.py
+
+def test_get_user_by_id(db_session, sample_user):
+    """Teste: Service busca usuário existente por ID"""
+    # Arrange
+    user_id = sample_user.id
+
+    # Act (fixture 'sample_user' foi criada automaticamente)
+    result = UserService.get_user(db_session, user_id)
+
+    # Assert
+    assert result.name == sample_user.name
+    assert result.email == sample_user.email
+```
+
+#### Exemplo: Teste com Mocks Organizados
+
+```python
+# tests/integration/test_api_endpoints.py
+
+def test_create_user_endpoint(api_client, auth_headers, mock_email_service):
+    """Teste: Endpoint POST /users cria usuário com email enviado"""
+    # Arrange
+    payload = {
+        "name": "New User",
+        "email": "new@example.com"
+    }
+
+    # Act
+    response = api_client.post(
+        "/api/users",
+        json=payload,
+        headers=auth_headers
+    )
+
+    # Assert
+    assert response.status_code == 201
+    mock_email_service.send.assert_called_once()
+```
+
+### Padrões Avançados
+
+#### Parametrização com Fixtures
+
+```python
+@pytest.mark.parametrize("user_type,expected_role", [
+    ("admin", "admin"),
+    ("user", "viewer"),
+    ("guest", "none"),
+])
+@pytest.fixture(params=[True, False])
+def cache_enabled(request):
+    return request.param
+
+def test_user_roles_with_cache(sample_user, user_type, expected_role, cache_enabled):
+    """Teste múltiplas combinações com fixtures"""
+    ...
+```
+
+#### Fixtures com Cleanup
+
+```python
+@pytest.fixture
+def temp_file():
+    """Create temporary file with cleanup"""
+    import tempfile
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        yield f.name
+
+    import os
+    os.remove(f.name)  # Cleanup after test
+```
+
+#### Fixtures Assíncronas
+
+```python
+@pytest.fixture
+async def async_client():
+    """Async HTTP client for testing"""
+    import httpx
+    async with httpx.AsyncClient(app=app) as client:
+        yield client
+```
+
+---
+
 ## 🎯 Skills Especializadas
 
 ### LangChain Test Specialist

@@ -5,6 +5,103 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [3.1.0] - 2025-11-02
+
+### ✨ NOVA FEATURE - Fixtures Architecture Support (v3.1.0)
+
+**NOVO em v3.1.0**: Suporte completo para arquitetura de fixtures organizada.
+
+#### Funcionalidades Adicionadas
+
+1. **Smart Fixtures Detection**
+   - Detecção automática de `conftest.py` e pasta `tests/fixtures/`
+   - Análise de fixtures disponíveis antes de criar novos testes
+   - Classificação de fixtures por tipo (database, api, mocks, data)
+
+2. **Automatic Fixtures Reuse**
+   - Reutilização automática de fixtures existentes ao criar novos testes
+   - Evita duplicação de setup/teardown
+   - Testes ficam mais DRY (Don't Repeat Yourself)
+
+3. **Recommended Fixtures Architecture**
+   - Padrão recomendado: `tests/conftest.py` + `tests/fixtures/`
+   - Exemplos completos de:
+     - `fixtures/database.py` - Database fixtures
+     - `fixtures/api.py` - API/HTTP fixtures
+     - `fixtures/mocks.py` - Mock objects
+     - `fixtures/data.py` - Data factories
+
+4. **Advanced Fixture Patterns**
+   - Fixtures parametrizadas
+   - Fixtures com cleanup (`yield`)
+   - Fixtures assíncronas
+   - Fixtures compartilhadas
+
+#### Documentação Expandida
+
+- **README.md**: Seção "Fixtures Architecture (v3.1.0+)" com:
+  - Estrutura recomendada de diretórios
+  - Por que usar essa arquitetura (5 benefícios)
+  - Exemplos completos de conftest.py
+  - Exemplos de fixtures por tipo
+  - Como o plugin suporta fixtures
+  - Padrões avançados
+
+- **Comando `/py-test`**: Atualizado com:
+  - Menção a PHASE 3 incluindo detecção de fixtures
+  - Suporte a reutilização automática
+  - Referência a README para mais detalhes
+
+- **Agent `test-assistant`**: Adicionado:
+  - Novo Step 1.5: "Detect and Analyze Available Fixtures"
+  - Lógica para ler e categorizar fixtures
+  - Estratégia de reutilização automática
+  - Sugestão de novas fixtures quando necessário
+
+#### Benefícios para Usuários
+
+- ✅ **Testes mais limpos**: Reutiliza fixtures em vez de duplicar setup
+- ✅ **Menos manutenção**: Uma mudança em fixture afeta todos os testes
+- ✅ **Melhor organização**: Fixtures organizadas por tipo
+- ✅ **Escalabilidade**: Fácil adicionar novas fixtures sem bagunçar conftest.py
+- ✅ **Documentação**: Exemplos práticos de padrões recomendados
+
+#### Tags Adicionadas
+
+- `fixtures` - Novo
+- `conftest` - Novo
+
+#### Backward Compatibility
+
+✅ Totalmente compatível com v3.0.0
+- Plugins existentes sem fixtures continuam funcionando
+- Detecção de fixtures é opcional
+- Se não houver fixtures, agent funciona normalmente
+
+#### Exemplo de Uso
+
+```python
+# Estrutura recomendada
+tests/
+├── conftest.py                 # Imports de fixtures
+├── fixtures/
+│   ├── database.py            # Database fixtures
+│   ├── api.py                 # API fixtures
+│   └── mocks.py               # Mock objects
+
+# Plugin detecta automaticamente:
+✅ fixtures/database.py - db_session, sample_user, etc.
+✅ fixtures/api.py - api_client, auth_headers, etc.
+✅ fixtures/mocks.py - mock_aws_s3, mock_llm, etc.
+
+# Novo teste reutiliza as fixtures:
+def test_create_user(api_client, db_session, auth_headers):
+    """Usa fixtures detectadas automaticamente"""
+    ...
+```
+
+---
+
 ## [3.0.0] - 2025-11-02
 
 ### 🚀 BREAKING CHANGE - Three-Phase Intelligent Test Strategy
