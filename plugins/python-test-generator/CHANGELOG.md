@@ -5,6 +5,44 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [2.0.0] - 2025-11-01
+
+### ⚠️ BREAKING CHANGES
+
+- **Test generation now respects 80% coverage threshold**: `/py-test` command will NOT generate new tests if project already has ≥80% coverage, unless explicitly requested by user. This prevents unnecessary test creation and maintains focus on untested code.
+
+  **Migration**: If you relied on automatic test generation regardless of coverage, you'll need to explicitly confirm test creation when coverage is already sufficient (≥80%). When prompted:
+  - Respond "y" to create tests anyway
+  - Respond "n" to abort (tests won't be created)
+
+  **Rationale**: This breaking change aligns with industry best practice (80% coverage target) and prevents test suite bloat.
+
+### Adicionado
+
+- **New command `/update-claude-md`**: Updates project's CLAUDE.md with python-test-generator configuration following best practices (≤40 lines, progressive disclosure, agent documentation)
+- **Automatic detection and removal of obsolete tests**: `/py-test` now identifies and removes unnecessary tests (functions no longer exist, duplicates, no assertions, invalid mocks)
+- **Conditional removal of failing tests**: `/py-test` detects failing tests and offers removal ONLY if coverage remains ≥80% after removal
+  - If coverage ≥80% after removal: offers to remove failing tests
+  - If coverage <80% after removal: warns user to fix tests manually instead
+  - Automatic coverage impact analysis before removal
+- Coverage threshold verification in `/py-test` command
+- User prompt when coverage ≥80%: asks if tests should be created anyway
+- User prompt before removing obsolete tests: lists all obsolete tests with justification
+- User prompt before removing failing tests: shows coverage impact analysis
+- Enhanced agent `test-assistant` with coverage threshold logic
+- Enhanced agent `test-assistant` with failing test detection (Step 2.5)
+- Enhanced agent `test-assistant` with obsolete test detection (Step 2.6)
+- Migration guide in README.md for v1.x → v2.0 upgrade
+- 5 criteria for obsolete test detection: FUNCTION_NOT_FOUND, DUPLICATE, NO_ASSERTIONS, MOCK_NOT_FOUND, OLD_IMPLEMENTATION
+
+### Modificado
+
+- **Agent no longer creates git commits**: test-assistant now only generates test files without committing. Users have full control over when to commit tests.
+- `/py-test` command now checks coverage before generating tests
+- Agent `test-assistant` updated to respect coverage threshold
+- README.md with breaking changes section and migration guide
+- Command `/py-test` description updated to mention threshold enforcement
+
 ## [1.4.1] - 2025-10-26
 
 ### Adicionado

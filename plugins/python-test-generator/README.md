@@ -2,13 +2,61 @@
 
 Plugin de geração automática de testes unitários Python com análise de cobertura e **criação paralela** de arquivos para máxima performance.
 
+## ⚠️ BREAKING CHANGES - v2.0.0
+
+**MAJOR CHANGES in v2.0.0** (Released: 2025-11-01):
+
+### 🚨 Coverage Threshold Enforcement
+
+**Before (v1.x)**:
+- `/py-test` always created tests regardless of current coverage
+- No verification of existing coverage level
+
+**After (v2.0+)**:
+- `/py-test` **RESPECTS 80% coverage threshold**
+- If coverage ≥80%: **STOPS and asks user** if they want to continue
+- If coverage <80%: **Proceeds automatically** without questions
+
+**Migration Guide**:
+
+If you relied on automatic test generation regardless of coverage:
+1. ✅ Understand that v2.0+ prevents unnecessary test creation
+2. ✅ When coverage ≥80%, explicitly confirm test creation: respond "y" when prompted
+3. ✅ To bypass threshold check, you'll need to confirm explicitly
+
+**Why this breaking change?**:
+- ✅ Prevents unnecessary test creation when coverage is already sufficient
+- ✅ Focuses test generation on code that actually needs it
+- ✅ Reduces noise and keeps test suite maintainable
+- ✅ Aligns with best practice: 80% coverage is the industry standard target
+
+### 🆕 New Command: `/update-claude-md`
+
+**What it does**:
+- Updates project's CLAUDE.md with python-test-generator configuration
+- Follows best practices (≤40 lines, progressive disclosure)
+- Documents agent and critical testing rules
+- Auto-discovery friendly (no manual skill copying)
+
+**When to use**:
+```bash
+# Setup python-test-generator in project
+/update-claude-md
+```
+
+---
+
 ## 📋 Descrição
 
 O **Python Test Generator** é um plugin especializado que analisa a cobertura de testes do seu projeto Python e **cria automaticamente múltiplos testes em paralelo**, gerando testes unitários completos, bem estruturados e com alta qualidade, seguindo os padrões e frameworks já utilizados no projeto.
 
+**v2.0+**: Agora com **coverage threshold enforcement** - respeita 80% de cobertura para evitar criação desnecessária de testes.
+
 ### 🎯 Principais Recursos
 
 - ⚡ **Criação Paralela**: Gera múltiplos arquivos de teste simultaneamente (até 80% mais rápido)
+- 🧹 **🆕 v2.0: Detecção de Testes Obsoletos**: Identifica e remove testes desnecessários automaticamente
+- 🧪 **🆕 v2.0: Remoção Condicional de Testes Falhando**: Remove testes falhando APENAS se cobertura permanecer ≥80%
 - ✅ **Detecção Automática Python**: Identifica frameworks, estrutura e padrões do projeto Python
 - ✅ **Análise de Cobertura**: Executa e analisa cobertura atual automaticamente
 - ✅ **Criação Inteligente**: Gera testes Python seguindo AAA pattern e padrões do projeto
@@ -17,6 +65,27 @@ O **Python Test Generator** é um plugin especializado que analisa a cobertura d
 - ✅ **Modo Empírico**: Executa sem perguntas, totalmente automatizado
 - ✅ **Reutilização**: Aproveita fixtures e factories Python existentes
 - ✅ **Validação**: Executa testes criados e valida cobertura alcançada
+
+### ❌ What the Agent Does NOT Do
+
+**IMPORTANT**: This plugin does NOT create git commits.
+
+**What the agent does**:
+- ✅ Generates test files and saves to disk
+- ✅ Runs tests to verify they work
+- ✅ Reports results and coverage
+
+**What the agent does NOT do**:
+- ❌ Does NOT create git commits (you commit when ready)
+- ❌ Does NOT push to remote repositories
+- ❌ Does NOT modify .gitignore or git configuration
+
+**Workflow**:
+1. Agent generates and saves test files
+2. Agent runs tests to validate
+3. Agent reports results
+4. **You review tests**
+5. **You commit when satisfied**: `git add tests/ && git commit -m "test: ..."`
 
 ---
 
@@ -38,6 +107,30 @@ git pull origin main
 ---
 
 ## 📖 Uso
+
+### 🆕 `/update-claude-md` (v2.0+)
+
+**Configura CLAUDE.md do projeto** com plugin python-test-generator.
+
+**O que faz**:
+- ✅ Cria ou atualiza `CLAUDE.md` na raiz do projeto
+- ✅ Adiciona seção python-test-generator (≤40 linhas)
+- ✅ Documenta agent test-assistant e regras críticas
+- ✅ Link para README.md completo (progressive disclosure)
+- ✅ Preserva conteúdo existente (não sobrescreve)
+
+**Uso**:
+```bash
+# Setup do plugin no projeto
+/update-claude-md
+```
+
+**Quando usar**:
+- ✅ Ao começar a usar python-test-generator em um projeto
+- ✅ Quando CLAUDE.md foi corrompido ou deletado
+- ✅ Para atualizar configuração após upgrade do plugin
+
+---
 
 ### `/setup-project-tests`
 
@@ -96,11 +189,15 @@ Analisa cobertura e **cria testes Python em paralelo** automaticamente:
 1. **Detecta** framework de testes Python (pytest/unittest/nose)
 2. **Identifica** gerenciador de pacotes Python (poetry/pipenv/uv/pip)
 3. **Analisa** cobertura atual do projeto Python
-4. **Identifica** módulos Python com cobertura < 80%
-5. **Lê** fixtures e padrões Python existentes (conftest.py)
-6. **Cria testes em PARALELO** - múltiplos arquivos simultaneamente (⚡ até 80% mais rápido)
-7. **Executa** testes criados e valida cobertura
-8. **Reporta** resultados detalhados
+4. **🆕 v2.0: Verifica** se cobertura já está ≥80% (pergunta se continua)
+5. **🆕 v2.0: Detecta testes falhando** e analisa impacto na cobertura
+6. **🆕 v2.0: Remove testes falhando** (APENAS se cobertura ≥80% após remoção)
+7. **🆕 v2.0: Detecta testes obsoletos** e pergunta se remove
+8. **Identifica** módulos Python com cobertura < 80%
+9. **Lê** fixtures e padrões Python existentes (conftest.py)
+10. **Cria testes em PARALELO** - múltiplos arquivos simultaneamente (⚡ até 80% mais rápido)
+11. **Executa** testes criados e valida cobertura
+12. **Reporta** resultados detalhados
 
 ### ⚡ Performance com Paralelização
 
@@ -108,6 +205,118 @@ O plugin cria **múltiplos arquivos de teste simultaneamente**:
 - **5 módulos sem testes** → Cria 5 arquivos em paralelo
 - **10 módulos sem testes** → Cria 10 arquivos em paralelo
 - **Redução de tempo**: Até 80% mais rápido que criação sequencial
+
+### 🧪 Remoção Condicional de Testes Falhando (v2.0+)
+
+**NOVO em v2.0**: O plugin agora detecta **testes falhando** e remove-os automaticamente **APENAS** se cobertura permanecer ≥80% após remoção.
+
+#### Como Funciona
+
+1. **Executa pytest** e identifica testes com falhas
+2. **Calcula cobertura atual** do projeto
+3. **Estima cobertura após remoção** dos testes falhando
+4. **Decisão condicional**:
+   - ✅ Se cobertura ≥80%: **Oferece remoção**
+   - ❌ Se cobertura <80%: **Avisa para corrigir manualmente**
+
+#### Cenário 1: Cobertura ≥80% após remoção (REMOVE)
+
+```
+═══════════════════════════════════════════
+⚠️  FAILING TESTS DETECTED (2 tests)
+═══════════════════════════════════════════
+
+Coverage Analysis:
+- Current coverage: 85%
+- Estimated coverage after removal: 82%
+
+📍 tests/unit/test_calculator.py::test_divide_by_zero
+   Error: ZeroDivisionError
+
+📍 tests/unit/test_validator.py::test_email_validation
+   Error: AssertionError: expected True, got False
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Coverage will remain ≥80% (82%) after removal.
+
+These tests are failing and can be safely removed
+without compromising coverage.
+
+Remove failing tests? (y/n)
+```
+
+#### Cenário 2: Cobertura <80% após remoção (NÃO REMOVE)
+
+```
+═══════════════════════════════════════════
+⚠️  FAILING TESTS DETECTED (5 tests)
+═══════════════════════════════════════════
+
+Coverage Analysis:
+- Current coverage: 83%
+- Estimated coverage after removal: 76%
+
+❌ Cannot remove failing tests automatically.
+
+Reason: Coverage would drop below 80% threshold (76% < 80%).
+
+These tests are failing but cover critical code paths.
+You should fix them instead of removing them:
+
+📍 tests/unit/test_core.py::test_main_flow
+📍 tests/unit/test_api.py::test_endpoint_validation
+...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  Action Required: Fix failing tests manually.
+```
+
+#### Por que isso é útil?
+
+- ✅ **Automático**: Detecta testes falhando sem intervenção manual
+- ✅ **Seguro**: Só remove se cobertura permanecer suficiente
+- ✅ **Transparente**: Mostra impacto na cobertura antes de remover
+- ✅ **Inteligente**: Evita remoção de testes críticos
+
+---
+
+### 🧹 Detecção de Testes Obsoletos (v2.0+)
+
+O plugin também detecta automaticamente **testes desnecessários ou obsoletos** e oferece removê-los:
+
+**Critérios de Detecção**:
+1. **Função não existe mais**: Teste para função que foi removida/renomeada
+2. **Teste duplicado**: Outro teste já cobre o mesmo cenário
+3. **Sem asserções reais**: Teste vazio ou só com `assert True`
+4. **Mock inválido**: Mocka função/classe que não existe mais
+5. **Código refatorado**: Teste de implementação antiga que mudou
+
+**Exemplo de Output**:
+```
+🧹 OBSOLETE TESTS DETECTED (3 tests)
+
+📍 tests/unit/test_calculator.py
+   Function: test_add_old
+   Reason: Function 'add_old' no longer exists in source code
+
+📍 tests/unit/test_validator.py
+   Function: test_placeholder
+   Reason: No real assertions - test body is empty
+
+📍 tests/unit/test_parser.py
+   Function: test_with_old_parser
+   Reason: Mocks 'module.OldParser' which no longer exists
+
+Remove obsolete tests? (y/n)
+```
+
+**Por que isso é útil?**
+- ✅ Mantém suite de testes limpa e focada
+- ✅ Evita falsos positivos
+- ✅ Reduz tempo de execução dos testes
+- ✅ Facilita manutenção do código de testes
 
 ---
 

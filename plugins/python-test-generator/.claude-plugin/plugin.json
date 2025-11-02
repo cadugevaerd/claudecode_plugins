@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "1.4.1",
-  "description": "Gerador automático de testes unitários Python com configuração automática de pytest, sugestão inteligente de atualização de testes e análise de cobertura",
+  "version": "2.0.0",
+  "description": "Gerador automático de testes unitários Python com threshold enforcement (80%), configuração automática de pytest e análise de cobertura",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
@@ -22,7 +22,9 @@
     "langgraph",
     "agentevals",
     "trajectory",
-    "llm-testing"
+    "llm-testing",
+    "threshold",
+    "coverage-enforcement"
   ],
   "license": "MIT",
   "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
