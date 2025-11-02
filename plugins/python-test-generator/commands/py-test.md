@@ -1,198 +1,108 @@
 ---
 name: py-test
-description: Gera testes unitários Python automaticamente com análise de cobertura (RESPEITA THRESHOLD DE 80%)
+description: Executes autonomous test generation for Python projects, automatically iterating to 80% coverage without user prompts.
 ---
 
-# 🐍 Gerador Automático de Testes Unitários Python
+# Python Test Executor
 
-**MODO EMPÍRICO - EXECUÇÃO DIRETA SEM PERGUNTAS**
+**AUTONOMOUS EXECUTION MODE - NO USER QUESTIONS**
 
-Este comando analisa a cobertura de testes do seu projeto Python e cria automaticamente testes unitários completos seguindo os padrões e frameworks detectados, com **criação paralela de arquivos** para máxima performance.
+This command invokes the test-assistant agent to automatically generate unit tests for your Python project. The agent works independently, analyzing the codebase and creating tests with intelligent iteration to reach 80% coverage.
 
-**⚠️ BREAKING CHANGE (v2.0.0)**: Este comando **RESPEITA threshold de 80% de cobertura**. Se o projeto já tem ≥80% de cobertura, PARA e pergunta se o usuário realmente quer criar novos testes.
-
----
-
-## 🎯 O que este comando faz:
-
-1. **Invoca o agente test-assistant** especializado em testes Python
-2. **Analisa cobertura atual** do projeto Python
-3. **✅ NOVO v2.0: Verifica se cobertura ≥80%**
-   - Se ≥80%: PARA e pergunta ao usuário
-   - Se <80%: Prossegue automaticamente
-4. **🆕 NOVO v2.0: Detecta testes falhando**
-   - Executa pytest e identifica testes com falhas
-   - Calcula impacto na cobertura se removidos
-5. **🆕 NOVO v2.0: Remove testes falhando (se cobertura ≥80%)**
-   - SE cobertura pós-remoção ≥80%: oferece remoção
-   - SE cobertura pós-remoção <80%: avisa e mantém testes
-6. **🆕 NOVO v2.0: Detecta e remove testes obsoletos**
-   - Identifica testes desnecessários ou obsoletos
-   - Pergunta confirmação antes de remover
-   - Remove automaticamente com Edit tool
-7. **Identifica gaps de cobertura** (< 80%)
-8. **Cria testes em PARALELO** para máxima performance
-9. **Gera testes completos** seguindo padrões do projeto
-10. **Executa e valida** os testes criados
-11. **Reporta resultados** detalhados
+**Key Behavior**:
+- Executes test generation without pausing for confirmations
+- Agent determines strategy internally (mocks, patterns, fixtures)
+- Iterates automatically until 80% coverage is reached
+- Only shows final results to user
 
 ---
 
-## 📋 Uso
+## What Happens When You Run This
+
+1. **Agent analyzes** your Python project structure and current test coverage
+2. **Agent determines strategy** for creating tests (no prompts to user)
+3. **Agent creates tests in parallel** for maximum performance
+4. **Agent executes and validates** all tests automatically
+5. **Agent iterates internally** until 80% coverage is reached
+6. **Reports final results** with complete test suite ready
+
+---
+
+## Usage
 
 ```bash
-# Analisar projeto Python inteiro
+# Analyze entire Python project and generate tests
 /py-test
 
-# Analisar diretório específico
-/py-test src/meu_modulo
+# Analyze specific module/directory
+/py-test src/my_module
 
-# Definir threshold customizado
+# Set custom coverage threshold
 /py-test --threshold 85
 ```
 
 ---
 
-## 🤖 Agente Especializado Python
+## How It Works Internally
 
-Este comando invoca o **test-assistant agent** que:
+The **test-assistant agent** automatically:
 
-- ✅ **Cria testes em PARALELO** - máxima performance e eficiência
-- ✅ Detecta automaticamente frameworks Python (pytest, unittest, nose)
-- ✅ Identifica padrões do projeto (fixtures, mocks, factories)
-- ✅ Cria testes Python seguindo AAA pattern
-- ✅ Cobre happy path + erros + edge cases
-- ✅ Mock de dependências externas (API, DB, LLM)
-- ✅ Suporta código Python assíncrono
-- ✅ Frameworks Python específicos (LangChain, FastAPI, Django, etc.)
+- Detects Python frameworks (pytest, unittest, nose)
+- Identifies project patterns (fixtures, mocks, factories)
+- Creates tests following AAA pattern (Arrange-Act-Assert)
+- Covers happy paths, error cases, and edge cases
+- Mocks external dependencies (APIs, databases, LLMs)
+- Handles async code patterns
+- Works with LangChain, FastAPI, Django, Flask, AWS Lambda, and more
+- Creates files in parallel for performance
+- Handles failing tests intelligently
+- Cleans up obsolete/broken tests
+- Iterates until reaching 80% coverage
 
 ---
 
-## 🎓 Padrões Suportados
+## Supported Patterns
 
-- **Testing Frameworks**: pytest, unittest, nose
-- **Mock Libraries**: unittest.mock, pytest-mock, responses
-- **Coverage Tools**: coverage.py, pytest-cov
+- **Frameworks**: pytest, unittest, nose, unittest2
+- **Mocking**: unittest.mock, pytest-mock, responses
+- **Coverage**: coverage.py, pytest-cov
 - **Async**: pytest-asyncio, asyncio
-- **Frameworks**: LangChain, FastAPI, Django, Flask, AWS Lambda
+- **Web**: LangChain, FastAPI, Django, Flask, Starlette
 - **Databases**: SQLAlchemy, Django ORM, Pynamodb
 - **HTTP**: requests, httpx, aiohttp
 
 ---
 
-## ⚡ MODO EMPÍRICO + PARALELIZAÇÃO (v2.0)
+## Coverage Threshold
 
-**Este comando RESPEITA threshold de 80% de cobertura.**
-
-**Fluxo automático**:
-1. ✅ Detecta ambiente Python
-2. ✅ Analisa cobertura
-3. ✅ **✨ NOVO v2.0: Verifica threshold de 80%**
-   - Se cobertura ≥80%:
-     ```
-     ✅ Coverage is already at X% (≥80%)
-
-     New tests will only be created if explicitly requested.
-     Do you want to create tests anyway? (y/n)
-     ```
-   - Se usuário responde "n": PARA e não cria testes
-   - Se usuário responde "y": Prossegue normalmente
-   - Se cobertura <80%: Prossegue automaticamente
-4. ✅ **🆕 NOVO v2.0: Detecta testes falhando**
-   - Executa pytest e identifica testes com falhas
-   - Calcula cobertura antes da remoção
-   - Estima cobertura após remoção dos testes falhando
-5. ✅ **🆕 NOVO v2.0: Remove testes falhando (CONDICIONAL)**
-   - **SE cobertura pós-remoção ≥80%**:
-     ```
-     ⚠️  FAILING TESTS DETECTED (N tests)
-
-     Coverage Analysis:
-     - Current coverage: 85%
-     - Estimated coverage after removal: 82%
-
-     ✅ Coverage will remain ≥80% (82%) after removal.
-
-     Remove failing tests? (y/n)
-     ```
-   - **SE cobertura pós-remoção <80%**:
-     ```
-     ⚠️  FAILING TESTS DETECTED (N tests)
-
-     Coverage Analysis:
-     - Current coverage: 83%
-     - Estimated coverage after removal: 76%
-
-     ❌ Cannot remove failing tests automatically.
-
-     Reason: Coverage would drop below 80% threshold (76% < 80%).
-
-     ⚠️  Action Required: Fix failing tests manually.
-     ```
-   - Se "y": Remove usando Edit tool
-   - Se "n" ou cobertura <80%: Mantém testes e avisa
-6. ✅ **🆕 NOVO v2.0: Detecta e remove testes obsoletos**
-   - Analisa arquivos de teste existentes
-   - Identifica testes desnecessários:
-     * Função testada não existe mais
-     * Teste duplicado
-     * Sem asserções reais
-     * Mock de função inexistente
-   - Lista testes obsoletos com justificativa
-   - Pergunta: "Remove obsolete tests? (y/n)"
-   - Se "y": Remove usando Edit tool
-   - Se "n": Mantém testes existentes
-7. ✅ **Cria MÚLTIPLOS testes EM PARALELO** (reduz tempo em até 80%)
-8. ✅ Executa testes
-9. ✅ Reporta resultados
-
-### 🚀 Performance Otimizada
-
-O agente cria **todos os arquivos de teste simultaneamente** usando paralelização:
-- 5 módulos sem testes = **5 arquivos criados em paralelo**
-- 10 módulos sem testes = **10 arquivos criados em paralelo**
-- Redução de tempo: **até 80% mais rápido**
-
----
-
-## 📊 Meta de Cobertura
-
-- **Padrão**: 80%
+- **Default**: 80%
 - **Ideal**: 85-90%
-- **Críticos**: 90%+
+- **Critical modules**: 90%+
 
-Respeita configurações em `pytest.ini`, `pyproject.toml`, `setup.cfg`, `.coveragerc`
+Respects existing configuration in `pytest.ini`, `pyproject.toml`, `setup.cfg`, `.coveragerc`
 
 ---
 
-## 📝 After Test Generation
+## After Generation
 
-Tests are generated and saved to disk, but **NOT committed**.
+Generated tests are saved to disk but **NOT committed**.
 
 **Next steps**:
-1. Review generated tests
-2. Run tests to verify they work: `pytest`
+1. Review the generated tests
+2. Run tests locally: `pytest`
 3. Commit when satisfied: `git add tests/ && git commit -m "test: add tests for X"`
 
-**Agent does NOT create commits** - you control when to commit.
+Tests are ready for immediate use - no configuration needed.
 
 ---
 
-**Invocação do agente test-assistant**:
+## Agent Invocation
 
-Use o agente especializado `test-coverage-analyzer:test-assistant` para executar esta tarefa.
+This command delegates to the **test-assistant agent**:
 
-**Parâmetros**:
-- Diretório de trabalho: {{WORKING_DIRECTORY}}
-- Threshold de cobertura: {{COVERAGE_THRESHOLD:80}}
-- Framework detectado: AUTO
-- Modo: EMPIRICO (sem perguntas)
+- Working directory: `{{WORKING_DIRECTORY}}`
+- Coverage threshold: `{{COVERAGE_THRESHOLD:80}}`
+- Framework detection: AUTO
+- Mode: AUTONOMOUS (no prompts, fully autonomous)
 
-**Tarefas do agente**:
-1. Detectar ambiente e frameworks
-2. Executar análise de cobertura
-3. Identificar módulos < threshold
-4. Ler padrões existentes (conftest.py, fixtures)
-5. Criar testes completos
-6. Executar testes e validar
-7. Reportar resultados
+The agent handles all complexity internally.

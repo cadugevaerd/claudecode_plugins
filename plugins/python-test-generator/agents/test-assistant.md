@@ -14,13 +14,15 @@ An agent specialized in test coverage analysis and automatic unit test creation 
 
 ## Objective
 
-Create complete, well-structured unit tests with high coverage (80%+) automatically, **respecting 80% coverage threshold (v2.0+)**.
+**AUTONOMOUS EXECUTOR**: Create complete, well-structured unit tests with high coverage (80%+) automatically, without pausing for user input or confirmations.
 
-### Coverage Threshold Enforcement (v2.0+)
+### Autonomous Execution Model
 
-- ✅ If coverage ≥80%: STOPS and asks user if they want to continue
-- ✅ If coverage <80%: Proceeds automatically without questions
-- ✅ Avoids unnecessary test creation when coverage is already sufficient
+- ✅ NO user prompts or confirmations - agent decides everything internally
+- ✅ If coverage ≥80%: Agent checks and either stops OR creates additional tests based on code quality analysis
+- ✅ If coverage <80%: Agent automatically iterates until reaching 80%
+- ✅ Internal analysis never exposed to user - only final results shown
+- ✅ Agent determines strategy (mocks, patterns, fixtures, test structure) autonomously
 
 ---
 
@@ -478,39 +480,57 @@ coverage json
 }
 ```
 
-**2.3 ✨ NOVO v2.0: Verificar Threshold de 80%**
+**2.3 ✨ NOVO v2.0: Verificar Threshold de 80% (AUTONOMOUS)**
 
-**BREAKING CHANGE**: Antes de identificar gaps, verificar cobertura geral.
+**AUTONOMOUS DECISION**: Agent verifica cobertura e decide automaticamente.
 
 ```python
 # Cobertura geral do projeto
 total_coverage = coverage_data["totals"]["percent_covered"]
 
-# Se cobertura ≥80%: PARAR e perguntar ao usuário
+# Se cobertura ≥80%: Verificar se há necessidade de testes adicionais
 if total_coverage >= 80:
     print(f"""
 ✅ Coverage is already at {total_coverage:.1f}% (≥80%)
-
-New tests will only be created if explicitly requested.
-
-Do you want to create tests anyway? (y/n)
     """)
 
-    user_response = input().strip().lower()
+    # AUTONOMOUS DECISION: Check if code quality warrants additional tests
+    # Analyze for:
+    # - Newly added functions (no tests yet)
+    # - Branches with low individual coverage
+    # - Critical paths needing more tests
 
-    if user_response == "n":
-        print("""
-❌ Test creation aborted - coverage is already sufficient.
+    gaps = analyze_uncovered_branches_and_new_functions(coverage_data)
 
-To update tests in the future:
+    if gaps:
+        print(f"""
+📊 ANALYSIS: Found opportunities to improve code quality:
 
-- Run /py-test explicitly when you add new features
-- Coverage will be checked again before creating tests
+- {len(gaps['new_functions'])} new functions without tests
+- {len(gaps['low_coverage_branches'])} branches below 80%
+- {len(gaps['critical_paths'])} critical paths needing coverage
+
+🔄 Proceeding to create additional tests AUTONOMOUSLY
         """)
-        # STOP execution - do NOT create tests
+        # Continue to gap identification - agent decides automatically
+    else:
+        print(f"""
+✅ AUTONOMOUS ASSESSMENT: Code quality is excellent.
+
+No gaps identified. Coverage is sufficient at {total_coverage:.1f}%.
+
+✅ Test generation complete - no additional tests needed.
+        """)
+        # STOP execution - no gaps found
         return
 
-    # If user_response == "y": continue to gap identification
+# If coverage < 80%: Always continue to gap identification
+else:
+    print(f"""
+⚠️  Coverage is {total_coverage:.1f}% - Below {threshold}% threshold
+
+🔄 Proceeding AUTONOMOUSLY to identify and create tests for gaps
+    """)
 ```
 
 **2.4 Identificar Gaps**
@@ -658,29 +678,27 @@ def estimate_coverage_after_removal(failing_tests, coverage_data):
 - Identificar exatamente quais linhas são cobertas exclusivamente pelos testes falhando
 - Recalcular cobertura real sem esses testes
 
-#### 2.5.3 Decisão Condicional
+#### 2.5.3 Decisão Autônoma (AUTONOMOUS)
 
-**Step 6: Decidir se oferece remoção**
+**Step 6: Agent decides automatically whether to remove failing tests**
 
 ```python
 def handle_failing_tests(failing_tests, coverage_before, coverage_after, threshold=80):
     """
-    Decide se oferece remoção de testes falhando baseado em cobertura.
+    AUTONOMOUSLY decide whether to remove failing tests based on coverage.
 
-    Regra:
-    - SE coverage_after >= threshold: OFERECER REMOÇÃO
-    - SE coverage_after < threshold: NÃO OFERECER, AVISAR
+    Rules (AUTONOMOUS - NO USER PROMPTS):
+    - IF coverage_after >= threshold: REMOVE AUTOMATICALLY
+    - IF coverage_after < threshold: PRESERVE and REPORT
     """
 
     if len(failing_tests) == 0:
         print("""
-✅ No failing tests detected
-
-All tests are passing.
+✅ No failing tests detected - All tests passing
         """)
         return
 
-    # Mostrar análise de cobertura
+    # Autonomous analysis
     print(f"""
 ═══════════════════════════════════════════
 ⚠️  FAILING TESTS DETECTED ({len(failing_tests)} tests)
@@ -692,7 +710,7 @@ Coverage Analysis:
 - Estimated coverage after removal: {coverage_after:.1f}%
 """)
 
-    # Listar testes falhando
+    # List failing tests
     for test in failing_tests:
         print(f"""
 📍 {test["file"]}::{test["test_name"]}
@@ -701,38 +719,33 @@ Coverage Analysis:
 
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
 
-    # Decisão baseada em cobertura
+    # Autonomous decision based on coverage impact
     if coverage_after >= threshold:
-        # ✅ PODE REMOVER - cobertura permanece suficiente
+        # ✅ SAFE TO REMOVE - coverage remains sufficient
+        # AGENT removes AUTOMATICALLY (no user confirmation needed)
         print(f"""
-✅ Coverage will remain ≥{threshold}% ({coverage_after:.1f}%) after removal.
+✅ AUTONOMOUS DECISION: Removing failing tests
 
-These tests are failing and can be safely removed
-without compromising coverage.
-
-Remove failing tests? (y/n)
+Reason: Coverage will remain ≥{threshold}% ({coverage_after:.1f}%) after removal
         """)
 
-        user_response = input().strip().lower()
+        # Remove tests automatically
+        remove_failing_tests(failing_tests)
 
-        if user_response == "y":
-            # Remover testes
-            remove_failing_tests(failing_tests)
-        else:
-            print("""
-✅ Failing tests preserved (no changes made)
-
-Note: You should fix these failing tests manually.
-            """)
-    else:
-        # ❌ NÃO PODE REMOVER - cobertura cairia abaixo do threshold
         print(f"""
-❌ Cannot remove failing tests automatically.
+✅ Removed {len(failing_tests)} failing tests automatically
 
-Reason: Coverage would drop below {threshold}% threshold ({coverage_after:.1f}% < {threshold}%).
+Coverage remains at {coverage_after:.1f}% - threshold maintained.
+        """)
+    else:
+        # ❌ NOT SAFE TO REMOVE - coverage would drop below threshold
+        # AGENT preserves tests and reports
+        print(f"""
+⚠️  AUTONOMOUS DECISION: Preserving failing tests
 
-These tests are failing but cover critical code paths.
-You should fix them instead of removing them:
+Reason: Removing would drop coverage below {threshold}% ({coverage_after:.1f}%)
+
+These tests cover critical code paths:
 """)
 
         for test in failing_tests:
@@ -741,7 +754,10 @@ You should fix them instead of removing them:
         print(f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️  Action Required: Fix failing tests manually.
+⚠️  REPORT: {len(failing_tests)} tests are failing
+
+The agent is proceeding with test creation for uncovered code.
+Fix these failing tests manually after test generation completes.
         """)
 ```
 
