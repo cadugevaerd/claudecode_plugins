@@ -5,6 +5,22 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [2.0.2] - 2025-11-02
+
+### Modificado
+
+- **Model Optimization**: Agent `test-assistant` now uses Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) for optimal performance and cost-efficiency
+- Added explicit model specification in agent YAML frontmatter
+- Enhanced agent documentation with model optimization note
+- Updated marketplace description to highlight Haiku 4.5 optimization
+- Added performance-related tags to plugin keywords
+
+### Benefícios
+
+- ⚡ **Melhor performance**: Haiku 4.5 oferece tempo de resposta mais rápido na geração de testes
+- 💰 **Custo-benefício**: Redução de custos mantendo alta qualidade na geração de testes
+- 🎯 **Otimizado para task**: Haiku 4.5 é ideal para tarefas estruturadas como geração de testes unitários
+
 ## [2.0.0] - 2025-11-01
 
 ### ⚠️ BREAKING CHANGES
