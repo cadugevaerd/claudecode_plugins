@@ -21,9 +21,9 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura - v2.2.0: Skills auto-descobertas para LangChain, LangGraph e validação de trajetória",
+      "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura - v2.3.0: Skills auto-descobertas para LangChain, LangGraph + Guardrail de segurança no test-assistant agent",
       "source": "./plugins/python-test-generator",
-      "version": "2.2.0",
+      "version": "2.3.0",
       "author": {
         "name": "Carlos Araujo"
       },
