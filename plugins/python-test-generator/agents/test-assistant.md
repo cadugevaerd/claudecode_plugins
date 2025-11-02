@@ -1607,17 +1607,41 @@ print(f"""
 """)
 ```
 
-**Step 2: Criar Novos Testes para Gaps**
+**Step 2: Criar Novos Testes para Gaps (PRIORIZANDO POR MAIOR MISS)**
+
+**⚠️ CRÍTICO**: Ordenar gaps por MAIOR MISS primeiro (100% - cobertura%)
 
 ```python
 if gaps:
+    # ✅ STEP 2.1: Calcular miss para cada gap e ordenar
+    for gap in gaps:
+        gap["miss"] = 100.0 - gap["coverage"]  # Calcular miss: 100% - cobertura%
+
+    # Ordenar por MAIOR MISS primeiro (maior gap = maior prioridade)
+    gaps.sort(key=lambda x: x["miss"], reverse=True)
+
+    # Relato de priorização
+    print(f"""
+📊 Gap Analysis (sorted by BIGGEST MISS first):
+    """)
+    for i, gap in enumerate(gaps, 1):
+        print(f"  {i}. {gap['module']}: {gap['coverage']:.0f}% cobertura → miss: {gap['miss']:.0f}%")
+
     print(f"""
 🆕 PHASE 3: Creating new tests for identified gaps ({len(gaps)} modules)
+STRATEGY: Priorizar arquivos com MAIOR GAP (mais distantes de 80%)
     """)
 
     new_tests = []
 
-    for gap in gaps:
+    # Criar testes NA ORDEM DE PRIORIDADE (maior miss primeiro)
+    for idx, gap in enumerate(gaps, 1):
+        print(f"""
+[{idx}/{len(gaps)}] 🆕 Creating tests for: {gap['module']}
+  Coverage: {gap['coverage']:.0f}% → Target: {threshold:.0f}% (miss: {gap['miss']:.0f}%)
+  Priority: MAIOR GAP = PRIORIDADE 1
+        """)
+
         # Criar testes especificamente para linhas/branches não cobertas
         tests = generate_tests_for_gap(gap)
 
@@ -1633,6 +1657,31 @@ if gaps:
 
     # Criar arquivos em paralelo
     create_test_files_in_parallel(new_tests)
+```
+
+**Exemplo de Priorização**:
+
+```
+📊 Gap Analysis (sorted by BIGGEST MISS first):
+  1. src/parser.py: 25% cobertura → miss: 75% ← PRIORIDADE 1 (criar testes primeiro)
+  2. src/validator.py: 55% cobertura → miss: 45% ← PRIORIDADE 2
+  3. src/calculator.py: 70% cobertura → miss: 30% ← PRIORIDADE 3
+  4. src/utils.py: 85% cobertura → miss: 15% ← PRIORIDADE 4 (última)
+
+🆕 PHASE 3: Creating new tests for identified gaps (4 modules)
+STRATEGY: Priorizar arquivos com MAIOR GAP (mais distantes de 80%)
+
+[1/4] 🆕 Creating tests for: src/parser.py
+  Coverage: 25% → Target: 80% (miss: 75%) ← MAIOR MISS = PRIORIDADE 1
+
+[2/4] 🆕 Creating tests for: src/validator.py
+  Coverage: 55% → Target: 80% (miss: 45%)
+
+[3/4] 🆕 Creating tests for: src/calculator.py
+  Coverage: 70% → Target: 80% (miss: 30%)
+
+[4/4] 🆕 Creating tests for: src/utils.py
+  Coverage: 85% → Target: 80% (miss: 15%) ← MENOR MISS = ÚLTIMA
 ```
 
 **Step 3: Executar e Validar Novos Testes**
