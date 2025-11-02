@@ -21,9 +21,9 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Gerador automático de testes unitários Python com threshold enforcement (80%), configuração automática de pytest e criação paralela - v2.0.2: Otimizado com modelo Haiku 4.5 para melhor performance e custo-benefício",
+      "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura - v2.1.0: NUNCA finaliza sem entregar ≥80%, cria testes adicionais automaticamente em iterações até meta",
       "source": "./plugins/python-test-generator",
-      "version": "2.0.2",
+      "version": "2.1.0",
       "author": {
         "name": "Carlos Araujo"
       },

@@ -2325,13 +2325,258 @@ uv run -m pytest tests/unit/test_new_module.py -v
 
 ```bash
 # Re-executar análise de cobertura
-{package_manager} {test_command} --cov={source_dir} --cov-report=term-missing
+{package_manager} {test_command} --cov={source_dir} --cov-report=term-missing --cov-report=json
 
 # Comparar:
 # - Cobertura antes
 # - Cobertura depois
 # - Módulos que atingiram 80%+
 # - Módulos que ainda precisam atenção
+```
+
+### 8.1 ⚡ NOVO - Loop Automático de Cobertura (CRITICAL)
+
+**REGRA CRÍTICA**: Se cobertura < 80% após primeira iteração, CONTINUAR AUTOMATICAMENTE criando testes até atingir threshold.
+
+```python
+def validate_and_iterate_coverage(threshold=80, max_iterations=5):
+    """
+    Valida cobertura e cria testes adicionais automaticamente até atingir threshold.
+
+    IMPORTANTE: Este processo é AUTOMÁTICO - NÃO perguntar ao usuário.
+
+    Args:
+        threshold: Meta de cobertura (padrão 80%)
+        max_iterations: Máximo de iterações para evitar loop infinito (padrão 5)
+
+    Returns:
+        Final coverage percentage
+    """
+
+    iteration = 1
+
+    while iteration <= max_iterations:
+        # Re-executar análise de cobertura
+        coverage_data = run_coverage_analysis()
+        current_coverage = coverage_data["totals"]["percent_covered"]
+
+        print(f"""
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION {iteration}/{max_iterations} - Coverage: {current_coverage:.1f}%
+╚═══════════════════════════════════════════════════════════════╝
+        """)
+
+        # ✅ Meta atingida: FINALIZAR
+        if current_coverage >= threshold:
+            print(f"""
+✅ TARGET ACHIEVED: Coverage is now {current_coverage:.1f}% (≥{threshold}%)
+
+Test generation completed successfully.
+            """)
+            return current_coverage
+
+        # ⚠️ Meta NÃO atingida: CONTINUAR AUTOMATICAMENTE
+        gap = threshold - current_coverage
+        print(f"""
+⚠️  Coverage is {current_coverage:.1f}% - Still below {threshold}% threshold
+📊 Gap to close: {gap:.1f}%
+
+🔄 AUTOMATICALLY creating additional tests to improve coverage...
+        """)
+
+        # Identificar módulos que ainda precisam cobertura
+        remaining_gaps = identify_remaining_gaps(coverage_data, threshold)
+
+        if not remaining_gaps:
+            print(f"""
+⚠️  WARNING: No more gaps identified, but coverage is {current_coverage:.1f}%
+
+This may indicate:
+- Some code paths are unreachable
+- Complex branching requiring manual test design
+- Coverage measurement limitations
+
+Stopping automatic iteration.
+            """)
+            return current_coverage
+
+        # Criar testes adicionais EM PARALELO
+        print(f"""
+📝 Creating tests for {len(remaining_gaps)} modules with insufficient coverage:
+        """)
+
+        for gap in remaining_gaps:
+            print(f"   - {gap['file']} ({gap['coverage']:.1f}% → target: {threshold}%)")
+
+        # PARALLELIZAR criação de testes
+        create_additional_tests_parallel(remaining_gaps)
+
+        # Executar testes recém-criados
+        print(f"""
+🧪 Running newly created tests...
+        """)
+        run_tests()
+
+        # Incrementar iteração
+        iteration += 1
+
+    # ❌ Máximo de iterações atingido
+    final_coverage = run_coverage_analysis()["totals"]["percent_covered"]
+
+    print(f"""
+⚠️  Maximum iterations reached ({max_iterations})
+
+Final coverage: {final_coverage:.1f}%
+
+Reasons for not reaching {threshold}%:
+- Complex code paths requiring manual test design
+- Some branches may be unreachable
+- Additional edge cases may need specialized testing
+
+Recommendation: Review remaining gaps manually.
+    """)
+
+    return final_coverage
+
+
+def identify_remaining_gaps(coverage_data, threshold):
+    """
+    Identifica módulos que ainda precisam cobertura adicional.
+
+    Args:
+        coverage_data: Dados de cobertura (JSON)
+        threshold: Threshold de cobertura (80%)
+
+    Returns:
+        Lista de gaps [{file, coverage, missing_lines, priority}]
+    """
+    gaps = []
+
+    for file_path, file_data in coverage_data["files"].items():
+        file_coverage = file_data["summary"]["percent_covered"]
+
+        # Apenas módulos abaixo do threshold
+        if file_coverage < threshold:
+            # Calcular prioridade (menor cobertura = maior prioridade)
+            priority = threshold - file_coverage
+
+            gaps.append({
+                "file": file_path,
+                "coverage": file_coverage,
+                "missing_lines": file_data["summary"]["missing_lines"],
+                "priority": priority,
+                "gap": threshold - file_coverage,
+            })
+
+    # Ordenar por prioridade (maior gap primeiro)
+    gaps.sort(key=lambda x: x["priority"], reverse=True)
+
+    return gaps
+
+
+def create_additional_tests_parallel(gaps):
+    """
+    Cria testes adicionais para módulos com gaps EM PARALELO.
+
+    IMPORTANTE: Usar Write tool MÚLTIPLAS VEZES em uma ÚNICA mensagem.
+
+    Args:
+        gaps: Lista de gaps identificados
+    """
+
+    print(f"""
+🚀 Creating {len(gaps)} test files in PARALLEL...
+    """)
+
+    # Para cada gap, preparar código de teste adicional
+    # focando nas linhas/funções faltantes
+
+    for gap in gaps:
+        # Ler código fonte do módulo
+        source_code = read_file(gap["file"])
+
+        # Identificar funções/classes nas linhas faltantes
+        missing_functions = extract_functions_from_lines(
+            source_code,
+            gap["missing_lines"]
+        )
+
+        # Ler arquivo de teste existente (se houver)
+        test_file = get_test_file_path(gap["file"])
+        existing_tests = read_file(test_file) if file_exists(test_file) else ""
+
+        # Identificar quais funções JÁ têm testes
+        tested_functions = extract_tested_functions(existing_tests)
+
+        # Criar testes APENAS para funções ainda não testadas
+        untested_functions = [
+            func for func in missing_functions
+            if func not in tested_functions
+        ]
+
+        if untested_functions:
+            # Gerar código de teste adicional
+            additional_test_code = generate_additional_tests(
+                source_code=source_code,
+                functions_to_test=untested_functions,
+                existing_tests=existing_tests,
+                gap_info=gap,
+            )
+
+            # Adicionar testes ao arquivo existente (ou criar novo)
+            if existing_tests:
+                # APPEND to existing file
+                updated_content = existing_tests + "\n\n" + additional_test_code
+                # Write tool será invocado em paralelo fora deste loop
+                gap["updated_test_content"] = updated_content
+                gap["test_file"] = test_file
+            else:
+                # CREATE new file
+                gap["updated_test_content"] = additional_test_code
+                gap["test_file"] = test_file
+
+    # ⚡ PARALLELIZAR Write tool - TODOS os arquivos de uma vez
+    # Invocar Write MÚLTIPLAS VEZES na MESMA mensagem
+
+    # Nota: A implementação real usará múltiplas chamadas Write
+    # em uma única resposta do agente para máxima paralelização
+```
+
+### 8.2 Exemplo de Output do Loop Automático
+
+```text
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION 1/5 - Coverage: 72.0%
+╚═══════════════════════════════════════════════════════════════╝
+
+⚠️  Coverage is 72.0% - Still below 80% threshold
+📊 Gap to close: 8.0%
+
+🔄 AUTOMATICALLY creating additional tests to improve coverage...
+
+📝 Creating tests for 3 modules with insufficient coverage:
+   - src/calculator.py (65.0% → target: 80%)
+   - src/validator.py (70.0% → target: 80%)
+   - src/formatter.py (75.0% → target: 80%)
+
+🚀 Creating 3 test files in PARALLEL...
+
+✅ Created additional tests:
+   - tests/unit/test_calculator.py (+5 tests)
+   - tests/unit/test_validator.py (+3 tests)
+   - tests/unit/test_formatter.py (+2 tests)
+
+🧪 Running newly created tests...
+
+✅ All new tests passed
+
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION 2/5 - Coverage: 82.0%
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ TARGET ACHIEVED: Coverage is now 82.0% (≥80%)
+
+Test generation completed successfully.
 ```
 
 ---

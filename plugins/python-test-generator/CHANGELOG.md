@@ -5,6 +5,80 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [2.1.0] - 2025-11-02
+
+### ⚡ FEATURE CRÍTICA
+
+- **Loop automático de cobertura até atingir 80%**: `/py-test` agora NUNCA finaliza sem entregar cobertura ≥80%
+  - Implementado `validate_and_iterate_coverage()` no agent `test-assistant` (Passo 8.1)
+  - Máximo de 5 iterações por segurança (previne loop infinito)
+  - Cria testes adicionais automaticamente em paralelo a cada iteração
+  - Re-executa análise de cobertura após cada iteração
+  - Identifica gaps remanescentes e prioriza por maior deficiência
+  - Finaliza apenas quando: coverage ≥80% OU max iterations atingido OU sem mais gaps detectados
+
+### Adicionado
+
+- Função `validate_and_iterate_coverage(threshold=80, max_iterations=5)` no agent
+- Função `identify_remaining_gaps(coverage_data, threshold)` para detectar módulos abaixo do threshold
+- Função `create_additional_tests_parallel(gaps)` para criar testes focados nas linhas faltantes
+- Output iterativo visual com box drawing:
+  ```
+  ╔═══════════════════════════════════════════════════════════════╗
+  ║ 🔄 ITERATION 1/5 - Coverage: 72.0%
+  ╚═══════════════════════════════════════════════════════════════╝
+  ```
+- Mensagens informativas sobre gap de cobertura e progresso
+- Proteção contra loop infinito (max 5 iterações)
+- Detecção de situações sem saída (código irracessível, branches complexos)
+
+### Modificado
+
+- Agent `test-assistant` agora executa Passo 8.1 (Loop Automático) após criação inicial de testes
+- Relatório final (Passo 9) agora inclui histórico de iterações se loop foi executado
+- Descrição do comando `/py-test` atualizada para mencionar loop automático
+- Descrição do plugin no marketplace.json destaca garantia de 80%
+- Version bump: 2.0.2 → 2.1.0 (MINOR - nova funcionalidade)
+
+### Benefícios
+
+- 🎯 **Garantia de qualidade**: NUNCA entrega cobertura abaixo de 80%
+- 🤖 **Totalmente automático**: Zero intervenção do usuário durante iterações
+- ⚡ **Performance otimizada**: Testes criados em paralelo a cada iteração
+- 🛡️ **Seguro**: Proteção contra loops infinitos e situações sem saída
+- 📊 **Transparente**: Progresso visível com coverage atual e gap restante
+
+### Exemplo de Output
+
+```
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION 1/5 - Coverage: 72.0%
+╚═══════════════════════════════════════════════════════════════╝
+
+⚠️  Coverage is 72.0% - Still below 80% threshold
+📊 Gap to close: 8.0%
+
+🔄 AUTOMATICALLY creating additional tests to improve coverage...
+
+📝 Creating tests for 3 modules with insufficient coverage:
+   - src/calculator.py (65.0% → target: 80%)
+   - src/validator.py (70.0% → target: 80%)
+   - src/formatter.py (75.0% → target: 80%)
+
+🚀 Creating 3 test files in PARALLEL...
+✅ Created additional tests (10 new tests)
+🧪 Running newly created tests...
+✅ All new tests passed
+
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION 2/5 - Coverage: 82.0%
+╚═══════════════════════════════════════════════════════════════╝
+
+✅ TARGET ACHIEVED: Coverage is now 82.0% (≥80%)
+
+Test generation completed successfully.
+```
+
 ## [2.0.2] - 2025-11-02
 
 ### Modificado

@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "2.0.2",
-  "description": "Gerador automático de testes unitários Python com threshold enforcement (80%), configuração automática de pytest e análise de cobertura",
+  "version": "2.1.0",
+  "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura, threshold enforcement e configuração automática de pytest",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
