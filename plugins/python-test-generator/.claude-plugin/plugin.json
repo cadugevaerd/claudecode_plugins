@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "2.3.0",
-  "description": "Automatic Python unit test generator with intelligent iteration to 80% coverage. Advanced LangChain/LangGraph testing patterns with auto-discovered skills for LCEL chains, graph testing, and LLM mocking.",
+  "version": "3.0.0",
+  "description": "Automatic Python unit test generator with three-phase intelligent strategy: analyze existing tests, maintain quality, then create new tests. Reaches 80% coverage with zero test duplication.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"

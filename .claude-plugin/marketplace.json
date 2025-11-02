@@ -21,9 +21,9 @@
     },
     {
       "name": "python-test-generator",
-      "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura - v2.3.0: Skills auto-descobertas para LangChain, LangGraph + Guardrail de segurança no test-assistant agent",
+      "description": "Intelligent Python test generator with three-phase strategy (analyze → maintain → create). Zero test duplication, automatic optimization of existing tests, guaranteed 80% coverage.",
       "source": "./plugins/python-test-generator",
-      "version": "2.3.0",
+      "version": "3.0.0",
       "author": {
         "name": "Carlos Araujo"
       },

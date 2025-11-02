@@ -106,7 +106,38 @@ git pull origin main
 
 ---
 
-## 📖 Uso
+## 📖 Uso - New Three-Phase Strategy (v3.0)
+
+### 🆕 NEW: Three-Phase Intelligent Test Strategy
+
+**Version 3.0 introduces a smarter approach:**
+
+#### Phase 1: Analyze Existing Tests
+The agent scans your project for existing test files and analyzes their quality:
+- ✅ Valid and well-structured tests → KEEP
+- 🟡 Tests with low coverage → IMPROVE
+- ⚠️ Failing tests → FIX
+- ❌ Obsolete tests → REMOVE
+
+#### Phase 2: Maintain Tests (Before Creating New)
+The agent automatically optimizes existing tests:
+- Remove obsolete tests that no longer apply
+- Fix failing tests while maintaining coverage
+- Improve low-quality tests to increase their effectiveness
+
+#### Phase 3: Create New Tests (Only for Gaps)
+Only after optimizing existing tests, the agent creates new ones:
+- Creates tests **only for uncovered code paths**
+- Avoids test duplication with existing tests
+- Creates files in **parallel** for maximum performance
+
+**Benefits over v2.0:**
+- ✅ Prevents test duplication
+- ✅ Maintains high test quality by improvement, not just addition
+- ✅ Respects existing test investments
+- ✅ Clear three-phase reporting
+
+---
 
 ### 🆕 `/update-claude-md` (v2.0+)
 

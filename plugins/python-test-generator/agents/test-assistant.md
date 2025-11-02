@@ -1343,50 +1343,396 @@ Test suite is now cleaner and more maintainable.
 
 ---
 
-### PASSO 3: Consultar Padrões Existentes
+### PASSO 3: 🆕 NEW v3.0 - Three-Phase Test Strategy (CRITICAL)
 
-**3.1 Ler conftest.py**
+**This is the heart of the new strategy: Analyze → Maintain → Create**
+
+---
+
+#### PHASE 1: Analyze Existing Tests (MANDATORY FIRST)
+
+**Objetivo**: Verificar se há testes existentes para o arquivo e analisar sua qualidade.
+
+**Step 1: Identificar Testes Existentes**
 
 ```python
-# Identificar fixtures disponíveis
-@pytest.fixture
-def sample_state():
-    """State básico do agente"""
-    return {...}
+# Para cada módulo com cobertura < 80%
+for module in modules_needing_coverage:
+    # Buscar arquivo de teste correspondente
+    test_file = find_test_file_for_module(module)
 
-@pytest.fixture
-def mock_db():
-    """Mock de database"""
-    ...
-
-# Catalogar para reutilização
-fixtures_disponiveis = ["sample_state", "mock_db", ...]
+    if test_file_exists(test_file):
+        print(f"""
+✅ PHASE 1: Analyzing existing tests in {test_file}
+        """)
+        existing_tests = analyze_test_quality(test_file)
+    else:
+        print(f"""
+📝 PHASE 1: No existing tests found for {module}
+        """)
+        existing_tests = []
 ```
 
-**3.2 Ler Factories e Mocks**
+**Step 2: Analisar Qualidade e Relevância**
+
+Para cada teste existente, verificar:
 
 ```python
-# tests/factories.py
-class UserFactory:
-    @staticmethod
-    def create(**kwargs):
-        ...
+# Critério 1: Teste ainda é relevante?
+def is_test_still_relevant(test_func):
+    """
+    Teste é relevante se:
+    - Função testada ainda existe no código
+    - Teste tem asserções válidas (não é vazio)
+    - Mock não referencia código removido
+    - Teste cobre cenário atual (não é duplicado)
+    """
 
-# tests/mocks/
-mock_api_response.json
-mock_llm_responses.py
+    tested_func = extract_tested_function_name(test_func)
+
+    if not function_still_exists(tested_func):
+        return False, f"Tested function '{tested_func}' no longer exists"
+
+    if not has_valid_assertions(test_func):
+        return False, "Test has no valid assertions"
+
+    if mocks_nonexistent_items(test_func):
+        return False, "Test mocks functions/classes that no longer exist"
+
+    if is_duplicate_of_existing_test(test_func):
+        return False, "Test is duplicate of another test"
+
+    return True, "Test is valid and relevant"
+
+# Classificar testes
+analysis = {
+    "obsolete": [],     # Não são mais relevantes - REMOVER
+    "broken": [],       # Existem mas falham - CORRIGIR
+    "valid": [],        # Funcionam bem - MANTER
+    "low_quality": []   # Funcionam mas cobertura baixa - MELHORAR
+}
+
+for test in existing_tests:
+    relevant, reason = is_test_still_relevant(test)
+
+    if not relevant:
+        analysis["obsolete"].append({"test": test, "reason": reason})
+    elif test.is_failing():
+        analysis["broken"].append(test)
+    elif test.coverage < 50:
+        analysis["low_quality"].append(test)
+    else:
+        analysis["valid"].append(test)
 ```
 
-**3.3 Analisar Testes Existentes**
+**Step 3: Relatar Análise**
+
+```
+═══════════════════════════════════════════════════════════════
+🔍 PHASE 1: ANALYZING EXISTING TESTS
+═══════════════════════════════════════════════════════════════
+
+📊 Analysis Results for src/calculator.py:
+
+Tests found: 15 existing tests in tests/unit/test_calculator.py
+
+✅ Valid tests: 10
+   - test_add_numbers (90% coverage)
+   - test_subtract_numbers (85% coverage)
+   - ... (8 more)
+
+🟡 Low quality tests: 2
+   - test_multiply (40% coverage) → Needs improvement
+   - test_divide (35% coverage) → Needs improvement
+
+⚠️  Failing tests: 2
+   - test_edge_case_overflow (AssertionError)
+   - test_negative_numbers (ValueError)
+
+❌ Obsolete tests: 1
+   - test_old_interface (function 'old_api()' no longer exists)
+
+═══════════════════════════════════════════════════════════════
+```
+
+---
+
+#### PHASE 2: Maintenance of Existing Tests (BEFORE Creating New)
+
+**Objetivo**: Remover testes obsoletos e corrigir/melhorar os existentes.
+
+**Step 1: Remover Testes Obsoletos**
 
 ```python
-# Identificar padrões:
-# - Estrutura de classes (TestNomeModulo)
-# - Nomenclatura (test_cenario_resultado)
-# - AAA pattern (Arrange-Act-Assert)
-# - Uso de mocks (@patch, Mock, MagicMock)
-# - Parametrização (@pytest.mark.parametrize)
-# - Markers (@pytest.mark.asyncio, @pytest.mark.django_db)
+if analysis["obsolete"]:
+    print(f"""
+🧹 PHASE 2: Removing obsolete tests ({len(analysis['obsolete'])} tests)
+    """)
+
+    for item in analysis["obsolete"]:
+        remove_obsolete_test(item["test"])
+        print(f"✅ Removed {item['test'].name} - Reason: {item['reason']}")
+```
+
+**Step 2: Corrigir Testes Falhando**
+
+```python
+if analysis["broken"]:
+    print(f"""
+🔧 PHASE 2: Fixing failing tests ({len(analysis['broken'])} tests)
+    """)
+
+    for failing_test in analysis["broken"]:
+        # Ler test para entender a falha
+        test_code = read_test(failing_test)
+
+        # Identificar problema
+        problem = analyze_test_failure(failing_test)
+
+        # Diferentes estratégias de correção
+        if problem.type == "MOCK_ERROR":
+            fix_mock_definition(failing_test)
+        elif problem.type == "ASSERTION_ERROR":
+            fix_assertion(failing_test)
+        elif problem.type == "IMPORT_ERROR":
+            fix_import(failing_test)
+        else:
+            # Notificar usuário de problemas que requerem intervenção manual
+            report_unfixable_failure(failing_test, problem)
+```
+
+**Step 3: Melhorar Testes com Baixa Cobertura**
+
+```python
+if analysis["low_quality"]:
+    print(f"""
+📈 PHASE 2: Improving low-quality tests ({len(analysis['low_quality'])} tests)
+    """)
+
+    for low_quality_test in analysis["low_quality"]:
+        # Analisar o que o teste cobre
+        covered_lines = get_covered_lines(low_quality_test)
+        uncovered_lines = get_uncovered_lines(low_quality_test)
+
+        # Adicionar mais asserções para cobrir mais linhas
+        improved_test = enhance_test_coverage(
+            test=low_quality_test,
+            covered_lines=covered_lines,
+            uncovered_lines=uncovered_lines
+        )
+
+        # Atualizar arquivo
+        update_test_file(improved_test)
+
+        print(f"""
+✅ Improved {low_quality_test.name}
+   Coverage: {low_quality_test.coverage:.0f}% → {improved_test.coverage:.0f}%
+        """)
+```
+
+**Step 4: Executar Testes Atualizados**
+
+```bash
+# Executar todos os testes
+pytest tests/ --cov=src --cov-report=json
+
+# Verificar se todos passam
+if all_tests_passing():
+    print("""
+✅ All updated tests passing
+    """)
+else:
+    # Se ainda há falhas, reportar ao usuário
+    report_remaining_failures()
+```
+
+**Relato da Fase 2**:
+
+```
+═══════════════════════════════════════════════════════════════
+🔧 PHASE 2: MAINTAINING EXISTING TESTS
+═══════════════════════════════════════════════════════════════
+
+Changes made:
+
+❌ Removed 1 obsolete test:
+   - test_old_interface
+
+🔧 Fixed 2 failing tests:
+   - test_edge_case_overflow (fixed mock definition)
+   - test_negative_numbers (fixed assertion)
+
+📈 Improved 2 low-quality tests:
+   - test_multiply: 40% → 78% coverage
+   - test_divide: 35% → 82% coverage
+
+═══════════════════════════════════════════════════════════════
+
+✅ Maintenance complete - All existing tests optimized
+```
+
+---
+
+#### PHASE 3: Creating New Tests (ONLY FOR GAPS)
+
+**Objetivo**: Criar novos testes APENAS para cobrir gaps não cobertos pelos testes existentes.
+
+**Step 1: Identificar Gaps Reais**
+
+```python
+# Após correções, re-analisar cobertura
+current_coverage = run_coverage_analysis()
+
+gaps = []
+for module in modules_analyzed:
+    module_coverage = current_coverage[module]
+
+    if module_coverage < threshold:
+        # Identificar EXATAMENTE quais linhas/branches não cobrem
+        missing_lines = get_uncovered_lines(module)
+        missing_branches = get_uncovered_branches(module)
+
+        gaps.append({
+            "module": module,
+            "coverage": module_coverage,
+            "missing_lines": missing_lines,
+            "missing_branches": missing_branches
+        })
+
+print(f"""
+📊 Gap Analysis:
+- Modules with gaps: {len(gaps)}
+- Coverage improvement needed: {threshold - current_coverage:.1f}%
+- Estimated new tests: {estimate_new_tests_needed(gaps)}
+""")
+```
+
+**Step 2: Criar Novos Testes para Gaps**
+
+```python
+if gaps:
+    print(f"""
+🆕 PHASE 3: Creating new tests for identified gaps ({len(gaps)} modules)
+    """)
+
+    new_tests = []
+
+    for gap in gaps:
+        # Criar testes especificamente para linhas/branches não cobertas
+        tests = generate_tests_for_gap(gap)
+
+        # Verificar que não duplicam testes existentes
+        unique_tests = filter_duplicate_tests(tests, analysis["valid"])
+
+        new_tests.extend(unique_tests)
+
+        print(f"""
+✅ Generated {len(unique_tests)} new tests for {gap['module']}
+   Current: {gap['coverage']:.0f}% → Target: {threshold:.0f}%
+        """)
+
+    # Criar arquivos em paralelo
+    create_test_files_in_parallel(new_tests)
+```
+
+**Step 3: Executar e Validar Novos Testes**
+
+```bash
+# Executar apenas novos testes
+pytest tests/ --cov=src --cov-report=json
+
+# Verificar cobertura final
+final_coverage = get_total_coverage()
+coverage_improvement = final_coverage - current_coverage
+
+print(f"""
+✅ New tests created and validated
+
+Final Coverage: {final_coverage:.1f}%
+Improvement: +{coverage_improvement:.1f}%
+""")
+```
+
+**Relato da Fase 3**:
+
+```
+═══════════════════════════════════════════════════════════════
+🆕 PHASE 3: CREATING NEW TESTS
+═══════════════════════════════════════════════════════════════
+
+Modules with gaps: 3
+
+📁 src/calculator.py
+   Generated: 5 new tests
+   Coverage: 82% → 92%
+
+📁 src/validator.py
+   Generated: 3 new tests
+   Coverage: 78% → 85%
+
+📁 src/parser.py
+   Generated: 2 new tests
+   Coverage: 75% → 81%
+
+═══════════════════════════════════════════════════════════════
+
+🎯 Total New Tests Created: 10
+
+═══════════════════════════════════════════════════════════════
+```
+
+---
+
+#### Complete Three-Phase Flow Report
+
+```
+═══════════════════════════════════════════════════════════════
+✅ TEST GENERATION COMPLETE - THREE-PHASE STRATEGY
+═══════════════════════════════════════════════════════════════
+
+📊 Overall Results:
+
+Coverage Before: 65.0%
+Coverage After:  87.0%
+Improvement:     +22.0%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PHASE 1 - Analysis Summary:
+✅ Analyzed 15 existing tests
+   ✅ Valid: 10 tests
+   🟡 Low quality: 2 tests
+   ⚠️  Failing: 2 tests
+   ❌ Obsolete: 1 test
+
+PHASE 2 - Maintenance Summary:
+✅ Removed 1 obsolete test
+✅ Fixed 2 failing tests
+✅ Improved 2 low-quality tests
+   Improvement: 38% → 80% average
+
+PHASE 3 - Creation Summary:
+✅ Created 10 new tests for gaps
+✅ All new tests passing
+✅ Zero duplicates with existing tests
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Files Modified:
+✅ tests/unit/test_calculator.py (15 → 19 tests)
+✅ tests/unit/test_validator.py (12 → 14 tests)
+✅ tests/unit/test_parser.py (5 → 7 tests)
+
+Total: 15 new tests created, 1 removed, 4 fixed/improved
+
+═══════════════════════════════════════════════════════════════
+
+📝 Next Steps:
+1. Review generated tests
+2. Commit when satisfied: git add tests/ && git commit
+3. Run locally: pytest -v
+
+═══════════════════════════════════════════════════════════════
 ```
 
 ---

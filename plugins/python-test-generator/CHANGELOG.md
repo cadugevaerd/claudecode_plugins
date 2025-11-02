@@ -5,7 +5,114 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
-## [2.1.0] - 2025-11-02
+## [3.0.0] - 2025-11-02
+
+### 🚀 BREAKING CHANGE - Three-Phase Intelligent Test Strategy
+
+This is a MAJOR version update introducing a fundamentally smarter approach to test generation.
+
+#### What Changed
+
+**Before (v2.x)**:
+- Agent created new tests immediately
+- No analysis of existing test quality
+- Risk of test duplication
+- No maintenance of existing tests
+
+**After (v3.0)**:
+- **Phase 1 (NEW)**: Analyze existing tests for quality and relevance
+- **Phase 2 (NEW)**: Maintain tests - remove obsolete, fix failing, improve low-quality
+- **Phase 3**: Create new tests ONLY for actual gaps
+
+#### Core Features Added
+
+1. **Phase 1: Test Analysis**
+   - Automatic scanning of existing test files
+   - Classification of tests: valid, low-quality, failing, obsolete
+   - Quality assessment before any modifications
+
+2. **Phase 2: Test Maintenance** (BEFORE Creating New)
+   - Automatic removal of obsolete tests
+   - Automatic fixing of failing tests (with coverage validation)
+   - Automatic improvement of low-quality tests
+   - Validation that all fixes maintain ≥80% coverage
+
+3. **Phase 3: Gap Coverage** (AFTER Maintenance)
+   - Creates new tests ONLY for uncovered code paths
+   - Prevents test duplication with existing tests
+   - Parallel file creation for maximum performance
+
+#### Key Improvements
+
+- ✅ **Zero Test Duplication**: Compares new tests against existing before creation
+- ✅ **Quality-First Approach**: Improves existing tests before adding new ones
+- ✅ **Intelligent Maintenance**: Automatically optimizes existing test suite
+- ✅ **Better Coverage**: Respects existing test investments while filling gaps
+- ✅ **Clear Transparency**: Three-phase reporting shows exactly what happens at each stage
+
+#### Impact on Users
+
+Users who run `/py-test` will now see:
+1. Analysis of existing tests (classified by quality)
+2. Automatic cleanup and improvements (if needed)
+3. Creation of new tests (only for real gaps)
+
+Total test quality improves because existing tests are maintained, not just added to.
+
+#### Migration from v2.x
+
+No action required! The command works the same way:
+```bash
+/py-test          # Still works - now with better strategy
+```
+
+The agent internally uses the three-phase approach transparently.
+
+#### Documentation Updates
+
+- Updated `/py-test` command description with three-phase explanation
+- Updated README.md with new strategy details
+- Added examples of Phase 1, 2, and 3 workflows
+- Documented benefits over v2.0 approach
+
+### Technical Implementation
+
+#### New Functions in test-assistant Agent
+
+- `analyze_existing_tests()` - PHASE 1: Scan and classify existing tests
+- `maintain_existing_tests()` - PHASE 2: Remove, fix, and improve tests
+- `create_gap_covering_tests()` - PHASE 3: Create new tests for gaps only
+- `validate_test_quality()` - Assess individual test quality/relevance
+- `filter_duplicate_tests()` - Prevent duplication with existing tests
+
+#### New Sections in Agent Documentation
+
+- PHASE 1: Analyze Existing Tests (Mandatory First) - 300+ lines
+- PHASE 2: Maintenance of Existing Tests (Before Creating New) - 250+ lines
+- PHASE 3: Creating New Tests (Only for Gaps) - 200+ lines
+- Complete Three-Phase Flow Report Template
+
+### Version Compatibility
+
+- Python: 3.7+
+- pytest: 7.0+
+- All previous feature compatibility maintained
+
+### Breaking Changes for Developers
+
+If you relied on immediate test creation without analysis:
+- Agent now pauses to analyze and optimize existing tests first
+- This is intentional - results in better test suite overall
+
+If you have many obsolete tests:
+- Agent will identify and offer to remove them
+- This improves test suite quality
+
+### Deprecations
+
+None. All v2.x functionality maintained and enhanced.
+
+## [2.3.0] - 2025-11-02
 
 ### ⚡ FEATURE CRÍTICA
 

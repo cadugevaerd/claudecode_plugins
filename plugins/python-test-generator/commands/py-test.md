@@ -43,21 +43,34 @@ This command invokes the test-assistant agent to automatically generate unit tes
 
 ---
 
-## How It Works Internally
+## How It Works Internally - Three-Phase Strategy (NEW v3.0)
 
-The **test-assistant agent** automatically:
+The **test-assistant agent** executes a **three-phase intelligent strategy**:
 
-- Detects Python frameworks (pytest, unittest, nose)
-- Identifies project patterns (fixtures, mocks, factories)
-- Creates tests following AAA pattern (Arrange-Act-Assert)
-- Covers happy paths, error cases, and edge cases
-- Mocks external dependencies (APIs, databases, LLMs)
-- Handles async code patterns
-- Works with LangChain, FastAPI, Django, Flask, AWS Lambda, and more
-- Creates files in parallel for performance
-- Handles failing tests intelligently
-- Cleans up obsolete/broken tests
-- Iterates until reaching 80% coverage
+### PHASE 1: Analyze Existing Tests
+- Scans project for existing test files
+- Analyzes test quality and relevance
+- Classifies tests: valid, low-quality, failing, obsolete
+- Identifies optimization opportunities
+
+### PHASE 2: Maintain Existing Tests (BEFORE Creating New)
+- **Removes obsolete tests** that no longer apply
+- **Fixes failing tests** with the same coverage maintained
+- **Improves low-quality tests** to increase their coverage
+- **Validates all fixes** by running updated tests
+
+### PHASE 3: Create New Tests (ONLY FOR GAPS)
+- Identifies coverage gaps AFTER maintaining existing tests
+- Creates new tests **only for uncovered code paths**
+- Eliminates test duplication by comparing with existing tests
+- Creates files in **parallel for maximum performance**
+- Iterates automatically until reaching 80% coverage
+
+**Key Differences from v2.0:**
+- ✅ **Prioritizes existing tests** - optimize before creating new
+- ✅ **Prevents test duplication** - only new gaps get tests
+- ✅ **Intelligent maintenance** - removes/fixes/improves automatically
+- ✅ **Three-phase transparency** - clear reporting at each phase
 
 ---
 
