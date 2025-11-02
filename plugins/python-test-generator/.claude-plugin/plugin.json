@@ -1,7 +1,7 @@
 {
   "name": "python-test-generator",
-  "version": "2.1.0",
-  "description": "Gerador automático de testes unitários Python com loop automático até atingir 80% de cobertura, threshold enforcement e configuração automática de pytest",
+  "version": "2.2.0",
+  "description": "Automatic Python unit test generator with intelligent iteration to 80% coverage. Advanced LangChain/LangGraph testing patterns with auto-discovered skills for LCEL chains, graph testing, and LLM mocking.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
