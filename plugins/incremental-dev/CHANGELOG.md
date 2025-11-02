@@ -5,6 +5,69 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [1.5.2] - 2025-11-01
+
+### Modificado (Usability Improvements - PATCH)
+
+#### PROBLEMA 1: Redundância `/prd-fix` ↔ `/prd-update`
+- Adicionado cross-reference no início de `/prd-fix` apontando para `/prd-update` para mudanças completas
+- Adicionado cross-reference no início de `/prd-update` apontando para `/prd-fix` para ajustes cirúrgicos
+- Clarificado diferença: `/prd-fix` para mudanças de seção única, `/prd-update` para fases completas
+
+#### PROBLEMA 3: Workflow confuso em `/adopt-incremental`
+- Adicionado diagrama de fluxo ASCII com 5 passos principais
+- Adicionado checklist de execução detalhado com sub-tarefas para cada passo
+- Reorganizado seções em ordem lógica do workflow
+- Melhorada navegabilidade do comando
+
+#### PROBLEMA 4: `/refactor-now` duplica skill
+- Adicionada nota explicativa: comando é wrapper manual da skill `refactor-advisor`
+- Documentado que skill é auto-invocada automaticamente por Claude
+- Clarificado quando usar comando vs deixar skill ser invocada
+
+#### PROBLEMA 7: Skill `prd-manager` descrição
+- Melhorada descrição YAML com trigger terms explícitos
+- Adicionados termos: requisitos, objetivos, MVP, incremento completo, decisões arquiteturais, aprendizados, lições aprendidas, ADR, Product Vision, épicos, User Stories
+- Descrição agora facilita auto-invocação da skill
+
+#### PROBLEMA 8 (CRÍTICO): CLAUDE.md não documenta agent e skills
+- Adicionada seção completa sobre agent `incremental-dev-coach` em `/setup-project-incremental`
+- Expandida seção de skills com detalhes sobre quando cada skill é invocada
+- Documentados trigger terms para cada skill (yagni-enforcer, refactor-advisor, prd-manager)
+- Aplicado progressive disclosure: seção reduzida para ~30 linhas (limite 40)
+- Adicionada referência ao README.md para documentação completa
+
+#### PROBLEMA 9 (CRÍTICO): Workflow `/add-increment` não está claro
+- Adicionada seção "When to Use This Command" no início
+- Adicionada tabela comparativa: `/start-incremental` vs `/add-increment` vs `/refactor-now` vs `/review-yagni`
+- Adicionado Passo 0: "Validate Prerequisites" (ALWAYS RUN FIRST)
+  - Validação de PRD existente
+  - Validação de git status limpo
+  - Validação de MVP definido
+- Adicionado "Increment Sizing Guide" com métricas ideais
+  - Tempo: 30min-2h
+  - Arquivos: 1-3 máximo
+  - Linhas: 20-100
+  - Testes: 1-3 casos
+- Integrado registro no PRD no fluxo principal (passo 8)
+  - Antes: passo opcional no final
+  - Agora: parte integral do workflow
+- Atualizado diagrama de fluxo com 10 passos claros
+
+### Benefícios
+- ✅ Usuários entendem claramente qual comando usar quando
+- ✅ Cross-references previnem uso incorreto de comandos similares
+- ✅ Workflow visual facilita execução de comandos complexos
+- ✅ Validações de pré-requisitos evitam erros
+- ✅ Documentação de agent/skills melhora uso do plugin
+- ✅ Progressive disclosure mantém CLAUDE.md conciso (≤40 linhas)
+- ✅ Registro no PRD agora é parte natural do workflow
+
+## [1.5.1] - 2025-11-01
+
+### Fixed
+- Corrigir lógica de workflow do plugin
+
 ## [1.5.0] - 2025-10-27
 
 ### Adicionado

@@ -6,6 +6,8 @@ description: Corrige ou ajusta seções específicas do PRD.md existente de form
 
 Permite fazer correções e ajustes específicos em seções individuais do PRD sem reescrever o documento inteiro.
 
+> **📘 Related Command**: For complete PRD updates (changing entire document or multiple sections), use `/prd-update`. This command (`/prd-fix`) is designed for surgical, single-section modifications only.
+
 ## 🎯 Objetivo
 
 Fazer modificações pontuais no PRD.md quando:

@@ -10,19 +10,137 @@ Este comando orienta a adição de uma ÚNICA funcionalidade incremental ao cód
 
 Adicionar a próxima funcionalidade de forma MÍNIMA e INCREMENTAL, evitando antecipar requisitos futuros.
 
-## 📋 Como usar
+## ❓ When to Use This Command
 
+Use `/add-increment` when you already have:
+- ✅ Working MVP (minimum viable product)
+- ✅ PRD defined with clear objectives
+- ✅ Clean git status (no uncommitted changes)
+- ✅ Previous increment tested and working
+
+**DO NOT use** `/add-increment` when:
+- ❌ Starting a new project → Use `/start-incremental` instead
+- ❌ MVP not yet defined → Use `/prd-update planejamento` first
+- ❌ Multiple features to add → Add one at a time
+- ❌ Major refactoring needed → Use `/refactor-now` first
+
+### 📊 Command Comparison
+
+| Scenario | Use This Command |
+|----------|------------------|
+| **Starting new project** | `/start-incremental` - Define MVP and initial scope |
+| **Adding next feature to working MVP** | `/add-increment` - Add one feature incrementally |
+| **Refactoring when patterns emerge** | `/refactor-now` - Identify refactoring opportunities |
+| **Reviewing over-engineering** | `/review-yagni` - Remove unnecessary complexity |
+
+## 📋 How to Use
+
+```bash
+/add-increment "feature description"
 ```
-/add-increment "descrição da funcionalidade"
+
+**Examples**:
+```bash
+/add-increment "Add email validation"
+/add-increment "Add retry logic when API fails"
+/add-increment "Add logging to critical operations"
 ```
 
 ## 🔍 Processo de Execução
 
 Quando este comando for executado, você DEVE:
 
+### 0. Validate Prerequisites (ALWAYS RUN FIRST)
+
+**CRITICAL**: Before starting increment, ALWAYS validate prerequisites:
+
+```bash
+# 1. Check if PRD exists
+test -f docs/PRD.md || test -f PRD.md
+
+# 2. Check git status (should be clean)
+git status --porcelain
+
+# 3. Check if MVP is defined in PRD
+grep -q "MVP" docs/PRD.md || grep -q "MVP" PRD.md
+```
+
+**If PRD does NOT exist**:
+```
+❌ PRD NOT FOUND
+
+Before adding increments, you need:
+1. Create PRD: /setup-project-incremental
+2. Define MVP: /prd-update planejamento
+3. Then: /add-increment
+
+STOP - Do not proceed without PRD
+```
+
+**If git status is NOT clean**:
+```
+⚠️  UNCOMMITTED CHANGES DETECTED
+
+Files with changes:
+[list modified files]
+
+Recommendation:
+1. Commit current work first
+2. Clean working directory
+3. Then: /add-increment
+
+Continue anyway? (y/n)
+```
+
+**If MVP is NOT defined**:
+```
+⚠️  MVP NOT DEFINED IN PRD
+
+PRD exists but MVP is not clearly defined.
+
+Recommendation:
+1. Define MVP: /prd-update planejamento
+2. Document what IS and ISN'T in MVP
+3. Then: /add-increment
+
+Continue anyway? (y/n)
+```
+
+---
+
+### 📏 Increment Sizing Guide
+
+**Ideal increment size**:
+- ⏱️ **Time**: 30 minutes to 2 hours of work
+- 📁 **Files**: Modify 1-3 files maximum
+- 📝 **Lines**: Add/change 20-100 lines of code
+- 🧪 **Tests**: 1-3 new test cases
+
+**If increment seems too large**:
+```
+⚠️  INCREMENT TOO LARGE DETECTED
+
+Your increment seems to involve:
+- 5+ files to modify
+- 200+ lines of code
+- Multiple features
+
+Recommendation: Break down into smaller increments
+
+Example:
+❌ "Add authentication with OAuth, JWT, and role-based access"
+✅ "Add basic authentication with hardcoded user"
+✅ (Next) "Add JWT token generation"
+✅ (Next) "Add role-based access control"
+
+Continue with large increment anyway? (y/n)
+```
+
+---
+
 ### 1. Analisar Estado Atual
 
-Antes de adicionar qualquer coisa:
+After validating prerequisites:
 
 ```
 🔄 ADICIONAR INCREMENTO
@@ -346,20 +464,26 @@ Após cada incremento:
 ```
 1. /add-increment "nova feature"
    ↓
-2. Analisar estado atual
+2. Validate Prerequisites (PRD exists, git clean, MVP defined)
    ↓
-3. Definir incremento MÍNIMO
+3. Analisar estado atual
    ↓
-4. Questionar necessidade
+4. Definir incremento MÍNIMO (30min-2h, 1-3 files)
    ↓
-5. Implementar (código simples)
+5. Questionar necessidade ("É necessário AGORA?")
    ↓
-6. Testar incremento
+6. Implementar (código simples, sem abstrações)
    ↓
-7. Commit
+7. Testar incremento (functionality works)
    ↓
-8. Próximo incremento OU refatorar (se padrão emergiu)
+8. Register in PRD (/prd-update incremento) ← INTEGRATED STEP
+   ↓
+9. Commit (with learnings documented)
+   ↓
+10. Próximo incremento OU refatorar (se padrão emergiu)
 ```
+
+**Key Change**: PRD update is now PART of the increment workflow, not an afterthought!
 
 ## 💡 Princípios do Incremento
 

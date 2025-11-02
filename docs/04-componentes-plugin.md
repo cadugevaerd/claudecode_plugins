@@ -792,6 +792,323 @@ Agentes podem usar esta skill para:
 
 ---
 
+## 📏 Tamanhos Recomendados e Separação de Responsabilidades
+
+### A Regra de Ouro
+
+```
+Agent = COMO fazer (processo de execução, 50-200 linhas)
+Command = Interface (invoca agents/MCPs, 20-100 linhas)
+Skill = O QUE saber (conhecimento de domínio, <500 linhas)
+```
+
+### Tabela de Tamanhos
+
+| Componente | Tamanho Ideal | Tamanho Máximo | Ação se Excedido |
+|------------|--------------|----------------|------------------|
+| **Agent** | 50-150 linhas | 200 linhas | Extrair conhecimento para skills OU dividir em múltiplos agents |
+| **Command** | 20-50 linhas | 100 linhas | Extrair lógica para agent se contém lógica de negócio |
+| **Skill (SKILL.md)** | 200-300 linhas | 500 linhas | Usar progressive disclosure (arquivos de referência) |
+| **Setup addition to CLAUDE.md** | 20-30 linhas | 40 linhas | Usar progressive disclosure, link para README.md |
+
+### Diferenças Críticas de Estrutura
+
+#### Agents (Sub-agentes)
+
+**❌ INCORRETO** - Agents NÃO são pastas:
+```
+.claude/agents/my-agent/
+├── my-agent.md
+└── reference.md        # ❌ NÃO SUPORTADO
+```
+
+**✅ CORRETO** - Agents são arquivos .md ÚNICOS:
+```
+.claude/agents/my-agent.md  # ← TODO o conteúdo em UM arquivo
+```
+
+**Por quê?**
+- Agents operam em contexto isolado
+- Precisam de system prompt completo em arquivo único
+- **NÃO suportam progressive disclosure**
+- Devem incluir TODAS as instruções em um .md
+
+#### Skills
+
+**✅ CORRETO** - Skills PODEM ter múltiplos arquivos:
+```
+.claude/skills/my-skill/
+├── SKILL.md           # Visão geral (< 500 linhas)
+├── reference.md       # Documentação de suporte
+└── patterns.md        # Biblioteca de padrões
+```
+
+**Por quê?**
+- Usam padrão de progressive disclosure
+- Carregam arquivos adicionais on-demand via Read tool
+- Podem organizar conhecimento em múltiplos arquivos
+- SKILL.md serve como overview/índice
+
+### Quando Extrair Conhecimento para Skills
+
+**Extrair para skill se**:
+
+1. **Agent > 200 linhas**
+2. **Seções de documentação ou referência**
+3. **Múltiplas tabelas de referência**
+4. **Padrões de código ou templates**
+5. **Conhecimento duplicado entre agents**
+
+### Exemplo de Refatoração
+
+#### Antes (Agent com 310 linhas)
+
+```markdown
+# test-generator.md (310 linhas)
+
+## Instructions
+[80 linhas de processo]
+
+## Mock Patterns for LangChain    # ← Conhecimento - EXTRAIR!
+[150 linhas de patterns]
+
+## Pytest Best Practices    # ← Conhecimento - EXTRAIR!
+[80 linhas de docs]
+```
+
+**Problemas**:
+- ❌ Agent muito grande (310 linhas)
+- ❌ Mistura processo com conhecimento
+- ❌ Conhecimento não reutilizável
+- ❌ Difícil manutenção
+
+#### Depois (Agent 90 linhas + Skills)
+
+**Agent focado no processo**:
+```markdown
+# test-generator.md (90 linhas)
+
+## Instructions
+For LangChain mock patterns, see skill `langchain-mock-patterns`
+For pytest best practices, see skill `pytest-best-practices`
+
+[80 linhas de processo essencial]
+```
+
+**Skills reutilizáveis**:
+```
+plugins/python-test-generator/
+├── agents/
+│   └── test-generator.md         # 90 linhas
+└── skills/
+    ├── langchain-mock-patterns/
+    │   └── SKILL.md               # 150 linhas
+    └── pytest-best-practices/
+        └── SKILL.md               # 80 linhas
+```
+
+**Benefícios**:
+- ✅ Agent focado (90 linhas)
+- ✅ Skills reutilizáveis por outros agents
+- ✅ Manutenção mais fácil
+- ✅ Conhecimento organizado por domínio
+- ✅ Performance otimizada
+
+### O Fluxo Correto
+
+#### 1. Agents Executam Tarefas (COMO fazer)
+
+- Processo de execução passo-a-passo
+- Lógica de orquestração
+- Invocação de tools
+- **Arquivo .md único** (sem progressive disclosure)
+- **50-200 linhas ideal**
+
+**Exemplo**:
+```markdown
+# commit-assistant.md (150 linhas)
+
+For conventional commit rules, see skill `conventional-commits`
+For CI detection, see skill `ci-detection`
+
+## Process:
+1. Validate security
+2. Run CI/CD (see skill for tool detection)
+3. Analyze changes
+4. Generate commit message (see skill for format)
+5. Commit and push
+```
+
+#### 2. Commands Facilitam Invocação (Interface)
+
+- Interface voltada para o usuário
+- Invoca agents via Task tool
+- Invoca MCPs
+- **SEM lógica de negócio** (delega para agents)
+- **20-100 linhas**
+
+**Exemplo**:
+```markdown
+# commit.md (19 linhas)
+
+Use agent commit-assistant to execute full commit process
+```
+
+#### 3. Skills Fornecem Conhecimento (O QUE saber)
+
+- Conhecimento de domínio
+- Documentação de API
+- Melhores práticas
+- Padrões de código
+- **Auto-descobertas por Claude**
+- **Progressive disclosure suportado** (estrutura de pasta)
+- **SKILL.md < 500 linhas**
+
+**Exemplo**:
+```
+skills/
+├── conventional-commits/        # Pasta com múltiplos arquivos
+│   ├── SKILL.md                 # Conhecimento
+│   └── examples.md
+└── ci-detection/
+    └── SKILL.md
+```
+
+### Sinais de Alerta
+
+**🚨 Agent Precisa Refatoração**:
+
+- ✅ Agent > 200 linhas
+- ✅ Seções com "Documentation" ou "Reference"
+- ✅ Múltiplas tabelas de referência
+- ✅ Conhecimento duplicado entre agents
+- ✅ Agent faz "tudo"
+
+**Ação**: Identificar seções de conhecimento → Extrair para skills → Agent reduzido para ~150 linhas
+
+**🚨 Command com Lógica de Negócio**:
+
+- ✅ Command > 100 linhas
+- ✅ Contém passos de processo
+- ✅ Contém lógica de decisão complexa
+
+**Ação**: Criar agent com processo → Command apenas invoca agent (~50 linhas)
+
+### Processo de Refatoração
+
+#### Para Agent > 200 linhas:
+
+1. **Identificar seções**:
+   - Processo/execução → manter no agent
+   - Conhecimento/docs → extrair para skill
+
+2. **Para cada seção de conhecimento**:
+   - \> 50 linhas? → extrair para skill
+   - Usado por outro agent? → extrair para skill
+   - < 50 linhas & específico? → pode manter
+
+3. **Criar skills separadas** (com estrutura de pasta)
+
+4. **Agent referencia skills**: "See skill X for Y"
+
+5. **Validar**: agent agora < 200 linhas?
+
+#### Para Command com Lógica:
+
+1. **Identificar passos independentes do workflow**
+
+2. **Criar agent** (~150 linhas) com processo
+
+3. **Command invoca agent** (~50 linhas)
+
+4. **Validar**: command < 100 linhas?
+
+### Exemplo Completo: Antes & Depois
+
+#### Antes: Command Monolítico (906 linhas)
+
+```markdown
+# setup-project-incremental.md (906 linhas)
+
+## Processo de Execução
+### 1. Detectar Tipo de Projeto (Novo vs Legacy)
+[Lógica detalhada de detecção - 200 linhas]
+
+### 2. Configurar CLAUDE.md
+[Lógica de configuração - 300 linhas]
+
+### 3. Criar PRD
+[Lógica de criação - 400 linhas]
+```
+
+**Problemas**:
+- ❌ Command com lógica de negócio (906 linhas!)
+- ❌ Deveria ser agent
+- ❌ Viola padrão de separação
+
+#### Depois: Command + Agent (50 + 150 linhas)
+
+**Command** (50 linhas):
+```markdown
+# setup-project-incremental.md (50 linhas)
+
+Use agent setup-assistant to configure project with YAGNI principles
+
+[Documentação de uso]
+```
+
+**Agent** (150 linhas):
+```markdown
+# setup-assistant.md (150 linhas)
+
+## Process:
+1. Detect project type
+2. Configure CLAUDE.md (≤40 lines)
+3. Create PRD v0.1
+4. Validate setup
+```
+
+**Benefícios**:
+- ✅ Command leve (50 linhas)
+- ✅ Agent focado em processo (150 linhas)
+- ✅ Separação clara de responsabilidades
+- ✅ Reutilizável
+
+### Regras Finais
+
+1. **Agent = COMO, Skill = O QUE**
+   - Processo → Agent
+   - Conhecimento → Skill
+
+2. **1 Agent = 1 Responsabilidade**
+   - Múltiplas responsabilidades → quebrar
+
+3. **Agent > 200 linhas? Revisar!**
+   - Identificar conhecimento extraível
+   - Ou quebrar em sub-agents
+
+4. **Teste do Copy-Paste**
+   - Se copiaria entre agents → extrair para skill
+
+5. **Progressive Disclosure (APENAS SKILLS!)**
+   - ✅ Skill > 500 lines → arquivos de referência
+   - ❌ Agent > 200 lines → NÃO suporta progressive disclosure
+   - → Extrair para skills OU dividir agents
+
+6. **Agents são ARQUIVOS ÚNICOS**
+   - ✅ `agents/my-agent.md`
+   - ❌ `agents/my-agent/my-agent.md`
+
+7. **Skills são PASTAS**
+   - ✅ `skills/my-skill/SKILL.md`
+   - ❌ `skills/my-skill.md` (sem progressive disclosure)
+
+8. **Reuso > Especificidade**
+   - Conhecimento reutilizável → sempre skill
+   - Processo único → pode ficar no agent
+
+---
+
 ## 🎨 Combinando Componentes
 
 ### Exemplo: Plugin Completo de Testes

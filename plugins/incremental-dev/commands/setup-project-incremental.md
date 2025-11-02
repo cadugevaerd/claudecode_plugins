@@ -260,31 +260,33 @@ Se você detectar estes padrões, QUESTIONE:
 
 ## 🎯 Plugin Incremental-Dev
 
-Este projeto usa o plugin `incremental-dev` com os seguintes comandos:
+Este projeto usa o plugin `incremental-dev` para desenvolvimento incremental.
 
-### Comandos para Projetos Novos
-- `/start-incremental` - Definir MVP inicial
-- `/add-increment` - Adicionar próxima funcionalidade
-- `/refactor-now` - Verificar se é hora de refatorar
-- `/review-yagni` - Revisar código removendo over-engineering
+### 🤖 Agent Disponível
 
-### Comandos para Projetos Legacy
-- `/adopt-incremental` - Adotar YAGNI em projeto existente (análise completa)
-- `/prd-retrofit` - Criar PRD retroativo a partir de código existente
+- **incremental-dev-coach**: Use via Task tool para orientação autônoma em YAGNI, MVP e refatoração
+  - Analisa codebase, identifica over-engineering, valida PRD
 
-### Comandos de Gestão de PRD
-- `/prd-view` - Visualizar PRD
-- `/prd-update` - Atualizar PRD completo
-- `/prd-fix` - Ajuste cirúrgico em seção do PRD
-
-## 🔍 Skills Auto-Invocadas
-
-O plugin possui skills que Claude invoca automaticamente:
+### 🔍 Skills Auto-Invocadas (Automáticas)
 
 - **yagni-enforcer**: Detecta over-engineering ANTES de implementar
 - **refactor-advisor**: Detecta quando padrões emergiram (Regra dos 3)
+- **prd-manager**: Gerencia PRD automaticamente, sugere atualizações
 
-Confie nessas skills para orientar decisões de arquitetura.
+**Skills são auto-invocadas - você NÃO precisa chamar manualmente!**
+
+### 📋 Principais Comandos
+
+- `/start-incremental` - Definir MVP inicial
+- `/add-increment` - Adicionar próxima funcionalidade
+- `/adopt-incremental` - Adotar YAGNI em projeto legacy
+- `/prd-view` - Visualizar PRD
+- `/prd-update` - Atualizar PRD completo
+- `/refactor-now` - Verificar se é hora de refatorar
+
+**📖 Documentação completa**: `plugins/incremental-dev/README.md`
+
+**Nota**: Comandos e skills são auto-descobertos pelo Claude Code na inicialização.
 
 ---
 

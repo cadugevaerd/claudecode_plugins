@@ -4,7 +4,15 @@ description: Identificar momento certo para refatorar código quando padrões em
 
 # Refactor Now
 
-Este comando identifica o momento APROPRIADO para refatorar código, quando padrões já emergiram naturalmente e refatoração adiciona valor real.
+**📘 Note**: This command is a **manual invocation wrapper** for the `refactor-advisor` skill. The skill is automatically invoked by Claude when detecting refactoring opportunities. Use this command when you want to explicitly trigger refactoring analysis.
+
+**Skill Connection**: This command delegates to the `refactor-advisor` skill, which:
+- Analyzes codebase for emerging patterns
+- Validates "Rule of 3" (pattern must appear 3+ times)
+- Suggests refactorings only when real pattern emerged
+- Prioritizes by impact (occurrences × LOC reduction - risk)
+
+---
 
 ## 🎯 Objetivo
 

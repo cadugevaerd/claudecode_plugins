@@ -25,6 +25,76 @@ Permitir que projetos legados adotem YAGNI e desenvolvimento incremental:
 /adopt-incremental "API REST com FastAPI para gerenciar usuários"
 ```
 
+## 🗺️ Workflow Overview (5 Main Steps)
+
+```
+┌─────────────────────────────────────────────┐
+│  1. Detect Existing Project                  │
+│     ✓ Find code files                        │
+│     ✓ Analyze structure                      │
+│     ✓ Check git history                      │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│  2. Analyze Code Automatically               │
+│     ✓ Collect metrics (LOC, complexity)      │
+│     ✓ Detect implemented features            │
+│     ✓ Identify over-engineering              │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│  3. Generate Retroactive PRD                 │
+│     ✓ Document detected functionalities      │
+│     ✓ List over-engineering opportunities    │
+│     ✓ Create simplification roadmap          │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│  4. Configure CLAUDE.md                      │
+│     ✓ Add YAGNI instructions                 │
+│     ✓ Add transition guidelines              │
+│     ✓ Link to PRD and roadmap                │
+└─────────────────────────────────────────────┘
+                    ↓
+┌─────────────────────────────────────────────┐
+│  5. Generate Action Roadmap                  │
+│     ✓ Phase 1: Quick wins (1 week)           │
+│     ✓ Phase 2: Medium refactorings (2-4w)    │
+│     ✓ Phase 3: New features with YAGNI       │
+└─────────────────────────────────────────────┘
+```
+
+## ✅ Checklist de Execução
+
+Use este checklist para acompanhar o progresso:
+
+- [ ] **Step 1: Project Detection**
+  - [ ] Code files found (*.py, *.js, etc.)
+  - [ ] Structure analyzed (src/, lib/, app/)
+  - [ ] Git history checked
+
+- [ ] **Step 2: Code Analysis**
+  - [ ] Metrics collected (LOC, complexity, duplication)
+  - [ ] Features detected and documented
+  - [ ] Over-engineering identified with impact
+
+- [ ] **Step 3: PRD Generation**
+  - [ ] docs/PRD.md created
+  - [ ] Functionalities documented
+  - [ ] Simplification roadmap defined
+  - [ ] User reviewed and validated PRD
+
+- [ ] **Step 4: CLAUDE.md Configuration**
+  - [ ] YAGNI instructions added
+  - [ ] Transition rules documented
+  - [ ] File size validated (≤40KB)
+
+- [ ] **Step 5: Roadmap Generated**
+  - [ ] Phase 1 actions defined (quick wins)
+  - [ ] Phase 2 actions defined (medium refactorings)
+  - [ ] Phase 3 approach defined (new features)
+  - [ ] Next steps clear
+
 ## 🔍 Processo de Execução
 
 ### Passo 1: Detectar Projeto Existente

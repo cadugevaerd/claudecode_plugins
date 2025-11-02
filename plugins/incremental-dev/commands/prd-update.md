@@ -6,6 +6,8 @@ description: Atualiza PRD (Product Requirements Document) conforme fase do proje
 
 Este comando atualiza o PRD (Product Requirements Document) do projeto conforme a fase atual de desenvolvimento.
 
+> **📘 Related Command**: For small, surgical fixes to specific sections of the PRD (single field changes, priority adjustments), use `/prd-fix`. This command (`/prd-update`) is for complete phase updates or multi-section changes.
+
 ## 🎯 Objetivo
 
 Evoluir o PRD ao longo do ciclo de vida do projeto, mantendo documentação atualizada e sincronizada com o estado real do desenvolvimento.
