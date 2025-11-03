@@ -56,12 +56,15 @@ Commands for AI agent planning, environment setup, architecture validation, and 
 
 ## Troubleshooting
 
-**README.md not found**
+### README.md not found
+
 - Execute `/brief` first to create Brief Minimo specification
 
-**CLAUDE.md doesn't exist**
+### CLAUDE.md doesn't exist
+
 - Command creates CLAUDE.md automatically with Agentc section only
 
-**Section already exists**
+### Section already exists
+
 - Command updates existing section (no duplication)
 - All other CLAUDE.md content preserved
