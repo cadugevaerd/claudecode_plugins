@@ -9,6 +9,7 @@ Comando especializado para **commits rápidos** quando você precisa de velocida
 ## 🎯 Quando Usar
 
 **✅ Use /quick-commit quando**:
+
 - Commits pequenos e triviais (typos, formatação)
 - Mudanças urgentes que precisam ir rápido
 - Documentação simples
@@ -17,6 +18,7 @@ Comando especializado para **commits rápidos** quando você precisa de velocida
 - Você já testou localmente e confia nas mudanças
 
 **❌ NÃO use /quick-commit quando**:
+
 - Mudanças em código crítico
 - Refatorações grandes
 - Novas funcionalidades importantes
@@ -26,14 +28,17 @@ Comando especializado para **commits rápidos** quando você precisa de velocida
 
 ## 🚀 Como Usar
 
-```bash
+````bash
 /quick-commit
-```
+
+```text
 
 Ou com alias:
+
 ```bash
 /qcommit
-```
+
+```text
 
 ## 🔄 O que o Quick Commit faz
 
@@ -66,10 +71,13 @@ Execute `git status` e verifique arquivos sensíveis:
 
 ```bash
 git status --short
-```
+
+```text
 
 **Se houver arquivos sensíveis, PARE:**
-```
+
+```text
+
 ⚠️  ALERTA DE SEGURANÇA ⚠️
 Arquivos sensíveis detectados:
 - .env
@@ -81,29 +89,38 @@ Soluções:
 1. Adicione ao .gitignore
 2. Remove do stage: git rm --cached <arquivo>
 3. NUNCA commit arquivos sensíveis!
-```
+
+```text
 
 ### Passo 2: Análise Rápida
 
 Execute apenas:
+
 ```bash
 git diff --stat
-```
+
+```text
 
 Mostre resumo:
-```
+
+```text
+
 📊 Mudanças detectadas:
 - 3 arquivos modificados
 - +45 linhas adicionadas
 - -12 linhas removidas
-```
+
+```text
 
 ### Passo 3: Gerar Mensagem Simples
 
 **Pergunte ao usuário**:
-```
+
+```text
+
 Digite mensagem de commit (ou Enter para auto-gerar):
-```
+
+```text
 
 **Se usuário fornecer mensagem**:
 - Use a mensagem dele (valide formato conventional commits)
@@ -135,22 +152,27 @@ def auto_generate_message(files_changed):
         return f"chore: update {filename}"
     else:
         return f"chore: update {len(files_changed)} files"
-```
+
+```text
 
 **Exemplos de mensagens auto-geradas**:
-```
+
+```text
+
 docs: update README
 chore: update config files
 test: update test cases
 fix: update validation logic
 chore: update 5 files
-```
+
+```text
 
 ### Passo 4: Commit e Push
 
 **Execute em sequência**:
 
 ```bash
+
 # 1. Add all
 git add -A
 
@@ -165,10 +187,13 @@ git pull --rebase origin $(git branch --show-current)
 
 # 5. Push
 git push origin $(git branch --show-current)
-```
+
+```text
 
 **Se houver CONFLITOS durante rebase**:
-```
+
+```text
+
 ⚠️  CONFLITOS DETECTADOS
 
 Arquivos em conflito:
@@ -184,12 +209,15 @@ Arquivos em conflito:
 
 Ou cancele:
    git rebase --abort
-```
+
+```text
 
 ### Passo 5: Confirmação
 
 Mostre resultado:
-```
+
+```text
+
 ═══════════════════════════════════════════
 ⚡ QUICK COMMIT CONCLUÍDO!
 ═══════════════════════════════════════════
@@ -205,7 +233,8 @@ Mostre resultado:
 ⏱️  Tempo total: ~5 segundos
 
 ═══════════════════════════════════════════
-```
+
+```text
 
 ## 🎨 Exemplos de Uso
 
@@ -222,6 +251,7 @@ $ /quick-commit
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Digite mensagem (Enter para auto):
+
 # Usuário aperta Enter
 
 📝 Mensagem gerada: docs: update README
@@ -231,7 +261,8 @@ Digite mensagem (Enter para auto):
 ✅ Push: origin/main
 
 ⏱️  Concluído em 4s
-```
+
+```text
 
 ### Exemplo 2: Atualizar configuração
 
@@ -255,7 +286,8 @@ Digite mensagem (Enter para auto): chore(ci): add cache to workflow
 ✅ Push: origin/main
 
 ⏱️  Concluído em 5s
-```
+
+```text
 
 ### Exemplo 3: Arquivo sensível detectado
 
@@ -281,7 +313,8 @@ Ações:
 3. NUNCA commit arquivos sensíveis!
 
 🛑 Processo cancelado
-```
+
+```text
 
 ## 🔐 Segurança
 
@@ -317,7 +350,9 @@ Ações:
 ## 💡 Dicas de Uso
 
 ### Quando Usar Quick Commit
+
 ```bash
+
 # ✅ Typos e correções simples
 /quick-commit  # "Fix typo in README"
 
@@ -332,10 +367,13 @@ Ações:
 
 # ✅ WIP commits
 /quick-commit  # "wip: progress on feature"
-```
+
+```text
 
 ### Quando Usar Commit Normal
+
 ```bash
+
 # ✅ Nova funcionalidade
 /commit  # Executa testes, valida tudo
 
@@ -347,7 +385,8 @@ Ações:
 
 # ✅ Mudanças em produção
 /commit  # Segurança máxima
-```
+
+```text
 
 ## 🚨 Avisos e Limitações
 
@@ -375,7 +414,9 @@ Ações:
 **Problema**: `error: failed to push`
 
 **Solução**:
+
 ```bash
+
 # 1. Verificar status
 git status
 
@@ -386,15 +427,19 @@ git pull --rebase origin main
 
 # 4. Push novamente
 git push origin main
-```
+
+```text
 
 ### Conflitos após pull
 
 **Problema**: Conflitos durante rebase
 
 **Solução**:
+
 ```bash
+
 # 1. Resolver conflitos manualmente
+
 # Edite arquivos com conflito
 
 # 2. Adicionar arquivos resolvidos
@@ -405,21 +450,25 @@ git rebase --continue
 
 # 4. Push
 git push origin main
-```
+
+```text
 
 ### Commit acidental
 
 **Problema**: Fez quick-commit por engano
 
 **Solução**:
+
 ```bash
+
 # Desfazer último commit (mantém mudanças)
 git reset --soft HEAD~1
 
 # Ou desfazer commit e push
 git reset --hard HEAD~1
 git push --force origin main  # ⚠️ CUIDADO!
-```
+
+```text
 
 ## 📚 Recursos
 
@@ -427,6 +476,6 @@ git push --force origin main  # ⚠️ CUIDADO!
 - [Git Rebase Documentation](https://git-scm.com/docs/git-rebase)
 - [Git Best Practices](https://www.git-scm.com/book/en/v2)
 
----
 
 **Desenvolvido por Carlos Araujo para claudecode_plugins** 🚀
+````

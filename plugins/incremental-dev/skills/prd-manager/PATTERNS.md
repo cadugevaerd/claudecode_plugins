@@ -2,12 +2,12 @@
 
 Exemplos de detecção automática de momentos para atualizar PRD.
 
----
-
 ## Padrão 1: Incremento Completado
 
 ### Quando Detectar
+
 Usuário menciona:
+
 - "Pronto", "completo", "finalizado"
 - Feature específica concluída
 - "Funcionando", "testado"
@@ -15,9 +15,12 @@ Usuário menciona:
 ### Exemplo de Detecção
 
 **Conversa**:
-```
+
+````text
+
 Usuário: "Pronto! Upload de PDF funcionando com drag-and-drop e validação."
-```
+
+```text
 
 **Skill detecta**:
 - "Pronto", "funcionando" → Incremento completado
@@ -25,7 +28,9 @@ Usuário: "Pronto! Upload de PDF funcionando com drag-and-drop e validação."
 - "drag-and-drop", "validação" → Detalhes
 
 **Skill responde**:
-```
+
+```text
+
 ✅ INCREMENTO COMPLETO DETECTADO
 
 Funcionalidade: Upload de PDF
@@ -44,9 +49,9 @@ Benefícios:
 - Facilita retrospectivas
 
 Deseja registrar? (s/n)
-```
 
----
+```text
+
 
 ## Padrão 2: PRD Incompleto para MVP
 
@@ -61,16 +66,21 @@ Mas PRD não tem MVP definido
 ### Exemplo de Detecção
 
 **Conversa**:
-```
+
+```text
+
 Usuário: "Vamos começar a implementar o MVP"
-```
+
+```text
 
 **Skill verifica PRD**:
 - Versão: 0.1 (Descoberta)
 - MVP definido: ❌ NÃO
 
 **Skill responde**:
-```
+
+```text
+
 ⚠️  PRD INCOMPLETO PARA MVP
 
 PRD atual: v0.1 (Descoberta)
@@ -88,9 +98,9 @@ Recomendação:
 3. Depois: /start-incremental
 
 Isso evita implementar features desnecessárias!
-```
 
----
+```text
+
 
 ## Padrão 3: YAGNI Violation - Código Fora do MVP
 
@@ -103,25 +113,33 @@ Ao analisar código:
 ### Exemplo de Detecção
 
 **Skill analisa código**:
+
 ```python
+
 # src/auth/oauth.py
 class OAuthIntegration:
     def authenticate(self):
         # ...
-```
+
+```text
 
 **PRD define**:
-```
+
+```text
+
 **MVP**:
 - Upload PDF
 - Extração de texto
 
 **Fora do MVP** (YAGNI):
 - ❌ Autenticação OAuth
-```
+
+```text
 
 **Skill alerta**:
-```
+
+```text
+
 🚨 YAGNI VIOLATION DETECTADA
 
 Código implementado FORA DO MVP:
@@ -141,9 +159,9 @@ B) Atualizar PRD (é essencial afinal)
 C) Documentar exceção e justificar
 
 Escolha recomendada?
-```
 
----
+```text
+
 
 ## Padrão 4: PRD v0.1 Completo → Sugerir Planejamento
 
@@ -154,7 +172,9 @@ PRD v0.1 tem:
 - ✅ KPIs estabelecidos
 
 ### Skill Responde
-```
+
+```text
+
 📊 PRD PRONTO PARA EVOLUIR
 
 PRD v0.1 (Descoberta) COMPLETO ✅
@@ -174,9 +194,9 @@ Isso permitirá:
 - Estabelecer roadmap
 
 Pronto? (s/n)
-```
 
----
+```text
+
 
 ## Padrão 5: Arquitetura Definida → Registrar Design
 
@@ -188,7 +208,9 @@ Usuário menciona:
 - "APIs/contratos definidos"
 
 ### Skill Responde
-```
+
+```text
+
 🏗️  ARQUITETURA DEFINIDA
 
 Detectei definição de stack/arquitetura
@@ -210,9 +232,9 @@ Benefício:
 - Facilita onboarding de novos
 
 Registrar? (s/n)
-```
 
----
+```text
+
 
 ## Padrão 6: Decisão Arquitetural → Sugerir ADR
 
@@ -224,7 +246,9 @@ Usuário menciona:
 - Decisão com trade-offs considerados
 
 ### Skill Responde
-```
+
+```text
+
 ⚙️  DECISÃO ARQUITETURAL IMPORTANTE
 
 Detectei decisão técnica importante:
@@ -244,14 +268,16 @@ Benefícios de registrar:
 Futuro: Novo dev entende contexto
 
 Registrar? (s/n)
-```
 
----
+```text
+
 
 ## Padrão 7: Validação de Completude por Fase
 
 ### Fase Descoberta (v0.1)
-```
+
+```text
+
 Verificar:
 ✓ Problema está definido?
 ✓ 3+ Objetivos claros?
@@ -259,10 +285,13 @@ Verificar:
 
 Se NÃO: Alertar PRD incompleto
 Se SIM: Pronto para planejamento
-```
+
+```text
 
 ### Fase Planejamento (v1.0)
-```
+
+```text
+
 Verificar:
 ✓ Product Vision definida?
 ✓ MVP claramente especificado?
@@ -271,10 +300,13 @@ Verificar:
 
 Se NÃO: Alertar campos faltando
 Se SIM: Pronto para design
-```
+
+```text
 
 ### Fase Design (v1.1)
-```
+
+```text
+
 Verificar:
 ✓ Arquitetura de alto nível?
 ✓ Stack tecnológica?
@@ -283,10 +315,13 @@ Verificar:
 
 Se NÃO: Alertar campos faltando
 Se SIM: Pronto para implementação
-```
+
+```text
 
 ### Fase Desenvolvimento (v1.x)
-```
+
+```text
+
 Verificar:
 ✓ Incrementos documentados?
 ✓ Aprendizados registrados?
@@ -294,15 +329,16 @@ Verificar:
 
 Se NÃO: Sugerir `/prd-update incremento`
 Se SIM: Incremento bem rastreado
-```
 
----
+```text
+
 
 ## Checklist de Invocação Automática
 
 Quando Claude estar falando com usuário:
 
-```
+```text
+
 [ ] Usuário menciona incremento completo?
     → Sugerir /prd-update incremento
 
@@ -321,9 +357,9 @@ Quando Claude estar falando com usuário:
 
 [ ] Usuário tira dúvida sobre objetivos?
     → Referir ao PRD
-```
 
----
+```text
+
 
 ## Princípios de Detecção
 
@@ -332,3 +368,4 @@ Quando Claude estar falando com usuário:
 3. **Não invasivo**: Sugerir, não forçar
 4. **Educativo**: Explicar POR QUE sugerir
 5. **Validador**: Garantir PRD sempre sincronizado
+````

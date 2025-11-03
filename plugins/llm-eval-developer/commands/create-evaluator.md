@@ -9,6 +9,7 @@ Gera código completo de um evaluator customizado para avaliar outputs de LLMs, 
 ## Como usar
 
 Execute o comando e forneça:
+
 - Tipo de evaluator (llm-as-judge, regex, similarity, custom)
 - Framework (openevals, langsmith, custom)
 - Nome do evaluator
@@ -17,26 +18,31 @@ Execute o comando e forneça:
 ## Tipos de Evaluators Disponíveis
 
 ### 1. LLM-as-Judge
+
 Usa um LLM para avaliar outputs de outro LLM com rubrica em linguagem natural.
 
 **Frameworks suportados**: OpenEvals, LangSmith
 
 **Quando usar**:
+
 - Avaliação subjetiva (qualidade, relevância, tom)
 - Critérios complexos difíceis de codificar
 - Avaliação contextual
 
 ### 2. Regex-based
+
 Valida outputs contra padrões de regex.
 
 **Frameworks suportados**: OpenEvals, Custom
 
 **Quando usar**:
+
 - Validar formato (email, telefone, JSON)
 - Detectar palavras-chave específicas
 - Validar estrutura de resposta
 
 ### 3. Similarity-based
+
 Compara outputs com referências usando métricas de similaridade.
 
 **Frameworks suportados**: OpenEvals, LangSmith, Custom
@@ -44,16 +50,19 @@ Compara outputs com referências usando métricas de similaridade.
 **Métricas**: BLEU, ROUGE, embeddings similarity
 
 **Quando usar**:
+
 - Comparar com ground truth
 - Avaliar consistência
 - Medir precisão de tradução/summarização
 
 ### 4. Custom Rule-based
+
 Lógica customizada de avaliação.
 
 **Frameworks suportados**: LangSmith, Custom
 
 **Quando usar**:
+
 - Regras de negócio específicas
 - Validações complexas
 - Métricas proprietárias
@@ -61,16 +70,20 @@ Lógica customizada de avaliação.
 ## Exemplos de Uso
 
 ### Exemplo 1: LLM-as-Judge com OpenEvals
-```
+
+````text
+
 /create-evaluator
 
 Tipo: llm-as-judge
 Framework: openevals
 Nome: hallucination_detector
 Critério: Detectar alucinações comparando output com contexto
-```
+
+```text
 
 **Código gerado**:
+
 ```python
 from openevals.llm import create_llm_as_judge
 
@@ -100,19 +113,24 @@ hallucination_detector = create_llm_as_judge(
     prompt=HALLUCINATION_PROMPT,
     model="openai:gpt-4o-mini",
 )
-```
+
+```text
 
 ### Exemplo 2: Regex-based com OpenEvals
-```
+
+```text
+
 /create-evaluator
 
 Tipo: regex
 Framework: openevals
 Nome: email_format_validator
 Critério: Validar se output contém email válido
-```
+
+```text
 
 **Código gerado**:
+
 ```python
 import re
 from typing import Any
@@ -139,19 +157,24 @@ def create_email_validator() -> SimpleEvaluator:
     return email_evaluator
 
 email_validator = create_email_validator()
-```
+
+```text
 
 ### Exemplo 3: LangSmith Custom Evaluator
-```
+
+```text
+
 /create-evaluator
 
 Tipo: custom
 Framework: langsmith
 Nome: response_length_checker
 Critério: Verificar se resposta tem tamanho adequado (50-200 palavras)
-```
+
+```text
 
 **Código gerado**:
+
 ```python
 from langsmith.evaluation import evaluator
 
@@ -182,19 +205,24 @@ def response_length_checker(outputs: dict, reference_outputs: dict = None) -> di
         "score": score,
         "comment": f"Resposta com {word_count} palavras (ideal: 50-200)"
     }
-```
+
+```text
 
 ### Exemplo 4: BLEU Score Evaluator
-```
+
+```text
+
 /create-evaluator
 
 Tipo: similarity
 Framework: custom
 Nome: bleu_evaluator
 Métrica: BLEU
-```
+
+```text
 
 **Código gerado**:
+
 ```python
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 from typing import Dict, Any
@@ -226,7 +254,8 @@ def bleu_evaluator(outputs: Dict[str, Any], reference_outputs: Dict[str, Any]) -
         "score": score,
         "comment": f"BLEU score: {score:.3f}"
     }
-```
+
+```text
 
 ## Outputs
 
@@ -242,3 +271,4 @@ O comando gera:
 - OpenEvals: https://github.com/langchain-ai/openevals
 - LangSmith Evaluators: https://docs.smith.langchain.com/evaluation/how_to_guides/custom_evaluator
 - BLEU/ROUGE: https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation
+````

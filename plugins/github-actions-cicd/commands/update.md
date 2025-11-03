@@ -9,6 +9,7 @@ Atualiza automaticamente as versões de GitHub Actions nos workflows do projeto 
 ## 🎯 Objetivo
 
 Manter workflows GitHub Actions atualizados:
+
 - Atualizar actions para últimas versões
 - Aplicar correções de segurança
 - Manter compatibilidade
@@ -16,21 +17,24 @@ Manter workflows GitHub Actions atualizados:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /cicd-update
-```
+
+```text
 
 Modo dry-run (preview sem modificar):
 
 ```bash
 /cicd-update --dry-run
-```
+
+```text
 
 Atualizar action específica:
 
 ```bash
 /cicd-update --action actions/checkout
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -39,9 +43,11 @@ Atualizar action específica:
 **Primeiro, executar `/cicd-check`**:
 
 ```bash
+
 # Internamente executa
 /cicd-check
-```
+
+```text
 
 **Analisar resultado**:
 - Identificar actions desatualizadas
@@ -68,7 +74,8 @@ def classify_update(current_version, latest_version):
         return "PATCH", "✅", "Bug fixes, seguro"
     else:
         return "SAME", "✅", "Já atualizada"
-```
+
+```text
 
 **Classificação de risco**:
 
@@ -95,11 +102,14 @@ def classify_update(current_version, latest_version):
 #### a) Buscar Latest Release no GitHub
 
 ```bash
+
 # Via gh CLI
 gh api repos/{owner}/{repo}/releases/latest
-```
+
+```text
 
 Exemplo de resposta:
+
 ```json
 {
   "tag_name": "v5.0.0",
@@ -107,7 +117,8 @@ Exemplo de resposta:
   "body": "## What's Changed\n- Breaking: Removed deprecated parameters\n- Added new caching options",
   "published_at": "2025-01-15T10:00:00Z"
 }
-```
+
+```text
 
 #### b) Extrair Changelog
 
@@ -131,13 +142,15 @@ def extract_breaking_changes(release_body):
             breaking_changes.append(line.strip())
 
     return breaking_changes
-```
+
+```text
 
 ### 4. Apresentar Preview de Mudanças
 
 **Antes de aplicar, mostrar preview**:
 
-```
+```text
+
 ═══════════════════════════════════════════════════════════════
 📦 ATUALIZAÇÕES DISPONÍVEIS
 ═══════════════════════════════════════════════════════════════
@@ -222,7 +235,8 @@ Arquivos a modificar: 2
 4️⃣  Cancelar
 
 Escolha uma opção (1-4):
-```
+
+```text
 
 ### 5. Aplicar Atualizações
 
@@ -231,9 +245,11 @@ Escolha uma opção (1-4):
 #### a) Criar Branch de Atualização (Opcional)
 
 ```bash
+
 # Sugerir criar branch
 git checkout -b update/github-actions-$(date +%Y%m%d)
-```
+
+```text
 
 #### b) Atualizar Arquivos YAML
 
@@ -267,7 +283,8 @@ for workflow_file in workflows_to_update:
 
     with open(workflow_file, 'w') as f:
         f.write(content)
-```
+
+```text
 
 #### c) Validar YAML Após Mudanças
 
@@ -283,13 +300,15 @@ for workflow_file in modified_files:
         print(f"❌ {workflow_file}: Erro após atualização!")
         print(f"   Revertendo mudanças...")
         # Reverter arquivo
-```
+
+```text
 
 ### 6. Gerar Changelog de Atualizações
 
 **Criar arquivo com resumo**:
 
 ```markdown
+
 # GitHub Actions Update - 2025-10-26
 
 ## Atualizações Aplicadas
@@ -332,13 +351,15 @@ for workflow_file in modified_files:
   - ⚠️  Breaking Changes detectadas
   - Requer revisão manual antes de atualizar
   - Ver: https://github.com/actions/setup-python/releases/tag/v5.0.0
-```
+
+```text
 
 ### 7. Confirmar Sucesso
 
 **Após aplicar**:
 
-```
+```text
+
 ═══════════════════════════════════════════════════════════════
 ✅ ATUALIZAÇÕES APLICADAS COM SUCESSO
 ═══════════════════════════════════════════════════════════════
@@ -386,7 +407,8 @@ MAJOR updates não foram aplicadas (requerem atenção manual):
    /cicd-update --action actions/setup-python --force
 
 ═══════════════════════════════════════════════════════════════
-```
+
+```text
 
 ## 🔒 Segurança e Validação
 
@@ -401,13 +423,15 @@ MAJOR updates não foram aplicadas (requerem atenção manual):
 **Estratégia de atualização segura**:
 
 ```python
+
 # Sempre aplicar em ordem de risco
 update_order = [
     "PATCH",   # Primeiro, mais seguro
     "MINOR",   # Depois, se aprovado
     "MAJOR",   # Por último, com confirmação explícita
 ]
-```
+
+```text
 
 ## 🎛️ Opções Avançadas
 
@@ -415,13 +439,15 @@ update_order = [
 
 ```bash
 /cicd-update --action actions/setup-python --force
-```
+
+```text
 
 **Pin com SHA ao invés de tag**:
 
 ```bash
 /cicd-update --pin-sha
-```
+
+```text
 
 Resultado:
 - ❌ `uses: actions/checkout@v4`
@@ -431,7 +457,8 @@ Resultado:
 
 ```bash
 /cicd-update --create-pr
-```
+
+```text
 
 ## 📊 Estratégia de Atualização Recomendada
 
@@ -444,6 +471,7 @@ Resultado:
 **Configurar Dependabot** (recomendado):
 
 ```yaml
+
 # .github/dependabot.yml
 version: 2
 updates:
@@ -455,10 +483,12 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
-```
+
+```text
 
 ## 🎓 Referências
 
 - [GitHub Actions Versioning](https://docs.github.com/en/actions/creating-actions/about-custom-actions#using-release-management-for-actions)
 - [Dependabot for GitHub Actions](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot)
 - [Semantic Versioning](https://semver.org/)
+````

@@ -2,13 +2,12 @@
 
 **Step-by-step checklists for detecting and preventing over-engineering.**
 
----
-
 ## ✅ YAGNI Checklist for Code Review
 
 ### For Each File:
 
-```
+````text
+
 [ ] Abstract classes have 3+ implementations?
     ❌ Less than 3 → REMOVE abstraction
 
@@ -32,15 +31,16 @@
 
 [ ] Complexity justified by real requirement?
     ❌ Anticipated complexity → SIMPLIFY
-```
 
----
+```text
+
 
 ## 📋 Pre-Implementation Checklist
 
 Before implementing a feature, ask yourself:
 
-```
+```text
+
 YAGNI PRE-IMPLEMENTATION CHECKLIST:
 
 [ ] Is this needed RIGHT NOW?
@@ -66,15 +66,16 @@ YAGNI PRE-IMPLEMENTATION CHECKLIST:
 
 [ ] Will this complexity help the CURRENT user?
     ❌ No → Remove it
-```
 
----
+```text
+
 
 ## 🔍 Detection Checklist - When Adding Features
 
 **Use this when you're about to add a feature:**
 
-```
+```text
+
 ADDING A NEW FEATURE - YAGNI CHECK:
 
 1. WHAT AM I ADDING?
@@ -111,15 +112,16 @@ ADDING A NEW FEATURE - YAGNI CHECK:
    [ ] "To facilitate..."?
    [ ] Clean architecture patterns?
    All ✅ (none) → Good to add!
-```
 
----
+```text
+
 
 ## 🚨 Red Flag Detection - Phrases to Watch
 
 **If you hear/use these phrases - QUESTION IT:**
 
-```
+```text
+
 RED FLAG PHRASES:
 
 ❌ "Let's prepare for the future..."
@@ -142,15 +144,16 @@ RED FLAG PHRASES:
 ✅ "Delete if not used"
 ✅ "Simple and direct"
 ✅ "Solve NOW, not future"
-```
 
----
+```text
+
 
 ## 📊 Checklist: Rule of 3
 
 **Before creating abstraction, verify you have 3+ cases:**
 
-```
+```text
+
 RULE OF 3 VERIFICATION:
 
 Feature/Pattern: ____________________
@@ -166,15 +169,16 @@ DECISION:
 [ ] 3+ cases → Safe to abstract
 [ ] Exact duplicate? (Y/N) → Note differences
 [ ] Pattern clear? (Y/N) → Proceed with abstraction
-```
 
----
+```text
+
 
 ## 🏗️ Architecture Complexity Checklist
 
 **When designing architecture, verify it's necessary:**
 
-```
+```text
+
 ARCHITECTURE COMPLEXITY CHECK:
 
 [ ] Do we have 10+ classes?
@@ -198,15 +202,16 @@ ARCHITECTURE COMPLEXITY CHECK:
 VERDICT:
 [ ] Simple architecture ✅
 [ ] Over-engineered ❌ (simplify!)
-```
 
----
+```text
+
 
 ## 💻 Code Smell Checklist
 
 **Run this when reviewing code:**
 
-```
+```text
+
 CODE SMELL DETECTION:
 
 [ ] Abstract class with 1 implementation?
@@ -246,15 +251,16 @@ VERDICT:
 [ ] No smells ✅
 [ ] Some smells (refactor) ⚠️
 [ ] Many smells (over-engineered) ❌
-```
 
----
+```text
+
 
 ## 📝 Post-Increment Checklist
 
 **After completing each increment, verify:**
 
-```
+```text
+
 POST-INCREMENT YAGNI CHECK:
 
 [ ] Code compiles/runs without error?
@@ -271,15 +277,16 @@ POST-INCREMENT YAGNI CHECK:
 RESULT:
 [ ] All clear ✅ → Commit
 [ ] Issues found ❌ → Simplify and retry
-```
 
----
+```text
+
 
 ## 🎯 MVP Specific Checklist
 
 **When working on MVP, verify:**
 
-```
+```text
+
 MVP YAGNI CHECKLIST:
 
 [ ] NO abstract classes?
@@ -296,15 +303,16 @@ MVP YAGNI CHECKLIST:
 RESULT:
 [ ] MVP simple ✅
 [ ] Over-engineered MVP ❌ (simplify!)
-```
 
----
+```text
+
 
 ## 🔄 When to Refactor Checklist
 
 **Only refactor when ALL conditions are met:**
 
-```
+```text
+
 REFACTORING DECISION CHECKLIST:
 
 [ ] Clear pattern emerged (3+ cases)?
@@ -328,8 +336,9 @@ REFACTORING DECISION CHECKLIST:
 DECISION:
 [ ] All ✅ → REFACTOR
 [ ] Any ❌ → WAIT
-```
 
----
+```text
+
 
 **Use these checklists proactively to prevent over-engineering!**
+````

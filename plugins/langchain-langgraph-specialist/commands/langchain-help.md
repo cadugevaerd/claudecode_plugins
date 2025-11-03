@@ -13,24 +13,27 @@ Forneço ajuda rápida e referência sobre LangChain v1, incluindo LCEL (LangCha
 **Use as seguintes ferramentas MCP quando disponíveis**:
 
 1. **`list_doc_sources`** - Liste as fontes de documentação disponíveis (LangChain, LangGraph)
-2. **`fetch_docs`** - Busque conteúdo específico da documentação oficial
+1. **`fetch_docs`** - Busque conteúdo específico da documentação oficial
 
 **Quando usar MCP**:
+
 - ✅ Sempre que o usuário perguntar sobre APIs, métodos, ou funcionalidades específicas
 - ✅ Para verificar sintaxe correta e exemplos atualizados
 - ✅ Quando precisar de informações sobre recursos recentes
 - ✅ Para validar informações antes de responder
 
 **Workflow recomendado**:
+
 1. Se a pergunta é sobre funcionalidade específica → use `fetch_docs` para buscar na documentação oficial
-2. Se a resposta já está no seu conhecimento base → responda e **opcionalmente** use `fetch_docs` para validar
-3. Se não tiver certeza → **sempre** use `fetch_docs` primeiro
+1. Se a resposta já está no seu conhecimento base → responda e **opcionalmente** use `fetch_docs` para validar
+1. Se não tiver certeza → **sempre** use `fetch_docs` primeiro
 
 ## Como usar:
 
-```bash
+````bash
 /langchain-help [tópico opcional]
-```
+
+```text
 
 **Tópicos disponíveis**:
 - `lcel` - LangChain Expression Language (composição de chains)
@@ -65,6 +68,7 @@ Ajudo com mudanças importantes:
 ## Exemplos:
 
 ### LCEL Basic Chain
+
 ```python
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -78,9 +82,11 @@ chain = (
 )
 
 result = chain.invoke({"topic": "python"})
-```
+
+```text
 
 ### Parallel Execution
+
 ```python
 from langchain_core.runnables import RunnableParallel
 
@@ -92,19 +98,23 @@ parallel_chain = RunnableParallel(
 )
 
 results = parallel_chain.invoke({"topic": "AI"})
-```
+
+```text
 
 ### Message API v1
+
 ```python
 from langchain_core.messages import AIMessage
 
 response = llm.invoke("Hello")
+
 # v1: use .text como property (não .text())
 text_content = response.text
 
 # Content blocks (provider-agnostic)
 content_blocks = response.content_blocks
-```
+
+```text
 
 ## Quando me usar:
 
@@ -132,3 +142,4 @@ content_blocks = response.content_blocks
 - Docs: https://python.langchain.com/docs/
 - Migration Guide: https://docs.langchain.com/oss/python/migrate/langchain-v1
 - Blog Post v1: https://blog.langchain.com/langchain-langgraph-1dot0/
+````

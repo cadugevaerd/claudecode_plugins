@@ -5,6 +5,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 ## [0.5.0] - 2025-11-03
 
 ### Adicionado
+
 - **Novo Comando** `/spike-agentic` (Microprocesso 1.3)
   - AUTONOMOUS command para validação de arquitetura agêntica
   - Validates prerequisites from Microprocesso 1.2 completion
@@ -27,6 +28,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Validation checklist para geração completa
 
 ### Modificado
+
 - **README.md** - Adicionado `/spike-agentic` command documentation
   - Quick start section com Microprocesso 1.1/1.2/1.3 flow
   - Updated Roadmap para v0.5.0 com Microprocesso 1.3
@@ -36,6 +38,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Skills section agora inclui spike-agentic skill documentation
 
 ### Melhorias
+
 - **Command Best Practices**: `/spike-agentic` segue padrões rigorosamente
   - AUTONOMOUS badge com clara responsabilidade
   - TL;DR section com processo resumido
@@ -50,6 +53,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 ## [0.4.0] - 2025-11-02
 
 ### Adicionado
+
 - **Novo Skill** `microprocesso-1-2` para conhecimento detalhado de setup (675 linhas)
   - Complete knowledge base para as 8 atividades de Microprocesso 1.2
   - Provides step-by-step guidance, templates, troubleshooting, validation
@@ -66,6 +70,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Decision matrix para Skills vs Commands vs Agents
 
 ### Modificado
+
 - **Refatoração do comando `/brief`** para seguir best practices
   - Added INTERACTIVE badge e TL;DR section
   - Visual prerequisites section com checkmarks
@@ -82,7 +87,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Renamed "Using the Command" to "🚀 Usage"
   - Visual improvements com emojis (📝, ✨, ⚠️)
   - Better structure com visual hierarchy
-  - Prerequisite checklist com time estimate (<1 minute)
+  - Prerequisite checklist com time estimate (\<1 minute)
 - **README.md** completamente atualizado
   - New "## Skills" section documentando microprocesso-1-2
   - Detailed description de quando skill é auto-invocada
@@ -91,6 +96,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Better organization com Skills section entre Agents e Legacy Agents
 
 ### Melhorias
+
 - **Progressive Disclosure Pattern**: 3 commands agora seguem padrão rigorosamente
   - Commands ≤150 linhas com TL;DR, overview, quick start
   - Skill contém 675 linhas de detailed knowledge
@@ -113,6 +119,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 ### Informação de Versão
 
 Este é o v0.4.0 (MINOR update) do Agentc AI Developer com:
+
 - Novo skill `microprocesso-1-2` para progressive disclosure de setup knowledge
 - Refatoração de todos 3 commands para seguir best practices
 - Comprehensive command best practices documentation em plugin-creator.md
@@ -121,11 +128,10 @@ Este é o v0.4.0 (MINOR update) do Agentc AI Developer com:
 - Visual hierarchy melhorada com badges e emojis
 - README.md completamente atualizado com skill documentation
 
----
-
 ## [0.3.0] - 2025-11-02
 
 ### Adicionado
+
 - **Novo comando** `/update-claude-md` para integração de projeto (máx 40 linhas)
   - Lê Brief Minimo do README.md gerado pelo `/brief`
   - Cria seção concisa no CLAUDE.md com guia de uso
@@ -137,6 +143,7 @@ Este é o v0.4.0 (MINOR update) do Agentc AI Developer com:
   - Oferece práticas recomendadas e alternativas
 
 ### Modificado
+
 - Comando `/brief` agora 100% interativo (sem delegação a agente)
   - Todo o workflow de entrevista acontece no comando
   - Sem referências a "brief-assistant agent"
@@ -149,21 +156,22 @@ Este é o v0.4.0 (MINOR update) do Agentc AI Developer com:
 - Keywords expandidas para incluir "help-assistant"
 
 ### Removido
+
 - Agente `brief-assistant` (funcionalidade integrada no comando `/brief`)
 
 ### Informação de Versão
 
 Este é o v0.3.0 (MINOR update) do Agentc AI Developer com:
+
 - Comando `/brief` 100% interativo no comando (sem agente)
 - Novo agente `help-assistant` para suporte especializado
 - Novo comando `/update-claude-md` para integração de projetos com progressive disclosure
 - Melhoria na arquitetura: separação clara de responsabilidades (commands/agents/skills)
 
----
-
 ## [0.2.0] - 2025-11-02
 
 ### Adicionado
+
 - **Microprocesso 1.2**: Novo comando `/setup-local-observability` para setup de ambiente local
   - Guia interativo através de 8 atividades (Git já criado pelo `/brief`)
   - Setup Python venv com validações
@@ -175,12 +183,14 @@ Este é o v0.3.0 (MINOR update) do Agentc AI Developer com:
   - Leitura de README.md do brief para contextualização
 
 ### Modificado
+
 - Descrição do plugin agora reflete Microprocessos 1.1 (planning) e 1.2 (setup)
 - README.md reorganizado com seções de "Microprocesso 1.1" e "Microprocesso 1.2"
 - Roadmap expandido com menção a Microprocesso 1.3 (futuro)
 - Keywords expandidas para incluir "setup", "environment", "langsmith", "observability", "microprocessos", "interactive"
 
 ### Melhorias
+
 - Integração perfeita entre `/brief` (cria repositório) e `/setup-local-observability` (configura ambiente)
 - Ambiente reproduzível garantido via requirements.txt
 - Observabilidade completa com LangSmith desde o início
@@ -191,11 +201,10 @@ Este é o v0.3.0 (MINOR update) do Agentc AI Developer com:
 
 Este é o v0.2.0 (MINOR update) do Agentc AI Developer com o Microprocesso 1.2 totalmente implementado. Agora os usuários têm um fluxo completo: `/brief` (planning) → `/setup-local-observability` (environment) para começar o desenvolvimento de agentes agentic com confiança.
 
----
-
 ## [0.1.0] - 2025-11-02
 
 ### Adicionado
+
 - Suporte para 4 modos de operação do Brief Minimo:
   - Modo 1: Criar novo agente (padrão, 30 minutos)
   - Modo 2: Atualizar agente existente (15-20 minutos)
@@ -213,6 +222,7 @@ Este é o v0.2.0 (MINOR update) do Agentc AI Developer com o Microprocesso 1.2 t
 - Exemplos de uso com agentes legacy
 
 ### Modificado
+
 - Agent `brief-assistant` agora detecta contexto do projeto
 - Entrevista adapta-se ao modo selecionado
 - Documentação expandida com casos de uso em projetos existentes
@@ -221,6 +231,7 @@ Este é o v0.2.0 (MINOR update) do Agentc AI Developer com o Microprocesso 1.2 t
 - Keywords expandidas para incluir "documentation", "validation", "existing-projects"
 
 ### Melhorias
+
 - Maior flexibilidade para integração em projetos em andamento
 - Suporte a agentes já em produção
 - Funcionalidade de validação e qualidade
@@ -231,11 +242,10 @@ Este é o v0.2.0 (MINOR update) do Agentc AI Developer com o Microprocesso 1.2 t
 
 Este é o v0.1.0 (MINOR update) do Agentc AI Developer com a metodologia Brief Minimo expandida para 4 modos de operação. Agora suporta tanto projetos greenfield quanto projetos existentes com agentes em desenvolvimento ou produção.
 
----
-
 ## [0.0.0] - 2025-11-02
 
 ### Adicionado
+
 - Lançamento inicial do plugin Agentc AI Developer
 - Comando `/brief` para iniciar o processo de Brief Minimo
 - Agent `brief-assistant` para conduzir entrevista interativa de planejamento

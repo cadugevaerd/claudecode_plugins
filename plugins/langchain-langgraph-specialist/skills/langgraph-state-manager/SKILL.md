@@ -4,6 +4,10 @@ description: Gerencia estado em grafos LangGraph com TypedDict, reducers customi
 allowed-tools: Read, Write, Edit, Grep, Glob
 ---
 
+name: langgraph-state-manager
+description: Gerencia estado em grafos LangGraph com TypedDict, reducers customizados e state updates corretos. Use quando criar grafos LangGraph, definir state schema, implementar reducers, ou trabalhar com multi-agent state management.
+allowed-tools: Read, Write, Edit, Grep, Glob
+
 # LangGraph State Manager
 
 Skill para gerenciar estado em grafos LangGraph v1 com TypedDict, Annotated reducers e padrões de state updates.
@@ -20,12 +24,15 @@ Skill para gerenciar estado em grafos LangGraph v1 com TypedDict, Annotated redu
 - Verifique padrões multi-agent state se aplicável
 
 **Exemplo**:
-```
+
+````text
+
 User: "Criar state para multi-agent system"
 → ANTES: Use fetch_docs para buscar "multi-agent state" ou "shared scratchpad"
 → Analise padrões oficiais (shared vs private scratchpads)
 → ENTÃO implemente state schema baseado em docs oficiais
-```
+
+```text
 
 ### STEP 1: Analisar necessidades de estado
 
@@ -62,6 +69,7 @@ Use esta skill quando:
 ## State Patterns
 
 ### Pattern 1: Basic State (Override)
+
 ```python
 from typing import TypedDict
 
@@ -69,9 +77,11 @@ class BasicState(TypedDict):
     current_step: str    # Override: último valor prevalece
     user_input: str      # Override
     result: dict         # Override
-```
+
+```text
 
 ### Pattern 2: Additive State (Reducer)
+
 ```python
 from typing import TypedDict, Annotated
 from operator import add
@@ -80,9 +90,11 @@ class AdditiveState(TypedDict):
     # Additive: acumula valores
     messages: Annotated[list[str], add]
     scores: Annotated[list[int], add]
-```
+
+```text
 
 ### Pattern 3: Custom Reducer
+
 ```python
 from typing import Annotated
 
@@ -92,9 +104,11 @@ def merge_dicts(left: dict, right: dict) -> dict:
 
 class CustomState(TypedDict):
     metadata: Annotated[dict, merge_dicts]
-```
+
+```text
 
 ### Pattern 4: Mixed State
+
 ```python
 from typing import TypedDict, Annotated
 from operator import add
@@ -110,7 +124,8 @@ class MixedState(TypedDict):
 
     # Custom reducer
     config: Annotated[dict, merge_dicts]
-```
+
+```text
 
 ## Common Reducers
 
@@ -120,7 +135,9 @@ class MixedState(TypedDict):
 - `and_` (operator.and_): AND lógico
 
 ### Custom Reducer Examples
+
 ```python
+
 # Merge dicts
 def merge_dicts(left: dict, right: dict) -> dict:
     return {**left, **right}
@@ -135,20 +152,24 @@ def keep_last_n(n: int):
 # Deduplicate list
 def dedupe_list(left: list, right: list) -> list:
     return list(set(left + right))
-```
+
+```text
 
 ## State Update Methods
 
 ### Method 1: Override (No Reducer)
+
 ```python
 def node_function(state: State):
     # Substitui valor completamente
     state["current_step"] = "processing"
     state["iteration"] += 1
     return state
-```
+
+```text
 
 ### Method 2: Additive (With Reducer)
+
 ```python
 def node_function(state: State):
     # Adiciona à lista existente (reducer=add)
@@ -156,10 +177,13 @@ def node_function(state: State):
 
     # Ou retorna partial state (é merged automaticamente)
     return {"messages": ["New message"]}
-```
+
+```text
 
 ### Method 3: Concurrent Safe
+
 ```python
+
 # State com reducer garante thread-safety
 class ConcurrentState(TypedDict):
     results: Annotated[list[dict], add]
@@ -170,11 +194,13 @@ def node_a(state: ConcurrentState):
 
 def node_b(state: ConcurrentState):
     return {"results": [{"node": "B", "data": "..."}]}
-```
+
+```text
 
 ## Multi-Agent Patterns
 
 ### Pattern 1: Shared Scratchpad
+
 ```python
 class SharedState(TypedDict):
     # Todos agentes veem todo trabalho
@@ -190,9 +216,11 @@ def agent_a(state: SharedState):
         "messages": [{"agent": "A", "content": "..."}],
         "current_agent": "B"
     }
-```
+
+```text
 
 ### Pattern 2: Private Scratchpads
+
 ```python
 class PrivateState(TypedDict):
     # Cada agente tem seu scratchpad
@@ -215,7 +243,8 @@ def aggregator(state: PrivateState):
     return {
         "final_result": f"A: {state['agent_a_work']}, B: {state['agent_b_work']}"
     }
-```
+
+```text
 
 ## Best Practices
 
@@ -247,6 +276,7 @@ def aggregator(state: PrivateState):
 ## Examples
 
 **Example 1 - Basic Agent State**:
+
 ```python
 from typing import TypedDict, Annotated
 from operator import add
@@ -259,9 +289,11 @@ def agent_node(state: AgentState):
     state["messages"].append("Agent response")
     state["iteration"] += 1
     return state
-```
+
+```text
 
 **Example 2 - Multi-Agent Shared State**:
+
 ```python
 class MultiAgentState(TypedDict):
     messages: Annotated[list[dict], add]
@@ -272,9 +304,11 @@ def research_agent(state: MultiAgentState):
         "messages": [{"agent": "research", "content": "findings"}],
         "current_agent": "writer"
     }
-```
+
+```text
 
 **Example 3 - Custom Reducer for Limiting History**:
+
 ```python
 def keep_last_10(left: list, right: list) -> list:
     combined = left + right
@@ -283,4 +317,6 @@ def keep_last_10(left: list, right: list) -> list:
 class LimitedState(TypedDict):
     # Mantém apenas últimas 10 mensagens
     messages: Annotated[list[str], keep_last_10]
-```
+
+```text
+````

@@ -10,6 +10,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### ✨ Refatoração de Arquitetura
 
 #### Agente Refatorado: incremental-dev-coach.md
+
 - Reduzido de 720 para 132 linhas (-82%)
 - Mantém apenas processo/fluxo (responsabilidade única)
 - Executa comandos automaticamente (ativo, não sugere)
@@ -17,6 +18,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Sem referências explícitas a skills (auto-detectadas por contexto)
 
 #### Skills com Progressive Disclosure
+
 - **yagni-enforcer/SKILL.md**: Reduzido de 476 para 106 linhas (-78%) + PATTERNS.md
 - **prd-manager/SKILL.md**: Reduzido de 489 para 136 linhas (-72%) + PATTERNS.md
 - **refactor-advisor/SKILL.md**: Reduzido de 597 para 149 linhas (-75%) + PATTERNS.md
@@ -25,6 +27,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Referência compartilhada yagni-enforcer/REFERENCE.md mantida
 
 #### Melhorias de Markdown
+
 - ✅ 41 erros markdown corrigidos nos 3 principais arquivos
 - ✅ Todos code blocks com language type
 - ✅ Blank lines antes de lists e headings
@@ -34,21 +37,25 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### 🎯 Benefícios da Refatoração
 
 **Performance**:
+
 - Contexto menor para agentes (132 vs 720 linhas)
 - Skills independentes e reutilizáveis
 - Carregamento mais rápido do plugin
 
 **Manutenibilidade**:
+
 - Responsabilidade única clara: agent = processo, skills = conhecimento
 - Fácil adicionar novas funcionalidades
 - Skills podem ser reutilizadas em outros plugins
 
 **Usabilidade**:
+
 - Agente detecta contexto e executa automaticamente
 - Sem redundância de documentação
 - Progressive disclosure: overview no agent, detalhes em skills
 
 **Qualidade de Código**:
+
 - Segue boas práticas de plugin architecture
 - JSON validado e correto
 - Markdown formatado conforme padrões
@@ -75,6 +82,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### ✨ Adicionado (MINOR)
 
 #### Agente coach melhorado
+
 - Detecção automática de tipo de projeto (novo vs legacy)
 - Questionamento YAGNI integrado no fluxo
 - Orientação de spikes técnicos com preferência por notebooks
@@ -91,6 +99,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Adicionado (MINOR - New Feature)
 
 #### Novo Comando: `/update-claude-md`
+
 - Comando dedicado para atualizar arquivo CLAUDE.md do projeto com configuração do plugin
 - **Funcionalidades**:
   - ✅ Verifica se CLAUDE.md existe no projeto
@@ -115,12 +124,12 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Garantir CLAUDE.md segue práticas atuais
 - **Workflow detalhado** com 7 passos:
   1. Verificar existência de CLAUDE.md
-  2. Ler arquivo atual ou criar básico
-  3. Detectar seção incremental-dev
-  4. Perguntar overwrite se existir
-  5. Adicionar/atualizar seção (≤40 linhas)
-  6. Escrever CLAUDE.md atualizado
-  7. Validar e reportar sucesso
+  1. Ler arquivo atual ou criar básico
+  1. Detectar seção incremental-dev
+  1. Perguntar overwrite se existir
+  1. Adicionar/atualizar seção (≤40 linhas)
+  1. Escrever CLAUDE.md atualizado
+  1. Validar e reportar sucesso
 - **Error handling robusto**:
   - Permissão de leitura/escrita negada
   - CLAUDE.md corrompido
@@ -139,6 +148,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Modificado
 
 #### Marketplace Description
+
 - Atualizada descrição da versão 1.7.0 mencionando `/update-claude-md`
 - Tags adicionadas: "claude-md", "setup"
 
@@ -166,6 +176,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Adicionado (MINOR - New Features)
 
 #### Nova Documentação de Referência Centralizada
+
 - **YAGNI_REFERENCE.md**: Novo arquivo de referência centralizado em `docs/` contendo:
   - Todos os princípios YAGNI completos
   - Padrões comuns de over-engineering (4 categorias)
@@ -179,24 +190,29 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 ### Modificado (Progressive Disclosure Applied)
 
 #### Eliminação de Duplicações com Progressive Disclosure
+
 - **review-yagni.md**: Reduzido de 682 para 427 linhas (-255 linhas, -37%)
+
   - Seções de over-engineering patterns substituídas por referências ao YAGNI_REFERENCE.md
   - Mantidas quick references para navegação rápida
   - Detalhes movidos para documentação centralizada
 
 - **add-increment.md**: Reduzido de 537 para 479 linhas (-58 linhas, -11%)
+
   - Padrões de over-engineering em incremento consolidados
   - Princípios de incremento simplificados com referências
   - Regra dos 3 mantida como quick reference
 
 - **start-incremental.md**: Reduzido de 607 para 562 linhas (-45 linhas, -7%)
+
   - Sinais de over-engineering em MVP simplificados
   - Princípios a seguir consolidados
   - Referências ao documento central adicionadas
 
 #### Análise de Outros Problemas
+
 - **prd-update.md**: Já estava otimizado em 507 linhas (target: ~600) ✅
-- **PRD template**: Já estava ótimo em 172 linhas (target: <500) ✅
+- **PRD template**: Já estava ótimo em 172 linhas (target: \<500) ✅
 - Comandos restantes verificados: sem duplicações significativas
 
 ### Benefícios
@@ -210,12 +226,14 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ### Estatísticas Finais
 
-```
+````text
+
 Arquivos modificados: 3 comandos
 Novo arquivo criado: docs/YAGNI_REFERENCE.md (462 linhas)
 Linhas removidas: ~358 linhas
 Redução total: ~18% de código duplicado
-```
+
+```text
 
 ## [1.5.2] - 2025-11-01
 
@@ -454,3 +472,4 @@ Redução total: ~18% de código duplicado
 - Comando `/refactor-now` para identificar quando refatorar
 - Agente `incremental-dev-coach` para orientação em YAGNI
 - Skills `yagni-enforcer` e `refactor-advisor`
+````

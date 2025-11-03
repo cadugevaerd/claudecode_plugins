@@ -7,27 +7,29 @@ This file contains the template and instructions for generating `docs/microproce
 When `/spike-agentic` is invoked, Claude should:
 
 1. **Validate prerequisites**
+
    - Check venv exists
    - Check requirements.txt installed
    - Check .env file with API key
    - Check README.md from `/brief`
 
-2. **If validation passes**
+1. **If validation passes**
+
    - Create file: `docs/microprocesso-1.3-spike-agentic.md`
    - Use template below
    - Customize based on Brief Minimo if available
 
-3. **If validation fails**
+1. **If validation fails**
+
    - Tell user what's missing
    - Suggest running `/setup-local-observability` first
-
----
 
 ## Document Structure
 
 The generated guide should follow this structure:
 
-```
+````text
+
 # 🚀 Microprocesso 1.3: Spike Agentic - Implementation Guide
 
 [Header with time, goal, question]
@@ -37,6 +39,7 @@ The generated guide should follow this structure:
 - Check marks for each validation
 
 ## Phase 2: Build Graph (60-90 minutes)
+
 ### 2.1 - State Definition
 - Code snippet for TypedDict
 - Explanation of each field
@@ -60,6 +63,7 @@ The generated guide should follow this structure:
 - Compiled agent
 
 ## Phase 3: Run Tests (30 minutes)
+
 ### 3.1 - Test Script
 - Full `run_spike.py` code
 - Validations for both tests
@@ -69,6 +73,7 @@ The generated guide should follow this structure:
 - Expected output
 
 ## Phase 4: LangSmith Validation (30 minutes)
+
 ### 4.1 - Access Dashboard
 - Steps to check traces
 
@@ -93,9 +98,9 @@ The generated guide should follow this structure:
 
 ## Key Concepts
 - Definitions of State, Nodes, Edges, Loop Agêntico
-```
 
----
+```text
+
 
 ## Content Guidelines
 
@@ -124,23 +129,27 @@ If README.md from `/brief` exists, extract:
 
 Use these to customize examples in Phase 2/3/4.
 
----
 
 ## File Paths
 
 **Generate this file:**
-```
+
+```text
+
 docs/microprocesso-1.3-spike-agentic.md
-```
+
+```text
 
 **Reference files the user will create:**
-```
+
+```text
+
 src/agent.py          (Main graph - copy from Phase 2.5)
 src/mock_tool.py      (Mock tool - copy from Phase 2.2)
 run_spike.py          (Test script - copy from Phase 3.1)
-```
 
----
+```text
+
 
 ## Validation Checklist
 
@@ -155,6 +164,6 @@ Before considering generation complete:
 - ✅ Next steps are explicit
 - ✅ Markdown formatting is correct
 
----
 
 This guide helps Claude know exactly what to generate when `/spike-agentic` is invoked.
+````

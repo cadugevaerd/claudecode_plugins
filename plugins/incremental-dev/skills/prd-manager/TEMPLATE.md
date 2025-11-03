@@ -4,49 +4,55 @@
 **Última Atualização**: [YYYY-MM-DD]
 **Status**: Rascunho - Documento Vivo
 
----
-
 ## 📊 FASE 1: DESCOBERTA
 
 ### Problema
+
 [Descrever problema que o projeto resolve]
 
 ### Objetivos
+
 - [ ] Objetivo 1
 - [ ] Objetivo 2
 - [ ] Objetivo 3
 
 ### KPIs (Key Performance Indicators)
+
 - **KPI 1**: [descrição]
 - **KPI 2**: [descrição]
-
----
 
 ## 📋 FASE 2: PLANEJAMENTO (v1.0+)
 
 ### Product Vision
+
 [Visão do produto]
 
 ### Épicos
+
 1. **Épico 1**: [descrição]
-2. **Épico 2**: [descrição]
+1. **Épico 2**: [descrição]
 
 ### MVP (Minimum Viable Product)
+
 **Definição do MVP**:
+
 - [ ] Feature essencial 1
 - [ ] Feature essencial 2
 - [ ] Feature essencial 3
 
 **Fora do MVP** (YAGNI):
+
 - ❌ Feature prematura 1
 - ❌ Feature prematura 2
 
 ### Configurações de Desenvolvimento
 
 #### Formato de Spikes de Validação Técnica
+
 **Preferência**: [notebooks (.ipynb) / scripts (.py) / não-definido]
 
 **Quando usar Notebooks**:
+
 - Exploração de tecnologias novas
 - Prototipagem interativa
 - Validação de hipóteses técnicas
@@ -54,6 +60,7 @@
 - Documentação de aprendizados inline
 
 **Quando usar Scripts**:
+
 - Spikes muito simples (< 50 linhas)
 - Ambiente sem suporte a Jupyter
 - Integração com CI/CD necessária
@@ -62,7 +69,8 @@
 **Localização de Spikes**: `spikes/` ou `docs/spikes/`
 
 ### Roadmap
-```mermaid
+
+````mermaid
 gantt
     title Roadmap do Projeto
     dateFormat YYYY-MM-DD
@@ -71,7 +79,8 @@ gantt
     Incremento 2 :7d
     section Pós-MVP
     Incremento 3 :7d
-```
+
+```text
 
 ### User Stories
 1. **Como** [usuário], **quero** [funcionalidade], **para** [benefício]
@@ -79,7 +88,6 @@ gantt
      - [ ] Critério 1
      - [ ] Critério 2
 
----
 
 ## 🎨 FASE 3: DESIGN (v1.1+)
 
@@ -107,7 +115,6 @@ gantt
 - **Decisão**: [O que foi decidido]
 - **Consequências**: [Impactos positivos e negativos]
 
----
 
 ## 💻 DESENVOLVIMENTO
 
@@ -120,7 +127,6 @@ gantt
   - ✅ Feature 2
 - **Aprendizados**: [Lições aprendidas]
 
----
 
 ## ✅ VALIDAÇÃO
 
@@ -135,7 +141,6 @@ gantt
 ### Métricas Reais
 [Métricas coletadas em produção]
 
----
 
 ## 🚀 DEPLOY
 
@@ -150,7 +155,6 @@ gantt
 ### Monitoramento
 [Ferramentas e dashboards]
 
----
 
 ## 📝 LIÇÕES APRENDIDAS
 
@@ -160,7 +164,6 @@ gantt
 - **O que não funcionou**:
 - **Melhorias para próximo incremento**:
 
----
 
 ## 📊 HISTÓRICO DE VERSÕES
 
@@ -171,3 +174,4 @@ gantt
 | 1.1 | YYYY-MM-DD | Design técnico |
 | 1.x | YYYY-MM-DD | Incrementos e aprendizados |
 | 2.0 | YYYY-MM-DD | Documento final (as-built) |
+````

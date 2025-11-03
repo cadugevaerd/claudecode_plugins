@@ -9,6 +9,7 @@ Este comando configura o arquivo `CLAUDE.md` do projeto atual com instruções d
 ## 🎯 Objetivo
 
 Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
+
 - Execute code reviews seguindo padrões do projeto
 - Identifique vulnerabilidades de segurança específicas da stack
 - Aplique checklist customizado de qualidade
@@ -17,15 +18,17 @@ Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /setup-project-review
-```
+
+```text
 
 Ou com descrição da stack:
 
 ```bash
 /setup-project-review "API REST Python com FastAPI + PostgreSQL + Redis"
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -45,6 +48,7 @@ Ou com descrição da stack:
 O comando deve adicionar a seguinte seção ao `CLAUDE.md`:
 
 ```markdown
+
 # Code Review & Quality Standards
 
 **IMPORTANTE**: Este projeto utiliza o plugin `code-review` para análise automática de código e gerenciamento de débito técnico.
@@ -170,6 +174,7 @@ O plugin mantém registro estruturado de débito técnico em `docs/TECHNICAL_DEB
 ### Comandos de Débito Técnico
 
 ```bash
+
 # Adicionar novo débito
 /tech-debt add
 
@@ -184,13 +189,15 @@ O plugin mantém registro estruturado de débito técnico em `docs/TECHNICAL_DEB
 
 # Estatísticas de débito
 /tech-debt stats
-```
+
+```text
 
 ## 🔄 Workflow de Code Review
 
 ### 1. Antes de Commitar
 
 ```bash
+
 # 1. Stage mudanças
 git add .
 
@@ -198,19 +205,24 @@ git add .
 /review
 
 # 3. Analisar relatório
+
 # - 🔴 Críticos: Corrigir AGORA
+
 # - 🟡 Importantes: Criar task
+
 # - 🟢 Sugestões: Considerar
 
 # 4. Corrigir críticos
 
 # 5. Commitar
 /commit
-```
+
+```text
 
 ### 2. Durante Pull Request
 
 ```bash
+
 # 1. Checkout na branch
 git checkout feature/new-feature
 
@@ -221,19 +233,25 @@ git checkout feature/new-feature
 /tech-debt add  # Se necessário
 
 # 4. Comentar no PR com resultado
-```
+
+```text
 
 ### 3. Manutenção de Débito Técnico
 
 ```bash
+
 # Mensalmente: Revisar débitos acumulados
 /tech-debt stats
 
 # Priorizar resolução de:
+
 # 1. 🔴 Critical → Resolver urgente
+
 # 2. 🟡 Important → Planejar sprint
+
 # 3. 🟢 Improvement → Backlog
-```
+
+```text
 
 ## 🎯 Plugin Code Review
 
@@ -255,16 +273,17 @@ Este projeto usa o plugin `code-review` com os seguintes recursos:
 - Performance (N+1, loops, async)
 - Débito técnico (DRY, acoplamento)
 
----
 
 **Filosofia**: Qualidade > Velocidade | Prevenir > Corrigir | Automatizar > Manual
-```
+
+```text
 
 ### 3. Adicionar Contexto do Projeto (Se Fornecido)
 
 Se o usuário fornecer descrição da stack, adicionar seção customizada:
 
 ```markdown
+
 ## 📊 Contexto Deste Projeto
 
 **Stack**: [stack fornecida pelo usuário]
@@ -279,7 +298,8 @@ Se o usuário fornecer descrição da stack, adicionar seção customizada:
 - Problemas típicos da stack
 - Anti-patterns conhecidos
 - Otimizações recomendadas
-```
+
+```text
 
 ### 4. Detectar Stack do Projeto
 
@@ -294,6 +314,7 @@ Analisar projeto para customizar instruções:
 **Adicionar ao CLAUDE.md**:
 
 ```markdown
+
 ## 🔧 Stack Detectada
 
 **Linguagem**: [detectada]
@@ -306,13 +327,15 @@ Analisar projeto para customizar instruções:
 - Formatter: [específico da linguagem]
 - Security Scanner: [específico da linguagem]
 - Coverage Tool: [específico do framework de testes]
-```
+
+```text
 
 ### 5. Confirmar com Usuário
 
 Mostrar preview do que será adicionado:
 
-```
+```text
+
 ═══════════════════════════════════════════
 📝 SETUP CODE REVIEW
 ═══════════════════════════════════════════
@@ -327,12 +350,12 @@ Stack Detectada:
 - Testes: [framework de testes]
 
 Conteúdo a ser adicionado:
----
+
 [Preview das instruções]
----
 
 Adicionar ao CLAUDE.md? (s/n)
-```
+
+```text
 
 ### 6. Criar/Atualizar Arquivo
 
@@ -342,7 +365,8 @@ Se usuário confirmar:
 - Preservar conteúdo existente (NUNCA sobrescrever)
 - Validar que arquivo foi criado corretamente
 
-```
+```text
+
 ✅ CLAUDE.md configurado com sucesso!
 
 Instruções de code review adicionadas.
@@ -363,7 +387,8 @@ Claude agora está orientado a:
 ✓ Identificar vulnerabilidades de segurança
 ✓ Gerenciar débito técnico estruturadamente
 ✓ Priorizar problemas corretamente
-```
+
+```text
 
 ## 📚 Exemplos de Uso
 
@@ -371,7 +396,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-review "API REST Python com FastAPI + PostgreSQL"
-```
+
+```text
 
 **Resultado**:
 - Cria `CLAUDE.md` na raiz do projeto
@@ -384,7 +410,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-review "Frontend React + TypeScript + Jest"
-```
+
+```text
 
 **Resultado**:
 - Detecta `CLAUDE.md` existente
@@ -397,7 +424,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-review "Backend Go + Frontend Vue.js"
-```
+
+```text
 
 **Resultado**:
 - Detecta múltiplas linguagens
@@ -448,8 +476,11 @@ Após configurar o projeto, sempre execute code review antes de commits:
 ```bash
 git add .
 /review
+
 # Corrigir críticos
 /commit
-```
+
+```text
 
 Isso garantirá qualidade consistente e prevenção de problemas de segurança.
+````

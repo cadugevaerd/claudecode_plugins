@@ -6,6 +6,7 @@ description: Update project's CLAUDE.md with python-test-generator plugin config
 # Update CLAUDE.md with Python-Test-Generator Configuration
 
 This command **automatically updates** the project's CLAUDE.md file with the python-test-generator plugin configuration, following best practices:
+
 - ≤40 lines of content
 - Progressive disclosure (link to README.md for complete docs)
 - Mentions ONLY agent (test-assistant) - skills and commands are auto-discovered
@@ -15,6 +16,7 @@ This command **automatically updates** the project's CLAUDE.md file with the pyt
 ## When to Use This Command
 
 Use `/update-claude-md` when:
+
 - Project's CLAUDE.md doesn't have python-test-generator plugin configuration
 - CLAUDE.md was corrupted or deleted
 - Need to update/reconfigure plugin instructions after plugin update
@@ -23,16 +25,22 @@ Use `/update-claude-md` when:
 ## What This Command Does
 
 1. ✅ Checks if CLAUDE.md exists in project root
-2. ✅ Creates basic CLAUDE.md if it doesn't exist
-3. ✅ Detects if python-test-generator section already exists
-4. ✅ **Automatically overwrites section if exists** (no prompts)
-5. ✅ Adds/updates section following best practices:
+
+1. ✅ Creates basic CLAUDE.md if it doesn't exist
+
+1. ✅ Detects if python-test-generator section already exists
+
+1. ✅ **Automatically overwrites section if exists** (no prompts)
+
+1. ✅ Adds/updates section following best practices:
+
    - ≤40 lines
    - Agent available (test-assistant)
    - 3-5 critical rules about Python testing
    - Link to plugin README.md
    - Note: "Skills and commands are auto-discovered"
-6. ✅ Validates CLAUDE.md after update
+
+1. ✅ Validates CLAUDE.md after update
 
 ## ⚠️ What This Command DOES NOT Do
 
@@ -44,7 +52,8 @@ Use `/update-claude-md` when:
 
 ## Workflow
 
-```
+````text
+
 ┌─────────────────────────────────────────────┐
 │ Step 1: Check CLAUDE.md Existence          │
 └─────────────────────────────────────────────┘
@@ -95,7 +104,8 @@ Use `/update-claude-md` when:
 ┌─────────────────────────────────────────────┐
 │ Step 7: Validate & Report Success          │
 └─────────────────────────────────────────────┘
-```
+
+```text
 
 ## Step 1: Check CLAUDE.md Existence
 
@@ -103,12 +113,11 @@ Check if CLAUDE.md file exists in project root.
 
 ```bash
 test -f "CLAUDE.md" && echo "EXISTS" || echo "NOT_FOUND"
-```
+
+```text
 
 **If NOT_FOUND**: Proceed to Step 2b (create basic file)
 **If EXISTS**: Proceed to Step 2a (read current file)
-
----
 
 ## Step 2a: Read Current CLAUDE.md
 
@@ -118,26 +127,26 @@ If file exists, read its current content to preserve existing sections.
 - file_path: `CLAUDE.md` (project root)
 - Read entire file to preserve all content
 
----
-
 ## Step 2b: Create Basic CLAUDE.md
 
 If file doesn't exist, create basic CLAUDE.md with minimal structure:
 
 ```markdown
+
 # CLAUDE.md
 
 Project-specific instructions for Claude Code.
 
----
-```
+
+```text
 
 **Inform user**:
-```
-📝 CLAUDE.md not found - creating basic file
-```
 
----
+```text
+
+📝 CLAUDE.md not found - creating basic file
+
+```text
 
 ## Step 3: Detect Python-Test-Generator Section
 
@@ -149,43 +158,46 @@ Search for existing python-test-generator section in CLAUDE.md content.
 - OR any heading containing "python" and "test" and "generator"
 
 **Use pattern matching**:
-```
+
+```text
+
 Check if content contains:
 - "# Python Test Generator" OR
 - "# python-test-generator" OR
 - Heading with "python", "test", and "generator"
-```
+
+```text
 
 **Result**:
 - **Section FOUND**: Proceed to Step 4a (automatically overwrite)
 - **Section NOT FOUND**: Proceed to Step 4b (prepare to add)
-
----
 
 ## Step 4a: Automatically Overwrite Existing Section
 
 If python-test-generator section already exists, **automatically overwrite it** without asking.
 
 **Inform user**:
-```
+
+```text
+
 ⚠️  CLAUDE.md already has Python Test Generator section
 ✅ Automatically updating with latest configuration...
-```
+
+```text
 
 **Action**: Proceed to Step 5 (replace section)
-
----
 
 ## Step 4b: Prepare to Add Section
 
 If section doesn't exist, prepare to add it at the end of CLAUDE.md.
 
 **Inform user**:
-```
-✅ Adding Python Test Generator section to CLAUDE.md
-```
 
----
+```text
+
+✅ Adding Python Test Generator section to CLAUDE.md
+
+```text
 
 ## Step 5: Add/Update Section (≤40 lines)
 
@@ -201,7 +213,6 @@ Create the python-test-generator section following best practices.
 **Template (EXACTLY this structure)**:
 
 ```markdown
----
 
 # Python Test Generator
 
@@ -238,8 +249,8 @@ All commands are auto-discovered on Claude startup. Key commands:
 
 📖 **Complete documentation:** `plugins/python-test-generator/README.md`
 
----
-```
+
+```text
 
 **Validation checklist**:
 - [ ] Total lines ≤40
@@ -249,8 +260,6 @@ All commands are auto-discovered on Claude startup. Key commands:
 - [ ] Note about auto-discovery present
 - [ ] NO manual skill copying instructions
 - [ ] NO creation of `.claude/knowledge/` directory
-
----
 
 ## Step 6: Write Updated CLAUDE.md
 
@@ -267,24 +276,26 @@ Write the updated CLAUDE.md file.
 
 **Use Edit tool** (if overwriting) or **append** (if new section).
 
----
-
 ## Step 7: Validate & Report Success
 
 After writing CLAUDE.md, validate and report to user.
 
 **Validation**:
+
 ```bash
+
 # Verify CLAUDE.md exists
 test -f "CLAUDE.md" && echo "✅ File exists"
 
 # Check section is present
 grep -q "# Python Test Generator" CLAUDE.md && echo "✅ Section added"
-```
+
+```text
 
 **Report to user**:
 
-```
+```text
+
 ═══════════════════════════════════════════
 ✅ CLAUDE.md UPDATED SUCCESSFULLY
 ═══════════════════════════════════════════
@@ -315,21 +326,24 @@ cat CLAUDE.md | grep -A 50 "# Python Test Generator"
 plugins/python-test-generator/README.md
 
 ═══════════════════════════════════════════
-```
 
----
+```text
 
 ## Error Handling
 
 ### Error 1: CLAUDE.md Read Permission Denied
 
 **Detection**:
+
 ```bash
 test -r "CLAUDE.md"
-```
+
+```text
 
 **Action**:
-```
+
+```text
+
 ❌ ERROR: Cannot read CLAUDE.md
 
 Reason: Permission denied
@@ -337,16 +351,17 @@ Solution: Check file permissions and try again
 
 chmod 644 CLAUDE.md
 /update-claude-md
-```
 
----
+```text
 
 ### Error 2: CLAUDE.md Write Permission Denied
 
 **Detection**: Edit/Write tool returns permission error
 
 **Action**:
-```
+
+```text
+
 ❌ ERROR: Cannot write to CLAUDE.md
 
 Reason: Permission denied
@@ -354,16 +369,17 @@ Solution: Check file permissions and try again
 
 chmod 644 CLAUDE.md
 /update-claude-md
-```
 
----
+```text
 
 ### Error 3: CLAUDE.md Corrupted or Invalid Format
 
 **Detection**: Read tool returns malformed content or encoding errors
 
 **Action**:
-```
+
+```text
+
 ❌ ERROR: CLAUDE.md appears corrupted
 
 Reason: File encoding or format issue
@@ -371,16 +387,17 @@ Solution: Backup current file and create fresh CLAUDE.md
 
 mv CLAUDE.md CLAUDE.md.backup
 /update-claude-md
-```
 
----
+```text
 
 ### Error 4: Project Root Detection Failed
 
 **Detection**: Unable to determine project root directory
 
 **Action**:
-```
+
+```text
+
 ❌ ERROR: Cannot determine project root
 
 Reason: Not in a valid project directory
@@ -388,9 +405,8 @@ Solution: Navigate to project root and try again
 
 cd /path/to/project
 /update-claude-md
-```
 
----
+```text
 
 ## Examples
 
@@ -399,12 +415,17 @@ cd /path/to/project
 **Scenario**: New project without CLAUDE.md
 
 **User command**:
-```
+
+```text
+
 /update-claude-md
-```
+
+```text
 
 **Agent output**:
-```
+
+```text
+
 📝 CLAUDE.md not found - creating basic file
 ✅ Adding Python Test Generator section to CLAUDE.md
 
@@ -419,21 +440,25 @@ cd /path/to/project
    - Section: 38 lines (within 40-line limit ✅)
 
 ═══════════════════════════════════════════
-```
 
----
+```text
 
 ### Example 2: Existing CLAUDE.md Without Plugin Config
 
 **Scenario**: CLAUDE.md exists with other content, but no python-test-generator section
 
 **User command**:
-```
+
+```text
+
 /update-claude-md
-```
+
+```text
 
 **Agent output**:
-```
+
+```text
+
 ✅ CLAUDE.md found - preserving existing content
 ✅ Adding Python Test Generator section to CLAUDE.md
 
@@ -447,21 +472,25 @@ cd /path/to/project
 ✅ All existing content preserved
 
 ═══════════════════════════════════════════
-```
 
----
+```text
 
 ### Example 3: Existing CLAUDE.md With Old Plugin Config (Automatic Overwrite)
 
 **Scenario**: CLAUDE.md has old python-test-generator section that needs updating
 
 **User command**:
-```
+
+```text
+
 /update-claude-md
-```
+
+```text
 
 **Agent output**:
-```
+
+```text
+
 ⚠️  CLAUDE.md already has Python Test Generator section
 ✅ Automatically updating with latest configuration...
 
@@ -476,16 +505,13 @@ cd /path/to/project
 ✅ All other sections preserved
 
 ═══════════════════════════════════════════
-```
 
----
+```text
 
 ## Related Commands
 
 - `/py-test` - Analyze coverage and generate tests
 - `/setup-pytest-config` - Create pytest configuration
-
----
 
 ## Best Practices
 
@@ -503,13 +529,12 @@ cd /path/to/project
 - Don't add >40 lines to CLAUDE.md (use progressive disclosure)
 - Don't mention all commands in CLAUDE.md (auto-discovered on startup)
 
----
-
 ## Technical Notes
 
 ### Progressive Disclosure Pattern
 
 This command follows progressive disclosure:
+
 - **CLAUDE.md**: ≤40 lines, essential info only
 - **README.md**: Complete documentation, examples, advanced topics
 - **User reads README.md** when needs detail (via Read tool or manually)
@@ -529,8 +554,6 @@ This command follows progressive disclosure:
 - Agents are NOT auto-discovered
 - Need explicit documentation for user to know when to use via Task tool
 
----
-
 ## Troubleshooting
 
 ### Issue: CLAUDE.md section too long
@@ -542,8 +565,6 @@ This command follows progressive disclosure:
 2. Move detailed content to `docs/testing/PYTHON_TESTING.md`
 3. Link from CLAUDE.md
 
----
-
 ### Issue: Skills not working after update
 
 **Symptom**: Skills don't activate automatically
@@ -551,7 +572,9 @@ This command follows progressive disclosure:
 **Cause**: Plugin not installed or Claude needs restart
 
 **Solution**:
+
 ```bash
+
 # Ensure plugin is installed
 /plugin list | grep python-test-generator
 
@@ -562,9 +585,8 @@ This command follows progressive disclosure:
 /plugin refresh
 
 # Skills are now auto-discovered
-```
 
----
+```text
 
 ### Issue: Agent not available
 
@@ -574,8 +596,6 @@ This command follows progressive disclosure:
 
 **Solution**: Run `/update-claude-md` to add agent documentation to CLAUDE.md
 
----
-
 ## Performance Notes
 
 - Command execution: ~2-5 seconds (file I/O operations)
@@ -583,6 +603,5 @@ This command follows progressive disclosure:
 - No impact on Claude startup time (agent already documented)
 - Skills auto-discovered on plugin install (one-time operation)
 
----
-
 **Developed by Carlos Araujo for python-test-generator plugin** 🧪
+````

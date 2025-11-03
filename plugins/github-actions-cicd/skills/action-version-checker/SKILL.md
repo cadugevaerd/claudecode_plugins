@@ -4,6 +4,10 @@ description: Verifica versões de GitHub Actions nos workflows e compara com úl
 allowed-tools: Read, Bash, Grep
 ---
 
+name: action-version-checker
+description: Verifica versões de GitHub Actions nos workflows e compara com últimas versões disponíveis. Use quando atualizar workflows, revisar dependências de actions, checar se actions estão desatualizadas, fazer auditoria de versões.
+allowed-tools: Read, Bash, Grep
+
 # Action Version Checker Skill
 
 ## Instructions
@@ -12,17 +16,22 @@ Verifica automaticamente versões de GitHub Actions utilizadas nos workflows e c
 
 ### 1. Extrair Actions dos Workflows
 
-```bash
+````bash
+
 # Buscar todas as linhas com 'uses:' nos workflows
 grep -r "uses:" .github/workflows/ | grep -v "^#"
-```
+
+```text
 
 Output exemplo:
-```
+
+```text
+
 .github/workflows/ci.yml:      - uses: actions/checkout@v4
 .github/workflows/ci.yml:      - uses: astral-sh/setup-uv@v6
 .github/workflows/deploy.yml:  - uses: actions/setup-python@v4
-```
+
+```text
 
 ### 2. Parse Action References
 
@@ -32,10 +41,13 @@ Para cada linha encontrada, extrair:
 - **Version type**: `major`, `semver`, `sha`, ou `branch`
 
 Formato comum:
-```
+
+```text
+
 uses: {owner}/{repo}@{version}
 uses: {owner}/{repo}/{path}@{version}
-```
+
+```text
 
 ### 3. Classificar Tipo de Versão
 
@@ -55,19 +67,22 @@ def classify_version(version):
         return 'branch'  # ❌ INSEGURO
     else:
         return 'unknown'
-```
+
+```text
 
 ### 4. Buscar Última Versão Disponível
 
 #### Opção A: Usar gh CLI (Preferido)
 
 ```bash
+
 # Buscar latest release
 gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name'
 
 # Exemplo para actions/checkout
 gh api repos/actions/checkout/releases/latest --jq '.tag_name'
-```
+
+```text
 
 #### Opção B: Versões Conhecidas (Fallback)
 
@@ -84,7 +99,8 @@ KNOWN_LATEST_VERSIONS = {
     "docker/build-push-action": "v5",
     "docker/setup-buildx-action": "v3",
 }
-```
+
+```text
 
 ### 5. Comparar Versões
 
@@ -105,11 +121,13 @@ def compare_versions(current, latest):
         return 'PATCH', '🟢', 'Bug fixes, seguro'
     else:
         return 'UP_TO_DATE', '✅', 'Atualizada'
-```
+
+```text
 
 ### 6. Reportar Resultados
 
-```
+```text
+
 ═══════════════════════════════════════════
 🔍 VERIFICAÇÃO DE VERSÕES
 ═══════════════════════════════════════════
@@ -139,7 +157,8 @@ Total: 8 actions
 Comando para atualizar:
 /cicd-update
 ═══════════════════════════════════════════
-```
+
+```text
 
 ## When to Use
 
@@ -164,23 +183,30 @@ Termos de gatilho:
 
 ```yaml
 uses: actions/checkout@v4
-```
+
+```text
 
 Verificação:
-```
+
+```text
+
 ✅ actions/checkout@v4
    Latest: v4
    Status: Atualizada
-```
+
+```text
 
 ### Exemplo 2: Action Desatualizada
 
 ```yaml
 uses: actions/setup-python@v4
-```
+
+```text
 
 Verificação:
-```
+
+```text
+
 ⚠️  actions/setup-python@v4
    Latest: v5
    Update: MINOR (v4 → v5)
@@ -189,16 +215,20 @@ Verificação:
 
    💡 Atualização recomendada:
    uses: actions/setup-python@v5
-```
+
+```text
 
 ### Exemplo 3: Action Insegura
 
 ```yaml
 uses: actions/cache@latest
-```
+
+```text
 
 Verificação:
-```
+
+```text
+
 🔴 actions/cache@latest
    Status: INSEGURO (usando @latest)
    Latest: v4
@@ -210,7 +240,8 @@ Verificação:
    Fix:
    - uses: actions/cache@latest
    + uses: actions/cache@v4
-```
+
+```text
 
 ## Version Update Matrix
 
@@ -241,7 +272,8 @@ GITHUB_ACTIONS = {
     },
     # ... mais actions
 }
-```
+
+```text
 
 ### Third-Party Trusted
 
@@ -258,7 +290,8 @@ TRUSTED_THIRD_PARTY = {
         "trust_level": "high"
     },
 }
-```
+
+```text
 
 ## Security Checks
 
@@ -272,11 +305,13 @@ UNSAFE_PATTERNS = {
     "@develop": "HIGH - Use stable release",
     "@HEAD": "CRITICAL - Use specific version",
 }
-```
+
+```text
 
 ### Recommended Pinning Strategy
 
 ```yaml
+
 # 🟢 Bom - Major version pinning
 uses: actions/checkout@v4
 
@@ -285,7 +320,8 @@ uses: actions/checkout@v4.1.0
 
 # 🔒 Máximo - SHA pinning (produção)
 uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
-```
+
+```text
 
 ## Performance Optimization
 
@@ -298,28 +334,34 @@ uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 
 ### API Rate Limit
 
-```
+```text
+
 ⚠️  GitHub API rate limit alcançado
 Tentando usar versões conhecidas...
 
 Fallback para KNOWN_LATEST_VERSIONS
-```
+
+```text
 
 ### Network Error
 
-```
+```text
+
 ❌ Erro ao buscar versão de actions/custom-action
 Usando última versão conhecida: v1.2.0 (cache)
-```
+
+```text
 
 ### Unknown Action
 
-```
+```text
+
 ❓ Action desconhecida: user/unknown-action@v1
 - Não encontrada no GitHub Marketplace
 - Verificar se repositório existe
 - Considerar usar action oficial alternativa
-```
+
+```text
 
 ## Integration with Update Command
 
@@ -346,10 +388,12 @@ Skill fornece dados para `/cicd-update`:
         }
     ]
 }
-```
+
+```text
 
 ## References
 
 - [GitHub Actions Versioning](https://docs.github.com/en/actions/creating-actions/about-custom-actions#using-release-management-for-actions)
 - [GitHub Releases API](https://docs.github.com/en/rest/releases/releases)
 - [Semantic Versioning](https://semver.org/)
+````

@@ -16,16 +16,17 @@ Works with **new agents** and integrates seamlessly with **existing projects**.
 Brief Minimo is a structured planning methodology that answers 5 fundamental questions about your AI agent:
 
 1. **What does the agent DO?** - Core functionality in one clear action verb
-2. **What is the INPUT?** - Type, format, maximum size, real example
-3. **What is the OUTPUT?** - Expected structure, success example, error example
-4. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
-5. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
+1. **What is the INPUT?** - Type, format, maximum size, real example
+1. **What is the OUTPUT?** - Expected structure, success example, error example
+1. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
+1. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
 
 ## Installation
 
-```bash
+````bash
 /plugin install agentc-ai-developer
-```
+
+```text
 
 ## Quick Start
 
@@ -35,7 +36,8 @@ Start your agent planning session:
 
 ```bash
 /brief
-```
+
+```text
 
 This launches an interactive interview that guides you through the Brief Minimo process. The agent automatically detects your context and offers relevant options.
 
@@ -47,7 +49,8 @@ After `/brief` creates your project repository, continue with environment setup:
 
 ```bash
 /setup-local-observability
-```
+
+```text
 
 This guides you interactively through:
 - ✅ Python virtual environment setup
@@ -66,7 +69,8 @@ This guides you interactively through:
 
 ```bash
 /brief
-```
+
+```text
 
 ### 2. Interactive Interview
 
@@ -103,7 +107,8 @@ After planning and environment setup, run `/update-claude-md` to integrate guida
 
 ```bash
 /update-claude-md
-```
+
+```text
 
 This adds a concise section (≤40 lines) with command references and next steps for ongoing development.
 
@@ -215,10 +220,14 @@ The `brief-assistant` agent adapts to your context and automatically offers the 
 
 ```bash
 /brief
+
 # Agent detects no existing agents
+
 # → "Let's create a new agent brief!"
+
 # → Full 30-minute interview
-```
+
+```text
 
 ### Mode 2: Existing Agent Update
 
@@ -234,11 +243,16 @@ The `brief-assistant` agent adapts to your context and automatically offers the 
 
 ```bash
 /brief
+
 # Agent detects existing agents in project
+
 # → "Update existing agent or create new one?"
+
 # → Select agent to update
+
 # → Interview focused on changes since original planning
-```
+
+```text
 
 ### Mode 3: Validate Agent
 
@@ -254,10 +268,14 @@ The `brief-assistant` agent adapts to your context and automatically offers the 
 
 ```bash
 /brief
+
 # → "Validate agent against Brief Minimo criteria"
+
 # → Assessment of each criterion (purpose, input/output, tools, success)
+
 # → Report with gaps and improvement suggestions
-```
+
+```text
 
 ### Mode 4: Document Existing Agent
 
@@ -273,10 +291,14 @@ The `brief-assistant` agent adapts to your context and automatically offers the 
 
 ```bash
 /brief
+
 # → "Document existing agent implementation"
+
 # → Questions about what agent actually does (from code review)
+
 # → Generate brief based on current implementation
-```
+
+```text
 
 ## Using in Existing Projects
 
@@ -290,7 +312,8 @@ The plugin works seamlessly with existing projects:
 
 ### Example: Updating a Production Agent
 
-```
+```text
+
 You have a "email_classifier" agent running in production for 6 months.
 
 1. Run: /brief
@@ -304,11 +327,13 @@ You have a "email_classifier" agent running in production for 6 months.
    - Changes to tool/API or costs?
 6. Output: Updated brief reflecting current state and improvements
 7. Share with team: New team members reference updated brief
-```
+
+```text
 
 ### Example: Documenting a Legacy Agent
 
-```
+```text
+
 You have an "error_processor" agent built 2 years ago with minimal docs.
 
 1. Run: /brief
@@ -323,7 +348,8 @@ You have an "error_processor" agent built 2 years ago with minimal docs.
    - How do you measure its success? (from monitoring/logs)
 6. Output: Brief specification retroactively created
 7. Store as reference: New developers understand agent without reading code
-```
+
+```text
 
 ## Example: Email Priority Agent
 
@@ -339,6 +365,7 @@ Here's how the Brief Minimo process works for a real agent:
 - Example: Real customer support email from your inbox
 
 ### Question 3: What is the OUTPUT?
+
 ```json
 {
   "priority": "high|medium|low",
@@ -346,9 +373,11 @@ Here's how the Brief Minimo process works for a real agent:
   "summary": "Brief one-liner description",
   "action_required": true|false
 }
-```
+
+```text
 
 Success example:
+
 ```json
 {
   "priority": "high",
@@ -356,7 +385,8 @@ Success example:
   "summary": "Production database unreachable",
   "action_required": true
 }
-```
+
+```text
 
 ### Question 4: What is the TOOL/API?
 - Primary: OpenWeather API (if weather-based classifications are needed)
@@ -407,7 +437,8 @@ Launches the **Microprocesso 1.1** - Brief Minimo 30-minute agent planning inter
 
 ```bash
 /brief
-```
+
+```text
 
 Conducts an interactive session and generates a comprehensive agent specification document (README.md) with complete agent specification.
 
@@ -416,7 +447,8 @@ Launches the **Microprocesso 1.2** - Interactive environment setup and configura
 
 ```bash
 /setup-local-observability
-```
+
+```text
 
 Guides you through 8 interactive activities:
 - Python virtual environment setup
@@ -432,7 +464,8 @@ Adds concise project integration section to your CLAUDE.md file.
 
 ```bash
 /update-claude-md
-```
+
+```text
 
 Reads your Brief Minimo specification from README.md and creates a focused CLAUDE.md section (≤40 lines) with:
 - Available Agentc commands and when to use them
@@ -447,7 +480,8 @@ Launches the **Microprocesso 1.3** - Agent spike with agentic loop validation (3
 
 ```bash
 /spike-agentic
-```
+
+```text
 
 Validates that Microprocesso 1.2 is complete, then generates `docs/microprocesso-1.3-spike-agentic.md` with:
 - Prerequisites validation checklist
@@ -558,7 +592,6 @@ MIT
 Email: [cadu.gevaerd@gmail.com](mailto:cadu.gevaerd@gmail.com)
 Repository: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugins)
 
----
 
 ## Quick Links
 
@@ -569,3 +602,4 @@ Repository: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugi
 - **Plugin Marketplace**: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugins)
 
 Start planning your AI agent today with `/brief`!
+````

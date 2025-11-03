@@ -19,7 +19,8 @@ Este comando invoca o agente especializado `debt-manager` que:
 
 ## Sintaxe
 
-```bash
+````bash
+
 # Modo interativo (mostra menu de opções)
 /tech-debt
 
@@ -42,7 +43,8 @@ Este comando invoca o agente especializado `debt-manager` que:
 
 # Mostrar estatísticas
 /tech-debt stats
-```
+
+```text
 
 ## Operações
 
@@ -54,7 +56,8 @@ Adiciona um novo débito técnico ao registro.
 
 ```bash
 /tech-debt add
-```
+
+```text
 
 **O agente perguntará**:
 
@@ -70,7 +73,8 @@ Adiciona um novo débito técnico ao registro.
 
 **Exemplo de interação**:
 
-```
+```text
+
 /tech-debt add
 
 Título: SQL Injection vulnerability in user query
@@ -87,7 +91,8 @@ Plano de resolução:
 Responsável: @backend-team
 
 ✅ Débito TD-005 adicionado com sucesso em docs/TECHNICAL_DEBT.md!
-```
+
+```text
 
 ### 2. Listar Débitos (`list`)
 
@@ -96,6 +101,7 @@ Lista todos os débitos técnicos registrados.
 **Uso**:
 
 ```bash
+
 # Listar todos
 /tech-debt list
 
@@ -113,11 +119,13 @@ Lista todos os débitos técnicos registrados.
 /tech-debt list --category security
 /tech-debt list --category performance
 /tech-debt list --category refactoring
-```
+
+```text
 
 **Saída exemplo**:
 
 ```markdown
+
 ## Débitos Técnicos
 
 ### 🔴 Critical (2)
@@ -133,7 +141,8 @@ Lista todos os débitos técnicos registrados.
 - [TD-006] Add type hints to public API (Open) - src/api.py
 
 **Total**: 6 débitos (Open: 4 | In Progress: 1 | Resolved: 1)
-```
+
+```text
 
 ### 3. Atualizar Status (`update`)
 
@@ -143,11 +152,13 @@ Atualiza o status de um débito existente.
 
 ```bash
 /tech-debt update TD-005
-```
+
+```text
 
 **O agente perguntará**:
 
-```
+```text
+
 Status atual: Open
 
 Novo status?
@@ -156,13 +167,16 @@ Novo status?
 3. Resolved
 
 Escolha (1/2/3):
-```
+
+```text
 
 **Resultado**:
 
-```
+```text
+
 ✅ TD-005 atualizado para "In Progress"
-```
+
+```text
 
 ### 4. Resolver Débito (`resolve`)
 
@@ -172,22 +186,27 @@ Marca um débito como resolvido e move para a seção de resolvidos.
 
 ```bash
 /tech-debt resolve TD-005
-```
+
+```text
 
 **O agente perguntará** (opcional):
 
-```
+```text
+
 Como foi resolvido? (resumo breve):
-```
+
+```text
 
 **Resultado**:
 
-```
+```text
+
 ✅ TD-005 marcado como resolvido!
 - Movido para seção de débitos resolvidos
 - Data de resolução: 2025-10-21
 - Resumo da resolução registrado
-```
+
+```text
 
 ### 5. Estatísticas (`stats`)
 
@@ -197,11 +216,13 @@ Mostra estatísticas completas sobre os débitos técnicos.
 
 ```bash
 /tech-debt stats
-```
+
+```text
 
 **Saída exemplo**:
 
 ```markdown
+
 # 📊 Estatísticas de Débito Técnico
 
 ## Resumo Geral
@@ -235,7 +256,8 @@ Mostra estatísticas completas sobre os débitos técnicos.
 ## Recomendação
 ⚠️ Você tem 2 débitos críticos abertos há mais de 30 dias.
    Considere priorizar TD-001 e TD-003.
-```
+
+```text
 
 ### 6. Modo Interativo (sem argumentos)
 
@@ -245,11 +267,13 @@ Quando executado sem argumentos, mostra um menu interativo.
 
 ```bash
 /tech-debt
-```
+
+```text
 
 **Menu**:
 
-```
+```text
+
 📊 Technical Debt Management
 
 Escolha uma operação:
@@ -262,7 +286,8 @@ Escolha uma operação:
 6. ❌ Cancelar
 
 Opção (1-6):
-```
+
+```text
 
 ## Categorias Disponíveis
 
@@ -456,23 +481,32 @@ Cada débito inclui 10 campos essenciais:
 ### Cenário 1: Após Code Review
 
 ```bash
+
 # 1. Executar review
 /review
 
 # 2. Review encontra 3 problemas
+
 # 3. Plugin pergunta: "Registrar débitos? (s/n)"
+
 # 4. Responder: s
 
 # Resultado:
+
 # ✅ 3 débitos técnicos adicionados:
+
 # - TD-015: SQL Injection (Critical - Security)
+
 # - TD-016: Long function (Important - Refactoring)
+
 # - TD-017: Missing tests (Important - Testing)
-```
+
+```text
 
 ### Cenário 2: Gerenciamento Manual
 
 ```bash
+
 # Adicionar débito durante desenvolvimento
 /tech-debt add
 
@@ -481,16 +515,20 @@ Cada débito inclui 10 campos essenciais:
 
 # Começar a trabalhar em um
 /tech-debt update TD-015
+
 # Escolher: 2 (In Progress)
 
 # Após resolver
 /tech-debt resolve TD-015
+
 # Resumo: "Refactored to use parameterized queries"
-```
+
+```text
 
 ### Cenário 3: Sprint Planning
 
 ```bash
+
 # Ver estatísticas para planejamento
 /tech-debt stats
 
@@ -499,7 +537,8 @@ Cada débito inclui 10 campos essenciais:
 
 # Listar débitos de security
 /tech-debt list --category security
-```
+
+```text
 
 ## Localização do Arquivo
 
@@ -523,6 +562,6 @@ Este comando funciona com **qualquer linguagem de programação** e **qualquer t
 
 O formato é genérico e focado no débito técnico, não na stack específica.
 
----
 
 **Desenvolvido por Carlos Araujo para gerenciamento profissional de débito técnico** 📊
+````

@@ -15,8 +15,6 @@ Fully interactive command that asks 5 fundamental questions, validates your resp
 **Time**: ~30 minutes
 **Result**: Complete Brief Minimo specification ready for architecture & development
 
----
-
 ## ⚠️ Prerequisites
 
 - ✅ 15-20 minutes of focused time
@@ -24,17 +22,15 @@ Fully interactive command that asks 5 fundamental questions, validates your resp
 - ✅ Concrete examples ready (not conceptual descriptions)
 - ✅ Be prepared to think about specific metrics and tools
 
----
-
 ## The 5 Fundamental Questions
 
 The Brief Minimo methodology asks you to answer these 5 clear questions:
 
 1. **What does the agent DO?** - Core functionality in one clear action verb
-2. **What is the INPUT?** - Data type, format, maximum size, real example
-3. **What is the OUTPUT?** - Expected structure, success example, error example
-4. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
-5. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
+1. **What is the INPUT?** - Data type, format, maximum size, real example
+1. **What is the OUTPUT?** - Expected structure, success example, error example
+1. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
+1. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
 
 ## How It Works
 
@@ -43,6 +39,7 @@ When you run `/brief`, you engage in a **fully self-contained interactive interv
 ### Step 1: Initial Context Detection
 
 Command checks:
+
 - Are you in a new project or existing project with agents?
 - This determines if you're creating new agent or updating existing
 
@@ -81,15 +78,14 @@ Once confirmed, command **generates your production-ready specification** includ
 - Next steps for development
 - Everything you need to move to architecture and design phase
 
----
-
 ## Getting Started
 
 Simply run:
 
-```bash
+````bash
 /brief
-```
+
+```text
 
 **What to have ready**:
 
@@ -104,7 +100,6 @@ Simply run:
 - Measurable metrics (not vague goals)
 - Concrete implementation details (not "we'll figure it out later")
 
----
 
 ## Why Brief Minimo?
 
@@ -119,7 +114,6 @@ This methodology prevents common agent planning failures:
 | ❌ Hidden costs | ✅ Budget awareness from day one |
 | ❌ No documentation | ✅ Complete specification as-built |
 
----
 
 ## The Brief Minimo Output
 
@@ -133,7 +127,6 @@ After completion, you'll have:
 
 All packaged in a **production-ready README.md** specification.
 
----
 
 ## Complete Interview Flow (All in This Command)
 
@@ -181,11 +174,11 @@ Step 4: README.md Generation
   ✅ Formatted and ready for production
   ✅ Next steps for architecture & development
   ✅ Saved to your project directory
-```
+
+```text
 
 **Total time**: ~30 minutes from start to finished README.md
 
----
 
 ## Red Flags - Command Will Push Back
 
@@ -201,7 +194,6 @@ If you answer vaguely, the command will gently push back:
 
 This ensures your brief is **complete and specific**, not wishful thinking.
 
----
 
 After running `/brief`, you'll have:
 
@@ -213,3 +205,4 @@ After running `/brief`, you'll have:
 ✅ Ready for Microprocesso 1.2 (`/setup-local-observability`)
 
 The brief becomes your specification reference throughout development.
+````

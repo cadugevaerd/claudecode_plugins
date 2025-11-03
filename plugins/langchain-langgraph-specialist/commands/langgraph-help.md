@@ -13,24 +13,27 @@ Forneço ajuda rápida e referência sobre LangGraph v1, incluindo construção 
 **Use as seguintes ferramentas MCP quando disponíveis**:
 
 1. **`list_doc_sources`** - Liste as fontes de documentação disponíveis (LangChain, LangGraph)
-2. **`fetch_docs`** - Busque conteúdo específico da documentação oficial do LangGraph
+1. **`fetch_docs`** - Busque conteúdo específico da documentação oficial do LangGraph
 
 **Quando usar MCP**:
+
 - ✅ Sempre que o usuário perguntar sobre state management, graph construction, ou padrões específicos
 - ✅ Para verificar sintaxe correta de StateGraph, nodes, edges
 - ✅ Quando precisar de exemplos atualizados de multi-agent patterns
 - ✅ Para validar implementações de checkpointing e persistence
 
 **Workflow recomendado**:
+
 1. Pergunta sobre funcionalidade específica → use `fetch_docs` para buscar na documentação LangGraph
-2. Dúvida sobre padrões (ReAct, multi-agent) → busque exemplos oficiais via MCP
-3. Implementação de state management → valide com docs oficiais
+1. Dúvida sobre padrões (ReAct, multi-agent) → busque exemplos oficiais via MCP
+1. Implementação de state management → valide com docs oficiais
 
 ## Como usar:
 
-```bash
+````bash
 /langgraph-help [tópico opcional]
-```
+
+```text
 
 **Tópicos disponíveis**:
 - `graphs` - Construção de grafos (nodes, edges, state)
@@ -72,6 +75,7 @@ Demonstro padrões comuns:
 ## Exemplos:
 
 ### Basic Graph
+
 ```python
 from langgraph.graph import StateGraph
 from typing import TypedDict
@@ -95,9 +99,11 @@ graph.set_finish_point("analyze")
 
 # Compilar
 app = graph.compile()
-```
+
+```text
 
 ### State com Reducers
+
 ```python
 from typing import Annotated
 from operator import add
@@ -111,9 +117,11 @@ class State(TypedDict):
 
     # Custom reducer
     scores: Annotated[list[int], lambda x, y: x + y]
-```
+
+```text
 
 ### Conditional Branching
+
 ```python
 def route_decision(state: AgentState) -> str:
     """Decide qual node executar próximo"""
@@ -130,9 +138,11 @@ graph.add_conditional_edges(
         "needs_improvement": "revise"
     }
 )
-```
+
+```text
 
 ### Multi-Agent Pattern
+
 ```python
 from langgraph.prebuilt import ToolExecutor
 
@@ -153,9 +163,11 @@ def writer_agent(state):
 graph.add_node("research", research_agent)
 graph.add_node("write", writer_agent)
 graph.add_edge("research", "write")
-```
+
+```text
 
 ### Checkpointing (Persistence)
+
 ```python
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -171,7 +183,8 @@ result = app.invoke(input_data, config=config)
 
 # Retomar conversação
 result2 = app.invoke(new_input, config=config)  # Mantém histórico
-```
+
+```text
 
 ## Quando me usar:
 
@@ -218,3 +231,4 @@ result2 = app.invoke(new_input, config=config)  # Mantém histórico
 - Docs: https://langchain-ai.github.io/langgraph/
 - Tutorials: https://langchain-ai.github.io/langgraph/tutorials/
 - GitHub: https://github.com/langchain-ai/langgraph
+````

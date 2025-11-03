@@ -11,26 +11,30 @@ Sou um assistente interativo para construir chains usando LangChain Expression L
 **IMPORTANTE**: Use o MCP server `langchain-docs` para validar chains e buscar exemplos oficiais.
 
 **Ferramentas MCP**:
+
 1. **`list_doc_sources`** - Listar fontes de documentação
-2. **`fetch_docs`** - Buscar exemplos e sintaxe oficial de LCEL
+1. **`fetch_docs`** - Buscar exemplos e sintaxe oficial de LCEL
 
 **Quando usar MCP ao construir chains**:
+
 - ✅ Antes de gerar chain → busque exemplos similares na documentação oficial
 - ✅ Para validar sintaxe de componentes → verifique API reference via MCP
 - ✅ Ao usar componentes novos → busque exemplos de uso correto
 - ✅ Para padrões complexos (RAG, conditional routing) → consulte tutoriais oficiais
 
 **Workflow recomendado**:
+
 1. Receber descrição da chain do usuário
-2. **Usar `fetch_docs`** para buscar padrões similares no LangChain docs
-3. Gerar chain baseado em exemplos oficiais + conhecimento base
-4. Validar sintaxe e imports com documentação oficial
+1. **Usar `fetch_docs`** para buscar padrões similares no LangChain docs
+1. Gerar chain baseado em exemplos oficiais + conhecimento base
+1. Validar sintaxe e imports com documentação oficial
 
 ## Como usar:
 
-```bash
+````bash
 /lcel-builder [descrição da chain]
-```
+
+```text
 
 **Exemplos**:
 - `/lcel-builder criar uma chain que gera piada e traduz para português`
@@ -64,11 +68,14 @@ Explico:
 ## Padrões que Domino:
 
 ### 1. Sequential Chain (Pipe Operator)
+
 ```python
 chain = component1 | component2 | component3
-```
+
+```text
 
 ### 2. Parallel Execution
+
 ```python
 from langchain_core.runnables import RunnableParallel
 
@@ -76,9 +83,11 @@ parallel = RunnableParallel(
     branch1=chain1,
     branch2=chain2
 )
-```
+
+```text
 
 ### 3. Conditional Routing
+
 ```python
 from langchain_core.runnables import RunnableBranch
 
@@ -87,9 +96,11 @@ branch = RunnableBranch(
     (lambda x: x["type"] == "B", chain_b),
     default_chain
 )
-```
+
+```text
 
 ### 4. Custom Functions (RunnableLambda)
+
 ```python
 from langchain_core.runnables import RunnableLambda
 
@@ -98,14 +109,17 @@ def custom_logic(input_data):
     return processed_data
 
 chain = llm | RunnableLambda(custom_logic) | parser
-```
+
+```text
 
 ### 5. Fallback Pattern
+
 ```python
 chain_with_fallback = primary_chain.with_fallbacks(
     [fallback_chain1, fallback_chain2]
 )
-```
+
+```text
 
 ## Exemplos Completos:
 
@@ -130,7 +144,8 @@ joke_chain = prompt | llm | parser
 # Uso
 result = joke_chain.invoke({"topic": "python"})
 print(result)  # {"setup": "...", "punchline": "..."}
-```
+
+```text
 
 ### Exemplo 2: Parallel Execution
 **Requisito**: "Analisar texto gerando resumo e sentimento em paralelo"
@@ -166,7 +181,8 @@ analysis_chain = RunnableParallel(
 # Uso
 result = analysis_chain.invoke({"text": "Long text here..."})
 print(result)  # {"summary": "...", "sentiment": "..."}
-```
+
+```text
 
 ### Exemplo 3: Conditional Router
 **Requisito**: "Chain que roteia input para chain especializada baseado em categoria"
@@ -191,7 +207,8 @@ router = RunnableBranch(
 # Uso
 result1 = router.invoke({"category": "tech", "question": "What is Docker?"})
 result2 = router.invoke({"category": "casual", "question": "How are you?"})
-```
+
+```text
 
 ### Exemplo 4: RAG Chain
 **Requisito**: "Chain RAG completa com retrieval e generation"
@@ -232,7 +249,8 @@ rag_chain = (
 
 # Uso
 answer = rag_chain.invoke("What is the main topic?")
-```
+
+```text
 
 ## Quando me usar:
 
@@ -267,3 +285,4 @@ Ao construir chains, verifico:
 - Chains com < 100 steps
 - Branching simples (< 5 condições)
 - State simples (não precisa de reducers)
+````

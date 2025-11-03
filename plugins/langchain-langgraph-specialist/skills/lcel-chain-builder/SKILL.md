@@ -4,6 +4,10 @@ description: Constrói chains LCEL (LangChain Expression Language) com composiç
 allowed-tools: Read, Write, Edit, Grep, Glob
 ---
 
+name: lcel-chain-builder
+description: Constrói chains LCEL (LangChain Expression Language) com composição correta usando pipe operators, parallel execution e padrões v1. Use quando criar chains LangChain, compor runnables, implementar RAG, ou precisar de sequential/parallel execution.
+allowed-tools: Read, Write, Edit, Grep, Glob
+
 # LCEL Chain Builder
 
 Skill para construir chains usando LangChain Expression Language (LCEL) v1 com padrões corretos de composição.
@@ -20,12 +24,15 @@ Skill para construir chains usando LangChain Expression Language (LCEL) v1 com p
 - Verifique se há exemplos oficiais de padrões similares
 
 **Exemplo**:
-```
+
+````text
+
 User: "Criar chain RAG com retrieval"
 → ANTES de gerar: Use fetch_docs para buscar "RAG tutorial" ou "retrieval chain"
 → Analise exemplos oficiais retornados
 → ENTÃO gere chain baseada em padrões oficiais
-```
+
+```text
 
 ### STEP 1: Analisar requisitos da chain solicitada
 
@@ -64,6 +71,7 @@ Use esta skill quando:
 ## LCEL Patterns
 
 ### Pattern 1: Sequential Chain
+
 ```python
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -74,9 +82,11 @@ chain = (
     | ChatOpenAI(model="gpt-4")
     | StrOutputParser()
 )
-```
+
+```text
 
 ### Pattern 2: Parallel Execution
+
 ```python
 from langchain_core.runnables import RunnableParallel
 
@@ -85,9 +95,11 @@ parallel_chain = RunnableParallel(
     branch2=chain2,
     branch3=chain3
 )
-```
+
+```text
 
 ### Pattern 3: Conditional Router
+
 ```python
 from langchain_core.runnables import RunnableBranch
 
@@ -96,9 +108,11 @@ router = RunnableBranch(
     (condition2, chain2),
     default_chain
 )
-```
+
+```text
 
 ### Pattern 4: RAG Chain
+
 ```python
 from langchain_core.runnables import RunnablePassthrough
 
@@ -111,7 +125,8 @@ rag_chain = (
     | llm
     | parser
 )
-```
+
+```text
 
 ## Key Validations
 
@@ -133,7 +148,9 @@ rag_chain = (
 ## Examples
 
 **Example 1 - Simple Chain**:
+
 ```python
+
 # User: "Create a chain that answers questions"
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -146,10 +163,13 @@ qa_chain = (
 )
 
 answer = qa_chain.invoke({"question": "What is Python?"})
-```
+
+```text
 
 **Example 2 - Parallel Analysis**:
+
 ```python
+
 # User: "Analyze text for summary and sentiment in parallel"
 from langchain_core.runnables import RunnableParallel
 
@@ -159,11 +179,15 @@ analysis = RunnableParallel(
 )
 
 result = analysis.invoke({"text": "Input text here"})
+
 # Returns: {"summary": "...", "sentiment": "..."}
-```
+
+```text
 
 **Example 3 - RAG Pipeline**:
+
 ```python
+
 # User: "Create RAG chain with retrieval"
 from langchain_core.runnables import RunnablePassthrough
 
@@ -180,4 +204,6 @@ rag = (
 )
 
 answer = rag.invoke("What is the main topic?")
-```
+
+```text
+````

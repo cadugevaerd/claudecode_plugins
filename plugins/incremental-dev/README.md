@@ -5,6 +5,7 @@ Plugin para orientar desenvolvimento iterativo/incremental seguindo os princípi
 ## 🎯 Objetivo
 
 Este plugin **NÃO implementa código automaticamente** - ele atua como um **coach** que:
+
 - ✅ Questiona funcionalidades antecipadas
 - ✅ Sugere MVPs mínimos
 - ✅ Detecta over-engineering automaticamente
@@ -14,10 +15,11 @@ Este plugin **NÃO implementa código automaticamente** - ele atua como um **coa
 
 ## 📦 Instalação
 
-```bash
+````bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install incremental-dev
-```
+
+```text
 
 ## 🧠 Conceitos Fundamentais
 
@@ -26,26 +28,35 @@ Este plugin **NÃO implementa código automaticamente** - ele atua como um **coa
 **Princípio**: Não adicione funcionalidades até que sejam REALMENTE necessárias.
 
 ❌ **Errado**:
+
 ```python
+
 # Adicionando "para o futuro"
 def process_email(email, retry=3, timeout=30, async_mode=False):
     send(email)  # retry, timeout, async_mode não usados!
-```
+
+```text
 
 ✅ **Correto**:
+
 ```python
+
 # Apenas o necessário AGORA
 def process_email(email):
     send(email)
+
 # Adicionar retry/timeout QUANDO necessário
-```
+
+```text
 
 ### 2. Evolutionary Architecture
 
 **Princípio**: Arquitetura evolui conforme requisitos surgem, não é planejada antecipadamente.
 
 ❌ **Errado (over-engineering)**:
+
 ```python
+
 # MVP com abstração complexa
 class AbstractProcessor(ABC):
     @abstractmethod
@@ -53,10 +64,13 @@ class AbstractProcessor(ABC):
 
 class EmailProcessor(AbstractProcessor):  # Única implementação!
     def process(self): ...
-```
+
+```text
 
 ✅ **Correto (evolutionary)**:
+
 ```python
+
 # Iteração 1: Função simples
 def process_email(email):
     ...
@@ -68,24 +82,29 @@ class Processor:
 class EmailProcessor(Processor): ...
 class SMSProcessor(Processor): ...
 class PushProcessor(Processor): ...
-```
+
+```text
 
 ### 3. Regra dos 3
 
 **Princípio**: Refatore quando padrão aparecer 3+ vezes, não antes.
 
-```
+```text
+
 1 ocorrência  → Código direto
 2 ocorrências → Duas funções (duplicação OK!)
 3+ ocorrências → REFATORAR (padrão confirmado)
-```
+
+```text
 
 ### 4. Incremental Development
 
 **Princípio**: Adicionar uma funcionalidade por vez, testar, depois próxima.
 
 ✅ **Workflow correto**:
-```
+
+```text
+
 Iteração 1: MVP (processa email básico)
     ↓ testar
 Iteração 2: Adiciona validação
@@ -93,7 +112,8 @@ Iteração 2: Adiciona validação
 Iteração 3: Adiciona retry
     ↓ testar
 Iteração 4: Refatora (padrões emergiram)
-```
+
+```text
 
 ## 📋 Comandos Disponíveis
 
@@ -103,13 +123,15 @@ Iteração 4: Refatora (padrões emergiram)
 
 ```bash
 /setup-project-incremental
-```
+
+```text
 
 Ou com contexto do projeto:
 
 ```bash
 /setup-project-incremental "API REST com LangGraph para processamento de documentos"
-```
+
+```text
 
 **O que faz**:
 - ✅ Cria ou atualiza `CLAUDE.md` na raiz do projeto
@@ -135,9 +157,12 @@ Claude ficará automaticamente orientado a:
 Inicia desenvolvimento incremental definindo MVP mínimo.
 
 **Uso**:
-```
+
+```text
+
 /start-incremental "Criar sistema de processamento de emails"
-```
+
+```text
 
 **O que faz**:
 1. Questiona objetivo real
@@ -146,7 +171,9 @@ Inicia desenvolvimento incremental definindo MVP mínimo.
 4. Sugere código mais simples possível
 
 **Exemplo de output**:
-```
+
+```text
+
 📦 DESENVOLVIMENTO INCREMENTAL - MVP
 
 Objetivo: Sistema de processamento de emails
@@ -173,18 +200,21 @@ def process_email(email: str) -> str:
     return "processado"
 
 Implementar este MVP? (s/n)
-```
 
----
+```text
+
 
 ### `/add-increment`
 
 Adiciona próxima funcionalidade de forma MÍNIMA e INCREMENTAL.
 
 **Uso**:
-```
+
+```text
+
 /add-increment "Adicionar validação de email"
-```
+
+```text
 
 **O que faz**:
 1. Analisa estado atual do código
@@ -194,7 +224,9 @@ Adiciona próxima funcionalidade de forma MÍNIMA e INCREMENTAL.
 5. Sugere implementação mais simples
 
 **Exemplo de output**:
-```
+
+```text
+
 🔄 ADICIONAR INCREMENTO
 
 📍 Estado Atual:
@@ -223,18 +255,21 @@ def process_email(email: str):
 💡 Validação mínima funciona. Adicionar complexidade APENAS quando necessário.
 
 Implementar? (s/n)
-```
 
----
+```text
+
 
 ### `/refactor-now`
 
 Identifica momento apropriado para refatorar (quando padrões emergem).
 
 **Uso**:
-```
+
+```text
+
 /refactor-now
-```
+
+```text
 
 **O que faz**:
 1. Escaneia código em busca de padrões
@@ -244,7 +279,9 @@ Identifica momento apropriado para refatorar (quando padrões emergem).
 5. Bloqueia refatoração prematura
 
 **Exemplo de output (refatorar)**:
-```
+
+```text
+
 🔄 ANÁLISE DE REFATORAÇÃO
 
 ✅ PADRÃO EMERGENTE DETECTADO
@@ -268,6 +305,7 @@ if "@" not in email:
     raise ValueError("Invalid email")
 
 Depois (1 lugar):
+
 # utils/validators.py (NOVO)
 def validate_email(email: str) -> bool:
     return "@" in email
@@ -278,10 +316,13 @@ Impacto:
 ✅ Mais testável
 
 Refatorar? (s/n)
-```
+
+```text
 
 **Exemplo de output (NÃO refatorar)**:
-```
+
+```text
+
 🔄 ANÁLISE DE REFATORAÇÃO
 
 ❌ REFATORAÇÃO NÃO RECOMENDADA
@@ -299,18 +340,21 @@ Continuar desenvolvendo. Refatorar quando:
 - Duplicação dificultar manutenção
 
 Continue com /add-increment
-```
 
----
+```text
+
 
 ### `/review-yagni`
 
 Revisa código identificando e removendo over-engineering.
 
 **Uso**:
-```
+
+```text
+
 /review-yagni
-```
+
+```text
 
 **O que faz**:
 1. Escaneia codebase inteira
@@ -320,7 +364,9 @@ Revisa código identificando e removendo over-engineering.
 5. Sugere simplificações concretas
 
 **Exemplo de output**:
-```
+
+```text
+
 ⚠️  REVISÃO YAGNI - OVER-ENGINEERING DETECTADO
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -370,16 +416,20 @@ Impacto:
 ✅ Config clara e simples
 
 Simplificar? (s/n)
-```
+
+```text
 
 ## 🤖 Agente: incremental-dev-coach
 
 Agente especializado em orientar (não implementar) desenvolvimento incremental.
 
 **Uso**:
-```
+
+```text
+
 /task "usar incremental-dev-coach para definir MVP de sistema de pagamentos"
-```
+
+```text
 
 **Responsabilidades**:
 - Questionar funcionalidades antecipadas
@@ -389,7 +439,9 @@ Agente especializado em orientar (não implementar) desenvolvimento incremental.
 - Identificar momento de refatorar
 
 **Exemplo de interação**:
-```
+
+```text
+
 User: "Quero criar sistema de pagamentos com múltiplos gateways,
 retry, webhooks, logging e métricas"
 
@@ -420,7 +472,8 @@ Apenas isso! Sem:
 - ❌ Métricas (adicionar quando tiver usuários)
 
 Este MVP resolve o problema inicial? (s/n)
-```
+
+```text
 
 ## 🎨 Skills (Auto-Invocadas)
 
@@ -436,7 +489,9 @@ Este MVP resolve o problema inicial? (s/n)
 - Usar frases como "para o futuro"
 
 **Exemplo de detecção automática**:
-```
+
+```text
+
 Claude: "Vou criar AbstractProcessorFactory para facilitar..."
 
 yagni-enforcer (ATIVADO AUTOMATICAMENTE):
@@ -458,9 +513,9 @@ processor = EmailProcessor()  # Direto!
 💡 Regra: Factory com 3+ produtos, não com 1
 
 Usar código simples? (s/n)
-```
 
----
+```text
+
 
 ### refactor-advisor
 
@@ -473,7 +528,9 @@ Usar código simples? (s/n)
 - Mudança exige múltiplos arquivos
 
 **Exemplo de detecção automática**:
-```
+
+```text
+
 Claude: Acabei de adicionar terceiro processador similar
 
 refactor-advisor (ATIVADO AUTOMATICAMENTE):
@@ -494,7 +551,8 @@ Impacto:
 ✅ Facilita adicionar novos processadores
 
 Refatorar agora? (s/n)
-```
+
+```text
 
 ## 📚 Exemplos Práticos Completos
 
@@ -523,7 +581,8 @@ def process_doc(text: str):
     return result
 
 # ✅ MVP funciona! Testar antes de continuar
-```
+
+```text
 
 #### Iteração 2: Adicionar Validação (quando usuário enviar dados ruins)
 
@@ -541,7 +600,8 @@ def process_doc(req: ProcessRequest):
     return result
 
 # ✅ Funciona! Testar antes de continuar
-```
+
+```text
 
 #### Iteração 3: Adicionar Retry (quando erro ocorrer)
 
@@ -559,12 +619,15 @@ def process_node(state):
             return {"result": "erro", "error": str(e)}
 
 # ✅ Funciona! Testar antes de continuar
-```
+
+```text
 
 #### Iteração 4: Refatorar (quando padrão emergir)
 
 ```python
+
 # APENAS quando tiver 3+ nodes com retry
+
 # Criar função with_retry:
 
 def with_retry(func, state, retries=1):
@@ -577,9 +640,9 @@ def with_retry(func, state, retries=1):
 
 def process_node(state):
     return with_retry(do_processing, state, retries=1)
-```
 
----
+```text
+
 
 ### Exemplo 2: Sistema de Processamento de Emails
 
@@ -594,7 +657,8 @@ def process_email(email: str) -> str:
     return "processado"
 
 # ✅ Funciona! Testar
-```
+
+```text
 
 #### Iteração 2: Adicionar Validação
 
@@ -609,7 +673,8 @@ def process_email(email: str) -> str:
     return "processado"
 
 # ✅ Funciona! Testar
-```
+
+```text
 
 #### Iteração 3: Adicionar Logging
 
@@ -624,7 +689,8 @@ def process_email(email: str) -> str:
     return "processado"
 
 # ✅ Funciona! print() é suficiente por enquanto
-```
+
+```text
 
 #### Iteração 5: Refatorar Logging (quando necessário)
 
@@ -643,15 +709,16 @@ def process_email(email: str) -> str:
     return "processado"
 
 # APENAS quando print() não for mais suficiente
-```
 
----
+```text
+
 
 ### Exemplo 3: Quando NÃO Fazer (YAGNI Violations)
 
 #### ❌ ERRADO: Factory Prematura
 
 ```python
+
 # NÃO FAZER no MVP!
 class AbstractProcessorFactory:
     def create_processor(self, type):
@@ -660,22 +727,25 @@ class AbstractProcessorFactory:
 
 factory = AbstractProcessorFactory()
 processor = factory.create_processor("email")
-```
+
+```text
 
 #### ✅ CORRETO: Criação Direta
 
 ```python
+
 # MVP correto
 processor = EmailProcessor()  # Simples e direto!
 
 # Criar factory APENAS quando tiver 3+ tipos
-```
 
----
+```text
+
 
 #### ❌ ERRADO: Configuração Complexa
 
 ```python
+
 # NÃO FAZER no MVP!
 class ConfigurationManager:
     def __init__(self):
@@ -690,23 +760,26 @@ class ConfigurationManager:
 config = ConfigurationManager()
 config.load_from_yaml("config.yaml")
 MAX_RETRIES = config.get("max_retries")
-```
+
+```text
 
 #### ✅ CORRETO: Constantes Simples
 
 ```python
+
 # MVP correto
 MAX_RETRIES = 3
 TIMEOUT = 30
 
 # Criar ConfigManager APENAS quando tiver 10+ configs
-```
 
----
+```text
+
 
 #### ❌ ERRADO: Abstração Prematura
 
 ```python
+
 # NÃO FAZER no MVP!
 class AbstractProcessor(ABC):
     @abstractmethod
@@ -714,17 +787,20 @@ class AbstractProcessor(ABC):
 
 class EmailProcessor(AbstractProcessor):  # Única implementação!
     def process(self): ...
-```
+
+```text
 
 #### ✅ CORRETO: Função Direta
 
 ```python
+
 # MVP correto
 def process_email(email):
     ...
 
 # Criar abstração APENAS quando tiver 3+ processadores
-```
+
+```text
 
 ## 🎯 Workflow Recomendado
 
@@ -732,7 +808,8 @@ def process_email(email):
 
 ```bash
 /start-incremental "Sistema de notificações"
-```
+
+```text
 
 → Define MVP mínimo
 → Lista o que NÃO fazer
@@ -750,7 +827,8 @@ Garantir que funciona antes de continuar.
 
 ```bash
 /add-increment "Adicionar validação"
-```
+
+```text
 
 → Implementa mínimo necessário
 → Testa novamente
@@ -763,7 +841,8 @@ Continue ciclo de adicionar → testar → próximo.
 
 ```bash
 /refactor-now
-```
+
+```text
 
 → Detecta padrões (3+ vezes)
 → Refatora se vale a pena
@@ -772,12 +851,12 @@ Continue ciclo de adicionar → testar → próximo.
 
 ```bash
 /review-yagni
-```
+
+```text
 
 → Identifica complexidade desnecessária
 → Simplifica código
 
----
 
 ## 📄 Gerenciamento de PRD (Product Requirements Document)
 
@@ -891,7 +970,8 @@ graph TB
     style Dev fill:#90CAF9
     style Validacao fill:#A5D6A7
     style Deploy fill:#EF9A9A
-```
+
+```text
 
 ### 📦 Comandos de PRD
 
@@ -900,18 +980,19 @@ Cria PRD v0.1 inicial junto com CLAUDE.md
 
 ```bash
 /setup-project-incremental "Sistema de processamento de documentos"
-```
+
+```text
 
 **Cria**:
 - `CLAUDE.md` - Instruções de desenvolvimento incremental
 - `docs/PRD.md v0.1` - Problema, objetivos, KPIs
 
----
 
 #### `/prd-update [fase]`
 Atualiza PRD conforme fase do projeto
 
 ```bash
+
 # Após definir MVP
 /prd-update planejamento
 
@@ -923,7 +1004,8 @@ Atualiza PRD conforme fase do projeto
 
 # Ao finalizar projeto
 /prd-update final
-```
+
+```text
 
 **Fases**:
 - `descoberta` → PRD v0.1 (Problema + Objetivos)
@@ -932,14 +1014,14 @@ Atualiza PRD conforme fase do projeto
 - `incremento` → PRD v1.x (+ Funcionalidades + Aprendizados)
 - `final` → PRD v2.0 (Documento as-built)
 
----
 
 #### `/prd-view`
 Visualiza resumo do PRD atual
 
 ```bash
 /prd-view
-```
+
+```text
 
 **Exibe**:
 - Versão e status atual
@@ -950,24 +1032,27 @@ Visualiza resumo do PRD atual
 - Timeline de evolução
 
 **Visualizações específicas**:
+
 ```bash
 /prd-view incrementos  # Apenas incrementos
 /prd-view adrs         # Apenas ADRs
 /prd-view timeline     # Timeline de evolução
-```
 
----
+```text
+
 
 #### `/prd-fix`
 Corrige ou ajusta seções específicas do PRD de forma cirúrgica
 
 ```bash
+
 # Ajuste direto
 /prd-fix "Adicionar OAuth2 como método de autenticação obrigatório"
 
 # Modo interativo (sem argumentos)
 /prd-fix
-```
+
+```text
 
 **O que faz**:
 - ✅ Modifica UMA seção específica do PRD
@@ -983,7 +1068,9 @@ Corrige ou ajusta seções específicas do PRD de forma cirúrgica
 - Ajustar cronograma
 
 **Modo Interativo**:
-```
+
+```text
+
 ═══════════════════════════════════════════
 📝 AJUSTAR PRD
 ═══════════════════════════════════════════
@@ -998,18 +1085,19 @@ Seções disponíveis:
 ...
 
 Qual seção deseja ajustar?
-```
+
+```text
 
 **Diferença /prd-update vs /prd-fix**:
 - `/prd-update`: Atualiza PRD **COMPLETO** (todas seções)
 - `/prd-fix`: Ajusta **UMA seção específica** (cirúrgico)
 
----
 
 #### `/prd-help`
 Central de ajuda interativa sobre YAGNI, PRD e uso do plugin
 
 ```bash
+
 # Pergunta direta
 /prd-help "Como criar um PRD inicial?"
 /prd-help "O que é YAGNI?"
@@ -1017,7 +1105,8 @@ Central de ajuda interativa sobre YAGNI, PRD e uso do plugin
 
 # Modo interativo (sem argumentos)
 /prd-help
-```
+
+```text
 
 **O que faz**:
 - ✅ Explica conceitos (YAGNI, MVP, Incremental, Evolutionary Architecture)
@@ -1027,7 +1116,9 @@ Central de ajuda interativa sobre YAGNI, PRD e uso do plugin
 - ✅ Exemplos práticos de uso
 
 **Menu Interativo**:
-```
+
+```text
+
 ═══════════════════════════════════════════
 ❓ AJUDA - INCREMENTAL DEV
 ═══════════════════════════════════════════
@@ -1041,7 +1132,8 @@ Central de ajuda interativa sobre YAGNI, PRD e uso do plugin
 6. 📖 Exemplos Práticos
 
 Escolha (1-6):
-```
+
+```text
 
 **Perguntas Comuns Respondidas**:
 - "O que é YAGNI?"
@@ -1051,7 +1143,6 @@ Escolha (1-6):
 - "PRD é obrigatório?"
 - "Como começar projeto novo?"
 
----
 
 ### 🏗️  ADRs (Architectural Decision Records)
 
@@ -1064,7 +1155,9 @@ PRD registra automaticamente decisões arquiteturais importantes.
 - Mudança significativa de arquitetura
 
 **Exemplo de ADR**:
+
 ```markdown
+
 #### ADR-001: Usar FastAPI FileUpload
 - **Data**: 2025-01-15
 - **Status**: Aceito
@@ -1073,13 +1166,13 @@ PRD registra automaticamente decisões arquiteturais importantes.
 - **Consequências**:
   - ✅ Melhor performance
   - ❌ Requer multipart/form-data
-```
+
+```text
 
 **Comandos que sugerem ADRs**:
 - `/refactor-now` - Após refatoração importante
 - `/prd-update incremento` - Se decisão técnica foi tomada
 
----
 
 ### 📈 Versionamento do PRD
 
@@ -1093,7 +1186,6 @@ PRD registra automaticamente decisões arquiteturais importantes.
 | Incremento N | 1.N | `/prd-update incremento` |
 | Final | 2.0 | `/prd-update final` |
 
----
 
 ### 💡 Benefícios do PRD
 
@@ -1104,11 +1196,11 @@ PRD registra automaticamente decisões arquiteturais importantes.
 ✅ **Retrospectivas**: Facilita revisões e melhorias
 ✅ **Onboarding**: Novos desenvolvedores entendem histórico
 
----
 
 ### 🎯 Workflow Completo com PRD
 
-```
+```text
+
 1. /setup-project-incremental
    → Cria CLAUDE.md + PRD v0.1
 
@@ -1136,9 +1228,9 @@ PRD registra automaticamente decisões arquiteturais importantes.
 
 10. /prd-view
     → Visualiza evolução completa do projeto
-```
 
----
+```text
+
 
 ## 📊 Métricas de Sucesso
 
@@ -1239,13 +1331,15 @@ Este plugin detecta e alerta sobre:
 
 ### Traditional (Over-Engineering)
 
-```
+```text
+
 Dia 1-3: Design completo da arquitetura
 Dia 4-10: Implementar framework elaborado
 Dia 11-15: Adicionar abstrações e patterns
 Dia 16-20: Configuração flexível
 Dia 21: Primeira feature funciona
-```
+
+```text
 
 **Problemas**:
 - 21 dias até funcionar
@@ -1254,13 +1348,15 @@ Dia 21: Primeira feature funciona
 
 ### Incremental (Este Plugin)
 
-```
+```text
+
 Dia 1: MVP funciona (feature essencial)
 Dia 2: Incremento 1 funciona
 Dia 3: Incremento 2 funciona
 Dia 4: Incremento 3 funciona
 Dia 5: Refatorar (padrões emergiram)
-```
+
+```text
 
 **Benefícios**:
 - 1 dia até funcionar
@@ -1281,11 +1377,11 @@ Repositório: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plu
 
 MIT License
 
----
 
 ## 🚀 Comece Agora
 
 ```bash
+
 # 1. Instalar plugin
 /plugin install incremental-dev
 
@@ -1303,12 +1399,13 @@ MIT License
 
 # 6. Revisar over-engineering
 /review-yagni
-```
+
+```text
 
 **Lembre-se**: Este plugin é um COACH, não um implementador. Ele orienta suas decisões para evitar over-engineering e promover desenvolvimento incremental eficiente.
 
 **Filosofia**: Funcionar > Perfeição | Simples > Complexo | Agora > Futuro
 
----
 
 **Dúvidas?** Este plugin questiona decisões, sugere MVPs, detecta over-engineering e identifica momento certo de refatorar. Use-o como orientação para manter código simples e focado no problema real.
+````

@@ -18,15 +18,17 @@ Plugin para Claude Code que automatiza o processo completo de commit Git seguind
 
 ### Adicionar o Marketplace
 
-```bash
+````bash
 /plugin marketplace add seu-usuario/claudecode-plugins
-```
+
+```text
 
 ### Instalar o Plugin
 
 ```bash
 /plugin install git-commit-helper
-```
+
+```text
 
 ## 🚀 Uso
 
@@ -36,7 +38,8 @@ Execute o processo completo de commit:
 
 ```bash
 /commit
-```
+
+```text
 
 O comando irá automaticamente:
 
@@ -52,23 +55,27 @@ O comando irá automaticamente:
 
 Você também pode usar o agente commit-assistant:
 
-```
+```text
+
 "Analise as mudanças e faça commit"
 "Gere uma mensagem de commit para estas alterações"
 "Execute os testes e faça commit se passar"
-```
+
+```text
 
 ## 🎨 Conventional Commits
 
 O plugin gera mensagens seguindo o padrão [Conventional Commits](https://www.conventionalcommits.org/):
 
-```
+```text
+
 tipo(escopo): descrição curta
 
 Corpo da mensagem (opcional)
 
 Rodapé (opcional)
-```
+
+```text
 
 ### Tipos Suportados
 
@@ -90,60 +97,76 @@ Rodapé (opcional)
 O plugin detecta automaticamente as ferramentas do seu projeto:
 
 ### JavaScript/Node.js
+
 ```bash
 npm test
 npm run lint
 npm run build
-```
+
+```text
 
 ### Python
+
 ```bash
 pytest --cov
 black . --check
 flake8 .
 mypy .
-```
+
+```text
 
 **Com UV (detecção automática)**:
+
 ```bash
 uv run pytest --cov
 uv run black . --check
 uv run flake8 .
 uv run mypy .
-```
+
+```text
 
 ### Go
+
 ```bash
 go test
 go vet
 go fmt
-```
+
+```text
 
 ### Rust
+
 ```bash
 cargo test
 cargo check
 cargo clippy
-```
+
+```text
 
 ### Terraform
+
 ```bash
 terraform fmt -check
 terraform validate
 tflint
-```
+
+```text
 
 ### Docker
+
 ```bash
 docker build -t test .
-```
+
+```text
 
 ### Scripts Customizados
+
 ```bash
 ./ci.sh
 python ci.py
 make test
-```
+
+```text
 
 ## 🐍 Suporte para UV (Universal Virtualenv)
 
@@ -167,6 +190,7 @@ O plugin detecta uv quando encontra:
 ### Exemplo de Uso
 
 **Projeto com uv**:
+
 ```bash
 $ /commit
 
@@ -179,7 +203,8 @@ $ /commit
 
 → uv run mypy .  # Type checking com uv
 ✅ Type checking: passed
-```
+
+```text
 
 **Documentação completa**: Veja `skills/uv-python-runner.md` para detalhes.
 
@@ -233,7 +258,8 @@ tipo(escopo): feat(auth): add OAuth2 authentication support
 [abc123] feat(auth): add OAuth2 authentication support
 
 🚀 Deseja fazer push? (s/n)
-```
+
+```text
 
 ### Exemplo 2: Bug Fix
 
@@ -254,7 +280,8 @@ $ /commit
 fix(parser): prevent crash on empty input
 
 ✅ Commit realizado!
-```
+
+```text
 
 ## ⚙️ Configuração
 
@@ -264,6 +291,7 @@ Crie um script `ci.sh`, `ci.py` ou `validate.sh` na raiz do projeto:
 
 ```bash
 #!/bin/bash
+
 # ci.sh
 
 set -e
@@ -278,7 +306,8 @@ echo "Building..."
 npm run build
 
 echo "✅ All checks passed!"
-```
+
+```text
 
 O plugin detectará e executará automaticamente.
 
@@ -287,10 +316,12 @@ O plugin detectará e executará automaticamente.
 Configure hooks para executar antes do commit:
 
 ```bash
+
 # .git/hooks/pre-commit
 #!/bin/bash
 npm test || exit 1
-```
+
+```text
 
 ### Commitizen (Opcional)
 
@@ -298,7 +329,8 @@ Para CLI interativo:
 
 ```bash
 npm install -g commitizen
-```
+
+```text
 
 ## 🎓 Boas Práticas
 
@@ -332,14 +364,16 @@ npm install -g commitizen
 
 Para mudanças que quebram compatibilidade:
 
-```
+```text
+
 feat(api)!: change response format to JSON:API
 
 BREAKING CHANGE: API responses now follow JSON:API spec.
 Clients must update their response parsers.
 
 Migration guide: https://docs.example.com/migration/v2
-```
+
+```text
 
 ## 🐛 Troubleshooting
 
@@ -413,8 +447,8 @@ Inspirado por ferramentas como:
 - conventional-changelog
 - semantic-release
 
----
 
 **Desenvolvido com ❤️ pela Claude Code Community**
 
 ⭐ Se este plugin foi útil, dê uma estrela no repositório!
+````

@@ -15,8 +15,6 @@ This command continues directly from `/brief`, skipping Git setup (already done)
 **Time**: ~1.5 hours
 **Result**: Python venv + dependencies + .env + LangSmith integration
 
----
-
 ## ⚠️ Prerequisites
 
 - ✅ Completed `/brief` (Microprocesso 1.1)
@@ -25,22 +23,18 @@ This command continues directly from `/brief`, skipping Git setup (already done)
 - ✅ LangSmith account (free at smith.langchain.com)
 - ✅ 1.5 hours available
 
----
-
 ## What This Command Does
 
 After running `/setup-local-observability`, you'll have:
 
 1. **Python Virtual Environment** - Isolated Python environment for your project
-2. **Core Dependencies** - langchain, anthropic, langsmith, python-dotenv installed
-3. **.env Configuration** - Secure API keys and environment variables
-4. **.env.example** - Template for team members
-5. **requirements.txt** - Locked dependency versions
-6. **.gitignore** - Protects .env from being committed
-7. **LangSmith Integration** - Full observability and tracing
-8. **Validation Scripts** - Automated environment testing
-
----
+1. **Core Dependencies** - langchain, anthropic, langsmith, python-dotenv installed
+1. **.env Configuration** - Secure API keys and environment variables
+1. **.env.example** - Template for team members
+1. **requirements.txt** - Locked dependency versions
+1. **.gitignore** - Protects .env from being committed
+1. **LangSmith Integration** - Full observability and tracing
+1. **Validation Scripts** - Automated environment testing
 
 ## 🎯 Three Operating Modes
 
@@ -52,15 +46,14 @@ Choose the mode that fits your style:
 | **Automático (Automatic)** | Speed, reproducibility | I execute all commands automatically | ~20 minutes |
 | **Misto (Mixed)** | Flexibility | You choose manual or automatic per activity | ~1.5 hours |
 
----
-
 ## 🚀 Quick Start
 
 ### Run the Command
 
-```bash
+````bash
 /setup-local-observability
-```
+
+```text
 
 The command will ask you:
 1. **Choose your mode**: Guiado, Automático, or Misto?
@@ -70,7 +63,8 @@ The command will ask you:
 
 ### Example Flow
 
-```
+```text
+
 /setup-local-observability
 → "Which mode? [G]uiado [A]utomatico [M]isto?"
 → Your response: A (Automático)
@@ -79,9 +73,9 @@ The command will ask you:
 → "✅ Dependencies installed"
 → [continue through all 8 activities]
 → "✅ Environment ready! Run: python validate_setup.py"
-```
 
----
+```text
+
 
 ## The 8 Activities (Overview)
 
@@ -96,7 +90,6 @@ The command will ask you:
 
 Each activity has templates and validation.
 
----
 
 ## 💡 Key Features
 
@@ -110,7 +103,6 @@ Each activity has templates and validation.
 
 **Reproducible**: Team can use requirements.txt to recreate environment
 
----
 
 ## 📚 For Detailed Guidance
 
@@ -122,7 +114,6 @@ For detailed information about any activity:
 
 The skill contains all the knowledge needed for each activity.
 
----
 
 ## What Happens Next
 
@@ -133,7 +124,6 @@ After successful setup:
 ✅ You're ready for Microprocesso 1.3 (Spike Agentic)
 ✅ Team can onboard quickly with requirements.txt
 
----
 
 ## See Also
 
@@ -141,6 +131,6 @@ After successful setup:
 - Skill `microprocesso-1-2` - Complete knowledge base for all 8 activities
 - Full documentation: `README.md` in plugin directory
 
----
 
 **Next**: After completing setup, run `/update-claude-md` to integrate guidance into your project's CLAUDE.md
+````

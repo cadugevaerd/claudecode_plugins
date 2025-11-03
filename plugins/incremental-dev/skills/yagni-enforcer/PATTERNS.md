@@ -2,13 +2,12 @@
 
 Exemplos de YAGNI violations e alternativas simples.
 
----
-
 ## Padrão 1: Abstração Prematura
 
 ### ❌ Violação: Classe Abstrata com 1 Implementação
 
-```python
+````python
+
 # YAGNI VIOLATION
 class AbstractProcessor(ABC):
     @abstractmethod
@@ -19,7 +18,8 @@ class EmailProcessor(AbstractProcessor):  # ÚNICA implementação!
     def process(self):
         # lógica de email
         pass
-```
+
+```text
 
 **Por que é YAGNI?**
 - Abstração sem necessidade (apenas 1 classe)
@@ -34,20 +34,22 @@ def process_email(data):
     pass
 
 # Quando aparecer 3ª tipo (SMS, Push), ENTÃO refatore para classe
-```
 
----
+```text
+
 
 ## Padrão 2: Antecipação de Futuro
 
 ### ❌ Violação: Parâmetros Não Usados
 
 ```python
+
 # YAGNI VIOLATION
 def process_email(email, retry=3, timeout=30, async_mode=False):
     # retry, timeout, async_mode NÃO são usados!
     send(email)
-```
+
+```text
 
 **Por que é YAGNI?**
 - Parâmetros não usados = over-engineering
@@ -68,15 +70,16 @@ def process_email(email, retry=3):
         except Exception:
             if attempt == retry - 1:
                 raise
-```
 
----
+```text
+
 
 ## Padrão 3: Over-Configuration
 
 ### ❌ Violação: ConfigManager para 3 Configs
 
 ```python
+
 # YAGNI VIOLATION
 class ConfigurationManager:
     def __init__(self):
@@ -96,7 +99,8 @@ class ConfigurationManager:
         pass
 
     # 150+ linhas para 3 valores!
-```
+
+```text
 
 **Por que é YAGNI?**
 - 150 linhas para gerenciar 3 valores
@@ -116,16 +120,18 @@ CONFIG = {
 timeout = CONFIG["timeout"]
 
 # QUANDO tiver 10+ configs e necessidade real:
-# ENTÃO considerar ConfigurationManager
-```
 
----
+# ENTÃO considerar ConfigurationManager
+
+```text
+
 
 ## Padrão 4: Factory Desnecessário
 
 ### ❌ Violação: Factory com 1 Produto
 
 ```python
+
 # YAGNI VIOLATION
 class ProcessorFactory:
     def create_processor(self, type):
@@ -133,7 +139,8 @@ class ProcessorFactory:
             return EmailProcessor()  # ÚNICO tipo!
 
 processor = factory.create_processor("email")
-```
+
+```text
 
 **Por que é YAGNI?**
 - Factory para 1 tipo = over-engineering
@@ -146,16 +153,18 @@ processor = factory.create_processor("email")
 processor = EmailProcessor()  # Criação direta!
 
 # QUANDO tiver 3+ tipos (Email, SMS, Push):
-# ENTÃO refatore para Factory ou Dictionary dispatch
-```
 
----
+# ENTÃO refatore para Factory ou Dictionary dispatch
+
+```text
+
 
 ## Padrão 5: Patterns Forçados
 
 ### ❌ Violação: Singleton para Função Stateless
 
 ```python
+
 # YAGNI VIOLATION
 class EmailSender:
     _instance = None
@@ -171,7 +180,8 @@ class EmailSender:
 
 sender = EmailSender()
 sender.send(email)
-```
+
+```text
 
 **Por que é YAGNI?**
 - Singleton para objeto stateless (desnecessário)
@@ -186,15 +196,16 @@ def send_email(email):
     pass
 
 send_email(email)
-```
 
----
+```text
+
 
 ## Padrão 6: Hierarquias Complexas Prematuras
 
 ### ❌ Violação: Interface → Abstract → Concrete
 
 ```python
+
 # YAGNI VIOLATION
 class IProcessor(ABC):
     @abstractmethod
@@ -213,7 +224,8 @@ class EmailProcessor(BaseProcessor):
         pass
 
 # Apenas 1 implementação concreta!
-```
+
+```text
 
 **Por que é YAGNI?**
 - Múltiplos níveis (Interface → Abstract → Concrete)
@@ -228,15 +240,16 @@ class EmailProcessor:
         pass
 
 # Refatore para hierarquia quando tiver 3+ tipos
-```
 
----
+```text
+
 
 ## Checklist de Detecção
 
 Ao implementar código, verificar:
 
-```
+```text
+
 [ ] Estou criando classe abstrata?
     ├─ Tenho 3+ implementações concretas PLANEJADAS? NÃO → ⚠️
     └─ Requisito claro de extensibilidade? NÃO → ⚠️
@@ -257,9 +270,9 @@ Ao implementar código, verificar:
 [ ] Estou criando configuração?
     ├─ São 10+ valores? NÃO → Dict simples
     └─ Complexa sem razão? → ⚠️ YAGNI
-```
 
----
+```text
+
 
 ## Regra de Ouro: "Regra dos 3"
 
@@ -270,16 +283,18 @@ Ao implementar código, verificar:
 
 Não abstraia para futuro, abstraia quando padrão realmente emergir.
 
----
 
 ## Lembrete Final
 
-```
+```text
+
 Simples > Complexo SEMPRE
 Funcionando > Elegante
 Agora > Futuro
 MVP > Overengineered
 Delete > Refactor
-```
+
+```text
 
 Se você não usa AGORA, não adicione. Padrão emergirá naturalmente.
+````

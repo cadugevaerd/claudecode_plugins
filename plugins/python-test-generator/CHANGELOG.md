@@ -14,16 +14,19 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 #### Funcionalidades Adicionadas
 
 1. **Smart Fixtures Detection**
+
    - Detecção automática de `conftest.py` e pasta `tests/fixtures/`
    - Análise de fixtures disponíveis antes de criar novos testes
    - Classificação de fixtures por tipo (database, api, mocks, data)
 
-2. **Automatic Fixtures Reuse**
+1. **Automatic Fixtures Reuse**
+
    - Reutilização automática de fixtures existentes ao criar novos testes
    - Evita duplicação de setup/teardown
    - Testes ficam mais DRY (Don't Repeat Yourself)
 
-3. **Recommended Fixtures Architecture**
+1. **Recommended Fixtures Architecture**
+
    - Padrão recomendado: `tests/conftest.py` + `tests/fixtures/`
    - Exemplos completos de:
      - `fixtures/database.py` - Database fixtures
@@ -31,7 +34,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
      - `fixtures/mocks.py` - Mock objects
      - `fixtures/data.py` - Data factories
 
-4. **Advanced Fixture Patterns**
+1. **Advanced Fixture Patterns**
+
    - Fixtures parametrizadas
    - Fixtures com cleanup (`yield`)
    - Fixtures assíncronas
@@ -40,6 +44,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 #### Documentação Expandida
 
 - **README.md**: Seção "Fixtures Architecture (v3.1.0+)" com:
+
   - Estrutura recomendada de diretórios
   - Por que usar essa arquitetura (5 benefícios)
   - Exemplos completos de conftest.py
@@ -48,11 +53,13 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
   - Padrões avançados
 
 - **Comando `/py-test`**: Atualizado com:
+
   - Menção a PHASE 3 incluindo detecção de fixtures
   - Suporte a reutilização automática
   - Referência a README para mais detalhes
 
 - **Agent `test-assistant`**: Adicionado:
+
   - Novo Step 1.5: "Detect and Analyze Available Fixtures"
   - Lógica para ler e categorizar fixtures
   - Estratégia de reutilização automática
@@ -74,13 +81,15 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 #### Backward Compatibility
 
 ✅ Totalmente compatível com v3.0.0
+
 - Plugins existentes sem fixtures continuam funcionando
 - Detecção de fixtures é opcional
 - Se não houver fixtures, agent funciona normalmente
 
 #### Exemplo de Uso
 
-```python
+````python
+
 # Estrutura recomendada
 tests/
 ├── conftest.py                 # Imports de fixtures
@@ -98,9 +107,8 @@ tests/
 def test_create_user(api_client, db_session, auth_headers):
     """Usa fixtures detectadas automaticamente"""
     ...
-```
 
----
+```text
 
 ## [3.0.0] - 2025-11-02
 
@@ -150,6 +158,7 @@ This is a MAJOR version update introducing a fundamentally smarter approach to t
 #### Impact on Users
 
 Users who run `/py-test` will now see:
+
 1. Analysis of existing tests (classified by quality)
 2. Automatic cleanup and improvements (if needed)
 3. Creation of new tests (only for real gaps)
@@ -159,9 +168,11 @@ Total test quality improves because existing tests are maintained, not just adde
 #### Migration from v2.x
 
 No action required! The command works the same way:
+
 ```bash
 /py-test          # Still works - now with better strategy
-```
+
+```text
 
 The agent internally uses the three-phase approach transparently.
 
@@ -198,10 +209,12 @@ The agent internally uses the three-phase approach transparently.
 ### Breaking Changes for Developers
 
 If you relied on immediate test creation without analysis:
+
 - Agent now pauses to analyze and optimize existing tests first
 - This is intentional - results in better test suite overall
 
 If you have many obsolete tests:
+
 - Agent will identify and offer to remove them
 - This improves test suite quality
 
@@ -227,11 +240,14 @@ None. All v2.x functionality maintained and enhanced.
 - Função `identify_remaining_gaps(coverage_data, threshold)` para detectar módulos abaixo do threshold
 - Função `create_additional_tests_parallel(gaps)` para criar testes focados nas linhas faltantes
 - Output iterativo visual com box drawing:
-  ```
-  ╔═══════════════════════════════════════════════════════════════╗
-  ║ 🔄 ITERATION 1/5 - Coverage: 72.0%
-  ╚═══════════════════════════════════════════════════════════════╝
-  ```
+````
+
+╔═══════════════════════════════════════════════════════════════╗
+║ 🔄 ITERATION 1/5 - Coverage: 72.0%
+╚═══════════════════════════════════════════════════════════════╝
+
+````
+
 - Mensagens informativas sobre gap de cobertura e progresso
 - Proteção contra loop infinito (max 5 iterações)
 - Detecção de situações sem saída (código irracessível, branches complexos)
@@ -254,7 +270,8 @@ None. All v2.x functionality maintained and enhanced.
 
 ### Exemplo de Output
 
-```
+```text
+
 ╔═══════════════════════════════════════════════════════════════╗
 ║ 🔄 ITERATION 1/5 - Coverage: 72.0%
 ╚═══════════════════════════════════════════════════════════════╝
@@ -265,9 +282,9 @@ None. All v2.x functionality maintained and enhanced.
 🔄 AUTOMATICALLY creating additional tests to improve coverage...
 
 📝 Creating tests for 3 modules with insufficient coverage:
-   - src/calculator.py (65.0% → target: 80%)
-   - src/validator.py (70.0% → target: 80%)
-   - src/formatter.py (75.0% → target: 80%)
+ - src/calculator.py (65.0% → target: 80%)
+ - src/validator.py (70.0% → target: 80%)
+ - src/formatter.py (75.0% → target: 80%)
 
 🚀 Creating 3 test files in PARALLEL...
 ✅ Created additional tests (10 new tests)
@@ -281,7 +298,8 @@ None. All v2.x functionality maintained and enhanced.
 ✅ TARGET ACHIEVED: Coverage is now 82.0% (≥80%)
 
 Test generation completed successfully.
-```
+
+```text
 
 ## [2.0.2] - 2025-11-02
 
@@ -305,20 +323,21 @@ Test generation completed successfully.
 
 - **Test generation now respects 80% coverage threshold**: `/py-test` command will NOT generate new tests if project already has ≥80% coverage, unless explicitly requested by user. This prevents unnecessary test creation and maintains focus on untested code.
 
-  **Migration**: If you relied on automatic test generation regardless of coverage, you'll need to explicitly confirm test creation when coverage is already sufficient (≥80%). When prompted:
-  - Respond "y" to create tests anyway
-  - Respond "n" to abort (tests won't be created)
+**Migration**: If you relied on automatic test generation regardless of coverage, you'll need to explicitly confirm test creation when coverage is already sufficient (≥80%). When prompted:
+- Respond "y" to create tests anyway
+- Respond "n" to abort (tests won't be created)
 
-  **Rationale**: This breaking change aligns with industry best practice (80% coverage target) and prevents test suite bloat.
+**Rationale**: This breaking change aligns with industry best practice (80% coverage target) and prevents test suite bloat.
 
 ### Adicionado
 
 - **New command `/update-claude-md`**: Updates project's CLAUDE.md with python-test-generator configuration following best practices (≤40 lines, progressive disclosure, agent documentation)
 - **Automatic detection and removal of obsolete tests**: `/py-test` now identifies and removes unnecessary tests (functions no longer exist, duplicates, no assertions, invalid mocks)
 - **Conditional removal of failing tests**: `/py-test` detects failing tests and offers removal ONLY if coverage remains ≥80% after removal
-  - If coverage ≥80% after removal: offers to remove failing tests
-  - If coverage <80% after removal: warns user to fix tests manually instead
-  - Automatic coverage impact analysis before removal
+- If coverage ≥80% after removal: offers to remove failing tests
+- If coverage <80% after removal: warns user to fix tests manually instead
+- Automatic coverage impact analysis before removal
+
 - Coverage threshold verification in `/py-test` command
 - User prompt when coverage ≥80%: asks if tests should be created anyway
 - User prompt before removing obsolete tests: lists all obsolete tests with justification
@@ -420,3 +439,4 @@ Test generation completed successfully.
 - Criação paralela de múltiplos arquivos de teste (até 80% mais rápido)
 - AAA pattern (Arrange-Act-Assert)
 - Keywords: `python`, `testing`, `unit-tests`, `coverage`, `pytest`, `generator`, `mock`
+````

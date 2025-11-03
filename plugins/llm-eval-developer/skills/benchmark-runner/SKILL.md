@@ -4,6 +4,10 @@ description: Executa benchmarks comparativos de LLMs usando LangChain/LangGraph 
 allowed-tools: Read, Write, Bash, Grep
 ---
 
+name: benchmark-runner
+description: Executa benchmarks comparativos de LLMs usando LangChain/LangGraph e LangSmith. Use quando comparar múltiplos modelos, criar comparative evaluation, ou executar performance testing de LLMs.
+allowed-tools: Read, Write, Bash, Grep
+
 # Benchmark Runner Skill
 
 ## Instructions
@@ -13,6 +17,7 @@ Skill para executar benchmarks comparativos de LLMs automaticamente usando **Lan
 ### Step 1: Detect Benchmarking Need
 
 Quando usuário menciona termos como:
+
 - "comparar modelos", "benchmark LLMs"
 - "qual modelo melhor", "performance comparison"
 - "gpt vs claude", "model A vs model B"
@@ -24,21 +29,25 @@ Quando usuário menciona termos como:
 Determinar tipo de benchmark necessário:
 
 **Simple Comparison** (2-3 modelos, métricas básicas):
+
 - Usar LCEL batch
 - LangSmith evaluate() API
 - Evaluators nativos
 
 **Complex Comparison** (4+ modelos, métricas avançadas):
+
 - Usar LangGraph parallel workflows
 - Custom evaluators
 - Multiple evaluation rounds
 
 **Cost-Performance Analysis**:
+
 - Focus em cost-efficiency
 - LangSmith automatic cost tracking
 - Trade-off analysis
 
 **Latency Testing**:
+
 - Custom callbacks para P95/P99
 - TTFT tracking
 - SLA validation
@@ -48,21 +57,25 @@ Determinar tipo de benchmark necessário:
 Coletar informações necessárias:
 
 1. **Models to compare**:
+
    - Providers: OpenAI, Anthropic, Google
    - Models: gpt-4o, claude-3.5-sonnet, gemini-1.5-pro, etc.
    - Configurations: temperature, max_tokens
 
-2. **Dataset**:
+1. **Dataset**:
+
    - LangSmith dataset (preferred)
    - MMLU, HumanEval, TruthfulQA
    - Custom local dataset
 
-3. **Metrics**:
+1. **Metrics**:
+
    - **Quality**: accuracy, relevance, hallucination (LangSmith evaluators)
    - **Performance**: latency P95/P99, TTFT (callbacks)
    - **Cost**: token usage, costs (LangSmith tracking)
 
-4. **Execution mode**:
+1. **Execution mode**:
+
    - Parallel (LCEL batch ou LangGraph)
    - Sequential (menor custo)
 
@@ -72,7 +85,7 @@ Gerar código completo usando template apropriado:
 
 #### Template 1: LCEL Batch Benchmark (Simple)
 
-```python
+````python
 """
 Simple Benchmark usando LCEL Batch
 Compara múltiplos modelos em paralelo.
@@ -169,7 +182,8 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-```
+
+```text
 
 #### Template 2: LangGraph Parallel Benchmark (Complex)
 
@@ -256,7 +270,8 @@ result = graph.invoke({"input": "Explain quantum computing"})
 
 for model in result["responses"].keys():
     print(f"{model}: score={result['scores'][model]:.2f}, latency={result['latencies'][model]:.0f}ms")
-```
+
+```text
 
 ### Step 5: Execute and Report
 
@@ -364,7 +379,8 @@ results = evaluate(
     evaluators=[...],
     project_name="benchmark-project"
 )
-```
+
+```text
 
 ### Pattern 2: Custom Callbacks for Latency
 
@@ -380,7 +396,8 @@ class LatencyCallback(BaseCallbackHandler):
     def on_llm_end(self, *args, **kwargs):
         latency = (time.perf_counter() - self.start) * 1000
         self.latencies.append(latency)
-```
+
+```text
 
 ### Pattern 3: Parallel Execution
 
@@ -391,26 +408,32 @@ results = chain.batch(
     inputs,
     config=RunnableConfig(max_concurrency=10)
 )
-```
+
+```text
 
 **LangGraph para complex workflows**:
 
 ```python
 workflow = StateGraph(State)
+
 # Add parallel nodes
+
 # All execute concurrently
-```
+
+```text
 
 ### Pattern 4: Winner Analysis
 
 Sempre reportar winners por categoria:
 
-```
+```text
+
 🏆 Winners:
   Best Accuracy: gpt-4o (0.872)
   Fastest: claude-3.5-sonnet (891ms P95)
   Best Value: gemini-1.5-pro (196 acc/$)
-```
+
+```text
 
 ## Integration with LangSmith
 
@@ -427,7 +450,8 @@ client.create_examples(
     outputs=[{"output": "..."}],
     dataset_id=dataset.id
 )
-```
+
+```text
 
 ### Configure Cost Tracking
 
@@ -439,13 +463,16 @@ Via LangSmith UI:
 ### Access Results
 
 ```python
+
 # Via API
 project = client.read_project("benchmark-project")
 print(f"Total Cost: ${project.total_cost}")
 
 # Via UI
+
 # https://smith.langchain.com/o/org/projects/p/benchmark-project
-```
+
+```text
 
 ## References
 
@@ -453,3 +480,4 @@ print(f"Total Cost: ${project.total_cost}")
 - [LCEL Batch](https://python.langchain.com/docs/how_to/parallel/)
 - [LangGraph Parallel](https://langchain-ai.github.io/langgraph/how-tos/)
 - [LangChain Callbacks](https://python.langchain.com/docs/integrations/callbacks/)
+````

@@ -12,6 +12,7 @@ Expert in creating comprehensive unit and integration tests for **LangChain** an
 ## What This Skill Does
 
 Creates production-quality tests for LangChain/LangGraph applications including:
+
 - LCEL chain testing with pipe operators (`|`)
 - LangGraph state management and workflow testing
 - Individual node-level testing and partial execution
@@ -23,12 +24,14 @@ Creates production-quality tests for LangChain/LangGraph applications including:
 ## When Claude Should Auto-Invoke This
 
 ✅ **Auto-invoke when you detect trigger terms**:
+
 - User shows code with `from langchain` or `from langgraph` imports
 - Mentions: "test", "unit test", "integration test", "coverage", "mock", "LLM"
 - Specific triggers: "test chain", "test graph", "mock LLM", "write tests for agent", "validate trajectory"
 - Technical terms: "LCEL", "pipe operator", "StateGraph", "LangGraph nodes", "GenericFakeChatModel"
 
 ✅ **Auto-invoke when user asks**:
+
 - "How do I test this LangChain chain?"
 - "Generate unit tests for my LangGraph workflow"
 - "Write tests for LLM agent with trajectory validation"
@@ -40,6 +43,7 @@ Creates production-quality tests for LangChain/LangGraph applications including:
 ### 1. Detect LangChain/LangGraph Context
 
 When you detect code using:
+
 - `from langchain...` or `from langgraph...` imports
 - Classes: `StateGraph`, `MessageGraph`, `CompiledGraph`, `ChatOpenAI`, `ChatAnthropic`
 - LCEL chains with pipe operator (`|`)
@@ -50,22 +54,26 @@ When you detect code using:
 ### 2. Choose Appropriate Test Pattern
 
 **For LangGraph workflows**:
+
 - **Pattern 1 (State-based)**: Test full graph execution with state transformations
 - **Pattern 2 (Node-level)**: Test individual nodes in isolation
 - **Pattern 3 (Partial execution)**: Test interrupts and state injection for human-in-the-loop
 
 **For LangChain chains**:
+
 - **Pattern 4 (Mocking)**: Unit test chains with `GenericFakeChatModel` for determinism
 - **Pattern 5 (Trajectory match)**: Validate agent action sequences with `agentevals`
 - **Pattern 6 (LLM-as-judge)**: Use LLM to evaluate response quality
 
 **For integration tests**:
+
 - **Pattern 7 (VCR recording)**: Record real API calls on first run, replay in subsequent tests
 
 ### 3. Create Tests Following AAA (Arrange-Act-Assert)
 
 All tests must follow this pattern for clarity:
-```python
+
+````python
 def test_feature():
     """Test: Clear scenario description"""
     # Arrange - Set up state, mocks, fixtures
@@ -76,25 +84,23 @@ def test_feature():
 
     # Assert - Validate output
     ...
-```
+
+```text
 
 ### 4. Use Correct Pattern for Scenario
 
 Analyze the code and user request, then apply one of the 7 patterns below.
 
----
-
 ## When to Use (Full Context)
 
 Apply this skill automatically when you encounter:
+
 - Code containing `langchain` or `langgraph` imports
 - Requests to test conversational AI, chatbots, agents, workflows
 - Questions about mocking LLMs or testing chains
 - Mentions of LCEL, pipe operators, graphs, state management
 - Trajectory validation or agent testing scenarios
 - Integration testing with real LLM APIs
-
----
 
 ## Test Patterns
 
@@ -136,14 +142,13 @@ def test_basic_graph_execution():
 
     # Assert
     assert result["my_key"] == "hello"
-```
+
+```text
 
 **Apply when**:
 - Testing full graph workflow end-to-end
 - Validating state transformations across graph execution
 - Verifying checkpointing and thread management
-
----
 
 ### Pattern 2: Individual Node Testing
 
@@ -178,14 +183,13 @@ def test_node_with_dependencies():
 
     # Assert
     assert result["result"] == 10
-```
+
+```text
 
 **Apply when**:
 - Testing node-level logic in isolation
 - Validating individual data transformations
 - Debugging specific node issues without full graph context
-
----
 
 ### Pattern 3: Partial Execution (Interrupts)
 
@@ -256,14 +260,13 @@ def test_update_state_mid_execution():
 
     # Assert
     assert result["my_key"] == "injected_value"
-```
+
+```text
 
 **Apply when**:
 - Testing human-in-the-loop workflows with user input
 - Simulating workflow pauses and resumptions
 - Injecting state to test specific execution paths
-
----
 
 ### Pattern 4: Mocking LLM (GenericFakeChatModel)
 
@@ -334,15 +337,14 @@ def test_node_with_tool_calls():
 
     # Assert
     assert result2["response"] == "Final response based on tool"
-```
+
+```text
 
 **Apply when**:
 - Unit testing chains and graphs with LLMs
 - Avoiding API costs in tests
 - Guaranteeing deterministic responses
 - Testing tool calling behavior
-
----
 
 ### Pattern 5: Trajectory Match Evaluator (AgentEvals)
 
@@ -447,7 +449,8 @@ def test_trajectory_subset_match():
 
     # Assert
     assert evaluation["score"] is True
-```
+
+```text
 
 **Apply when**:
 - Validating agent executed correct actions
@@ -460,8 +463,6 @@ def test_trajectory_subset_match():
 - `unordered`: Same content, order doesn't matter
 - `subset`: Actual trajectory contains at least expected actions
 - `superset`: Actual trajectory is subset of expected actions
-
----
 
 ### Pattern 6: LLM-as-Judge Evaluator
 
@@ -519,7 +520,8 @@ async def test_async_llm_judge():
 
     # Assert
     assert evaluation["score"] is True
-```
+
+```text
 
 **Available prompts**:
 - `TRAJECTORY_ACCURACY_PROMPT`: Evaluates if agent answered correctly
@@ -534,8 +536,6 @@ async def test_async_llm_judge():
 - Validating agent achieved objective
 - Tests where exact match isn't feasible
 - Evaluating conversational quality or creativity
-
----
 
 ### Pattern 7: VCR Recording (HTTP Replay)
 
@@ -600,11 +600,13 @@ def test_agent_record_new_episodes():
     # This is new, will be recorded
     result2 = agent.invoke({"input": "What's 3+3?"})
     assert "6" in result2["output"]
-```
+
+```text
 
 **pytest-recording configuration**:
 
 ```python
+
 # conftest.py
 import pytest
 
@@ -618,7 +620,8 @@ def vcr_config():
         "match_on": ["method", "scheme", "host", "port", "path", "query"],
         "cassette_library_dir": "tests/cassettes",  # Where to save cassettes
     }
-```
+
+```text
 
 **Record modes**:
 - `once`: Record once, error if cassette missing later
@@ -633,7 +636,9 @@ def vcr_config():
 - Testing different LLM models without API keys in CI
 
 **Managing cassettes**:
+
 ```bash
+
 # Re-record all cassettes
 pytest --record-mode=all
 
@@ -642,15 +647,15 @@ pytest tests/test_agent.py --record-mode=all
 
 # Validate cassettes exist (CI/CD)
 pytest --record-mode=none
-```
 
----
+```text
 
 ## Dependencies
 
 To use these patterns, ensure your project has:
 
 ```toml
+
 # pyproject.toml
 [tool.poetry.dependencies]
 langchain = "^0.3.0"
@@ -663,14 +668,15 @@ pytest-asyncio = "^0.23.0"
 agentevals = "^0.1.0"  # For trajectory validation
 vcrpy = "^6.0.0"  # For HTTP recording/replay
 pytest-recording = "^0.13.0"  # pytest-vcr integration
-```
+
+```text
 
 ```bash
+
 # pip/uv installation
 pip install langchain langchain-core langgraph pytest pytest-asyncio agentevals vcrpy pytest-recording
-```
 
----
+```text
 
 ## Real-World Examples
 
@@ -773,7 +779,8 @@ class TestAgentGraph:
 
         # Assert - Stopped at router
         assert result["next_action"] == "continue"
-```
+
+```text
 
 ### Example 2: LangChain Chain with Mocked LLM
 
@@ -823,15 +830,15 @@ def test_chain_with_patch_mocking(mock_prompt, mock_chat):
     # Assert
     assert "Patched response" in result
     mock_chain.invoke.assert_called_once()
-```
 
----
+```text
 
 ## Best Practices
 
 ### 1. Always Use Factories for Graphs
 
 ```python
+
 # ✅ GOOD - Reusable factory
 def create_graph() -> StateGraph:
     graph = StateGraph(MyState)
@@ -841,81 +848,101 @@ def create_graph() -> StateGraph:
 def test_feature():
     graph = create_graph()
     compiled = graph.compile()
-```
+
+```text
 
 ```python
+
 # ❌ BAD - Global graph
 GRAPH = StateGraph(MyState)
+
 # ... can cause shared state between tests
-```
+
+```text
 
 ### 2. Use MemorySaver for Checkpointer Tests
 
 ```python
+
 # ✅ GOOD - In-memory checkpointer
 from langgraph.checkpoint.memory import MemorySaver
 
 checkpointer = MemorySaver()
 compiled = graph.compile(checkpointer=checkpointer)
-```
+
+```text
 
 ```python
+
 # ❌ BAD - Persistent checkpointer in tests
 from langgraph.checkpoint.sqlite import SqliteSaver
 
 checkpointer = SqliteSaver("test.db")  # Creates file, slow
-```
+
+```text
 
 ### 3. Mock LLMs for Unit Tests
 
 ```python
+
 # ✅ GOOD - Deterministic mock
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 
 mock_llm = GenericFakeChatModel(messages=iter([
     AIMessage(content="Expected response")
 ]))
-```
+
+```text
 
 ```python
+
 # ❌ BAD - Real LLM in unit test
 from langchain_openai import ChatOpenAI
 
 llm = ChatOpenAI()  # Costs $$$, not deterministic
-```
+
+```text
 
 ### 4. Use VCR for Integration Tests
 
 ```python
+
 # ✅ GOOD - Integration test with VCR
 @pytest.mark.vcr()
 def test_integration_with_real_api():
     # Records first time, replays after
     agent = create_agent()
     result = agent.invoke(...)
-```
+
+```text
 
 ### 5. Validate Trajectories with AgentEvals
 
 ```python
+
 # ✅ GOOD - Structured validation
 from agentevals.trajectory.match import create_trajectory_match_evaluator
 
 evaluator = create_trajectory_match_evaluator(trajectory_match_mode="subset")
 evaluation = evaluator(outputs=result, reference_outputs=expected)
 assert evaluation["score"] is True
-```
+
+```text
 
 ```python
+
 # ❌ BAD - Fragile manual validation
 assert len(result["messages"]) == 4
 assert result["messages"][1].tool_calls[0].name == "search"
+
 # Fragile, breaks with small changes
-```
+
+```text
 
 ### 6. Test Individual Nodes First
 
 ```python
+
 # ✅ GOOD - Test nodes in isolation first
 def test_individual_node():
     graph = create_graph()
@@ -926,15 +953,15 @@ def test_individual_node():
 def test_full_graph():
     # Then test full graph
     ...
-```
 
----
+```text
 
 ## Common Pitfalls
 
 ### ❌ Not using thread_id in checkpointer
 
 ```python
+
 # ERROR - Missing thread_id
 result = compiled.invoke({"key": "value"})
 
@@ -943,11 +970,13 @@ result = compiled.invoke(
     {"key": "value"},
     config={"configurable": {"thread_id": "1"}}
 )
-```
+
+```text
 
 ### ❌ Forgetting to compile graph
 
 ```python
+
 # ERROR
 graph = StateGraph(MyState)
 result = graph.invoke(...)  # StateGraph is not invocable
@@ -955,31 +984,35 @@ result = graph.invoke(...)  # StateGraph is not invocable
 # CORRECT
 compiled = graph.compile()
 result = compiled.invoke(...)
-```
+
+```text
 
 ### ❌ Incorrect pipe operator mocking
 
 ```python
+
 # ERROR - Incomplete pipe mock
 mock_prompt.return_value | mock_llm  # Doesn't work
 
 # CORRECT
 mock_prompt.return_value.__or__ = Mock(return_value=mock_chain)
-```
+
+```text
 
 ### ❌ Not installing test dependencies
 
 ```bash
+
 # ERROR - Fails to import agentevals
 pytest test_agent.py
+
 # ModuleNotFoundError: No module named 'agentevals'
 
 # CORRECT
 pip install agentevals pytest-recording
 pytest test_agent.py
-```
 
----
+```text
 
 ## Summary
 
@@ -994,3 +1027,4 @@ This skill provides **7 complete test patterns** for LangChain/LangGraph:
 7. **VCR Recording**: Record/replay HTTP calls for integration tests
 
 **Auto-invoke when**: Detecting LangChain, LangGraph, LCEL chains, graphs, agents, or requests to test LLMs.
+````

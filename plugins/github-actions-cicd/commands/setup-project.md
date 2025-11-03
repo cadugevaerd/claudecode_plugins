@@ -9,6 +9,7 @@ Configura o arquivo `CLAUDE.md` do projeto atual com instruções para que Claud
 ## 🎯 Objetivo
 
 Adicionar ao `CLAUDE.md` instruções para que Claude:
+
 - Siga princípio YAGNI ao criar workflows
 - Use versões específicas de actions (nunca @latest)
 - Aplique boas práticas de segurança
@@ -18,15 +19,17 @@ Adicionar ao `CLAUDE.md` instruções para que Claude:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /cicd-setup-project
-```
+
+```text
 
 Ou com contexto do projeto:
 
 ```bash
 /cicd-setup-project "projeto Python com uv, pytest e deploy AWS"
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -55,14 +58,14 @@ project_info = {
     "has_workflows": os.path.exists(".github/workflows"),
     "deploy_target": detect_deploy_target(),  # AWS, GCP, Vercel, etc.
 }
-```
+
+```text
 
 ### 3. Adicionar Instruções do Plugin
 
 Adicionar seção formatada ao CLAUDE.md:
 
 ```markdown
----
 
 # GitHub Actions CI/CD
 
@@ -94,6 +97,7 @@ Adicionar seção formatada ao CLAUDE.md:
 ## Estrutura de Workflows
 
 ### Nível 1 - MVP (COMEÇAR AQUI)
+
 ```yaml
 name: CI
 on: [push, pull_request]
@@ -108,33 +112,43 @@ jobs:
       - run: uv python install
       - run: uv sync
       - run: uv run pytest
-```
+
+```text
 
 ### Nível 2 - Com Cache (quando installs ficarem lentos)
+
 ```yaml
+
 # Adicionar apenas quando necessário
 - uses: actions/cache@v4
   with:
     path: ~/.cache/uv
     key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-```
+
+```text
 
 ### Nível 3 - Matrix (quando precisar múltiplas versões)
+
 ```yaml
+
 # Adicionar apenas quando necessário
 strategy:
   matrix:
     python-version: ['3.9', '3.10', '3.11']
-```
+
+```text
 
 ### Nível 4 - Deploy (quando houver ambiente)
+
 ```yaml
+
 # Adicionar apenas quando houver staging/prod configurado
 deploy:
   needs: test
   if: github.ref == 'refs/heads/main'
   # ... deploy steps
-```
+
+```text
 
 ## Actions Recomendadas
 
@@ -169,7 +183,9 @@ Este plugin fornece **2 agentes especializados** que Claude pode invocar automat
 - Aplicar "Regra dos 3" para refatoração
 
 **Invocação automática por contexto**:
+
 ```python
+
 # Usuário: "criar workflow CI para este projeto"
 Task("Usar cicd-assistant para criar workflow MVP para projeto Python com uv")
 
@@ -178,7 +194,8 @@ Task("Usar cicd-assistant para adicionar cache ao workflow quando necessário")
 
 # Usuário: "evoluir workflow para produção"
 Task("Usar cicd-assistant para analisar e sugerir próximo passo incremental")
-```
+
+```text
 
 **Conhecimento especializado**:
 - Detecção automática de linguagem/framework
@@ -197,7 +214,9 @@ Task("Usar cicd-assistant para analisar e sugerir próximo passo incremental")
 - Identificar anti-patterns
 
 **Invocação automática por contexto**:
+
 ```python
+
 # Usuário: "revisar meus workflows"
 Task("Usar workflow-analyzer para analisar .github/workflows/ci.yml")
 
@@ -206,7 +225,8 @@ Task("Usar workflow-analyzer para verificar versões de actions")
 
 # Usuário: "analisar segurança dos workflows"
 Task("Usar workflow-analyzer para auditoria de segurança completa")
-```
+
+```text
 
 **Conhecimento especializado**:
 - Validação de sintaxe YAML
@@ -261,14 +281,15 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
    ```python
    Task("Usar cicd-assistant para criar workflow básico de CI para projeto Python com uv")
    Task("Usar workflow-analyzer para analisar workflow e sugerir próximo passo incremental")
-   ```
+````
 
 3. **Seguir princípios dos agentes**:
+
    - YAGNI: Não adicionar complexidade prematura
    - Incremental: Evoluir baseado em evidências
    - Security First: Sempre aplicar boas práticas
 
-4. **Documentar decisões tomadas pelo agente**
+1. **Documentar decisões tomadas pelo agente**
 
 ### Exemplos de Invocação por Contexto
 
@@ -283,7 +304,8 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
 
 ### Fluxo Típico de Trabalho
 
-```
+````text
+
 ┌─────────────────────────────────────────┐
 │ Usuário: "melhorar meu workflow CI"     │
 └──────────────┬──────────────────────────┘
@@ -311,7 +333,8 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
 ┌─────────────────────────────────────────┐
 │ Resultado: Workflow otimizado e seguro  │
 └─────────────────────────────────────────┘
-```
+
+```text
 
 ## Scripts Python para CI/CD
 
@@ -323,7 +346,9 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
 - ✅ Integrações com APIs
 
 **Exemplo de estrutura**:
-```
+
+```text
+
 .github/
 ├─ workflows/
 │  └─ ci.yml
@@ -331,7 +356,8 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
    ├─ validate_workflow.py
    ├─ check_versions.py
    └─ requirements.txt  # ou use uv
-```
+
+```text
 
 ## Boas Práticas de Segurança
 
@@ -340,9 +366,10 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
    permissions:
      contents: read      # Padrão
      pull-requests: write  # Só quando necessário
-   ```
+````
 
 2. **Secrets**
+
    ```yaml
    # ✅ Correto
    env:
@@ -352,7 +379,8 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
    run: echo "API_KEY=${{ secrets.API_KEY }}"  # Expõe em logs
    ```
 
-3. **OIDC para Cloud**
+1. **OIDC para Cloud**
+
    ```yaml
    # Preferir OIDC ao invés de credentials estáticas
    permissions:
@@ -362,41 +390,48 @@ Ao receber solicitações relacionadas a GitHub Actions, Claude deve:
 ## Troubleshooting
 
 ### Workflow não executa
+
 - Verificar triggers (`on:`)
 - Verificar permissions
 - Verificar branch name
 
 ### Actions desatualizadas
+
 - Executar `/cicd-check`
 - Executar `/cicd-update`
 
 ### Falhas de segurança
+
 - Revisar permissions
 - Verificar exposure de secrets
 - Pin actions com SHA
 
----
-```
+````text
 
 ### 4. Adicionar Informações Específicas do Projeto
 
 **Customizar seção baseado no projeto**:
 
 ```python
+
 # Se projeto usa uv
 if project_info["package_manager"] == "uv":
     add_section("""
+
 ## Projeto Python com uv
 
 ### Setup Recomendado
+
 ```yaml
 - uses: astral-sh/setup-uv@v6
 - run: uv python install
 - run: uv sync
 - run: uv run pytest
-```
+
+```text
 
 ### Cache uv
+
 ```yaml
 - uses: actions/cache@v4
   with:
@@ -404,30 +439,38 @@ if project_info["package_manager"] == "uv":
       ~/.cache/uv
       .venv
     key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-```
+
+```text
+
 """)
 
 # Se projeto tem Docker
 if project_info["has_docker"]:
     add_section("""
+
 ## Docker Build
 
 ### Build e Push
+
 ```yaml
 - uses: docker/build-push-action@v5
   with:
     context: .
     push: true
     tags: user/app:latest
-```
+
+```text
+
 """)
 
 # Se projeto tem deploy AWS
 if project_info["deploy_target"] == "aws":
     add_section("""
+
 ## Deploy AWS
 
 ### OIDC Configuration (Recomendado)
+
 ```yaml
 permissions:
   id-token: write
@@ -437,15 +480,19 @@ permissions:
   with:
     role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
     aws-region: us-east-1
-```
+
+```text
+
 """)
-```
+
+```text
 
 ### 5. Confirmar com Usuário
 
 Mostrar preview:
 
-```
+```text
+
 ═══════════════════════════════════════════
 📝 SETUP GITHUB ACTIONS CI/CD
 ═══════════════════════════════════════════
@@ -461,12 +508,12 @@ Informações detectadas do projeto:
 └─ Workflows existentes: Não
 
 Conteúdo a ser adicionado:
----
+
 [Preview das instruções personalizadas]
----
 
 Adicionar ao CLAUDE.md? (s/n)
-```
+
+```text
 
 ### 6. Criar/Atualizar Arquivo
 
@@ -478,7 +525,8 @@ Se confirmado:
 
 ### 7. Confirmar Sucesso
 
-```
+```text
+
 ✅ CLAUDE.md configurado com sucesso!
 
 Instruções de GitHub Actions CI/CD adicionadas.
@@ -489,52 +537,63 @@ Próximos passos:
 3. Claude agora está orientado para CI/CD incremental!
 
 ═══════════════════════════════════════════
-```
+
+```text
 
 ## 🎨 Templates por Linguagem/Framework
 
 ### Python com uv
+
 ```yaml
 - uses: astral-sh/setup-uv@v6
 - run: uv python install
 - run: uv sync
 - run: uv run pytest
-```
+
+```text
 
 ### Python com poetry
+
 ```yaml
 - uses: actions/setup-python@v5
 - uses: snok/install-poetry@v1
 - run: poetry install
 - run: poetry run pytest
-```
+
+```text
 
 ### Node.js
+
 ```yaml
 - uses: actions/setup-node@v4
   with:
     node-version: '20'
 - run: npm install
 - run: npm test
-```
+
+```text
 
 ### Go
+
 ```yaml
 - uses: actions/setup-go@v5
   with:
     go-version: '1.21'
 - run: go mod download
 - run: go test -v ./...
-```
+
+```text
 
 ### Rust
+
 ```yaml
 - uses: actions-rs/toolchain@v1
   with:
     toolchain: stable
 - run: cargo build --release
 - run: cargo test
-```
+
+```text
 
 ## ⚠️ IMPORTANTE
 
@@ -554,3 +613,4 @@ Próximos passos:
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [GitHub Actions Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
 - [YAGNI Principle](https://martinfowler.com/bliki/Yagni.html)
+````

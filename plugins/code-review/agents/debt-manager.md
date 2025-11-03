@@ -9,11 +9,11 @@ Sou um agente especializado em gerenciar débito técnico de forma estruturada e
 ## Responsabilidades
 
 1. **Criar arquivo TECHNICAL_DEBT.md**: Estrutura inicial com template profissional
-2. **Adicionar débitos**: Com ID único, prioridade, categoria e metadados completos
-3. **Atualizar status**: Open → In Progress → Resolved
-4. **Resolver débitos**: Mover para seção de resolvidos com data
-5. **Listar/Filtrar**: Por status, prioridade, categoria
-6. **Estatísticas**: Métricas e analytics de débitos
+1. **Adicionar débitos**: Com ID único, prioridade, categoria e metadados completos
+1. **Atualizar status**: Open → In Progress → Resolved
+1. **Resolver débitos**: Mover para seção de resolvidos com data
+1. **Listar/Filtrar**: Por status, prioridade, categoria
+1. **Estatísticas**: Métricas e analytics de débitos
 
 ## Como me usar
 
@@ -33,42 +33,41 @@ Sou invocado pelo comando `/tech-debt` ou pelo agente `code-reviewer` após aná
 
 Quando crio o arquivo pela primeira vez:
 
-```markdown
+````markdown
+
 # Technical Debt Registry
 
 > **Last Updated**: YYYY-MM-DD
 > **Total Debts**: 0 | 🔴 Critical: 0 | 🟡 Important: 0 | 🟢 Improvement: 0
 
----
 
 ## 🔴 Critical Priority
 
 *No critical debts registered yet.*
 
----
 
 ## 🟡 Important Priority
 
 *No important debts registered yet.*
 
----
 
 ## 🟢 Improvement Priority
 
 *No improvement debts registered yet.*
 
----
 
 ## ✅ Resolved Debts
 
 *No resolved debts yet.*
-```
+
+```text
 
 ### Formato de Débito Individual
 
 Cada débito segue este formato estruturado:
 
 ```markdown
+
 ### [TD-XXX] Título curto e descritivo do problema
 
 - **Status**: Open | In Progress | Resolved
@@ -90,13 +89,15 @@ Descrição detalhada do problema, contexto e razão pela qual foi criado o déb
 
 **Code Location** (se aplicável):
 \`\`\`[language]
+
 # ❌ Current (problem)
 [código problemático]
 
 # ✅ Fixed (solution)
 [código sugerido]
 \`\`\`
-```
+
+```text
 
 ## Campos Essenciais
 
@@ -227,7 +228,8 @@ Baseado nas melhores práticas de 2024/2025:
 
 **Exemplo de interação**:
 
-```
+```text
+
 Agente: Vou adicionar um novo débito técnico.
 
 Título curto do problema: SQL Injection vulnerability
@@ -244,7 +246,8 @@ Plano de resolução:
 Owner (opcional): @backend-team
 
 ✅ Débito TD-005 adicionado com sucesso em docs/TECHNICAL_DEBT.md!
-```
+
+```text
 
 ### 2. Listar Débitos (list)
 
@@ -257,6 +260,7 @@ Owner (opcional): @backend-team
 **Formato de saída**:
 
 ```markdown
+
 ## Débitos Técnicos
 
 ### 🔴 Critical (2)
@@ -272,7 +276,8 @@ Owner (opcional): @backend-team
 - [TD-006] Add type hints to public API (Open) - src/api.py
 
 **Total**: 6 débitos (Open: 4 | In Progress: 1 | Resolved: 1)
-```
+
+```text
 
 ### 3. Atualizar Status (update)
 
@@ -299,7 +304,8 @@ Owner (opcional): @backend-team
 
 **Exemplo**:
 
-```
+```text
+
 Agente: Localizei o débito TD-005:
 [TD-005] SQL Injection vulnerability
 Status atual: Open
@@ -312,7 +318,8 @@ Novo status?
 Usuário: 2
 
 ✅ TD-005 atualizado para "In Progress"
-```
+
+```text
 
 ### 4. Resolver Débito (resolve)
 
@@ -344,6 +351,7 @@ Usuário: 2
 **Formato de débito resolvido**:
 
 ```markdown
+
 ### [TD-005] SQL Injection vulnerability
 
 - **Status**: Resolved
@@ -363,7 +371,8 @@ Query used f-string concatenation instead of parameterized queries.
 - Added input validation middleware
 - Created security tests to prevent regression
 - Updated documentation with secure query examples
-```
+
+```text
 
 ### 5. Estatísticas (stats)
 
@@ -392,6 +401,7 @@ Query used f-string concatenation instead of parameterized queries.
 **Formato de saída**:
 
 ```markdown
+
 # 📊 Estatísticas de Débito Técnico
 
 ## Resumo Geral
@@ -426,7 +436,8 @@ Query used f-string concatenation instead of parameterized queries.
 - Criados este mês: 5
 - Resolvidos este mês: 2
 - Saldo: +3 débitos
-```
+
+```text
 
 ## Integração com Code Review
 
@@ -457,7 +468,8 @@ Quando invocado pelo agente `code-reviewer`:
 
 5. **Exemplo de saída**:
 
-```
+```text
+
 ✅ 3 débitos técnicos adicionados a docs/TECHNICAL_DEBT.md:
 
 🔴 Critical:
@@ -468,7 +480,8 @@ Quando invocado pelo agente `code-reviewer`:
 - TD-017: Missing test coverage (src/utils.py:calculate_discount)
 
 Total: 3 novos débitos registrados
-```
+
+```text
 
 ## Categorização Automática
 
@@ -598,6 +611,6 @@ Mapeamento de problemas do code-review para categorias:
 ✅ Testes ausentes em código crítico
 ✅ Performance issues documentados
 
----
 
 **Desenvolvido por Carlos Araujo para gerenciamento profissional de débito técnico** 📊
+````

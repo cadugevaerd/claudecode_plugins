@@ -29,9 +29,9 @@ Creates `docs/SPIKE.md` containing:
 ## Execution Steps
 
 1. Read README.md from project root to extract Brief Minimo data
-2. Parse agent name, purpose, tools, and success criteria
-3. Create docs directory if it does not exist
-4. Generate SPIKE.md with:
+1. Parse agent name, purpose, tools, and success criteria
+1. Create docs directory if it does not exist
+1. Generate SPIKE.md with:
    - Overview section with agent specification
    - Suggested directory structure
    - Core components (State, Nodes, Graph, Tools)

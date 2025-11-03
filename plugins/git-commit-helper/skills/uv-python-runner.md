@@ -4,6 +4,10 @@ description: Detecta e usa uv automaticamente para executar comandos Python. Use
 allowed-tools: Read, Bash, Grep
 ---
 
+name: uv-python-runner
+description: Detecta e usa uv automaticamente para executar comandos Python. Use quando executar testes, linters, type checkers, scripts Python ou qualquer comando Python em projetos que possuem uv.lock ou pyproject.toml com [tool.uv].
+allowed-tools: Read, Bash, Grep
+
 # UV Python Runner Skill
 
 Esta skill detecta automaticamente se um projeto Python utiliza **uv** (gerenciador de pacotes e projetos Python da Astral) e executa comandos usando `uv run` quando apropriado.
@@ -26,7 +30,8 @@ Esta skill é **invocada automaticamente** quando Claude detecta necessidade de 
 
 A skill verifica a presença de indicadores de uso do uv:
 
-```bash
+````bash
+
 # Verificar se pyproject.toml tem configuração uv
 grep -q "\[tool.uv\]" pyproject.toml
 
@@ -35,29 +40,34 @@ test -f uv.lock
 
 # Verificar se .venv foi criado por uv
 test -d .venv && test -f .venv/pyvenv.cfg
-```
+
+```text
 
 ### 2. Transformação de Comandos
 
 Quando uv é detectado, a skill transforma comandos Python:
 
 **Antes (sem uv)**:
+
 ```bash
 pytest
 python script.py
 black . --check
 mypy .
 flake8 .
-```
+
+```text
 
 **Depois (com uv)**:
+
 ```bash
 uv run pytest
 uv run python script.py
 uv run black . --check
 uv run mypy .
 uv run flake8 .
-```
+
+```text
 
 ### 3. Benefícios do UV Run
 
@@ -83,7 +93,8 @@ dev-dependencies = [
     "pytest>=7.0.0",
     "black>=23.0.0",
 ]
-```
+
+```text
 
 ### Indicador 2: Arquivo uv.lock
 
@@ -98,52 +109,72 @@ O diretório `.venv` com estrutura criada por uv (contém `pyvenv.cfg` com refer
 ### Exemplo 1: Executar Testes
 
 **Projeto sem uv**:
+
 ```bash
 $ pytest --cov
+
 # Pode falhar se virtualenv não estiver ativado
-```
+
+```text
 
 **Projeto com uv (skill aplicada automaticamente)**:
+
 ```bash
 $ uv run pytest --cov
+
 # ✅ Sincroniza dependências automaticamente
+
 # ✅ Executa em ambiente isolado
+
 # ✅ Garante versões corretas
-```
+
+```text
 
 ### Exemplo 2: Executar Scripts Python
 
 **Antes**:
+
 ```bash
 $ source .venv/bin/activate  # Ativação manual necessária
 $ python scripts/validate.py
-```
+
+```text
 
 **Depois (com uv)**:
+
 ```bash
 $ uv run python scripts/validate.py
+
 # ✅ Sem necessidade de ativação manual
+
 # ✅ Dependências sincronizadas automaticamente
-```
+
+```text
 
 ### Exemplo 3: Ferramentas de Desenvolvimento
 
 **Antes**:
+
 ```bash
 $ source .venv/bin/activate
 $ black . --check
 $ mypy .
 $ flake8 .
-```
+
+```text
 
 **Depois (com uv)**:
+
 ```bash
 $ uv run black . --check
 $ uv run mypy .
 $ uv run flake8 .
+
 # ✅ Cada comando em ambiente consistente
+
 # ✅ Sem ativação manual
-```
+
+```text
 
 ## 🎨 Integração com Git Commit Helper
 
@@ -154,16 +185,19 @@ Esta skill se integra perfeitamente com o plugin git-commit-helper:
 Quando o commit-assistant detecta que precisa executar testes em projeto Python com uv:
 
 ```bash
+
 # Sem skill (pode falhar)
 pytest --cov
 
 # Com skill (sempre funciona)
 uv run pytest --cov
-```
+
+```text
 
 ### Durante Validação de Código
 
 ```bash
+
 # Linting
 uv run black . --check
 uv run flake8 .
@@ -173,17 +207,20 @@ uv run mypy .
 
 # Security audit
 uv run pip-audit
-```
+
+```text
 
 ### Durante Build/CI
 
 ```bash
+
 # Executar script CI customizado
 uv run python ci.py
 
 # Executar script de validação
 uv run python scripts/validate.py
-```
+
+```text
 
 ## 🚀 Comandos Suportados
 
@@ -230,6 +267,7 @@ Se uv não estiver instalado ou não for detectado, a skill não interfere e per
 Para verificar se a skill detectou uv corretamente:
 
 ```bash
+
 # Verificar se uv está instalado
 uv --version
 
@@ -238,27 +276,32 @@ uv run --version  # Deve funcionar se projeto usa uv
 
 # Verificar sincronização
 uv sync  # Sincroniza dependências manualmente
-```
+
+```text
 
 ## 📚 Boas Práticas
 
 ### 1. Manter Lockfile Atualizado
 
 ```bash
+
 # Atualizar dependências
 uv lock
 
 # Sincronizar ambiente com lockfile
 uv sync
-```
+
+```text
 
 ### 2. Usar uv.lock no Controle de Versão
 
 ✅ **Sempre commitar** `uv.lock`:
+
 ```bash
 git add uv.lock
 git commit -m "chore: update dependencies lockfile"
-```
+
+```text
 
 ### 3. Especificar Dependências no pyproject.toml
 
@@ -275,7 +318,8 @@ dev-dependencies = [
     "black>=23.0.0",
     "mypy>=1.0.0",
 ]
-```
+
+```text
 
 ### 4. Usar uv run para Scripts CI/CD
 
@@ -283,6 +327,7 @@ Em scripts de CI, sempre use `uv run`:
 
 ```bash
 #!/bin/bash
+
 # ci.sh
 
 set -e
@@ -298,7 +343,8 @@ echo "Running type checker..."
 uv run mypy .
 
 echo "✅ All checks passed!"
-```
+
+```text
 
 ## 🐛 Troubleshooting
 
@@ -316,27 +362,33 @@ echo "✅ All checks passed!"
 **Sintoma**: `command not found: uv`
 
 **Solução**:
+
 ```bash
+
 # Instalar uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Ou via pip
 pip install uv
-```
+
+```text
 
 ### Problema: Dependências desatualizadas
 
 **Sintoma**: Testes falham por versão incorreta de dependência
 
 **Solução**:
+
 ```bash
+
 # Sincronizar dependências
 uv sync
 
 # Ou forçar atualização
 uv lock --upgrade
 uv sync
-```
+
+```text
 
 ## 📖 Referências
 
@@ -390,8 +442,8 @@ Para projetos que usam uv, a skill garante:
 - [x] Fallback para comandos tradicionais se uv não disponível
 - [x] Zero configuração necessária
 
----
 
 **Desenvolvido para git-commit-helper plugin** 🚀
 
 Integração perfeita com uv para execução consistente e rápida de comandos Python!
+````

@@ -9,6 +9,7 @@ Lista completa de métricas de evaluation para LLMs, com explicações, quando u
 ## Como usar
 
 Execute o comando e opcionalmente especifique:
+
 - Categoria de métrica (traditional, llm-judge, similarity, task-specific)
 - Framework preferido (openevals, langsmith, custom)
 - Tipo de aplicação (chatbot, summarization, translation, etc.)
@@ -28,7 +29,8 @@ Métricas baseadas em regras e comparações exatas.
 **Range**: 0.0 - 1.0 (maior = melhor)
 
 **Código**:
-```python
+
+````python
 from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
 
 def bleu_evaluator(outputs: dict, reference_outputs: dict) -> dict:
@@ -39,14 +41,14 @@ def bleu_evaluator(outputs: dict, reference_outputs: dict) -> dict:
     score = sentence_bleu([reference], predicted, smoothing_function=smoothing)
 
     return {"bleu_score": score}
-```
+
+```text
 
 **Limitações**:
 - Não captura nuances semânticas
 - Favorece matches exatos de palavras
 - Pode ser enganado por repetições
 
----
 
 #### ROUGE (Recall-Oriented Understudy for Gisting Evaluation)
 
@@ -62,6 +64,7 @@ def bleu_evaluator(outputs: dict, reference_outputs: dict) -> dict:
 **Range**: 0.0 - 1.0 (maior = melhor)
 
 **Código**:
+
 ```python
 from rouge import Rouge
 
@@ -77,14 +80,14 @@ def rouge_evaluator(outputs: dict, reference_outputs: dict) -> dict:
         "rouge_2_f1": scores["rouge-2"]["f"],
         "rouge_l_f1": scores["rouge-l"]["f"],
     }
-```
+
+```text
 
 **Limitações**:
 - Foca em overlap superficial
 - Ignora paráfrase e sinônimos
 - Não considera coerência
 
----
 
 #### Exact Match
 
@@ -95,6 +98,7 @@ def rouge_evaluator(outputs: dict, reference_outputs: dict) -> dict:
 **Range**: 0 ou 1 (binário)
 
 **Código**:
+
 ```python
 def exact_match_evaluator(outputs: dict, reference_outputs: dict) -> dict:
     output = outputs.get("answer", "").strip().lower()
@@ -106,9 +110,9 @@ def exact_match_evaluator(outputs: dict, reference_outputs: dict) -> dict:
         "exact_match": score,
         "comment": "Match" if score == 1.0 else f"Expected: {reference}, Got: {output}"
     }
-```
 
----
+```text
+
 
 #### Regex Match
 
@@ -119,6 +123,7 @@ def exact_match_evaluator(outputs: dict, reference_outputs: dict) -> dict:
 **Range**: 0 ou 1 (binário)
 
 **Código (OpenEvals)**:
+
 ```python
 import re
 from openevals.types import EvaluatorResult, SimpleEvaluator
@@ -144,9 +149,9 @@ def create_regex_evaluator(pattern: str) -> SimpleEvaluator:
 # Uso
 phone_validator = create_regex_evaluator(r"^\d{3}-\d{3}-\d{4}$")
 email_validator = create_regex_evaluator(r"^[\w\.-]+@[\w\.-]+\.\w+$")
-```
 
----
+```text
+
 
 ### 2. Embedding-based Similarity
 
@@ -161,6 +166,7 @@ Métricas baseadas em similaridade semântica usando embeddings.
 **Range**: -1.0 a 1.0 (maior = mais similar)
 
 **Código**:
+
 ```python
 from openai import OpenAI
 import numpy as np
@@ -193,9 +199,9 @@ def cosine_similarity_evaluator(outputs: dict, reference_outputs: dict) -> dict:
         "cosine_similarity": float(similarity),
         "comment": f"Similarity: {similarity:.3f}"
     }
-```
 
----
+```text
+
 
 ### 3. LLM-as-Judge Metrics
 
@@ -210,6 +216,7 @@ Métricas que usam LLMs para avaliar outputs.
 **Range**: 0.0 - 1.0 (maior = mais relevante)
 
 **Código (OpenEvals)**:
+
 ```python
 from openevals.llm import create_llm_as_judge
 
@@ -234,9 +241,9 @@ relevance_evaluator = create_llm_as_judge(
     prompt=RELEVANCE_PROMPT,
     model="openai:gpt-4o-mini",
 )
-```
 
----
+```text
+
 
 #### Hallucination Detection (LLM-as-Judge)
 
@@ -247,6 +254,7 @@ relevance_evaluator = create_llm_as_judge(
 **Range**: 0.0 - 1.0 (0 = alucinado, 1 = factual)
 
 **Código (LangSmith)**:
+
 ```python
 from langsmith.evaluation import evaluator
 from openai import OpenAI
@@ -289,9 +297,9 @@ Retorne JSON:
         "score": result["hallucination_score"],
         "comment": result["reason"]
     }
-```
 
----
+```text
+
 
 #### Coherence (LLM-as-Judge)
 
@@ -302,6 +310,7 @@ Retorne JSON:
 **Range**: 0.0 - 1.0 (maior = mais coerente)
 
 **Código**:
+
 ```python
 from openevals.llm import create_llm_as_judge
 
@@ -323,9 +332,9 @@ coherence_evaluator = create_llm_as_judge(
     prompt=COHERENCE_PROMPT,
     model="openai:gpt-4o-mini",
 )
-```
 
----
+```text
+
 
 ### 4. Task-Specific Metrics
 
@@ -340,6 +349,7 @@ Métricas específicas para tarefas particulares.
 **Range**: 0+ segundos (menor = melhor)
 
 **Código**:
+
 ```python
 import time
 
@@ -363,9 +373,9 @@ def response_time_evaluator(outputs: dict, metadata: dict) -> dict:
         "score": score,
         "comment": f"Tempo: {response_time:.2f}s (threshold: {threshold}s)"
     }
-```
 
----
+```text
+
 
 #### Citation Accuracy
 
@@ -376,6 +386,7 @@ def response_time_evaluator(outputs: dict, metadata: dict) -> dict:
 **Range**: 0.0 - 1.0 (maior = melhor)
 
 **Código**:
+
 ```python
 def citation_accuracy_evaluator(outputs: dict, inputs: dict) -> dict:
     """
@@ -408,9 +419,9 @@ def citation_accuracy_evaluator(outputs: dict, inputs: dict) -> dict:
         "citation_f1": f1,
         "comment": f"Citou {len(cited_sources)} de {len(expected_sources)} fontes"
     }
-```
 
----
+```text
+
 
 ## Tabela de Decisão de Métricas
 
@@ -427,6 +438,7 @@ def citation_accuracy_evaluator(outputs: dict, inputs: dict) -> dict:
 ## Combining Multiple Metrics
 
 **Exemplo de Composite Evaluator**:
+
 ```python
 def composite_evaluator(outputs: dict, inputs: dict, reference_outputs: dict) -> dict:
     """
@@ -457,10 +469,12 @@ def composite_evaluator(outputs: dict, inputs: dict, reference_outputs: dict) ->
         "hallucination": hallucination["score"],
         "similarity": similarity["cosine_similarity"]
     }
-```
+
+```text
 
 ## Referências
 
 - BLEU/ROUGE: https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation
 - LLM-as-Judge: https://www.evidentlyai.com/llm-guide/llm-as-a-judge
 - OpenEvals Metrics: https://github.com/langchain-ai/openevals
+````

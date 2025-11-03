@@ -9,6 +9,7 @@ Inicializa CI/CD no projeto atual usando GitHub Actions, seguindo abordagem incr
 ## 🎯 Objetivo
 
 Criar workflow GitHub Actions **mínimo e funcional** que:
+
 - Detecta estrutura e linguagem do projeto
 - Implementa apenas o necessário AGORA
 - Evita features não utilizadas
@@ -16,15 +17,17 @@ Criar workflow GitHub Actions **mínimo e funcional** que:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /cicd-init
-```
+
+```text
 
 Ou com contexto adicional:
 
 ```bash
 /cicd-init "projeto Python com pytest e Django"
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -48,9 +51,11 @@ Ou com contexto adicional:
 **Verificar se `.github/workflows/` existe**:
 
 ```bash
+
 # Se existe
 ls -la .github/workflows/*.yml .github/workflows/*.yaml 2>/dev/null
-```
+
+```text
 
 **Se workflows já existem**:
 - ⚠️  Avisar ao usuário
@@ -109,7 +114,8 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
-```
+
+```text
 
 **Template para Node.js**:
 
@@ -143,7 +149,8 @@ jobs:
 
       - name: Run tests
         run: npm test
-```
+
+```text
 
 **Template para Go**:
 
@@ -177,16 +184,19 @@ jobs:
 
       - name: Run tests
         run: go test -v ./...
-```
+
+```text
 
 ### 4. Validar Workflow YAML
 
 **Usar yamllint ou validação interna**:
 
 ```bash
+
 # Validar sintaxe YAML
 python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"
-```
+
+```text
 
 **Verificar**:
 - ✅ Sintaxe YAML válida
@@ -198,7 +208,8 @@ python3 -c "import yaml; yaml.safe_load(open('.github/workflows/ci.yml'))"
 
 **Após criar workflow MVP, sugerir evolução**:
 
-```
+```text
+
 ✅ Workflow CI básico criado: .github/workflows/ci.yml
 
 📈 PRÓXIMOS PASSOS INCREMENTAIS (adicionar quando necessário):
@@ -220,15 +231,18 @@ Nível 5 - Deploy:
   Comando: /cicd-add-deploy
 
 💡 PRINCÍPIO YAGNI: Adicione features APENAS quando a necessidade for real!
-```
+
+```text
 
 ### 6. Atualizar CLAUDE.md (Opcional)
 
 **Perguntar ao usuário**:
 
-```
+```text
+
 Deseja atualizar CLAUDE.md com padrões de CI/CD deste projeto? (s/n)
-```
+
+```text
 
 **Se SIM**:
 - Executar `/cicd-setup-project` automaticamente
@@ -246,14 +260,16 @@ Deseja atualizar CLAUDE.md com padrões de CI/CD deste projeto? (s/n)
    ```yaml
    permissions:
      contents: read  # Apenas leitura por padrão
-   ```
+````
 
 3. **Secrets**:
+
    - ✅ Usar `${{ secrets.API_KEY }}`
    - ❌ NUNCA hardcode credenciais
    - 💡 Preferir OIDC quando possível
 
-4. **Third-Party Actions**:
+1. **Third-Party Actions**:
+
    - ✅ Usar apenas actions verificadas
    - ✅ Revisar código antes de usar
    - ✅ Preferir actions oficiais (GitHub, Astral, etc.)
@@ -262,9 +278,10 @@ Deseja atualizar CLAUDE.md com padrões de CI/CD deste projeto? (s/n)
 
 **Exemplo 1 - Projeto Python simples**:
 
-```bash
+````bash
 /cicd-init
-```
+
+```text
 
 Resultado:
 - Detecta `pyproject.toml` e `uv.lock`
@@ -275,7 +292,8 @@ Resultado:
 
 ```bash
 /cicd-init "Node.js API com testes Jest"
-```
+
+```text
 
 Resultado:
 - Detecta `package.json`
@@ -286,7 +304,8 @@ Resultado:
 
 ```bash
 /cicd-init
-```
+
+```text
 
 Resultado:
 - Detecta `go.mod`
@@ -313,3 +332,4 @@ Resultado:
 - [uv GitHub Actions Guide](https://docs.astral.sh/uv/guides/integration/github/)
 - [YAGNI Principle](https://martinfowler.com/bliki/Yagni.html)
 - [GitHub Actions Marketplace](https://github.com/marketplace?type=actions)
+````

@@ -9,6 +9,7 @@ Este comando cria ou atualiza a configuração do pytest, priorizando `pyproject
 ## 🎯 Objetivo
 
 Configurar pytest automaticamente com:
+
 - Coverage habilitado
 - Testes paralelos (pytest-xdist)
 - Markers customizados
@@ -17,7 +18,8 @@ Configurar pytest automaticamente com:
 
 ## 📋 Como usar
 
-```bash
+````bash
+
 # Configuração automática
 /setup-pytest-config
 
@@ -26,19 +28,22 @@ Configurar pytest automaticamente com:
 
 # Forçar pytest.ini mesmo se pyproject.toml existe
 /setup-pytest-config --force-ini
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
 ### 1. Detecção de Ambiente
 
-```
+```text
+
 ═══════════════════════════════════════════
 ⚙️  CONFIGURAÇÃO PYTEST
 ═══════════════════════════════════════════
 
 🔍 Detectando ambiente do projeto...
-```
+
+```text
 
 **Verificar existência de arquivos**:
 
@@ -52,20 +57,24 @@ Configurar pytest automaticamente com:
    - Em `setup.cfg` → seção `[tool:pytest]`
 
 **Se configuração já existe**:
-```
+
+```text
+
 ⚠️  Configuração pytest já existe em [arquivo]
 
 Deseja atualizar/sobrescrever? (s/n/ver)
 - s: Atualizar com novas configurações
 - n: Cancelar
 - ver: Mostrar configuração atual
-```
+
+```text
 
 ### 2. Detectar Stack Python
 
 **Verificar dependências** (requirements.txt, pyproject.toml, Pipfile):
 
 ```python
+
 # Detectar frameworks async
 pytest-asyncio → asyncio_mode = "auto"
 anyio → anyio_mode = "auto"
@@ -84,10 +93,13 @@ flat layout → --cov=.
 @pytest.mark.slow
 @pytest.mark.integration
 @pytest.mark.unit
-```
+
+```text
 
 **Output**:
-```
+
+```text
+
 ✅ Stack detectada:
 
 Gerenciador: poetry
@@ -106,12 +118,15 @@ Markers detectados:
   - @pytest.mark.slow (2 usos)
   - @pytest.mark.integration (5 usos)
   - @pytest.mark.unit (15 usos)
-```
+
+```text
 
 ### 3. Escolher Formato de Configuração
 
 **Se pyproject.toml existe**:
-```
+
+```text
+
 📝 pyproject.toml encontrado
 
 ✅ Recomendação: Usar pyproject.toml
@@ -119,10 +134,13 @@ Markers detectados:
    Centralize todas as configurações do projeto
 
 Usar pyproject.toml? (s/n)
-```
+
+```text
 
 **Se pyproject.toml NÃO existe**:
-```
+
+```text
+
 📝 pyproject.toml não encontrado
 
 Opções:
@@ -130,7 +148,8 @@ Opções:
 2. Criar pyproject.toml (recomendado, centraliza configs)
 
 Escolha (1/2):
-```
+
+```text
 
 ### 4. Gerar Configuração
 
@@ -140,6 +159,7 @@ Escolha (1/2):
 
 ```toml
 [tool.pytest.ini_options]
+
 # Paths
 testpaths = ["tests"]
 
@@ -184,11 +204,13 @@ DJANGO_SETTINGS_MODULE = "config.settings.test"
 
 # Timeout (se detectado pytest-timeout)
 timeout = 300
-```
+
+```text
 
 **Customização por stack detectada**:
 
 ```python
+
 # Se FastAPI detectado
 markers += ["api: API endpoint tests"]
 
@@ -203,7 +225,8 @@ markers += ["db: Tests requiring database"]
 
 # Se coverage threshold fornecido
 addopts = [..., f"--cov-fail-under={coverage_threshold}"]
-```
+
+```text
 
 #### Opção B: pytest.ini (FALLBACK)
 
@@ -211,6 +234,7 @@ addopts = [..., f"--cov-fail-under={coverage_threshold}"]
 
 ```ini
 [pytest]
+
 # Paths
 testpaths = tests
 
@@ -250,13 +274,15 @@ asyncio_mode = auto
 
 # Timeout
 timeout = 300
-```
+
+```text
 
 ### 5. Preview da Configuração
 
 Mostrar preview COMPLETO antes de aplicar:
 
-```
+```text
+
 ═══════════════════════════════════════════
 📄 PREVIEW DA CONFIGURAÇÃO
 ═══════════════════════════════════════════
@@ -266,7 +292,7 @@ Seção: [tool.pytest.ini_options]
 
 Configuração gerada:
 
----
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
@@ -291,7 +317,6 @@ markers = [
 ]
 
 asyncio_mode = "auto"
----
 
 Características:
 ✅ Coverage habilitado (≥80%)
@@ -306,11 +331,13 @@ Aplicar configuração? (s/n/editar)
 - s: Aplicar
 - n: Cancelar
 - editar: Ajustar configuração
-```
+
+```text
 
 **Se usuário escolher "editar"**:
 
-```
+```text
+
 O que deseja ajustar?
 
 1. Coverage threshold (atual: 80%)
@@ -320,13 +347,15 @@ O que deseja ajustar?
 5. Cancelar edição
 
 Escolha (1-5):
-```
+
+```text
 
 ### 6. Aplicar Configuração
 
 #### Se pyproject.toml (atualizar arquivo existente):
 
 ```python
+
 # Pseudocódigo do processo
 
 1. Ler pyproject.toml atual
@@ -335,7 +364,8 @@ Escolha (1-5):
 4. Preservar TODAS as outras seções
 5. Escrever de volta com formatação correta
 6. Validar sintaxe TOML
-```
+
+```text
 
 **CRÍTICO**:
 - ❌ NUNCA sobrescrever outras seções do pyproject.toml
@@ -345,6 +375,7 @@ Escolha (1-5):
 **Exemplo de atualização segura**:
 
 ```toml
+
 # pyproject.toml ANTES
 [tool.poetry]
 name = "my-project"
@@ -363,22 +394,27 @@ line-length = 100
 
 [tool.pytest.ini_options]  # ← ADICIONADO
 testpaths = ["tests"]
+
 # ... resto da config
-```
+
+```text
 
 #### Se pytest.ini (criar arquivo novo):
 
 ```python
+
 # Pseudocódigo
 
 1. Criar pytest.ini na raiz do projeto
 2. Escrever template completo
 3. Validar sintaxe INI
-```
+
+```text
 
 ### 7. Confirmação de Sucesso
 
-```
+```text
+
 ═══════════════════════════════════════════
 ✅ CONFIGURAÇÃO PYTEST APLICADA
 ═══════════════════════════════════════════
@@ -413,12 +449,15 @@ Configurações:
    /py-test
 
 ═══════════════════════════════════════════
-```
+
+```text
 
 ### 8. Dicas e Troubleshooting
 
 **Se erro ao parsear TOML**:
-```
+
+```text
+
 ❌ Erro ao ler pyproject.toml
 
 Sintaxe TOML inválida detectada.
@@ -428,10 +467,13 @@ Possíveis causas:
 - Seções duplicadas
 
 Deseja ver detalhes do erro? (s/n)
-```
+
+```text
 
 **Se conflito de configuração**:
-```
+
+```text
+
 ⚠️  Múltiplas configurações pytest detectadas
 
 Encontrado em:
@@ -445,7 +487,8 @@ Pytest usa ordem de prioridade:
 3. setup.cfg
 
 Remover pytest.ini e manter pyproject.toml? (s/n)
-```
+
+```text
 
 ## 📚 Exemplos de Uso
 
@@ -453,10 +496,13 @@ Remover pytest.ini e manter pyproject.toml? (s/n)
 
 ```bash
 /setup-pytest-config
-```
+
+```text
 
 **Resultado**:
-```
+
+```text
+
 ⚙️  Detectando ambiente...
 
 ✓ Estrutura: src/ layout
@@ -471,16 +517,20 @@ Opções:
 Escolha: 2
 
 ✅ pyproject.toml criado com configuração pytest
-```
+
+```text
 
 ### Exemplo 2: Projeto com pyproject.toml Existente
 
 ```bash
 /setup-pytest-config
-```
+
+```text
 
 **Resultado**:
-```
+
+```text
+
 ⚙️  Detectando ambiente...
 
 ✓ pyproject.toml encontrado
@@ -496,34 +546,43 @@ addopts = ["-n auto", "--cov=src", ...]
 Aplicar? s
 
 ✅ pyproject.toml atualizado
-```
+
+```text
 
 ### Exemplo 3: Coverage Customizado
 
 ```bash
 /setup-pytest-config --coverage 90
-```
+
+```text
 
 **Resultado**:
-```
+
+```text
+
 ⚙️  Configurando com coverage ≥90%
 
 ✅ Configuração aplicada
    --cov-fail-under=90
-```
+
+```text
 
 ### Exemplo 4: Forçar pytest.ini
 
 ```bash
 /setup-pytest-config --force-ini
-```
+
+```text
 
 **Resultado**:
-```
+
+```text
+
 ⚙️  Criando pytest.ini (forçado)
 
 ✅ pytest.ini criado (pyproject.toml ignorado)
-```
+
+```text
 
 ## 🎯 Configurações Recomendadas por Stack
 
@@ -541,7 +600,8 @@ markers = [
     "api: API endpoint tests",
     "unit: Unit tests",
 ]
-```
+
+```text
 
 ### LangChain / LangGraph
 
@@ -559,7 +619,8 @@ markers = [
     "unit: Unit tests with mocks",
 ]
 asyncio_mode = "auto"
-```
+
+```text
 
 ### Django
 
@@ -578,7 +639,8 @@ markers = [
     "views: View tests",
     "models: Model tests",
 ]
-```
+
+```text
 
 ## ⚠️ Importante
 
@@ -605,6 +667,7 @@ Pytest usa esta ordem para carregar configuração:
 Após criar/atualizar:
 
 ```bash
+
 # Validar TOML
 python -c "import tomli; tomli.load(open('pyproject.toml', 'rb'))"
 
@@ -612,13 +675,15 @@ python -c "import tomli; tomli.load(open('pyproject.toml', 'rb'))"
 pytest --version
 pytest --markers
 pytest --collect-only
-```
+
+```text
 
 ## 🚀 Integração com Outros Comandos
 
 ### Usar com /setup-project-tests
 
 ```bash
+
 # 1. Configurar CLAUDE.md com padrões de testes
 /setup-project-tests
 
@@ -627,11 +692,13 @@ pytest --collect-only
 
 # 3. Gerar testes automaticamente
 /py-test
-```
+
+```text
 
 ### Usar com /py-test
 
 O comando `/py-test` automaticamente:
+
 - Detecta configuração pytest
 - Respeita testpaths
 - Usa addopts configurados
@@ -649,21 +716,25 @@ addopts = [
     "--cov=src/utils",
     "--cov-report=term-missing:skip-covered",
 ]
-```
+
+```text
 
 ### Executar Apenas Testes Rápidos
 
 ```toml
+
 # Adicionar marker slow
 markers = ["slow: Slow tests"]
 
 # No CI, skip slow tests
 addopts = ["-m", "not slow"]
-```
+
+```text
 
 ### Parallel com Número Fixo de Workers
 
 ```toml
+
 # Auto (recomendado)
 addopts = ["-n auto"]
 
@@ -671,8 +742,10 @@ addopts = ["-n auto"]
 addopts = ["-n 4"]
 
 # Desabilitar parallel
+
 # Remover -n auto
-```
+
+```text
 
 ### Relatórios Customizados
 
@@ -683,33 +756,41 @@ addopts = [
     "--cov-report=xml",            # XML para CI/CD
     "--cov-report=json",           # JSON para análise
 ]
-```
+
+```text
 
 ## 🔧 Troubleshooting
 
 ### "No module named tomli"
 
 ```bash
+
 # Instalar tomli (Python < 3.11)
 pip install tomli
 
 # Ou usar tomllib (Python 3.11+)
+
 # Já incluído no Python 3.11+
-```
+
+```text
 
 ### Conflito entre pytest.ini e pyproject.toml
 
 ```bash
+
 # Remover pytest.ini
 rm pytest.ini
 
 # Manter apenas pyproject.toml
+
 # Pytest usará automaticamente
-```
+
+```text
 
 ### Markers não reconhecidos
 
 ```bash
+
 # Adicionar --strict-markers
 addopts = ["--strict-markers"]
 
@@ -719,18 +800,21 @@ markers = [
     "integration: ...",
     # ... todos os markers
 ]
-```
+
+```text
 
 ### Coverage não encontra módulos
 
 ```bash
+
 # Verificar source paths
 addopts = ["--cov=src"]  # Se usa src/ layout
 addopts = ["--cov=."]    # Se flat layout
 
 # Adicionar source root
 addopts = ["--cov=.", "--cov-config=.coveragerc"]
-```
+
+```text
 
 ## 📖 Referências
 
@@ -740,6 +824,5 @@ addopts = ["--cov=.", "--cov-config=.coveragerc"]
 - [pytest-cov](https://pytest-cov.readthedocs.io/)
 - [pytest-xdist](https://pytest-xdist.readthedocs.io/)
 
----
-
 **Desenvolvido por Carlos Araujo para python-test-generator** 🧪
+````

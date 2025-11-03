@@ -65,9 +65,9 @@
     },
     {
       "name": "incremental-dev",
-      "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade. Suporta projetos novos e legacy com análise retroativa, PRD retroativo e roadmap de simplificação. v1.7.0: Comando /update-claude-md para atualizar CLAUDE.md com boas práticas (≤40 linhas, progressive disclosure, auto-discovery)",
+      "description": "Orienta desenvolvimento iterativo/incremental seguindo YAGNI e Evolutionary Architecture - evita over-engineering e promove simplicidade. Suporta projetos novos e legacy com análise retroativa, PRD retroativo e roadmap de simplificação. Inclui 12 comandos, agente coach, 3 skills com progressive disclosure e integração completa com CLAUDE.md.",
       "source": "./plugins/incremental-dev",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "author": {
         "name": "Carlos Araujo"
       },

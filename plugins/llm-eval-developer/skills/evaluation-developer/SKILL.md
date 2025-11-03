@@ -4,6 +4,10 @@ description: Desenvolve código de evaluators para LLMs (OpenEvals, LangSmith, B
 allowed-tools: Read, Write, Bash, Grep, Glob
 ---
 
+name: evaluation-developer
+description: Desenvolve código de evaluators para LLMs (OpenEvals, LangSmith, BLEU, ROUGE, LLM-as-judge). Use quando criar evaluators, métricas customizadas, evaluation suites, ou testar LLMs.
+allowed-tools: Read, Write, Bash, Grep, Glob
+
 # Evaluation Developer Skill
 
 ## Instructions
@@ -13,6 +17,7 @@ Skill especializada em **desenvolver código de evaluation** para LLMs e agentes
 ### Step 1: Identify Evaluation Need
 
 Quando usuário menciona termos como:
+
 - "criar evaluator", "desenvolver evaluation"
 - "métricas para LLM", "testar meu chatbot"
 - "hallucination detection", "relevance evaluation"
@@ -25,21 +30,25 @@ Quando usuário menciona termos como:
 Identificar tipo de evaluator necessário:
 
 **LLM-as-Judge**:
+
 - Para critérios subjetivos (relevance, tone, coherence)
 - Quando regras são complexas demais para codificar
 - Exemplo: Detectar alucinações, avaliar qualidade
 
 **Similarity-based**:
+
 - Para comparar com ground truth
 - BLEU (translation), ROUGE (summarization), embeddings
 - Exemplo: Avaliar precisão de summary
 
 **Rule-based**:
+
 - Para validações exatas
 - Regex, exact match, custom logic
 - Exemplo: Validar formato de email
 
 **Composite**:
+
 - Combina múltiplas métricas
 - Quando precisa avaliar vários aspectos
 - Exemplo: Accuracy + Relevance + Response Time
@@ -49,18 +58,18 @@ Identificar tipo de evaluator necessário:
 Gerar código completo incluindo:
 
 1. **Imports necessários**
-2. **Função do evaluator** com:
+1. **Função do evaluator** com:
    - Docstring clara
    - Type hints
    - Error handling
    - Retorno padronizado
-3. **Testes unitários** com pytest
-4. **Exemplo de uso**
-5. **Explicação de quando usar**
+1. **Testes unitários** com pytest
+1. **Exemplo de uso**
+1. **Explicação de quando usar**
 
 #### Template para OpenEvals LLM-as-Judge:
 
-```python
+````python
 from openevals.llm import create_llm_as_judge
 
 CUSTOM_PROMPT = """
@@ -84,7 +93,8 @@ evaluator_name = create_llm_as_judge(
     prompt=CUSTOM_PROMPT,
     model="openai:gpt-4o-mini",
 )
-```
+
+```text
 
 #### Template para LangSmith Custom Evaluator:
 
@@ -110,7 +120,8 @@ def custom_evaluator(outputs: dict, inputs: dict = None, reference_outputs: dict
         "score": score,
         "comment": "explicação"
     }
-```
+
+```text
 
 #### Template para Similarity Metric:
 
@@ -133,7 +144,8 @@ def metric_evaluator(outputs: dict, reference_outputs: dict) -> dict:
         "metric_name": score,
         "comment": f"Score: {score:.3f}"
     }
-```
+
+```text
 
 ### Step 4: Include Testing Patterns
 
@@ -166,7 +178,8 @@ def test_evaluator_various(input, expected_min):
     """Testa múltiplos casos."""
     result = evaluator(outputs={"answer": input})
     assert result["score"] >= expected_min
-```
+
+```text
 
 ### Step 5: Explain Trade-offs
 
@@ -198,7 +211,8 @@ results = evaluate(
     evaluators=[evaluator1, evaluator2],
     experiment_prefix="experiment-name"
 )
-```
+
+```text
 
 ## When to Use
 
@@ -312,7 +326,8 @@ results = evaluate(
     data="rag-dataset",
     evaluators=[hallucination_detector]
 )
-```
+
+```text
 
 **E explica**:
 ✅ Use para: RAG systems, Q&A factual
@@ -320,7 +335,6 @@ results = evaluate(
 ❌ Limitações: Custo de API, latência
 💡 Trade-off: Precisão alta vs custo
 
----
 
 ### Example 2: Implement ROUGE Score
 
@@ -407,9 +421,9 @@ def test_rouge_partial():
   - Mas ignora semântica
   - Combine com LLM-as-judge para melhor avaliação
 """
-```
 
----
+```text
+
 
 ### Example 3: Create Evaluation Suite
 
@@ -417,7 +431,8 @@ def test_rouge_partial():
 
 **Skill generates**:
 
-```
+```text
+
 evaluations/
 ├── config/
 │   └── eval_config.py           # Thresholds e configuração
@@ -433,7 +448,8 @@ evaluations/
 │   └── test_integration.py      # Testes end-to-end
 ├── run_evaluation.py             # Script principal
 └── README.md
-```
+
+```text
 
 **E gera código funcional para cada arquivo**, incluindo:
 - Evaluators implementados
@@ -489,3 +505,4 @@ Incluir:
 - BLEU/ROUGE: https://www.confident-ai.com/blog/llm-evaluation-metrics-everything-you-need-for-llm-evaluation
 - LLM-as-Judge: https://www.evidentlyai.com/llm-guide/llm-as-a-judge
 - Pytest: https://docs.pytest.org/
+````

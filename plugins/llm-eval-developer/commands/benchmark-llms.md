@@ -5,6 +5,7 @@ description: Cria suite de benchmark comparativo para avaliar múltiplos LLMs us
 # Benchmark LLMs - Comparative Evaluation com LangChain/LangGraph
 
 Cria **suite completa de benchmarking comparativo** para avaliar múltiplos LLMs usando **LangChain/LangGraph** para execução e **LangSmith** para tracking automático de:
+
 - **Métricas de qualidade** (accuracy, relevance, hallucination via LangSmith evaluators)
 - **Métricas de performance** (latency P50/P95/P99, TTFT via callbacks)
 - **Métricas de custo** (tracking automático via LangSmith)
@@ -16,9 +17,10 @@ Gerar código funcional completo usando **LangChain Expression Language (LCEL)**
 
 ## 📋 Como Usar
 
-```bash
+````bash
 /benchmark-llms
-```
+
+```text
 
 O agente perguntará interativamente:
 
@@ -113,7 +115,8 @@ Pergunta interativa sobre:
 
 Cria estrutura completa:
 
-```
+```text
+
 benchmarks/
 ├── config/
 │   ├── benchmark_config.py          # Configuração de modelos e métricas
@@ -145,7 +148,8 @@ benchmarks/
 ├── analyze_results.py               # Análise via LangSmith API
 ├── requirements.txt                 # Dependências
 └── README.md                        # Documentação
-```
+
+```text
 
 ### Passo 3: Implementar Código com LangChain/LangGraph
 
@@ -466,7 +470,8 @@ class LangChainBenchmark:
             if reporter:
                 reporter.generate(self.results)
                 print(f"📄 Relatório {format.upper()} gerado!")
-```
+
+```text
 
 **Exemplo: `langgraph_benchmark.py`** (Benchmark com LangGraph - Parallel)
 
@@ -646,7 +651,8 @@ if __name__ == "__main__":
         print(f"\n{model}:")
         print(f"  Quality: {metrics['quality_score']:.2f}")
         print(f"  Latency: {metrics['latency_ms']:.0f}ms")
-```
+
+```text
 
 **Exemplo: `langsmith_evaluators.py`** (LangSmith Evaluators)
 
@@ -731,7 +737,8 @@ def get_all_evaluators():
         Lista completa de evaluators
     """
     return get_quality_evaluators() + get_custom_evaluators()
-```
+
+```text
 
 ### Passo 4: Implementar Callbacks para Métricas
 
@@ -836,7 +843,8 @@ class LatencyTracker(BaseCallbackHandler):
         self.ttfts = []
         self.current_start = None
         self.current_first_token = None
-```
+
+```text
 
 ### Passo 5: Script Principal
 
@@ -880,7 +888,8 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-```
+
+```text
 
 ## 📊 Exemplo de Output
 
@@ -897,6 +906,7 @@ Todos os resultados são automaticamente trackados no LangSmith:
 ### Markdown Report
 
 ```markdown
+
 # 📊 LLM Benchmark Report
 
 ## Summary
@@ -945,7 +955,8 @@ Todos os resultados são automaticamente trackados no LangSmith:
 - **Best overall**: **claude-3.5-sonnet** (balanced quality, speed, safety)
 - **Budget-conscious**: **gemini-1.5-pro** (best cost-efficiency)
 - **Highest quality**: **gpt-4o** (best QA score)
-```
+
+```text
 
 ## 🎓 Melhores Práticas
 
@@ -963,12 +974,14 @@ Todos os resultados são automaticamente trackados no LangSmith:
 ### 2. Use LCEL Batch para Paralelização
 
 ```python
+
 # LCEL batch executa em paralelo automaticamente
 results = chain.batch(
     inputs,
     config=RunnableConfig(max_concurrency=10)
 )
-```
+
+```text
 
 ### 3. Use LangSmith Evaluators Nativos
 
@@ -990,17 +1003,20 @@ results = chain.batch(
 **Para cost tracking automático**:
 
 ```python
+
 # Via LangSmith UI ou API
 client.update_pricing({
     "gpt-4o": {"input": 0.0025, "output": 0.01},
     "claude-3.5-sonnet": {"input": 0.003, "output": 0.015},
     # etc
 })
-```
+
+```text
 
 ## ⚙️ Variáveis de Ambiente Necessárias
 
 ```bash
+
 # API Keys dos LLMs
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
@@ -1013,13 +1029,15 @@ LANGSMITH_PROJECT=llm-benchmark-comparison
 
 # Opcional: Endpoint customizado
 LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-```
+
+```text
 
 ## 🔗 Integração com LangSmith
 
 ### Setup Inicial
 
 ```bash
+
 # Instalar dependências
 pip install langchain-openai langchain-anthropic langchain-google-genai
 pip install langsmith langgraph
@@ -1028,7 +1046,8 @@ pip install numpy
 # Configurar LangSmith
 export LANGSMITH_API_KEY=lsv2_...
 export LANGSMITH_TRACING=true
-```
+
+```text
 
 ### Upload Dataset para LangSmith
 
@@ -1054,7 +1073,8 @@ client.create_examples(
     ],
     dataset_id=dataset.id
 )
-```
+
+```text
 
 ## 🚨 Vantagens de Usar LangChain/LangSmith
 
@@ -1079,6 +1099,6 @@ client.create_examples(
 - [HumanEval](https://github.com/openai/human-eval)
 - [BBQ Bias Benchmark](https://arxiv.org/abs/2110.08193)
 
----
 
 **Criado com llm-eval-developer plugin usando LangChain/LangGraph/LangSmith** 🚀
+````

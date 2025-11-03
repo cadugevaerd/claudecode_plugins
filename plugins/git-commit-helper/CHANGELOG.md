@@ -39,8 +39,6 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Detecção automática de ferramentas de CI/CD
 - Documentação completa no README.md
 
----
-
 ## Formato do Changelog
 
 ### Tipos de Mudança

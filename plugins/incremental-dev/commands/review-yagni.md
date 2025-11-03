@@ -4,425 +4,113 @@ description: Revisar código identificando e removendo over-engineering seguindo
 
 # Review YAGNI
 
-Este comando analisa código existente identificando complexidade desnecessária, abstrações prematuras e funcionalidades não utilizadas que podem ser simplificadas ou removidas.
+Analisa código existente identificando complexidade desnecessária, abstrações prematuras e funcionalidades não utilizadas que podem ser simplificadas.
 
-## 🎯 Objetivo
+## Como usar
 
-Identificar e simplificar código seguindo YAGNI (You Aren't Gonna Need It), removendo over-engineering acumulado.
-
-## 📋 Como usar
-
-```
+````bash
 /review-yagni
-```
-
-OU revisar arquivo/módulo específico:
-
-```
 /review-yagni "caminho/do/arquivo.py"
-```
+/review-yagni "módulo específico"
 
-## 🔍 Processo de Execução
+```text
 
-Quando este comando for executado, você DEVE:
+## Padrões de over-engineering
 
-### 1. Escanear Codebase
+### 1. Abstrações Prematuras
 
-Analisar arquivos identificando sinais de over-engineering:
+```text
 
-```
-⚠️  REVISÃO YAGNI - PROCURANDO OVER-ENGINEERING
+❌ Uma classe abstrata com 1 implementação
+❌ Interface usada por apenas 1 função
+❌ Factory pattern para criar um tipo
 
-📂 Escaneando arquivos:
-- [arquivo1] ... ✅ OK
-- [arquivo2] ... ⚠️  Complexidade suspeita
-- [arquivo3] ... ✅ OK
-- [arquivo4] ... ⚠️  Abstração desnecessária
-- [arquivo5] ... ⚠️  Código não utilizado
+```text
 
-Analisando...
-```
+### 2. Código Não Utilizado
 
-**Para projetos com git history**:
-```
-🔍 ANÁLISE GIT BLAME (Projeto Legacy)
+```text
 
-Analisando histórico de commits para entender quando
-código foi adicionado e se ainda está em uso:
+❌ Funções nunca chamadas
+❌ Imports não utilizados
+❌ Arquivos sem referência
 
-- Código antigo (>6 meses) sem alterações → Pode estar obsoleto
-- Abstrações adicionadas recentemente → Possivelmente prematura
-- Código nunca referenciado em commits recentes → Candidato à remoção
+```text
 
-Executando git blame em arquivos suspeitos...
-```
+### 3. Configuração Excessiva
 
-### 2. Detectar Anti-Patterns
+```text
 
-Identificar padrões comuns de over-engineering:
+❌ Arquivo config.json com 100 variáveis
+❌ Múltiplos ambientes (dev, test, staging, prod) quando não precisa
+❌ Feature flags para comportamento simples
 
-```
-🚨 OVER-ENGINEERING DETECTADO
+```text
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. ⚠️  Abstração Prematura
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+### 4. Validação Sofisticada
 
-Arquivo: processors/base.py
-Problema: AbstractProcessorFactory usado apenas 1 vez
-📅 Adicionado: 3 meses atrás (git blame)
-👤 Por: dev@example.com
-💬 Commit: "add factory for future processors"
+```text
 
-Código atual:
-class AbstractProcessorFactory:
-    def create_processor(self, type):
-        if type == "email":
-            return EmailProcessor()
-        # Apenas 1 tipo usado!
+❌ Regex complexa quando simples check funciona
+❌ Múltiplas camadas de validação
+❌ Tratamento de casos impossíveis
 
-# Usado apenas em:
-processor = factory.create_processor("email")
+```text
 
-💡 YAGNI: Factory com 1 produto é over-engineering
-⚠️  "future processors" nunca foram adicionados (3 meses)
+## Processo
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2. ⚠️  Configuração Excessiva
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. **Escanear codebase**:
+   - Analisar todos os arquivos
+   - Procurar padrões de over-engineering
+   - Listar achados por severidade
 
-Arquivo: config/manager.py
-Problema: 200 linhas para gerenciar 2 configurações
+2. **Identificar abstrações com 1 uso**:
+   - Interfaces não implementadas
+   - Classes abstratas com 1 filho
+   - Padrões sem casos de uso
 
-Código atual:
-class ConfigurationManager:
-    def __init__(self):
-        self.config = {}
-        self.validators = []
-        self.observers = []
+3. **Encontrar código não utilizado**:
+   - Funções nunca chamadas
+   - Imports mortos
+   - Branches de código obsoleto
 
-    def load_from_yaml(self): ...
-    def validate_schema(self): ...
-    def notify_observers(self): ...
-    # 200 linhas...
+4. **Revisar configuração**:
+   - Variáveis nunca lidas
+   - Settings redundantes
+   - Complexidade desnecessária
 
-# Usado apenas para:
-MAX_RETRIES = config.get("max_retries")
-TIMEOUT = config.get("timeout")
+5. **Gerar relatório**:
+   - Listar achados com localização
+   - Sugerir simplificações
+   - Indicar impacto da remoção
 
-💡 YAGNI: Dict simples seria suficiente
+## Output esperado
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-3. ⚠️  Pattern Desnecessário
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```text
 
-Arquivo: validators/email.py
-Problema: Strategy Pattern sem necessidade
+⚠️ OVER-ENGINEERING DETECTADO
 
-Código atual:
-class ValidationStrategy(ABC):
-    @abstractmethod
-    def validate(self, data): pass
+📊 Achados: 12 oportunidades
+- Abstrações prematuras: 4
+- Código morto: 5
+- Configuração excessiva: 3
 
-class EmailValidationStrategy(ValidationStrategy):
-    def validate(self, email):
-        return "@" in email
+🔴 CRÍTICO (remover):
+- Classe UserValidator (nunca usada)
+- Função calculate_hash() (chamada 1x, inline OK)
 
-class PhoneValidationStrategy(ValidationStrategy):
-    def validate(self, phone):
-        return len(phone) == 10
+🟡 AVISO (considerar):
+- Interface Database com 1 implementação
+- Config com 20 variáveis não lidas
 
-# Apenas 2 estratégias, nunca trocadas em runtime
+💡 Recomendação:
+/refactor-now para refatorar quando padrão emergir
 
-💡 YAGNI: Funções simples são suficientes
-```
+```text
 
-### 3. Sugerir Simplificações
+## Próximos comandos
 
-Para cada problema detectado:
-
-```
-✅ SIMPLIFICAÇÕES SUGERIDAS
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. Remover AbstractProcessorFactory
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Antes (15 linhas):
-class AbstractProcessorFactory:
-    def create_processor(self, type):
-        if type == "email":
-            return EmailProcessor()
-
-factory = AbstractProcessorFactory()
-processor = factory.create_processor("email")
-
-Depois (1 linha):
-processor = EmailProcessor()  # Direto!
-
-Impacto:
-- Remove arquivo base.py (15 linhas)
-- Código mais direto
-- Sem complexidade desnecessária
-
-Simplificar? (s/n)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2. Substituir ConfigurationManager por dict
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Antes (200 linhas):
-class ConfigurationManager:
-    # ... 200 linhas ...
-
-config = ConfigurationManager()
-config.load_from_yaml("config.yaml")
-MAX_RETRIES = config.get("max_retries")
-
-Depois (3 linhas):
-CONFIG = {
-    "max_retries": 3,
-    "timeout": 30
-}
-
-Impacto:
-- Remove arquivo manager.py (200 linhas!)
-- Config clara e simples
-- Fácil de modificar
-
-Simplificar? (s/n)
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-3. Remover Strategy Pattern
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-Antes (30 linhas):
-class ValidationStrategy(ABC): ...
-class EmailValidationStrategy(ValidationStrategy): ...
-class PhoneValidationStrategy(ValidationStrategy): ...
-
-validator = EmailValidationStrategy()
-if validator.validate(email):
-    ...
-
-Depois (6 linhas):
-def validate_email(email):
-    return "@" in email
-
-def validate_phone(phone):
-    return len(phone) == 10
-
-if validate_email(email):
-    ...
-
-Impacto:
-- Remove arquivo strategy.py (30 linhas)
-- Funções simples e diretas
-- Sem hierarquia desnecessária
-
-Simplificar? (s/n)
-```
-
-## 📚 Sinais de Over-Engineering
-
-> **📘 Complete Reference**: See `docs/YAGNI_REFERENCE.md` for comprehensive list of over-engineering patterns, anti-patterns, and simplification strategies.
-
-### Quick Reference - Common Patterns:
-
-**🚨 Categoria 1: Abstrações Prematuras**
-- Abstract class with 1 implementation → Use direct function
-- Interface for 1-2 implementations → Use simple functions
-- Factory without variation → Use direct instantiation
-
-**🚨 Categoria 2: Configuração Excessiva**
-- ConfigurationManager for < 10 values → Use dict/constants
-- Environment variables wrapper class → Use direct os.getenv
-
-**🚨 Categoria 3: Patterns Desnecessários**
-- Singleton for stateless object → Use function
-- Observer Pattern without dynamic switching → Use direct call
-- Strategy Pattern without runtime variation → Use simple implementation
-
-**🚨 Categoria 4: Código Não Utilizado**
-- Functions/classes never called → DELETE
-- Unused parameters → REMOVE
-- Unused imports → DELETE
-
-**For detailed examples and code snippets**, refer to `docs/YAGNI_REFERENCE.md`.
-
-## 📊 Análise de Complexidade
-
-Para cada arquivo, calcular:
-
-```
-📊 MÉTRICAS DE COMPLEXIDADE
-
-Arquivo: email_processor.py
-├─ Linhas: 250
-├─ Classes: 5
-├─ Funções: 15
-├─ Complexidade Ciclomática: 45
-├─ Abstrações: 3 (AbstractX, FactoryY, StrategyZ)
-└─ Uso real: 30% do código
-
-⚠️  SINAIS DE OVER-ENGINEERING:
-1. Apenas 30% do código usado
-2. 3 abstrações para funcionalidade simples
-3. Complexidade alta (45) para tarefa básica
-
-💡 RECOMENDAÇÃO: Simplificar drasticamente
-```
-
-## 📝 Checklist de Revisão
-
-### Para cada arquivo:
-
-```
-✅ CHECKLIST DE REVISÃO YAGNI
-
-[ ] Classes abstratas têm 3+ implementações?
-    ❌ Menos de 3 → REMOVER abstração
-
-[ ] Factory cria 3+ tipos diferentes?
-    ❌ Apenas 1-2 → USAR criação direta
-
-[ ] Pattern usado em 3+ contextos?
-    ❌ Apenas 1-2 → SIMPLIFICAR para função
-
-[ ] Configuração gerencia 10+ valores?
-    ❌ Menos de 10 → USAR dict/constantes
-
-[ ] Função tem 3+ parâmetros usados?
-    ❌ Parâmetros não usados → REMOVER
-
-[ ] Classe tem estado que varia?
-    ❌ Stateless → USAR função
-
-[ ] Código foi usado nos últimos 3 meses?
-    ❌ Não usado → DELETAR
-
-[ ] Complexidade justificada por requisito real?
-    ❌ Complexidade antecipada → SIMPLIFICAR
-```
-
-## 🎯 Estratégias de Simplificação
-
-> **📘 Complete Guide**: See `docs/YAGNI_REFERENCE.md` sections:
-> - "Simplification Strategies" - Detailed refactoring patterns
-> - "Core YAGNI Principles" - Fundamental guidelines
-
-### Quick Reference:
-
-1. **Replace Class with Function** - When class is stateless
-2. **Inline Complex Abstraction** - When abstraction used only once
-3. **Replace Configuration Class with Constants** - For < 10 config values
-4. **Remove Unused Code** - Delete code not called
-
-**For code examples**, see `docs/YAGNI_REFERENCE.md`.
-
-## 💡 Princípios YAGNI
-
-> **📘 Core Principles**: Full list in `docs/YAGNI_REFERENCE.md`
-
-Quick mantras:
-- **Delete > Refactor** - Delete unused code, don't improve it
-- **Simple > Elegant** - Simple code > "Well-architected" code
-- **Direct > Abstract** - Direct call > Complex abstraction
-- **Now > Future** - Solve current problem, not hypothetical
-- **Measure Use** - Unused 3+ months = probably unnecessary
-
-## 📊 Relatório Final
-
-Após análise completa:
-
-```
-═══════════════════════════════════════════
-📊 RELATÓRIO YAGNI - RESULTADOS
-═══════════════════════════════════════════
-
-Arquivos analisados: 15
-
-🚨 OVER-ENGINEERING DETECTADO:
-
-1. Abstrações desnecessárias: 5
-   - AbstractProcessor (1 uso)
-   - ProcessorFactory (1 tipo)
-   - ValidationStrategy (2 usos)
-   - ConfigurationManager (3 configs)
-   - SingletonManager (stateless)
-
-2. Código não utilizado: 8 arquivos/funções
-   - legacy_processor.py (não usado)
-   - old_validator.py (não usado)
-   - função helper_x() (não chamada)
-   [...]
-
-3. Configuração excessiva: 2
-   - ConfigurationManager: 200 linhas → 10 linhas
-   - EnvManager: 80 linhas → 5 linhas
-
-✅ SIMPLIFICAÇÕES POSSÍVEIS:
-
-- Remover: 450 linhas
-- Simplificar: 300 linhas → 50 linhas
-- Total: Redução de ~65% de código!
-
-💡 IMPACTO ESPERADO:
-- Código mais simples
-- Menos bugs (menos código = menos bugs)
-- Manutenção mais fácil
-- Novos desenvolvedores entendem mais rápido
-
-═══════════════════════════════════════════
-
-Aplicar todas as simplificações? (s/n)
-Ou revisar uma por uma? (r)
-```
-
-## 📄 Após Simplificação
-
-Se simplificações significativas foram feitas:
-
-```
-✅ SIMPLIFICAÇÃO COMPLETA!
-
-Código simplificado com sucesso.
-
-Registrar aprendizado no PRD? (s/n)
-```
-
-**Se SIM**:
-```
-Adicionando à seção "Lições Aprendidas" do PRD:
-
-📝 Retrospectiva - Simplificação YAGNI
-**Data**: [data]
-- **O que foi simplificado**:
-  - [lista de simplificações]
-- **Impacto**:
-  - Linhas removidas: [N]
-  - Complexidade reduzida: [%]
-  - Manutenibilidade: Melhorada
-- **Lição aprendida**:
-  - [aprendizado sobre over-engineering detectado]
-
-✅ Aprendizado registrado em docs/PRD.md
-```
-
-**Exemplos de lições aprendidas**:
-- "Abstrações prematuras adicionaram complexidade sem benefício"
-- "ConfigurationManager com 200 linhas era desnecessário - dict simples suficiente"
-- "Padrões devem emergir, não serem planejados antecipadamente"
-
----
-
-## ⚡ Lembre-se
-
-- YAGNI = Delete código desnecessário
-- Simples > Complexo
-- Menos código = Menos bugs
-- Abstrações devem emergir, não serem planejadas
-- Se não é usado, provavelmente não é necessário
-- Código "feio mas funcional" > Código "bonito mas complexo"
-- Refatorar = Simplificar, não complicar
-- **Registre aprendizados sobre over-engineering no PRD**
+- `/refactor-now` - Refatorar padrões emergentes
+- `/add-increment` - Adicionar feature com YAGNI
+- `/commit` - Commitar simplificações
+````

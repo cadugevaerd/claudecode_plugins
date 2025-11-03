@@ -9,6 +9,7 @@ Padrões de código comuns e best practices para desenvolver evaluations de LLMs
 ## Como usar
 
 Execute o comando e opcionalmente especifique:
+
 - Tipo de padrão (dataset-creation, testing, ci-cd, mocking)
 - Framework (openevals, langsmith, pytest)
 
@@ -18,10 +19,11 @@ Execute o comando e opcionalmente especifique:
 
 #### Pattern 1.1: Golden Dataset Manual
 
-**Quando usar**: Dataset pequeno (<100 exemplos), alta qualidade necessária
+**Quando usar**: Dataset pequeno (\<100 exemplos), alta qualidade necessária
 
 **Estrutura**:
-```json
+
+````json
 [
   {
     "inputs": {
@@ -40,9 +42,11 @@ Execute o comando e opcionalmente especifique:
     }
   }
 ]
-```
+
+```text
 
 **Código de carregamento**:
+
 ```python
 import json
 from pathlib import Path
@@ -62,15 +66,16 @@ def validate_dataset_schema(dataset: List[Dict[str, Any]]) -> bool:
             raise ValueError(f"Exemplo faltando chaves: {required_keys - set(example.keys())}")
 
     return True
-```
 
----
+```text
+
 
 #### Pattern 1.2: Synthetic Dataset Generation
 
 **Quando usar**: Dataset grande (100+), diversidade necessária, bootstrap rápido
 
 **Código (usando LLM)**:
+
 ```python
 from openai import OpenAI
 from typing import List, Dict
@@ -145,15 +150,16 @@ Retorne JSON no formato:
 dataset = generate_synthetic_dataset(num_examples=50)
 with open("datasets/synthetic.json", "w") as f:
     json.dump(dataset, f, indent=2)
-```
 
----
+```text
+
 
 #### Pattern 1.3: Real Data Sampling
 
 **Quando usar**: Production data disponível, avaliação de casos reais
 
 **Código**:
+
 ```python
 from datetime import datetime, timedelta
 import random
@@ -233,9 +239,9 @@ def sample_production_data(
             })
 
     return dataset
-```
 
----
+```text
+
 
 ### 2. Testing Patterns
 
@@ -244,6 +250,7 @@ def sample_production_data(
 **Quando usar**: Sempre! Testar evaluators antes de usar em production
 
 **Código (pytest)**:
+
 ```python
 import pytest
 from evaluators.hallucination_evaluator import hallucination_evaluator
@@ -292,15 +299,16 @@ class TestHallucinationEvaluator:
         result = hallucination_evaluator(outputs, inputs)
 
         assert result["score"] >= expected_min_score
-```
 
----
+```text
+
 
 #### Pattern 2.2: Integration Testing with LangSmith
 
 **Quando usar**: Testar evaluation completa end-to-end
 
 **Código (pytest + LangSmith)**:
+
 ```python
 import pytest
 from langsmith import evaluate
@@ -339,15 +347,16 @@ def test_rag_chatbot_evaluation():
     # Asserts
     assert results["hallucination_evaluator"]["mean"] >= 0.8
     assert results["relevance_evaluator"]["mean"] >= 0.7
-```
 
----
+```text
+
 
 #### Pattern 2.3: Mocking LLM Calls in Tests
 
 **Quando usar**: Testes rápidos, determinísticos, sem custos de API
 
 **Código (pytest-mock)**:
+
 ```python
 import pytest
 from unittest.mock import Mock, patch
@@ -391,9 +400,9 @@ def test_with_fixture(mock_openai_client):
 
     # Seu teste aqui
     pass
-```
 
----
+```text
+
 
 ### 3. CI/CD Patterns
 
@@ -402,6 +411,7 @@ def test_with_fixture(mock_openai_client):
 **Quando usar**: Executar evaluations automaticamente em PRs
 
 **Código (.github/workflows/evaluation.yml)**:
+
 ```yaml
 name: LLM Evaluation
 
@@ -460,15 +470,16 @@ jobs:
               repo: context.repo.repo,
               body: comment
             });
-```
 
----
+```text
+
 
 #### Pattern 3.2: Regression Detection
 
 **Quando usar**: Detectar degradação de performance entre versões
 
 **Código**:
+
 ```python
 import json
 from pathlib import Path
@@ -525,9 +536,9 @@ if __name__ == "__main__":
     # Fail CI se houver regressão
     if any(r["is_regression"] for r in regressions.values()):
         exit(1)
-```
 
----
+```text
+
 
 ### 4. Advanced Patterns
 
@@ -536,6 +547,7 @@ if __name__ == "__main__":
 **Quando usar**: Comparar duas versões de modelo/prompt
 
 **Código**:
+
 ```python
 from langsmith import evaluate
 from typing import Callable, Dict
@@ -592,15 +604,16 @@ def ab_test_evaluators(
             }
 
     return comparison
-```
 
----
+```text
+
 
 #### Pattern 4.2: Pairwise Evaluation
 
 **Quando usar**: Comparar outputs lado a lado
 
 **Código**:
+
 ```python
 from openai import OpenAI
 
@@ -655,9 +668,9 @@ Retorne JSON:
     )
 
     return json.loads(response.choices[0].message.content)
-```
 
----
+```text
+
 
 ## Best Practices Summary
 
@@ -675,3 +688,4 @@ Retorne JSON:
 - Pytest Best Practices: https://docs.pytest.org/
 - LangSmith CI/CD: https://docs.smith.langchain.com/evaluation/how_to_guides/pytest
 - Synthetic Data: https://www.confident-ai.com/blog/the-definitive-guide-to-synthetic-data-generation-using-llms
+````

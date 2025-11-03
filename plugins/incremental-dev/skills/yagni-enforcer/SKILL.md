@@ -4,6 +4,11 @@ description: Detecta automaticamente quando código está sendo criado "para o f
 allowed-tools: Read, Grep, Glob
 ---
 
+name: yagni-enforcer
+description: Detecta automaticamente quando código está sendo criado "para o futuro" ou tem complexidade desnecessária. Use quando implementar funcionalidades, criar classes/abstrações, ou adicionar configurações. Detecta over-engineering, abstrações prematuras, e antecipação de requisitos futuros.
+allowed-tools: Read, Grep, Glob
+version: 1.0.0
+
 # YAGNI Enforcer
 
 Skill que detecta automaticamente quando código está prestes a violar YAGNI (You Aren't Gonna Need It), identificando over-engineering, abstrações prematuras, e funcionalidades antecipadas.
@@ -13,13 +18,14 @@ Skill que detecta automaticamente quando código está prestes a violar YAGNI (Y
 Invoque automaticamente quando:
 
 1. **Criar classes abstratas/interfaces** - "Vou criar AbstractX..."
-2. **Implementar design patterns** - "Usando Factory/Strategy..."
-3. **Adicionar configuração complexa** - "ConfigManager para..."
-4. **Antecipar funcionalidades** - "Para facilitar no futuro..."
-5. **Criar múltiplos níveis de abstração** - Hierarquias complexas
-6. **Implementar features não pedidas** - "Vou adicionar também..."
+1. **Implementar design patterns** - "Usando Factory/Strategy..."
+1. **Adicionar configuração complexa** - "ConfigManager para..."
+1. **Antecipar funcionalidades** - "Para facilitar no futuro..."
+1. **Criar múltiplos níveis de abstração** - Hierarquias complexas
+1. **Implementar features não pedidas** - "Vou adicionar também..."
 
 ### Termos Suspeitos
+
 - "para o futuro", "caso precise", "para facilitar expansão"
 - "preparar para", "deixar flexível", "para reutilização"
 - "será útil depois", "pode ser necessário"
@@ -27,6 +33,7 @@ Invoque automaticamente quando:
 ## ⚠️ Padrões YAGNI
 
 ### Padrão 1: Abstração Prematura
+
 - Classe abstrata com 1 implementação
 - Interface para 1-2 implementações
 - Hierarquia sem 3+ casos de uso
@@ -34,6 +41,7 @@ Invoque automaticamente quando:
 **Alternativa**: Função/classe direta, refatore quando tiver 3+ tipos
 
 ### Padrão 2: Antecipação de Futuro
+
 - Parâmetros não usados "para depois"
 - Comentários "TODO: adicionar X"
 - Código preparando expansão hipotética
@@ -41,6 +49,7 @@ Invoque automaticamente quando:
 **Alternativa**: Implementar apenas o necessário AGORA
 
 ### Padrão 3: Over-Configuration
+
 - ConfigurationManager para < 10 configs
 - Sistema elaborado para valores simples
 - Validação complexa de config
@@ -48,12 +57,14 @@ Invoque automaticamente quando:
 **Alternativa**: Dict simples para < 10 configs
 
 ### Padrão 4: Factory Desnecessário
+
 - Factory criando apenas 1 tipo
 - Factory sem variação runtime
 
 **Alternativa**: Criação direta (não precisa factory com 1 tipo)
 
 ### Padrão 5: Patterns Forçados
+
 - Singleton para objeto stateless
 - Observer sem necessidade de notificação
 - Strategy com apenas 1-2 implementações
@@ -72,7 +83,8 @@ Invoque automaticamente quando:
 
 Ao implementar código, verificar:
 
-```
+````text
+
 [ ] Criando abstração? → Tenho 3+ casos? NÃO → ⚠️
 [ ] Usando pattern? → Tenho 3+ casos? NÃO → ⚠️
 [ ] Adicionando config? → 10+ valores? NÃO → ⚠️
@@ -80,7 +92,8 @@ Ao implementar código, verificar:
 [ ] Adicionando parâmetro? → Usa AGORA? NÃO → ⚠️
 [ ] "Para o futuro"? → Requisito concreto? NÃO → ⚠️
 [ ] Hierarquia de classes? → Realmente necessária? NÃO → ⚠️
-```
+
+```text
 
 ## 💡 Princípios de Ouro
 
@@ -89,6 +102,11 @@ Ao implementar código, verificar:
 3. **Simples > Complexo**: Sempre preferir simplicidade
 4. **MVP funcional**: Funcionando > código elegante
 5. **Delete > Refactor**: Não adicione = não precisa refatorar
+
+## 🔗 Integração com Outras Skills
+
+- **PRD Manager**: Alerta quando código implementa features fora do MVP definido
+- **Refactor Advisor**: Evita refatoração prematura de código simples (mantém YAGNI)
 
 ## 📚 Referência Detalhada
 
@@ -107,3 +125,4 @@ Para aprofundar em YAGNI:
 ❌ Não implementar código (apenas alertar)
 
 **Valor**: Desenvolvimento INCREMENTAL e SIMPLES, sem complexidade prematura.
+````

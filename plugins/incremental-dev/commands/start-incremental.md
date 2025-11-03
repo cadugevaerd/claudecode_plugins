@@ -9,15 +9,17 @@ Inicia desenvolvimento incremental identificando o **Minimum Viable Product (MVP
 
 ## Como usar
 
-```bash
+````bash
 /start-incremental "objetivo do projeto"
-```
+
+```text
 
 Ou modo interativo sem argumentos:
 
 ```bash
 /start-incremental
-```
+
+```text
 
 ## Processo
 
@@ -25,7 +27,8 @@ Ou modo interativo sem argumentos:
 
 **Se detectar projeto LEGACY** (código existente):
 
-```
+```text
+
 ⚠️ PROJETO EXISTENTE DETECTADO
 
 Este comando é para NOVOS projetos.
@@ -35,7 +38,8 @@ Para projetos legacy, use:
 - /prd-retrofit (apenas criar PRD retroativo)
 
 Continuar mesmo assim? (s/n)
-```
+
+```text
 
 **Se novo**: Prosseguir
 
@@ -58,7 +62,8 @@ Se nenhuma descrição foi fornecida, fazer perguntas:
 
 Exibir resumo:
 
-```
+```text
+
 ═══════════════════════════════════════════
 📋 RESUMO DO SEU PRD
 ═══════════════════════════════════════════
@@ -77,7 +82,8 @@ Usuário: [usuario_final]
 - [fora_de_escopo]
 
 Este resumo está correto? (s/n/editar)
-```
+
+```text
 
 ### 4. Criar PRD.md
 
@@ -108,23 +114,29 @@ Salvar em `docs/PRD.md` ou `PRD.md` (raiz).
 ❌ GRANDE: "Sistema de processamento com fila, validação, logging e retry"
 
 ✅ MVP:
-```
+
+```text
+
 - [ ] Receber um email (string)
 - [ ] Processar (função simples)
 - [ ] Retornar "processado" ou "erro"
-```
+
+```text
 
 ### Exemplo 2: API REST com LangGraph
 
 ❌ GRANDE: "API com cache, validação, retry, autenticação, logging, métricas"
 
 ✅ MVP:
-```
+
+```text
+
 - [ ] Endpoint POST /process
 - [ ] Receber documento (texto simples)
 - [ ] LangGraph com 1 node
 - [ ] Retornar resultado
-```
+
+```text
 
 ## Princípios YAGNI
 
@@ -165,3 +177,4 @@ Use:
 
 **Importante**: MVP não precisa ser "código bonito"!
 Hardcode é OK. Refatore quando padrões emergirem (3+ casos).
+````

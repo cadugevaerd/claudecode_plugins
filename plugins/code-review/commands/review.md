@@ -18,18 +18,19 @@ Executa uma análise completa e automática do código modificado, identificando
 O comando executa automaticamente os seguintes passos:
 
 1. **Identificação do Contexto**: Analisa `git status` e `git diff` para identificar mudanças
-2. **Análise de Segurança**: Procura credenciais hardcoded, funções perigosas, inputs sem sanitização
-3. **Análise de Qualidade**: Verifica estrutura, boas práticas, performance
-4. **Análise de Testes**: Valida cobertura e qualidade dos testes
-5. **Documentação**: Verifica se código novo está documentado
-6. **Débito Técnico**: Identifica código duplicado, complexidade alta, acoplamento
-7. **Relatório Final**: Gera relatório estruturado com problemas priorizados
+1. **Análise de Segurança**: Procura credenciais hardcoded, funções perigosas, inputs sem sanitização
+1. **Análise de Qualidade**: Verifica estrutura, boas práticas, performance
+1. **Análise de Testes**: Valida cobertura e qualidade dos testes
+1. **Documentação**: Verifica se código novo está documentado
+1. **Débito Técnico**: Identifica código duplicado, complexidade alta, acoplamento
+1. **Relatório Final**: Gera relatório estruturado com problemas priorizados
 
 ## Como usar
 
-```bash
+````bash
 /review
-```
+
+```text
 
 O comando detecta automaticamente a linguagem e framework do seu projeto e adapta a análise.
 
@@ -38,22 +39,26 @@ O comando detecta automaticamente a linguagem e framework do seu projeto e adapt
 ### Revisar mudanças antes de commit
 
 ```bash
+
 # Após fazer modificações
 git add .
 /review
 
 # O plugin analisa as mudanças staged e fornece feedback
-```
+
+```text
 
 ### Revisar pull request
 
 ```bash
+
 # Checkout na branch do PR
 git checkout feature-branch
 /review
 
 # Analisa todas as mudanças da branch
-```
+
+```text
 
 ## Saída
 
@@ -88,3 +93,4 @@ O agente `code-reviewer` adapta a análise baseado no contexto do projeto:
 - Detecta frameworks e ferramentas em uso
 - Aplica boas práticas específicas da stack
 - Pula análises não aplicáveis (ex: testes se não houver framework)
+````

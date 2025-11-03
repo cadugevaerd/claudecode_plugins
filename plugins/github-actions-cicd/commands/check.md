@@ -9,6 +9,7 @@ Analisa workflows GitHub Actions existentes no projeto, verifica versões de act
 ## 🎯 Objetivo
 
 Realizar auditoria completa de workflows GitHub Actions:
+
 - Detectar workflows existentes
 - Verificar versões de actions
 - Comparar com últimas versões disponíveis no GitHub Marketplace
@@ -17,15 +18,17 @@ Realizar auditoria completa de workflows GitHub Actions:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /cicd-check
-```
+
+```text
 
 Com análise detalhada:
 
 ```bash
 /cicd-check --detailed
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -34,22 +37,27 @@ Com análise detalhada:
 **Buscar workflows em `.github/workflows/`**:
 
 ```bash
+
 # Listar todos os workflows
 find .github/workflows -name "*.yml" -o -name "*.yaml" 2>/dev/null
-```
+
+```text
 
 **Se NÃO encontrar workflows**:
 
-```
+```text
+
 ❌ Nenhum workflow GitHub Actions encontrado.
 
 💡 Para inicializar CI/CD, use:
    /cicd-init
-```
+
+```text
 
 **Se encontrar workflows**:
 
-```
+```text
+
 ✅ Workflows encontrados:
 
 📁 .github/workflows/
@@ -58,7 +66,8 @@ find .github/workflows -name "*.yml" -o -name "*.yaml" 2>/dev/null
 └─ release.yml
 
 Analisando...
-```
+
+```text
 
 ### 2. Analisar Cada Workflow
 
@@ -76,7 +85,8 @@ try:
 except yaml.YAMLError as e:
     print(f"❌ {workflow_file}: Erro de sintaxe YAML")
     print(f"   {e}")
-```
+
+```text
 
 #### b) Extrair Informações do Workflow
 
@@ -87,7 +97,8 @@ workflow_info = {
     "jobs": list(workflow.get("jobs", {}).keys()),
     "actions_used": []
 }
-```
+
+```text
 
 #### c) Identificar Actions Utilizadas
 
@@ -103,7 +114,8 @@ for job_name, job_config in workflow.get("jobs", {}).items():
                 "job": job_name,
                 "step_name": step.get("name", "Sem nome")
             })
-```
+
+```text
 
 ### 3. Verificar Versões de Actions
 
@@ -112,8 +124,11 @@ for job_name, job_config in workflow.get("jobs", {}).items():
 #### a) Extrair Nome e Versão
 
 ```python
+
 # Exemplo: actions/checkout@v4
+
 # Exemplo: astral-sh/setup-uv@v6
+
 # Exemplo: actions/setup-python@8ade135a41bc03ea155e62e844d188df1ea18608
 
 import re
@@ -122,7 +137,8 @@ match = re.match(r"([^@]+)@(.+)", action)
 if match:
     action_name = match.group(1)
     current_version = match.group(2)
-```
+
+```text
 
 #### b) Classificar Tipo de Versão
 
@@ -140,19 +156,22 @@ def classify_version(version):
         return "branch", "❌"  # NUNCA usar!
     else:
         return "unknown", "❓"
-```
+
+```text
 
 #### c) Buscar Última Versão no GitHub
 
 **Usar GitHub API para buscar releases**:
 
 ```bash
+
 # Via gh CLI
 gh api repos/{owner}/{repo}/releases/latest --jq '.tag_name'
 
 # Exemplo para actions/checkout
 gh api repos/actions/checkout/releases/latest --jq '.tag_name'
-```
+
+```text
 
 **Actions populares e versões (atualizadas 2025)**:
 
@@ -169,7 +188,8 @@ KNOWN_ACTIONS_VERSIONS = {
     "docker/build-push-action": "v5",
     "docker/setup-buildx-action": "v3",
 }
-```
+
+```text
 
 ### 4. Identificar Problemas de Segurança
 
@@ -216,13 +236,15 @@ for action_info in actions_used:
                 "issue": f"Action third-party: {action_name}",
                 "recommendation": "Revisar código da action antes de usar"
             })
-```
+
+```text
 
 ### 5. Gerar Relatório Completo
 
 **Formato de saída**:
 
-```
+```text
+
 ═══════════════════════════════════════════════════════════════
 📊 ANÁLISE DE WORKFLOWS GITHUB ACTIONS
 ═══════════════════════════════════════════════════════════════
@@ -327,7 +349,8 @@ Para mais detalhes sobre uma action específica:
    /cicd-check --action actions/setup-python
 
 ═══════════════════════════════════════════════════════════════
-```
+
+```text
 
 ## 🔧 Opções Avançadas
 
@@ -335,19 +358,22 @@ Para mais detalhes sobre uma action específica:
 
 ```bash
 /cicd-check --action actions/checkout
-```
+
+```text
 
 **Exportar relatório JSON**:
 
 ```bash
 /cicd-check --format json --output cicd-report.json
-```
+
+```text
 
 **Verificar apenas segurança**:
 
 ```bash
 /cicd-check --security-only
-```
+
+```text
 
 ## 📊 Métricas Calculadas
 
@@ -370,3 +396,4 @@ O comando também calcula:
 - [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
 - [GitHub Actions Marketplace](https://github.com/marketplace?type=actions)
 - [Dependabot for GitHub Actions](https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot)
+````

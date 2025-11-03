@@ -7,92 +7,114 @@ Complete step-by-step instructions for all 8 setup activities.
 **Purpose**: Isolate project dependencies from system Python
 
 **Commands**:
-```bash
+
+````bash
 python -m venv venv
-```
+
+```text
 
 On Windows, if `python` doesn't work:
+
 ```bash
 python3 -m venv venv
-```
+
+```text
 
 **Verification**:
+
 ```bash
+
 # Check venv exists
 ls -la venv/
 
 # On Windows
 dir venv\
-```
+
+```text
 
 **Troubleshooting**:
 - If `python -m venv` fails: Try `python3 -m venv venv`
 - If permission denied: Use `chmod +x venv/bin/activate`
 - If venv already exists: Delete with `rm -rf venv/` and create new
 
----
 
 ## Activity 2: Activate Virtual Environment
 
 **Purpose**: Load the isolated environment so pip installs go to venv, not system
 
 **On Linux/macOS**:
+
 ```bash
 source venv/bin/activate
-```
+
+```text
 
 **On Windows (PowerShell)**:
+
 ```powershell
 venv\Scripts\activate
-```
+
+```text
 
 **On Windows (cmd.exe)**:
+
 ```cmd
 venv\Scripts\activate.bat
-```
+
+```text
 
 **Verification** (you should see `(venv)` prefix in terminal):
+
 ```bash
 (venv) $ which python
 /path/to/project/venv/bin/python
 
 (venv) $ python --version
 Python 3.10.x
-```
+
+```text
 
 **Troubleshooting**:
 - If prompt doesn't show `(venv)`: Not activated, run command again
 - If "command not found": Wrong path or venv not created yet
 - If permission denied on macOS/Linux: Run `chmod +x venv/bin/activate`
 
----
 
 ## Activity 3: Install Core Dependencies
 
 **Purpose**: Install packages needed for LLM development and observability
 
 **Command** (with venv activated):
+
 ```bash
 pip install langchain anthropic langsmith python-dotenv
-```
+
+```text
 
 **Full install with additional packages** (optional):
+
 ```bash
 pip install langchain anthropic langsmith python-dotenv pydantic pytest
-```
+
+```text
 
 **Verification**:
+
 ```bash
 pip list | grep -E "langchain|anthropic|langsmith|python-dotenv"
-```
+
+```text
 
 Expected output:
-```
+
+```text
+
 anthropic           0.34.x
 langchain           0.1.x
 langsmith           0.1.x
 python-dotenv       1.0.x
-```
+
+```text
 
 **Troubleshooting**:
 - If installation is slow: Network issue or PyPI slow
@@ -103,9 +125,7 @@ python-dotenv       1.0.x
   pip install anthropic
   pip install langsmith
   pip install python-dotenv
-  ```
-
----
+````
 
 ## Activity 4: Create .env File
 
@@ -114,7 +134,9 @@ python-dotenv       1.0.x
 **Location**: Project root directory
 
 **Template** (create file named `.env`):
-```bash
+
+````bash
+
 # LangSmith Configuration
 LANGSMITH_API_KEY=your-key-from-smith.langchain.com
 LANGSMITH_PROJECT="your-project-name"
@@ -125,13 +147,15 @@ ANTHROPIC_API_KEY=your-key-from-console.anthropic.com
 
 # Environment
 ENVIRONMENT=development
-```
+
+```text
 
 **How to create**:
 
 Using VS Code: Create file `.env` in project root, paste template
 
 Using command line:
+
 ```bash
 cat > .env << 'EOF'
 LANGSMITH_API_KEY=your-key
@@ -140,14 +164,17 @@ LANGSMITH_ENDPOINT=https://api.smith.langchain.com
 ANTHROPIC_API_KEY=your-key
 ENVIRONMENT=development
 EOF
-```
+
+```text
 
 **Get API Keys**:
 1. **LangSmith**: Visit smith.langchain.com → Sign up (free) → Settings → Create API key
 2. **Anthropic**: Visit console.anthropic.com → Login → API Keys → Create new key
 
 **Verification**:
+
 ```bash
+
 # Check file exists
 ls -la .env
 
@@ -162,14 +189,14 @@ load_dotenv()
 print("LANGSMITH_API_KEY:", bool(os.getenv('LANGSMITH_API_KEY')))
 print("ANTHROPIC_API_KEY:", bool(os.getenv('ANTHROPIC_API_KEY')))
 EOF
-```
+
+```text
 
 **Troubleshooting**:
 - If keys not loading: Check file is in project root (not subfolder)
 - If `load_dotenv` fails: Install with `pip install python-dotenv`
 - If wrong keys: Verify from console.anthropic.com and smith.langchain.com
 
----
 
 ## Activity 5: Create .env.example
 
@@ -178,7 +205,9 @@ EOF
 **Location**: Project root (same directory as .env)
 
 **Template** (create file named `.env.example`):
+
 ```bash
+
 # LangSmith Configuration
 LANGSMITH_API_KEY=your-api-key-here
 LANGSMITH_PROJECT=your-project-name
@@ -189,7 +218,8 @@ ANTHROPIC_API_KEY=your-api-key-here
 
 # Environment
 ENVIRONMENT=development
-```
+
+```text
 
 **Purpose for team**:
 1. New team member clones repo
@@ -200,6 +230,7 @@ ENVIRONMENT=development
 **How to create**:
 
 Using command line:
+
 ```bash
 cat > .env.example << 'EOF'
 LANGSMITH_API_KEY=your-api-key-here
@@ -208,21 +239,25 @@ LANGSMITH_ENDPOINT=https://api.smith.langchain.com
 ANTHROPIC_API_KEY=your-api-key-here
 ENVIRONMENT=development
 EOF
-```
+
+```text
 
 **Verification**:
+
 ```bash
+
 # Check file exists
 ls -la .env.example
 
 # Compare with .env
 diff .env .env.example
+
 # Should show only differences are actual values vs placeholders
-```
+
+```text
 
 **Important**: `.env.example` IS committed to git (it has no secrets)
 
----
 
 ## Activity 6: Create requirements.txt
 
@@ -231,12 +266,16 @@ diff .env .env.example
 **Location**: Project root
 
 **Command** (with venv activated):
+
 ```bash
 pip freeze > requirements.txt
-```
+
+```text
 
 **Result** (typical content):
-```
+
+```text
+
 anthropic==0.34.0
 langchain==0.1.14
 langchain-community==0.0.32
@@ -245,7 +284,8 @@ python-dotenv==1.0.0
 pydantic==2.5.0
 pydantic-core==2.14.1
 ...
-```
+
+```text
 
 **Why this matters**:
 - Locks exact versions of all packages
@@ -253,24 +293,30 @@ pydantic-core==2.14.1
 - Prevents "works on my machine" problems
 
 **For team onboarding**:
+
 ```bash
+
 # New team member setup
 python -m venv venv
 source venv/bin/activate  # or Windows equivalent
 pip install -r requirements.txt
+
 # Now they have exact same environment as you
-```
+
+```text
 
 **Verification**:
+
 ```bash
+
 # Check file exists and has content
 ls -la requirements.txt
 wc -l requirements.txt
-```
+
+```text
 
 **Important**: Commit `requirements.txt` to git (no secrets, safe to share)
 
----
 
 ## Activity 7: Create .gitignore
 
@@ -279,7 +325,9 @@ wc -l requirements.txt
 **Location**: Project root
 
 **Minimal template** (copy this):
-```
+
+```text
+
 # Environment
 .env
 .env.local
@@ -328,11 +376,14 @@ Thumbs.db
 *.log
 .cache/
 tmp/
-```
+
+```text
 
 **How to create**:
+
 ```bash
 cat > .gitignore << 'EOF'
+
 # Environment
 .env
 .env.local
@@ -357,7 +408,8 @@ env/
 .DS_Store
 Thumbs.db
 EOF
-```
+
+```text
 
 **Critical files to ignore**:
 - `.env` - MUST be ignored (has secrets)
@@ -366,27 +418,31 @@ EOF
 - `.vscode/, .idea/` - IDE configuration
 
 **Verification**:
+
 ```bash
+
 # Check file exists
 ls -la .gitignore
 
 # Simulate git add (won't actually add ignored files)
 git add .
 git status
+
 # Should NOT show .env or venv/
-```
+
+```text
 
 **Troubleshooting**:
 - If .env keeps showing in git: Remove from staging: `git reset .env`
 - If too much ignored: Start with minimal, add more as needed
 
----
 
 ## Activity 8: Test LangSmith Integration
 
 **Purpose**: Verify observability setup works end-to-end
 
 **Create test file** (`test_langsmith.py` in project root):
+
 ```python
 import os
 from dotenv import load_dotenv
@@ -411,20 +467,26 @@ message = client.messages.create(
 print("✅ LangSmith integration working!")
 print(f"Response: {message.content[0].text}")
 print(f"Check your traces at: https://smith.langchain.com")
-```
+
+```text
 
 **Run test** (with venv activated):
+
 ```bash
 python test_langsmith.py
-```
+
+```text
 
 **Expected output**:
-```
+
+```text
+
 Testing LangSmith integration...
 ✅ LangSmith integration working!
 Response: Hello! How can I help you today?
 Check your traces at: https://smith.langchain.com
-```
+
+```text
 
 **Verify in LangSmith**:
 1. Go to smith.langchain.com
@@ -439,11 +501,11 @@ Check your traces at: https://smith.langchain.com
 - If timeout: Check internet connection
 - If "module not found": `pip install anthropic langsmith`
 
----
 
 ## Quick Command Checklist
 
 ```bash
+
 # 1. Create venv
 python -m venv venv
 
@@ -462,6 +524,8 @@ pip freeze > requirements.txt
 
 # 8. Test
 python test_langsmith.py
-```
+
+```text
 
 All activities complete when you see ✅ output and traces appear in smith.langchain.com!
+````

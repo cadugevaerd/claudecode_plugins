@@ -1,0 +1,49 @@
+{
+  "default": true,
+  "MD001": true,
+  "MD003": {
+    "style": "consistent"
+  },
+  "MD004": {
+    "style": "consistent"
+  },
+  "MD007": {
+    "indent": 2
+  },
+  "MD010": false,
+  "MD011": true,
+  "MD012": {
+    "maximum": 2
+  },
+  "MD013": {
+    "line_length": 200,
+    "code_block_line_length": 220,
+    "code_blocks": true,
+    "headers": true,
+    "headers_line_length": 200,
+    "tables": false
+  },
+  "MD022": {
+    "lines": 1
+  },
+  "MD024": {
+    "siblings_only": true
+  },
+  "MD025": true,
+  "MD026": false,
+  "MD029": {
+    "style": "any"
+  },
+  "MD032": false,
+  "MD033": {
+    "allowed_elements": ["br", "hr", "details", "summary"]
+  },
+  "MD034": true,
+  "MD035": true,
+  "MD036": false,
+  "MD040": true,
+  "MD041": false,
+  "MD046": {
+    "style": "backtick"
+  }
+}

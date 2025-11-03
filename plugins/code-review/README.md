@@ -4,10 +4,11 @@ Plugin genérico de análise estática de código que identifica bugs, vulnerabi
 
 ## Instalação
 
-```bash
+````bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install code-review
-```
+
+```text
 
 ## Funcionalidades
 
@@ -34,13 +35,16 @@ Plugin genérico de análise estática de código que identifica bugs, vulnerabi
 - ✅ Detecta stack automaticamente (Python/JS/Java/Go/etc.)
 
 **Uso**:
+
 ```bash
+
 # Setup básico (detecta stack automaticamente)
 /setup-project-review
 
 # Ou com descrição da stack
 /setup-project-review "API REST Python com FastAPI + PostgreSQL + Redis"
-```
+
+```text
 
 **Resultado**:
 Claude ficará automaticamente orientado a:
@@ -55,18 +59,20 @@ Claude ficará automaticamente orientado a:
 - ✅ Ao adicionar este plugin em projetos existentes
 - ✅ Quando quiser padronizar code review no time
 
----
 
 ### `/review`
 
 Executa análise completa e automática do código modificado.
 
 **Uso básico**:
+
 ```bash
+
 # Após fazer mudanças
 git add .
 /review
-```
+
+```text
 
 **Detecção automática**:
 - Identifica linguagem de programação
@@ -101,6 +107,7 @@ Agente especializado em análise de código que executa automaticamente:
 ### Exemplo 1: Code Review Antes do Commit
 
 ```bash
+
 # Cenário: Você fez mudanças e quer validar antes de commitar
 
 # 1. Stage suas mudanças
@@ -110,6 +117,7 @@ git add .
 /review
 
 # 3. O plugin analisa e gera relatório
+
 ## 🔍 Relatório de Code Review
 
 **Arquivos modificados**: 3
@@ -135,11 +143,13 @@ git add .
 
 # 4. Corrigir problemas e commitar
 git commit -m "fix: remove hardcoded credentials"
-```
+
+```text
 
 ### Exemplo 2: Review de Pull Request
 
 ```bash
+
 # Cenário: Revisar PR antes de aprovar
 
 # 1. Checkout na branch
@@ -149,6 +159,7 @@ git checkout feature/new-api-endpoint
 /review
 
 # 3. Analisa todas as mudanças da branch vs main
+
 ## 🔍 Relatório de Code Review
 
 **Projeto**: my-api
@@ -180,11 +191,13 @@ git checkout feature/new-api-endpoint
 - Débito técnico: 2 itens
 
 **Status**: ⚠️ NÃO PRONTO (1 crítico)
-```
+
+```text
 
 ### Exemplo 3: Review Rápido de Hotfix
 
 ```bash
+
 # Cenário: Hotfix urgente, precisa garantir qualidade
 
 # 1. Faça o fix
@@ -195,6 +208,7 @@ git add src/payment.py
 /review
 
 # 3. Plugin foca apenas no arquivo modificado
+
 ## 🔍 Relatório de Code Review
 
 **Arquivos modificados**: 1 (src/payment.py)
@@ -217,7 +231,8 @@ git add src/payment.py
 1. 🟡 Adicionar teste de regressão
 
 **Status**: ✅ PODE COMMITAR (sem críticos)
-```
+
+```text
 
 ## Linguagens Suportadas
 
@@ -264,39 +279,51 @@ Se a linguagem não for reconhecida especificamente, o plugin aplica análises g
 ### 1. Segurança 🔒
 
 **Credenciais Hardcoded**:
+
 ```python
+
 # ❌ Detectado
 API_KEY = "sk-1234567890"
 PASSWORD = "admin123"
 
 # ✅ Recomendado
 API_KEY = os.getenv("API_KEY")
-```
+
+```text
 
 **SQL Injection**:
+
 ```python
+
 # ❌ Detectado
 query = f"SELECT * FROM users WHERE id = {user_id}"
 
 # ✅ Recomendado
 query = "SELECT * FROM users WHERE id = %s"
 cursor.execute(query, (user_id,))
-```
+
+```text
 
 **Funções Perigosas**:
+
 ```python
+
 # ❌ Detectado
 eval(user_input)
 exec(code_from_api)
 
 # ✅ Recomendado
+
 # Evitar ou validar rigorosamente
-```
+
+```text
 
 ### 2. Qualidade de Código ✨
 
 **Código Duplicado**:
+
 ```python
+
 # ❌ Detectado (repetido 3x)
 if user.is_active and user.email_verified:
     send_email(user)
@@ -304,10 +331,13 @@ if user.is_active and user.email_verified:
 # ✅ Recomendado
 def can_receive_email(user):
     return user.is_active and user.email_verified
-```
+
+```text
 
 **Funções Longas**:
+
 ```python
+
 # ❌ Detectado (120 linhas)
 def process_order(order):
     # ... 120 linhas de código
@@ -317,10 +347,13 @@ def process_order(order):
     validated = validate_order(order)
     calculated = calculate_totals(validated)
     return save_order(calculated)
-```
+
+```text
 
 **Magic Numbers**:
+
 ```python
+
 # ❌ Detectado
 if count > 100:
     raise ValueError("Too many")
@@ -329,12 +362,15 @@ if count > 100:
 MAX_ITEMS = 100
 if count > MAX_ITEMS:
     raise ValueError(f"Máximo {MAX_ITEMS} itens")
-```
+
+```text
 
 ### 3. Testes 🧪
 
 **Cobertura**:
+
 ```python
+
 # ⚠️ Detectado: função sem testes
 def calculate_discount(price, percentage):
     return price * (1 - percentage / 100)
@@ -346,10 +382,13 @@ def test_calculate_discount_valid():
 def test_calculate_discount_invalid():
     with pytest.raises(ValueError):
         calculate_discount(100, 150)
-```
+
+```text
 
 **Qualidade dos Testes**:
+
 ```python
+
 # ❌ Detectado: teste ruim
 def test_process():
     result = process(data)  # chamada real à API
@@ -365,25 +404,32 @@ def test_process_with_valid_data(mocker):
 
     assert result.status == "ok"
     mock_api.assert_called_once()
-```
+
+```text
 
 ### 4. Performance ⚡
 
 **Loops Ineficientes**:
+
 ```python
+
 # ❌ Detectado (N+1 queries)
 for user_id in user_ids:
     user = db.get_user(user_id)  # query por iteração
 
 # ✅ Recomendado
 users = db.get_users(user_ids)  # query única
-```
+
+```text
 
 **Operações Síncronas**:
+
 ```python
+
 # ❌ Detectado (chamadas em série)
 result1 = api.get_data_1()  # 1s
 result2 = api.get_data_2()  # 1s
+
 # Total: 2s
 
 # ✅ Recomendado (paralelo)
@@ -392,13 +438,17 @@ async def fetch_all():
         api.get_data_1(),
         api.get_data_2()
     )
+
 # Total: 1s
-```
+
+```text
 
 ### 5. Documentação 📚
 
 **Funções Complexas**:
+
 ```python
+
 # ⚠️ Falta documentação
 def retry_with_backoff(func, max_attempts=3):
     # código complexo...
@@ -418,40 +468,49 @@ def retry_with_backoff(func, max_attempts=3):
     Raises:
         Exception: Se todas as tentativas falharem
     """
-```
+
+```text
 
 ## Melhores Práticas
 
 ### 1. Execute Antes de Cada Commit
 
 ```bash
+
 # Adicione ao seu workflow
 git add .
 /review  # Valida mudanças
+
 # Corrige problemas críticos
 git commit -m "..."
-```
+
+```text
 
 ### 2. Integre com Pull Requests
 
 ```bash
+
 # Ao revisar PRs
 git checkout feature-branch
 /review
+
 # Comenta problemas no PR
-```
+
+```text
 
 ### 3. Use em Pipelines CI/CD
 
 O plugin pode ser integrado em pipelines:
 
 ```yaml
+
 # .github/workflows/code-review.yml
 - name: Code Review
   run: |
     claude /review
     # Falha se houver problemas críticos
-```
+
+```text
 
 ### 4. Customize para Seu Projeto
 
@@ -489,23 +548,33 @@ Funcionalidades planejadas:
 ## Troubleshooting
 
 **Problema**: Plugin não detecta linguagem
+
 ```bash
+
 # Solução: Verifique extensões dos arquivos
 ls -la src/
-```
+
+```text
 
 **Problema**: Testes não executados
+
 ```bash
+
 # Solução: Verifique se framework está instalado
 pip list | grep pytest
 npm list jest
-```
+
+```text
 
 **Problema**: Muitos falsos positivos
+
 ```bash
+
 # Solução: Configure linter do projeto
+
 # .eslintrc, .pylintrc, etc.
-```
+
+```text
 
 ## Changelog
 
@@ -519,6 +588,6 @@ Carlos Araujo - cadu.gevaerd@gmail.com
 
 MIT
 
----
 
 **Qualidade de código automatizada para qualquer linguagem** 🔍✨
+````

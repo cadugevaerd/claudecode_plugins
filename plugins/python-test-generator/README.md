@@ -9,22 +9,26 @@ Plugin de geração automática de testes unitários Python com análise de cobe
 ### 🚨 Coverage Threshold Enforcement
 
 **Before (v1.x)**:
+
 - `/py-test` always created tests regardless of current coverage
 - No verification of existing coverage level
 
 **After (v2.0+)**:
+
 - `/py-test` **RESPECTS 80% coverage threshold**
 - If coverage ≥80%: **STOPS and asks user** if they want to continue
-- If coverage <80%: **Proceeds automatically** without questions
+- If coverage \<80%: **Proceeds automatically** without questions
 
 **Migration Guide**:
 
 If you relied on automatic test generation regardless of coverage:
+
 1. ✅ Understand that v2.0+ prevents unnecessary test creation
-2. ✅ When coverage ≥80%, explicitly confirm test creation: respond "y" when prompted
-3. ✅ To bypass threshold check, you'll need to confirm explicitly
+1. ✅ When coverage ≥80%, explicitly confirm test creation: respond "y" when prompted
+1. ✅ To bypass threshold check, you'll need to confirm explicitly
 
 **Why this breaking change?**:
+
 - ✅ Prevents unnecessary test creation when coverage is already sufficient
 - ✅ Focuses test generation on code that actually needs it
 - ✅ Reduces noise and keeps test suite maintainable
@@ -33,18 +37,20 @@ If you relied on automatic test generation regardless of coverage:
 ### 🆕 New Command: `/update-claude-md`
 
 **What it does**:
+
 - Updates project's CLAUDE.md with python-test-generator configuration
 - Follows best practices (≤40 lines, progressive disclosure)
 - Documents agent and critical testing rules
 - Auto-discovery friendly (no manual skill copying)
 
 **When to use**:
-```bash
+
+````bash
+
 # Setup python-test-generator in project
 /update-claude-md
-```
 
----
+```text
 
 ## 📋 Descrição
 
@@ -87,13 +93,12 @@ O **Python Test Generator** é um plugin especializado que analisa a cobertura d
 4. **You review tests**
 5. **You commit when satisfied**: `git add tests/ && git commit -m "test: ..."`
 
----
-
 ## 🚀 Instalação
 
 Este plugin faz parte do repositório **claudecode_plugins**. Para usá-lo:
 
 ```bash
+
 # 1. Clone ou atualize o repositório
 git pull origin main
 
@@ -102,9 +107,8 @@ git pull origin main
 
 # 3. Verifique se o plugin está disponível
 /plugin list
-```
 
----
+```text
 
 ## 📖 Uso - New Three-Phase Strategy (v3.0)
 
@@ -114,6 +118,7 @@ git pull origin main
 
 #### Phase 1: Analyze Existing Tests
 The agent scans your project for existing test files and analyzes their quality:
+
 - ✅ Valid and well-structured tests → KEEP
 - 🟡 Tests with low coverage → IMPROVE
 - ⚠️ Failing tests → FIX
@@ -121,12 +126,14 @@ The agent scans your project for existing test files and analyzes their quality:
 
 #### Phase 2: Maintain Tests (Before Creating New)
 The agent automatically optimizes existing tests:
+
 - Remove obsolete tests that no longer apply
 - Fix failing tests while maintaining coverage
 - Improve low-quality tests to increase their effectiveness
 
 #### Phase 3: Create New Tests (Only for Gaps)
 Only after optimizing existing tests, the agent creates new ones:
+
 - Creates tests **only for uncovered code paths**
 - Avoids test duplication with existing tests
 - Creates files in **parallel** for maximum performance
@@ -136,8 +143,6 @@ Only after optimizing existing tests, the agent creates new ones:
 - ✅ Maintains high test quality by improvement, not just addition
 - ✅ Respects existing test investments
 - ✅ Clear three-phase reporting
-
----
 
 ### 🆕 `/update-claude-md` (v2.0+)
 
@@ -151,17 +156,18 @@ Only after optimizing existing tests, the agent creates new ones:
 - ✅ Preserva conteúdo existente (não sobrescreve)
 
 **Uso**:
+
 ```bash
+
 # Setup do plugin no projeto
 /update-claude-md
-```
+
+```text
 
 **Quando usar**:
 - ✅ Ao começar a usar python-test-generator em um projeto
 - ✅ Quando CLAUDE.md foi corrompido ou deletado
 - ✅ Para atualizar configuração após upgrade do plugin
-
----
 
 ### `/setup-project-tests`
 
@@ -177,16 +183,20 @@ Only after optimizing existing tests, the agent creates new ones:
 - ✅ Detecta stack Python automaticamente
 
 **Uso**:
+
 ```bash
+
 # Setup básico (detecta stack automaticamente)
 /setup-project-tests
 
 # Ou com descrição da stack
 /setup-project-tests "API FastAPI com LangChain + PostgreSQL"
-```
+
+```text
 
 **Resultado**:
 Claude ficará automaticamente orientado a:
+
 - Gerar testes Python seguindo padrões do projeto
 - Reutilizar fixtures existentes (conftest.py)
 - Criar mocks adequados (LangChain chains, FastAPI, AWS boto3)
@@ -198,13 +208,12 @@ Claude ficará automaticamente orientado a:
 - ✅ Ao adicionar este plugin em projetos existentes
 - ✅ Quando quiser padronizar testes no time
 
----
-
 ### Comando Principal: `/py-test`
 
 Analisa cobertura e **cria testes Python em paralelo** automaticamente:
 
 ```bash
+
 # Analisar projeto Python inteiro (padrão)
 /py-test
 
@@ -213,7 +222,8 @@ Analisa cobertura e **cria testes Python em paralelo** automaticamente:
 
 # Definir threshold customizado (padrão: 80%)
 /py-test --threshold 85
-```
+
+```text
 
 ### O que acontece automaticamente:
 
@@ -233,6 +243,7 @@ Analisa cobertura e **cria testes Python em paralelo** automaticamente:
 ### ⚡ Performance com Paralelização
 
 O plugin cria **múltiplos arquivos de teste simultaneamente**:
+
 - **5 módulos sem testes** → Cria 5 arquivos em paralelo
 - **10 módulos sem testes** → Cria 10 arquivos em paralelo
 - **Redução de tempo**: Até 80% mais rápido que criação sequencial
@@ -252,7 +263,8 @@ O plugin cria **múltiplos arquivos de teste simultaneamente**:
 
 #### Cenário 1: Cobertura ≥80% após remoção (REMOVE)
 
-```
+```text
+
 ═══════════════════════════════════════════
 ⚠️  FAILING TESTS DETECTED (2 tests)
 ═══════════════════════════════════════════
@@ -275,11 +287,13 @@ These tests are failing and can be safely removed
 without compromising coverage.
 
 Remove failing tests? (y/n)
-```
+
+```text
 
 #### Cenário 2: Cobertura <80% após remoção (NÃO REMOVE)
 
-```
+```text
+
 ═══════════════════════════════════════════
 ⚠️  FAILING TESTS DETECTED (5 tests)
 ═══════════════════════════════════════════
@@ -302,7 +316,8 @@ You should fix them instead of removing them:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚠️  Action Required: Fix failing tests manually.
-```
+
+```text
 
 #### Por que isso é útil?
 
@@ -310,8 +325,6 @@ You should fix them instead of removing them:
 - ✅ **Seguro**: Só remove se cobertura permanecer suficiente
 - ✅ **Transparente**: Mostra impacto na cobertura antes de remover
 - ✅ **Inteligente**: Evita remoção de testes críticos
-
----
 
 ### 🧹 Detecção de Testes Obsoletos (v2.0+)
 
@@ -325,7 +338,9 @@ O plugin também detecta automaticamente **testes desnecessários ou obsoletos**
 5. **Código refatorado**: Teste de implementação antiga que mudou
 
 **Exemplo de Output**:
-```
+
+```text
+
 🧹 OBSOLETE TESTS DETECTED (3 tests)
 
 📍 tests/unit/test_calculator.py
@@ -341,15 +356,14 @@ O plugin também detecta automaticamente **testes desnecessários ou obsoletos**
    Reason: Mocks 'module.OldParser' which no longer exists
 
 Remove obsolete tests? (y/n)
-```
+
+```text
 
 **Por que isso é útil?**
 - ✅ Mantém suite de testes limpa e focada
 - ✅ Evita falsos positivos
 - ✅ Reduz tempo de execução dos testes
 - ✅ Facilita manutenção do código de testes
-
----
 
 ## 🎯 Casos de Uso
 
@@ -359,10 +373,13 @@ Remove obsolete tests? (y/n)
 
 ```bash
 /test-coverage
-```
+
+```text
 
 **Resultado**:
-```
+
+```text
+
 ═══════════════════════════════════════════
 ✅ ANÁLISE DE TESTES CONCLUÍDA
 ═══════════════════════════════════════════
@@ -383,7 +400,8 @@ Total: 26 novos testes
 ✅ src/calculator.py - 90.0% (antes: 60.0%)
 ✅ src/validator.py - 85.0% (antes: 55.0%)
 ✅ src/parser.py - 82.0% (antes: 70.0%)
-```
+
+```text
 
 ### Caso 2: Projeto LangChain com Poetry
 
@@ -391,7 +409,8 @@ Total: 26 novos testes
 
 ```bash
 /test-coverage
-```
+
+```text
 
 **O plugin detecta automaticamente**:
 - Framework: pytest com poetry
@@ -399,6 +418,7 @@ Total: 26 novos testes
 - Padrão: Nodes, Chains, Agents com LLM
 
 **Cria testes específicos**:
+
 ```python
 @patch("workflow.nodes.node_processar.ChatOpenAI")
 @patch("workflow.nodes.node_processar.ChatPromptTemplate.from_template")
@@ -423,7 +443,8 @@ def test_node_processar_com_sucesso(
     assert result is not None
     assert "resultado" in result
     mock_chat.assert_called_once()
-```
+
+```text
 
 ### Caso 3: Projeto FastAPI
 
@@ -431,9 +452,11 @@ def test_node_processar_com_sucesso(
 
 ```bash
 /test-coverage
-```
+
+```text
 
 **Cria testes de API**:
+
 ```python
 from fastapi.testclient import TestClient
 
@@ -468,7 +491,8 @@ class TestUserAPI:
 
         # Assert
         assert response.status_code == 201
-```
+
+```text
 
 ### Caso 4: Projeto Django
 
@@ -476,9 +500,11 @@ class TestUserAPI:
 
 ```bash
 /test-coverage
-```
+
+```text
 
 **Cria testes Django**:
+
 ```python
 import pytest
 from django.test import Client
@@ -512,7 +538,8 @@ class TestBlogViews:
         # Assert
         assert post.pk is not None
         assert post.title == "Test Post"
-```
+
+```text
 
 ### Caso 5: AWS Lambda
 
@@ -520,9 +547,11 @@ class TestBlogViews:
 
 ```bash
 /test-coverage
-```
+
+```text
 
 **Cria testes de Lambda**:
+
 ```python
 @patch("main.boto3.client")
 @patch("main.os.getenv")
@@ -552,9 +581,8 @@ def test_lambda_handler_processa_s3_event(self, mock_env, mock_boto):
     # Assert
     assert response["statusCode"] == 200
     mock_s3.get_object.assert_called_once()
-```
 
----
+```text
 
 ## 🔧 Frameworks e Bibliotecas Suportados
 
@@ -604,15 +632,14 @@ def test_lambda_handler_processa_s3_event(self, mock_env, mock_boto):
 - ✅ **asyncio**
 - ✅ **AsyncMock**
 
----
-
 ## 🏗️ Fixtures Architecture (v3.1.0+)
 
 ### Recommended Project Structure
 
 O python-test-generator detecta automaticamente e suporta a seguinte arquitetura de fixtures:
 
-```
+```text
+
 tests/
 ├── conftest.py                    # Setup global + imports de fixtures
 ├── fixtures/
@@ -632,7 +659,8 @@ tests/
 └── e2e/
     ├── test_workflow.py
     └── ...
-```
+
+```text
 
 ### Por Que Usar Esta Arquitetura?
 
@@ -645,6 +673,7 @@ tests/
 ### conftest.py - Central Setup
 
 ```python
+
 # tests/conftest.py
 import pytest
 from fixtures.database import *      # Database fixtures
@@ -667,11 +696,13 @@ def test_config():
         "environment": "test",
         "timeout": 30,
     }
-```
+
+```text
 
 ### fixtures/database.py - Database Fixtures
 
 ```python
+
 # tests/fixtures/database.py
 import pytest
 from sqlalchemy import create_engine
@@ -703,11 +734,13 @@ def sample_user(db_session):
     db_session.add(user)
     db_session.commit()
     return user
-```
+
+```text
 
 ### fixtures/api.py - API/HTTP Fixtures
 
 ```python
+
 # tests/fixtures/api.py
 import pytest
 from fastapi.testclient import TestClient
@@ -730,11 +763,13 @@ def auth_headers():
         "Authorization": "Bearer test-token",
         "Content-Type": "application/json",
     }
-```
+
+```text
 
 ### fixtures/mocks.py - Mock Objects
 
 ```python
+
 # tests/fixtures/mocks.py
 import pytest
 from unittest.mock import Mock, patch
@@ -760,11 +795,13 @@ def mock_env_vars(mocker):
         "API_KEY": "test-key",
         "DATABASE_URL": "sqlite:///:memory:",
     })
-```
+
+```text
 
 ### fixtures/data.py - Data Factories
 
 ```python
+
 # tests/fixtures/data.py
 import pytest
 from factory import Factory, Sequence
@@ -793,7 +830,8 @@ def sample_users(db_session):
     db_session.add_all(users)
     db_session.commit()
     return users
-```
+
+```text
 
 ### Como o Plugin Suporta Esta Arquitetura
 
@@ -808,6 +846,7 @@ O python-test-generator automaticamente:
 #### Exemplo: Teste que Reutiliza Fixtures
 
 ```python
+
 # tests/unit/test_user_service.py
 
 def test_get_user_by_id(db_session, sample_user):
@@ -821,11 +860,13 @@ def test_get_user_by_id(db_session, sample_user):
     # Assert
     assert result.name == sample_user.name
     assert result.email == sample_user.email
-```
+
+```text
 
 #### Exemplo: Teste com Mocks Organizados
 
 ```python
+
 # tests/integration/test_api_endpoints.py
 
 def test_create_user_endpoint(api_client, auth_headers, mock_email_service):
@@ -846,7 +887,8 @@ def test_create_user_endpoint(api_client, auth_headers, mock_email_service):
     # Assert
     assert response.status_code == 201
     mock_email_service.send.assert_called_once()
-```
+
+```text
 
 ### Padrões Avançados
 
@@ -865,7 +907,8 @@ def cache_enabled(request):
 def test_user_roles_with_cache(sample_user, user_type, expected_role, cache_enabled):
     """Teste múltiplas combinações com fixtures"""
     ...
-```
+
+```text
 
 #### Fixtures com Cleanup
 
@@ -879,7 +922,8 @@ def temp_file():
 
     import os
     os.remove(f.name)  # Cleanup after test
-```
+
+```text
 
 #### Fixtures Assíncronas
 
@@ -890,9 +934,8 @@ async def async_client():
     import httpx
     async with httpx.AsyncClient(app=app) as client:
         yield client
-```
 
----
+```text
 
 ## 🎯 Skills Especializadas
 
@@ -915,6 +958,7 @@ Esta skill detecta automaticamente código LangChain/LangGraph e aplica **7 padr
 #### Quando a Skill é Ativada
 
 A skill é invocada automaticamente pelo Claude quando detecta:
+
 - Imports de `langchain`, `langgraph`, ou `langchain_core`
 - Uso de `StateGraph`, `MessageGraph`, chains LCEL
 - LLM calls (`ChatOpenAI`, `ChatAnthropic`, etc.)
@@ -924,6 +968,7 @@ A skill é invocada automaticamente pelo Claude quando detecta:
 #### Exemplos de Testes Criados
 
 **Teste de Grafo LangGraph**:
+
 ```python
 def test_basic_graph_execution():
     """Teste: Grafo executa corretamente com estado inicial"""
@@ -940,9 +985,11 @@ def test_basic_graph_execution():
 
     # Assert
     assert result["my_key"] == "expected_value"
-```
+
+```text
 
 **Teste com Mocked LLM**:
+
 ```python
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 
@@ -959,9 +1006,11 @@ def test_node_with_mocked_llm():
 
     # Assert
     assert result["response"] == "Primeira resposta"
-```
+
+```text
 
 **Trajectory Validation com AgentEvals**:
+
 ```python
 from agentevals.trajectory.match import create_trajectory_match_evaluator
 
@@ -980,9 +1029,11 @@ def test_trajectory_strict_match():
 
     # Assert
     assert evaluation["score"] is True
-```
+
+```text
 
 **VCR Recording para Integration Tests**:
+
 ```python
 @pytest.mark.vcr()
 def test_agent_with_real_llm_vcr():
@@ -994,27 +1045,32 @@ def test_agent_with_real_llm_vcr():
     result = agent.invoke({"input": "What's the capital of France?"})
 
     assert "Paris" in result["output"]
-```
+
+```text
 
 #### Dependencies Adicionais
 
 Para usar os padrões LangChain/LangGraph, certifique-se de ter:
 
 ```bash
+
 # Principais
 pip install langchain langchain-core langgraph
 
 # Testing
 pip install pytest pytest-asyncio agentevals vcrpy pytest-recording
-```
+
+```text
 
 Ou com poetry:
+
 ```toml
 [tool.poetry.group.test.dependencies]
 agentevals = "^0.1.0"      # Trajectory validation
 vcrpy = "^6.0.0"            # HTTP recording
 pytest-recording = "^0.13.0"  # pytest-vcr integration
-```
+
+```text
 
 #### Modos de Trajectory Matching
 
@@ -1026,10 +1082,9 @@ pytest-recording = "^0.13.0"  # pytest-vcr integration
 #### LLM-as-Judge Models
 
 Suportados:
+
 - `openai:gpt-4o-mini`, `openai:o3-mini`
 - `anthropic:claude-3-5-sonnet`, `anthropic:claude-3-5-haiku`
-
----
 
 ## 📝 Padrões de Teste Criados
 
@@ -1051,13 +1106,15 @@ def test_exemplo(self):
     assert result is not None
     assert result["status"] == "ok"
     mock_api.assert_called_once()
-```
+
+```text
 
 ### Happy Path + Erros + Edge Cases
 
 Cada função recebe pelo menos 3 tipos de testes:
 
 ```python
+
 # 1. Happy path - Cenário de sucesso
 def test_process_data_success(self):
     """Teste: Processa dados válidos com sucesso"""
@@ -1079,7 +1136,8 @@ def test_process_data_invalid_input(self):
 def test_process_data_edge_cases(self, input, expected):
     """Teste: Lida com casos extremos"""
     ...
-```
+
+```text
 
 ### Mocks de Dependências Externas
 
@@ -1093,9 +1151,8 @@ Todas as dependências externas são mockadas:
 def test_with_all_mocks(self, mock_db, mock_llm, mock_aws, mock_http):
     """Teste: Todas as dependências externas mockadas"""
     ...
-```
 
----
+```text
 
 ## 🎓 Recursos Avançados
 
@@ -1104,6 +1161,7 @@ def test_with_all_mocks(self, mock_db, mock_llm, mock_aws, mock_http):
 O plugin lê automaticamente `conftest.py` e reutiliza fixtures:
 
 ```python
+
 # conftest.py
 @pytest.fixture
 def sample_user():
@@ -1114,7 +1172,8 @@ def test_get_user(self, sample_user):
     """Teste: Buscar usuário usa fixture existente"""
     result = get_user(sample_user["id"])
     assert result["name"] == sample_user["name"]
-```
+
+```text
 
 ### Parametrização Inteligente
 
@@ -1133,7 +1192,8 @@ def test_validate_email_parametrized(self, input_value, expected_output):
     """Teste: Validação de email com múltiplos casos"""
     result = validate_email(input_value)
     assert result == expected_output
-```
+
+```text
 
 ### Suporte a Código Assíncrono
 
@@ -1154,7 +1214,8 @@ async def test_fetch_data_async(self, mock_client):
 
     # Assert
     assert result == {"data": "test"}
-```
+
+```text
 
 ### Mocks Específicos de LangChain
 
@@ -1178,9 +1239,8 @@ def test_langchain_chain(self, mock_chat, mock_prompt):
     # Assert
     assert result["output"] == "result"
     mock_chain.invoke.assert_called_once()
-```
 
----
+```text
 
 ## 📊 Configuração de Cobertura
 
@@ -1195,12 +1255,15 @@ def test_langchain_chain(self, mock_chat, mock_prompt):
 O plugin respeita configurações existentes:
 
 **pytest.ini**:
+
 ```ini
 [pytest]
 addopts = --cov=src --cov-report=term-missing --cov-fail-under=80
-```
+
+```text
 
 **pyproject.toml**:
+
 ```toml
 [tool.coverage.report]
 fail_under = 80
@@ -1209,24 +1272,27 @@ exclude_lines = [
     "def __repr__",
     "raise NotImplementedError",
 ]
-```
+
+```text
 
 **setup.cfg**:
+
 ```cfg
 [coverage:report]
 fail_under = 80
-```
+
+```text
 
 **.coveragerc**:
+
 ```ini
 [report]
 fail_under = 80
 omit =
     */tests/*
     */migrations/*
-```
 
----
+```text
 
 ## ⚡ Modo Empírico
 
@@ -1244,8 +1310,6 @@ Este plugin opera em **modo empírico** - executa automaticamente sem perguntas.
 - ✅ Cria testes diretamente
 - ✅ Executa testes automaticamente
 - ✅ Reporta resultados ao final
-
----
 
 ## 🐛 Troubleshooting
 
@@ -1273,8 +1337,6 @@ Este plugin opera em **modo empírico** - executa automaticamente sem perguntas.
 
 **Solução automática**: O plugin move fixtures para local correto
 
----
-
 ## 📚 Componentes do Plugin
 
 ### Command: `/test-coverage`
@@ -1294,8 +1356,6 @@ Agente especializado em análise e criação de testes
 - Mocks inteligentes
 - Validação de qualidade
 
----
-
 ## 🚀 Roadmap
 
 Funcionalidades planejadas para versões futuras:
@@ -1310,21 +1370,15 @@ Funcionalidades planejadas para versões futuras:
 - [ ] Suporte a TypeScript/JavaScript
 - [ ] Dashboard de cobertura
 
----
-
 ## 📄 Licença
 
 MIT License - Carlos Araujo
-
----
 
 ## 👤 Autor
 
 **Carlos Araujo**
 - Email: cadu.gevaerd@gmail.com
 - GitHub: [@cadugevaerd](https://github.com/cadugevaerd)
-
----
 
 ## 🤝 Contribuindo
 
@@ -1336,13 +1390,10 @@ Contribuições são bem-vindas! Para contribuir:
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
----
-
 ## 📞 Suporte
 
 - **Issues**: [GitHub Issues](https://github.com/cadugevaerd/claudecode_plugins/issues)
 - **Documentação**: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugins)
 
----
-
 **Desenvolvido com ❤️ para Claude Code Community**
+````

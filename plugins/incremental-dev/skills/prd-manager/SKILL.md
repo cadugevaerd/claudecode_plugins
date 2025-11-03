@@ -4,6 +4,11 @@ description: Automatically manages and updates PRD (Product Requirements Documen
 allowed-tools: Read, Write, Edit, Grep, Bash
 ---
 
+name: prd-manager
+description: Manages PRD (Product Requirements Document) automatically, detecting update moments and validating consistency between code and documentation. Use when defining MVP, editing, creating or other manipulating PRD.md, completing increments, making architectural decisions, or transitioning development phases. Triggers - requisitos, MVP, incremento, decisões, aprendizados, PRD.
+allowed-tools: Read, Write, Edit, Grep, Bash
+version: 1.0.0
+
 # PRD Manager Skill
 
 Skill que gerencia automaticamente o PRD (Product Requirements Document), detectando momentos apropriados para atualizar e validando consistência entre código e documentação.
@@ -13,13 +18,14 @@ Skill que gerencia automaticamente o PRD (Product Requirements Document), detect
 Invoque automaticamente quando:
 
 1. **Incremento completado** - "Pronto, funcionalidade X completa"
-2. **Planejamento de MVP** - "Vamos definir MVP", "features principais"
-3. **Arquitetura definida** - "Stack definido", "modelagem pronta"
-4. **Decisão técnica importante** - "Escolhemos pattern X", ADR
-5. **Pergunta sobre projeto** - Usuário questiona objetivos, MVP
-6. **Implementação fora do MVP** - Detectar YAGNI violations
+1. **Planejamento de MVP** - "Vamos definir MVP", "features principais"
+1. **Arquitetura definida** - "Stack definido", "modelagem pronta"
+1. **Decisão técnica importante** - "Escolhemos pattern X", ADR
+1. **Pergunta sobre projeto** - Usuário questiona objetivos, MVP
+1. **Implementação fora do MVP** - Detectar YAGNI violations
 
 ### Termos Gatilho
+
 - "atualizar PRD", "PRD", "requisitos"
 - "incremento completo", "funcionalidade pronta"
 - "decisão arquitetural", "ADR"
@@ -29,12 +35,14 @@ Invoque automaticamente quando:
 ## 📊 Responsabilidades
 
 ### 1. Detecção de Momento de Atualização
+
 - Incremento completado → sugerir `/prd-update incremento`
 - MVP definido → sugerir `/prd-update planejamento`
 - Arquitetura pronta → sugerir `/prd-update design`
 - Decisão importante → sugerir registrar ADR
 
 ### 2. Validação de Completude
+
 Verificar se PRD tem campos obrigatórios por fase:
 
 | Fase | Versão | Obrigatório |
@@ -45,44 +53,57 @@ Verificar se PRD tem campos obrigatórios por fase:
 | **Desenvolvimento** | 1.x+ | Incrementos, aprendizados, ADRs |
 
 ### 3. Sugerir Próxima Fase
+
 Baseado em progresso: v0.1 ✅ → sugira planejamento (v1.0)
 
 ### 4. Validar Consistência Código ↔ PRD
+
 Detectar divergências: código implementa feature fora do MVP?
 
 ### 5. Alertar sobre YAGNI
+
 Se código implementa features **fora do MVP** definido no PRD
 
 ## 📋 Fases do PRD
 
 ### Fase 0: Descoberta (v0.1)
+
 **O que é o problema?**
+
 - Problema definido
 - 3+ objetivos claros
 - KPIs para medir sucesso
 
 ### Fase 1: Planejamento (v1.0)
+
 **O que vamos construir?**
+
 - Product Vision
 - MVP claramente definido
 - Features fora do MVP (YAGNI)
 - Épicos/user stories principais
 
 ### Fase 2: Design (v1.1)
+
 **Como vamos construir?**
+
 - Arquitetura de alto nível
 - Stack tecnológica
 - Modelagem de dados
 - APIs/contratos
 
 ### Fase 3: Desenvolvimento (v1.x)
+
 **Construindo incrementalmente**
+
 - Incrementos documentados
 - Aprendizados registrados
 - ADRs para decisões importantes
 
 ### Fase 4: Finalizado (v2.0)
+
 **As-Built documentation**
+
 - Projeto completo
 - Lições aprendidas
 - Retrospectiva final
@@ -91,7 +112,8 @@ Se código implementa features **fora do MVP** definido no PRD
 
 **Cenário**: PRD define MVP, código implementa features fora do MVP
 
-```
+````text
+
 ⚠️  DIVERGÊNCIA DETECTADA
 
 PRD MVP:
@@ -108,7 +130,8 @@ Ações:
 A) Remover código (seguir MVP)
 B) Atualizar PRD (é essencial afinal)
 C) Documentar exceção
-```
+
+```text
 
 ## 💡 Princípios
 
@@ -117,6 +140,11 @@ C) Documentar exceção
 3. **Educativo**: Explicar POR QUE sugerir
 4. **Validador**: Consistência código ↔ documentação
 5. **Orientador YAGNI**: Alertar features fora do MVP
+
+## 🔗 Integração com Outras Skills
+
+- **YAGNI Enforcer**: Alerta quando código implementa features fora do MVP definido no PRD
+- **Refactor Advisor**: Sugere refatoração apenas após consolidação de incrementos e dentro do MVP
 
 ## 📚 Referência Detalhada
 
@@ -134,3 +162,4 @@ Para instruções passo-a-passo:
 ✅ Fase do PRD evolui com projeto
 
 **Valor**: Documentação viva que guia desenvolvimento incremental.
+````

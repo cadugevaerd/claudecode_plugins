@@ -27,21 +27,25 @@ O MCP (Model Context Protocol) permite que Claude acesse documentação em tempo
 
 O plugin requer que você tenha `uvx` instalado (parte do `uv`):
 
-```bash
+````bash
+
 # Instalar uv (inclui uvx)
 curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+
+```text
 
 ## Verificar Instalação
 
 Para confirmar que o MCP server está ativo:
 
 ```bash
+
 # Listar MCP servers ativos
 claude mcp list
 
 # Você deve ver: langchain-docs
-```
+
+```text
 
 ## Configuração (Automática)
 
@@ -65,7 +69,8 @@ O arquivo `.mcp.json` no root do plugin contém:
     }
   }
 }
-```
+
+```text
 
 Esta configuração:
 - Usa `uvx` para executar `mcpdoc` sem instalação global
@@ -84,24 +89,33 @@ Quando você usa comandos como `/langchain-help` ou `/lcel-builder`, Claude pode
 ## Exemplos de Uso
 
 ### Consulta Simples
+
 ```bash
 /langchain-help LCEL
+
 # Claude acessa docs via MCP para trazer info atualizada
-```
+
+```text
 
 ### Construção de Chain
+
 ```bash
 /lcel-builder criar RAG pipeline com retrievers
+
 # Claude consulta docs oficiais sobre retrievers via MCP
-```
+
+```text
 
 ### Debug com Contexto
+
 ```python
+
 # Você tem um erro em um chain
 chain = prompt | llm | parser
 
 # Claude usa MCP para verificar assinatura correta e sugerir fix
-```
+
+```text
 
 ## Troubleshooting
 
@@ -110,36 +124,44 @@ chain = prompt | llm | parser
 **Causa**: `uv` não está instalado no sistema.
 
 **Solução**: Instale `uv`:
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+
+```text
 
 Depois reinicie o plugin:
+
 ```bash
 /plugin refresh
-```
+
+```text
 
 ### Erro: "MCP server not starting"
 
 **Causa**: Problema com mcpdoc ou llms.txt URLs.
 
 **Solução**: Teste manualmente:
+
 ```bash
 uvx --from mcpdoc mcpdoc \
   --urls \
   "LangChain:https://python.langchain.com/llms.txt" \
   "LangGraph:https://langchain-ai.github.io/langgraph/llms.txt" \
   --transport stdio
-```
+
+```text
 
 Se funcionar manualmente mas não no plugin, verifique se `.mcp.json` existe no root do plugin.
 
 ### MCP server não aparece na lista
 
 **Verificar**: Confirme que o servidor está configurado:
+
 ```bash
 claude mcp list
-```
+
+```text
 
 Se `langchain-docs` não aparecer:
 1. Verifique se o plugin está habilitado
@@ -149,10 +171,12 @@ Se `langchain-docs` não aparecer:
 ### Verificar llms.txt URLs
 
 Teste se os URLs estão acessíveis:
+
 ```bash
 curl https://python.langchain.com/llms.txt
 curl https://langchain-ai.github.io/langgraph/llms.txt
-```
+
+```text
 
 Ambos devem retornar conteúdo de documentação.
 
@@ -162,6 +186,6 @@ Ambos devem retornar conteúdo de documentação.
 - **LangChain Docs**: https://python.langchain.com/docs/
 - **LangGraph Docs**: https://langchain-ai.github.io/langgraph/
 
----
 
 **Nota**: Este MCP Server é opcional mas altamente recomendado para garantir acesso às informações mais atualizadas do LangChain.
+````

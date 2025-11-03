@@ -9,6 +9,7 @@ Gera scaffolding completo de uma evaluation suite, incluindo estrutura de projet
 ## Como usar
 
 Execute o comando e forneça:
+
 - Nome da suite
 - Tipo de aplicação sendo avaliada (chatbot, summarizer, translator, etc.)
 - Métricas desejadas (accuracy, relevance, hallucination, etc.)
@@ -16,7 +17,8 @@ Execute o comando e forneça:
 
 ## Estrutura Gerada
 
-```
+````text
+
 evaluations/
 ├── __init__.py
 ├── config/
@@ -39,24 +41,28 @@ evaluations/
 │   └── .gitkeep
 ├── run_evaluation.py            # Script principal de execução
 └── README.md                    # Documentação da suite
-```
+
+```text
 
 ## Exemplos de Uso
 
 ### Exemplo 1: Suite para Chatbot RAG
 
-```
+```text
+
 /create-eval-suite
 
 Nome: rag-chatbot-eval
 Tipo: chatbot com RAG
 Métricas: accuracy, relevance, hallucination, response_time
 Framework: langsmith
-```
+
+```text
 
 **Arquivos gerados**:
 
 **evaluations/config/eval_config.py**:
+
 ```python
 """Configuração de evaluators para RAG Chatbot."""
 
@@ -84,9 +90,11 @@ THRESHOLDS = {
     "hallucination": 0.9,   # Mínimo 90% (sem alucinação)
     "response_time": 2.0,   # Máximo 2 segundos
 }
-```
+
+```text
 
 **evaluations/datasets/golden_dataset.json**:
+
 ```json
 [
   {
@@ -120,9 +128,11 @@ THRESHOLDS = {
     }
   }
 ]
-```
+
+```text
 
 **evaluations/evaluators/hallucination_evaluator.py**:
+
 ```python
 """Evaluator para detectar alucinações."""
 
@@ -182,9 +192,11 @@ Retorne um JSON com:
         "score": score,
         "comment": comment
     }
-```
+
+```text
 
 **evaluations/tests/test_evaluators.py**:
+
 ```python
 """Testes unitários para evaluators."""
 
@@ -218,9 +230,11 @@ def test_relevance_evaluator_relevant():
     result = relevance_evaluator(outputs, inputs)
 
     assert result["score"] >= 0.8, "Deveria detectar relevância"
-```
+
+```text
 
 **evaluations/run_evaluation.py**:
+
 ```python
 """Script principal para executar evaluation suite."""
 
@@ -289,22 +303,26 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
+
+```text
 
 ### Exemplo 2: Suite para Summarization
 
-```
+```text
+
 /create-eval-suite
 
 Nome: summarization-eval
 Tipo: text summarization
 Métricas: rouge, bleu, coherence, conciseness
 Framework: openevals
-```
+
+```text
 
 **Arquivos gerados** (estrutura similar, mas com evaluators específicos):
 
 **evaluations/evaluators/rouge_evaluator.py**:
+
 ```python
 """ROUGE score evaluator para summarization."""
 
@@ -334,7 +352,8 @@ def rouge_evaluator(outputs: Dict[str, Any], reference_outputs: Dict[str, Any]) 
         "rouge_2_f1": scores["rouge-2"]["f"],
         "rouge_l_f1": scores["rouge-l"]["f"],
     }
-```
+
+```text
 
 ## Features da Suite
 
@@ -354,3 +373,4 @@ Cada evaluation suite gerada inclui:
 - LangSmith Evaluation: https://docs.smith.langchain.com/evaluation
 - OpenEvals: https://github.com/langchain-ai/openevals
 - ROUGE Metrics: https://pypi.org/project/rouge/
+````

@@ -2,23 +2,26 @@
 
 **YAGNI (You Aren't Gonna Need It)** - Core principles for incremental development and avoiding over-engineering.
 
----
-
 ## 📚 Core YAGNI Principles
 
 ### 1. You Aren't Gonna Need It
+
 Don't implement functionality until it is REALLY necessary.
 
 ### 2. Simplicity First
+
 Simple, direct code is better than premature abstractions.
 
 ### 3. Evolutionary Architecture
+
 Architecture evolves as new requirements emerge, not beforehand.
 
 ### 4. Fast Feedback
+
 MVP allows testing hypotheses quickly with less code.
 
 ### 5. Refactoring at the Right Time
+
 Refactor when PATTERNS EMERGE, not anticipatorily.
 
 ### Core Mantras
@@ -31,8 +34,6 @@ Refactor when PATTERNS EMERGE, not anticipatorily.
 - **Working > Perfect**: Code that works > "Beautiful" code
 - **Less Code = Fewer Bugs**: Minimal code reduces bug surface area
 
----
-
 ## 📏 The Rule of 3
 
 **Wait for 3 similar cases before creating abstraction:**
@@ -44,22 +45,28 @@ Refactor when PATTERNS EMERGE, not anticipatorily.
 ### Example: Validators
 
 #### 1 Validator (no abstraction)
-```python
+
+````python
 def validate_email(email):
     return "@" in email
-```
+
+```text
 
 #### 2 Validators (still no abstraction)
+
 ```python
 def validate_email(email):
     return "@" in email
 
 def validate_phone(phone):  # Duplication is OK!
     return len(phone) == 10
-```
+
+```text
 
 #### 3 Validators (NOW abstract)
+
 ```python
+
 # Pattern emerged! Now create abstraction
 VALIDATORS = {
     "email": lambda x: "@" in x,
@@ -69,9 +76,9 @@ VALIDATORS = {
 
 def validate(data, type):
     return VALIDATORS[type](data)
-```
 
----
+```text
+
 
 ## 💡 MVP Principles
 
@@ -92,7 +99,6 @@ def validate(data, type):
 - ❌ Premature optimizations
 - ❌ "Future-proof" design
 
----
 
 ## 🔄 When to Refactor
 
@@ -103,7 +109,6 @@ def validate(data, type):
 
 **Refactor AFTER** several increments, not during.
 
----
 
 ## 📈 Incremental Development Strategy
 
@@ -115,13 +120,16 @@ Prefer adding new code to modifying existing:
 
 ### 2. Test After Each Increment
 After each increment:
-```
+
+```text
+
 ✅ POST-INCREMENT CHECKLIST:
 - [ ] Code compiled/executed without error
 - [ ] Functionality works (manual test)
 - [ ] Old code still works
 - [ ] Commit the increment
-```
+
+```text
 
 ### 3. One Increment at a Time
 - Don't add multiple features together
@@ -130,7 +138,6 @@ After each increment:
 - Reversible (small increment is easy to revert)
 - Testable (small increment is easy to test)
 
----
 
 ## 📏 Ideal Increment Size
 
@@ -148,7 +155,6 @@ After each increment:
   - ✅ (Next) "Add JWT token generation"
   - ✅ (Next) "Add role-based access control"
 
----
 
 ## 🎓 Remember
 
@@ -161,6 +167,6 @@ After each increment:
 - Refactor = Simplify, not complicate
 - **Document over-engineering learnings in PRD**
 
----
 
 **This is a LIVING principles document. Update as new patterns emerge!**
+````

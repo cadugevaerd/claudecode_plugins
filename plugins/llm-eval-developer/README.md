@@ -17,10 +17,11 @@ Plugin especializado para **desenvolver evaluations de LLMs e agentes**. Gera c�
 
 ## 📦 Instalação
 
-```bash
+````bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install llm-eval-developer
-```
+
+```text
 
 ## 🚀 Funcionalidades
 
@@ -107,13 +108,16 @@ Mostra padrões comuns de código para:
 - ✅ Detecta stack de evaluation automaticamente
 
 **Uso**:
+
 ```bash
+
 # Setup básico (detecta stack automaticamente)
 /setup-project-eval
 
 # Ou com descrição do tipo de evaluation
 /setup-project-eval "RAG system evaluation com LangSmith + OpenAI"
-```
+
+```text
 
 **Resultado**:
 Claude ficará automaticamente orientado a:
@@ -129,21 +133,23 @@ Claude ficará automaticamente orientado a:
 - ✅ Ao adicionar este plugin em projetos existentes
 - ✅ Quando quiser padronizar evaluations no time
 
----
 
 ### `/create-evaluator`
 
 Gera código de evaluator customizado.
 
 **Uso**:
-```
+
+```text
+
 /create-evaluator
 
 Tipo: llm-as-judge
 Framework: langsmith
 Nome: hallucination_detector
 Critério: Detectar alucinações comparando output com contexto
-```
+
+```text
 
 **Output**: Código Python completo do evaluator com:
 - Imports necessários
@@ -195,7 +201,8 @@ def test_hallucination_detector():
         inputs={"context": "Paris is France's capital."}
     )
     assert result["score"] >= 0.8
-```
+
+```text
 
 </details>
 
@@ -214,7 +221,8 @@ def bleu_evaluator(outputs: dict, reference_outputs: dict) -> dict:
     score = sentence_bleu([reference], predicted, smoothing_function=smoothing)
 
     return {"bleu_score": score}
-```
+
+```text
 
 </details>
 
@@ -239,29 +247,33 @@ def create_email_validator() -> SimpleEvaluator:
         }
 
     return email_evaluator
-```
+
+```text
 
 </details>
 
----
 
 ### `/create-eval-suite`
 
 Gera scaffolding completo de evaluation suite.
 
 **Uso**:
-```
+
+```text
+
 /create-eval-suite
 
 Nome: rag-chatbot-eval
 Tipo: chatbot com RAG
 Métricas: accuracy, relevance, hallucination, response_time
 Framework: langsmith
-```
+
+```text
 
 **Output**: Estrutura completa de diretórios e arquivos:
 
-```
+```text
+
 evaluations/
 ├── config/
 │   └── eval_config.py           # Configuração e thresholds
@@ -280,11 +292,11 @@ evaluations/
 │   └── .gitkeep
 ├── run_evaluation.py             # Script principal
 └── README.md                     # Documentação
-```
+
+```text
 
 **Cada arquivo é gerado com código funcional completo!**
 
----
 
 ### `/benchmark-llms` (NOVO! v1.2.0)
 
@@ -299,9 +311,11 @@ evaluations/
 - ✅ Gera relatórios comparativos (JSON, Markdown, HTML, CSV, LangSmith UI)
 
 **Uso**:
+
 ```bash
 /benchmark-llms
-```
+
+```text
 
 O comando pergunta interativamente:
 1. **Modelos**: gpt-4o, claude-3.5-sonnet, gemini-1.5-pro, etc.
@@ -312,7 +326,8 @@ O comando pergunta interativamente:
 
 **Output**: Estrutura completa de benchmark:
 
-```
+```text
+
 benchmarks/
 ├── config/
 │   ├── benchmark_config.py          # Config de modelos
@@ -331,12 +346,15 @@ benchmarks/
 │       └── markdown_reporter.py     # Relatórios comparativos
 ├── run_benchmark.py                 # Script principal
 └── README.md
-```
+
+```text
 
 **Cada arquivo é gerado com código funcional usando LangChain/LangSmith!**
 
 **Exemplo de output**:
+
 ```markdown
+
 # 📊 LLM Benchmark Report
 
 ## Winners
@@ -350,7 +368,8 @@ benchmarks/
 | gpt-4o | 87.2% | 1456ms | $1.15 | 75.8 qa/$ |
 | claude-3.5-sonnet | 85.8% | 891ms | $0.87 | 98.6 qa/$ |
 | gemini-1.5-pro | 84.3% | 1034ms | $0.43 | 196 qa/$ |
-```
+
+```text
 
 **Vantagens de LangChain/LangSmith**:
 - Tracking automático de tokens, custos, traces
@@ -359,14 +378,15 @@ benchmarks/
 - Dataset management centralizado
 - Não precisa implementar tracking manual!
 
----
 
 ### `/eval-metrics`
 
 Lista e documenta métricas de evaluation disponíveis.
 
 **Uso**:
-```
+
+```text
+
 /eval-metrics
 
 # Lista todas as métricas
@@ -374,7 +394,8 @@ Lista e documenta métricas de evaluation disponíveis.
 # Ou filtrar por categoria:
 /eval-metrics
 Categoria: llm-judge
-```
+
+```text
 
 **Output**: Documentação completa de métricas com:
 
@@ -403,14 +424,15 @@ Cada métrica inclui:
 - ✅ Código de implementação
 - ✅ Limitações e trade-offs
 
----
 
 ### `/eval-patterns`
 
 Mostra padrões de código comuns para evaluation.
 
 **Uso**:
-```
+
+```text
+
 /eval-patterns
 
 # Lista todos os padrões
@@ -418,7 +440,8 @@ Mostra padrões de código comuns para evaluation.
 # Ou filtrar:
 /eval-patterns
 Tipo: testing
-```
+
+```text
 
 **Output**: Padrões de código para:
 
@@ -444,7 +467,6 @@ Tipo: testing
 - Pairwise evaluation
 - Composite evaluators
 
----
 
 ## 🤖 Agente Especializado
 
@@ -453,9 +475,12 @@ Tipo: testing
 Agente focado em **desenvolvimento de evaluations**.
 
 **Invoke via Task tool**:
-```
+
+```text
+
 Task: Crie um evaluator para detectar toxicidade em chatbot responses usando LLM-as-judge. Framework: LangSmith.
-```
+
+```text
 
 **O agente irá**:
 1. Gerar código completo do evaluator
@@ -468,9 +493,11 @@ Task: Crie um evaluator para detectar toxicidade em chatbot responses usando LLM
 <details>
 <summary>Tarefa 1: Criar Evaluator de Relevância</summary>
 
-```
+```text
+
 Task: Implemente um evaluator de relevância para Q&A usando LLM-as-judge com OpenEvals.
-```
+
+```text
 
 **Agente gera**:
 - Código do evaluator com prompt otimizado
@@ -483,9 +510,11 @@ Task: Implemente um evaluator de relevância para Q&A usando LLM-as-judge com Op
 <details>
 <summary>Tarefa 2: Implementar ROUGE Score</summary>
 
-```
+```text
+
 Task: Como implemento ROUGE score para avaliar meu summarizer? Sem usar frameworks externos.
-```
+
+```text
 
 **Agente gera**:
 - Implementação custom de ROUGE
@@ -498,9 +527,11 @@ Task: Como implemento ROUGE score para avaliar meu summarizer? Sem usar framewor
 <details>
 <summary>Tarefa 3: Suite Completa de Evaluation</summary>
 
-```
+```text
+
 Task: Crie evaluation suite completa para RAG system com métricas de hallucination, relevance e citation accuracy.
-```
+
+```text
 
 **Agente gera**:
 - Estrutura completa de diretórios
@@ -512,7 +543,6 @@ Task: Crie evaluation suite completa para RAG system com métricas de hallucinat
 
 </details>
 
----
 
 ## 🧠 Skill de Auto-Discovery
 
@@ -534,44 +564,48 @@ Skill automaticamente invocada por Claude quando detectar necessidade de evaluat
 
 **Exemplo de ativação**:
 
-```
+```text
+
 Você: "Preciso detectar alucinações no meu RAG system"
 
 Claude (usando skill automaticamente):
 Vou criar um hallucination detector usando LLM-as-judge...
 
 [Gera código completo do evaluator]
-```
 
----
+```text
+
 
 ## 💡 Exemplos de Uso do Plugin
 
 ### Exemplo 1: Criar Evaluator de Hallucination
 
-```
+```text
+
 /create-evaluator
 
 Tipo: llm-as-judge
 Framework: langsmith
 Nome: hallucination_detector
 Critério: Detectar alucinações comparando output com contexto fornecido
-```
+
+```text
 
 **Plugin gera código completo pronto para usar!**
 
----
 
 ### Exemplo 2: Suite para Chatbot
 
-```
+```text
+
 /create-eval-suite
 
 Nome: chatbot-evaluation
 Tipo: customer support chatbot
 Métricas: relevance, tone, response_time, accuracy
 Framework: langsmith
-```
+
+```text
 
 **Plugin cria**:
 - 4 evaluators implementados
@@ -580,15 +614,16 @@ Framework: langsmith
 - Script de execução
 - GitHub Actions workflow
 
----
 
 ### Exemplo 3: Consultar Métricas
 
-```
+```text
+
 /eval-metrics
 
 Categoria: llm-judge
-```
+
+```text
 
 **Plugin mostra**:
 - Lista de métricas LLM-as-judge
@@ -596,15 +631,16 @@ Categoria: llm-judge
 - Quando usar
 - Código de exemplo
 
----
 
 ### Exemplo 4: Padrões de Testing
 
-```
+```text
+
 /eval-patterns
 
 Tipo: testing
-```
+
+```text
 
 **Plugin mostra**:
 - Como testar evaluators com pytest
@@ -612,7 +648,6 @@ Tipo: testing
 - Integration testing
 - Parametrized tests
 
----
 
 ## 📚 Casos de Uso
 
@@ -621,45 +656,51 @@ Tipo: testing
 **Necessidade**: Avaliar se RAG retorna respostas factuais sem alucinações.
 
 **Solução com plugin**:
-```
+
+```text
+
 1. /create-evaluator → hallucination_detector (LLM-as-judge)
 2. /create-evaluator → relevance_evaluator (LLM-as-judge)
 3. /create-evaluator → citation_accuracy (rule-based)
 4. /create-eval-suite → rag-eval-suite
-```
+
+```text
 
 **Resultado**: Suite completa de evaluation para RAG com 3 métricas.
 
----
 
 ### Use Case 2: Summarization System
 
 **Necessidade**: Avaliar qualidade de summaries gerados.
 
 **Solução com plugin**:
-```
+
+```text
+
 1. /create-evaluator → rouge_evaluator (similarity)
 2. /create-evaluator → coherence_evaluator (LLM-as-judge)
 3. /create-evaluator → conciseness_evaluator (rule-based)
-```
+
+```text
 
 **Resultado**: 3 evaluators complementares para avaliar summaries.
 
----
 
 ### Use Case 3: Chatbot Testing
 
 **Necessidade**: Testar chatbot em production antes de deploy.
 
 **Solução com plugin**:
-```
+
+```text
+
 1. /create-eval-suite → chatbot-eval
 2. /eval-patterns → ci-cd
-```
+
+```text
 
 **Resultado**: Suite com CI/CD integration, executa testes automaticamente em PRs.
 
----
 
 ## 🎓 Melhores Práticas
 
@@ -675,7 +716,8 @@ def test_evaluator_positive_case():
 def test_evaluator_negative_case():
     result = evaluator(outputs={"bad": "answer"})
     assert result["score"] <= 0.3
-```
+
+```text
 
 ### 2. Combine Múltiplas Métricas
 
@@ -693,12 +735,15 @@ def test_with_mock(mocker):
     mocker.patch("openai.OpenAI.chat.completions.create", return_value=mock_response)
     result = evaluator(outputs={"test": "data"})
     assert result["score"] == expected
-```
+
+```text
 
 ### 4. Version Your Datasets
 
 **Track mudanças** em datasets para detectar drift:
-```
+
+```text
+
 datasets/
 ├── v1.0/
 │   └── golden_dataset.json
@@ -706,18 +751,21 @@ datasets/
 │   └── golden_dataset.json
 └── current/
     └── golden_dataset.json
-```
+
+```text
 
 ### 5. Automate in CI/CD
 
 **Execute evaluations automaticamente** em PRs:
+
 ```yaml
+
 # .github/workflows/evaluation.yml
 - name: Run Evaluations
   run: pytest tests/evaluations/ --langsmith
-```
 
----
+```text
+
 
 ## 🔧 Integração com Frameworks
 
@@ -730,7 +778,8 @@ evaluator = create_llm_as_judge(
     prompt=YOUR_PROMPT,
     model="openai:gpt-4o-mini",
 )
-```
+
+```text
 
 ### LangSmith
 
@@ -747,7 +796,8 @@ results = evaluate(
     data="dataset-name",
     evaluators=[custom_evaluator]
 )
-```
+
+```text
 
 ### Pytest Integration
 
@@ -756,9 +806,9 @@ results = evaluate(
 def test_evaluation():
     results = evaluate(app, data=dataset)
     assert results["metric"]["mean"] >= threshold
-```
 
----
+```text
+
 
 ## 📖 Referências
 
@@ -773,7 +823,6 @@ def test_evaluation():
 - ROUGE: [Lin, 2004](https://aclanthology.org/W04-1013/)
 - G-Eval: [Liu et al., 2023](https://arxiv.org/abs/2303.16634)
 
----
 
 ## 🤝 Contribuindo
 
@@ -789,6 +838,6 @@ Este plugin faz parte do [claudecode_plugins marketplace](https://github.com/cad
 
 MIT
 
----
 
 **Desenvolvido para ajudar você a CRIAR evaluations de qualidade para seus LLMs! 🚀**
+````

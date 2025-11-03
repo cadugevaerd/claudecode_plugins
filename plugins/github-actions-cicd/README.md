@@ -11,6 +11,7 @@ Este plugin ajuda você a criar, manter e evoluir workflows GitHub Actions de fo
 **YAGNI** (You Aren't Gonna Need It) é um princípio de desenvolvimento que diz: "Não adicione funcionalidades até que sejam realmente necessárias".
 
 Aplicado ao CI/CD:
+
 - ✅ Comece com workflow **mínimo e funcional**
 - ✅ Adicione cache **quando installs ficarem lentos**
 - ✅ Adicione matrix builds **quando precisar múltiplas versões**
@@ -20,10 +21,11 @@ Aplicado ao CI/CD:
 
 ## 📦 Instalação
 
-```bash
+````bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install github-actions-cicd
-```
+
+```text
 
 ## ⚡ Quick Start
 
@@ -33,7 +35,8 @@ Configure o CLAUDE.md do seu projeto com padrões de CI/CD:
 
 ```bash
 /cicd-setup-project
-```
+
+```text
 
 Isso adiciona instruções ao CLAUDE.md para que Claude siga automaticamente:
 - Princípio YAGNI
@@ -47,7 +50,8 @@ Crie seu primeiro workflow MVP (Mínimo Viável):
 
 ```bash
 /cicd-init
-```
+
+```text
 
 O plugin detecta automaticamente:
 - Linguagem do projeto (Python, Node.js, Go, etc.)
@@ -55,6 +59,7 @@ O plugin detecta automaticamente:
 - Framework de testes (pytest, jest, go test, etc.)
 
 E cria um workflow básico:
+
 ```yaml
 name: CI
 on: [push, pull_request]
@@ -69,7 +74,8 @@ jobs:
       - run: uv python install
       - run: uv sync
       - run: uv run pytest
-```
+
+```text
 
 ### 3. Verificar e Atualizar
 
@@ -78,7 +84,8 @@ Periodicamente, verifique se suas actions estão atualizadas:
 ```bash
 /cicd-check
 /cicd-update
-```
+
+```text
 
 ## 🚀 Funcionalidades
 
@@ -94,11 +101,12 @@ Inicializa CI/CD no projeto com workflow MVP.
 - Evita complexidade prematura
 
 **Exemplo**:
+
 ```bash
 /cicd-init
-```
 
----
+```text
+
 
 #### `/cicd-check`
 Verifica workflows existentes, versões de actions e problemas de segurança.
@@ -110,12 +118,16 @@ Verifica workflows existentes, versões de actions e problemas de segurança.
 - Sugere melhorias
 
 **Exemplo**:
+
 ```bash
 /cicd-check
-```
+
+```text
 
 **Output**:
-```
+
+```text
+
 📊 ANÁLISE DE WORKFLOWS
 
 ✅ ci.yml: Válido
@@ -124,9 +136,9 @@ Verifica workflows existentes, versões de actions e problemas de segurança.
 
 ⚠️  Atualizações disponíveis:
    - actions/setup-python: v4 → v5
-```
 
----
+```text
+
 
 #### `/cicd-update`
 Atualiza versões de actions para as últimas versões disponíveis.
@@ -138,16 +150,17 @@ Atualiza versões de actions para as últimas versões disponíveis.
 - Valida após mudanças
 
 **Exemplo**:
+
 ```bash
 /cicd-update
-```
+
+```text
 
 **Estratégia de atualização**:
 - 🟢 **PATCH**: Atualização segura (bug fixes)
 - 🟡 **MINOR**: Revisar changelog recomendado (novas features)
 - 🔴 **MAJOR**: Revisão manual obrigatória (breaking changes)
 
----
 
 #### `/cicd-setup-project`
 Configura CLAUDE.md do projeto com padrões de CI/CD.
@@ -159,9 +172,11 @@ Configura CLAUDE.md do projeto com padrões de CI/CD.
 - Documenta boas práticas
 
 **Exemplo**:
+
 ```bash
 /cicd-setup-project
-```
+
+```text
 
 ### Agentes Especializados
 
@@ -175,11 +190,12 @@ Agente especializado em criar e evoluir workflows incrementalmente.
 - Aplicar "Regra dos 3" para refatoração
 
 **Exemplo**:
+
 ```python
 Task("Usar cicd-assistant para criar workflow básico de CI")
-```
 
----
+```text
+
 
 #### `workflow-analyzer`
 Agente especializado em analisar workflows e sugerir melhorias.
@@ -191,9 +207,11 @@ Agente especializado em analisar workflows e sugerir melhorias.
 - Identificar duplicação
 
 **Exemplo**:
+
 ```python
 Task("Usar workflow-analyzer para auditoria de segurança")
-```
+
+```text
 
 ### Skills Auto-Invocadas
 
@@ -211,7 +229,6 @@ Valida automaticamente sintaxe e estrutura de workflows.
 - ✅ Boas práticas aplicadas
 - ✅ Segurança configurada
 
----
 
 #### `action-version-checker`
 Verifica automaticamente versões de actions.
@@ -245,15 +262,16 @@ jobs:
       - run: uv python install
       - run: uv sync
       - run: uv run pytest
-```
+
+```text
 
 **Quando usar**: SEMPRE comece aqui! É o mínimo funcional.
 
----
 
 ### Nível 2 - Cache (Quando Installs > 1min)
 
 ```yaml
+
 # Adicionar APENAS quando necessário
 - uses: actions/cache@v4
   with:
@@ -261,34 +279,36 @@ jobs:
       ~/.cache/uv
       .venv
     key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-```
+
+```text
 
 **Quando adicionar**:
 - ✅ Instalação demora > 1 minuto
 - ✅ Builds lentos afetando produtividade
 - ❌ **NÃO** adicionar "para otimizar depois"
 
----
 
 ### Nível 3 - Matrix (Quando Precisar Múltiplas Versões)
 
 ```yaml
+
 # Adicionar APENAS quando necessário
 strategy:
   matrix:
     python-version: ['3.9', '3.10', '3.11']
-```
+
+```text
 
 **Quando adicionar**:
 - ✅ Projeto precisa suportar múltiplas versões
 - ✅ Requisito de compatibilidade explícito
 - ❌ **NÃO** adicionar "para garantir compatibilidade"
 
----
 
 ### Nível 4 - Linting (Quando Ferramentas Configuradas)
 
 ```yaml
+
 # Adicionar APENAS quando linters configurados
 lint:
   runs-on: ubuntu-latest
@@ -296,18 +316,19 @@ lint:
     - uses: actions/checkout@v4
     - run: uv run black . --check
     - run: uv run flake8 .
-```
+
+```text
 
 **Quando adicionar**:
 - ✅ black, flake8, mypy configurados no projeto
 - ✅ Equipe usa linters localmente
 - ❌ **NÃO** adicionar antes de configurar linters
 
----
 
 ### Nível 5 - Deploy (Quando Ambiente Pronto)
 
 ```yaml
+
 # Adicionar APENAS quando ambiente existe
 deploy:
   needs: test
@@ -315,7 +336,8 @@ deploy:
   runs-on: ubuntu-latest
   steps:
     # ... deploy steps
-```
+
+```text
 
 **Quando adicionar**:
 - ✅ Ambiente de staging/produção configurado
@@ -327,35 +349,42 @@ deploy:
 ### 1. Permissions Mínimas
 
 ```yaml
+
 # ✅ Correto - Mínimo necessário
 permissions:
   contents: read
 
 # ❌ Errado - Acesso excessivo
 permissions: write-all
-```
+
+```text
 
 ### 2. Versões Específicas
 
 ```yaml
+
 # ✅ Correto - Versão específica
 uses: actions/checkout@v4
 
 # ❌ Errado - Branch/latest
 uses: actions/checkout@latest
 uses: actions/checkout@main
-```
+
+```text
 
 ### 3. SHA Pinning (Produção)
 
 ```yaml
+
 # 🔒 Máxima segurança - SHA commit
 uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
-```
+
+```text
 
 ### 4. Secrets Seguros
 
 ```yaml
+
 # ✅ Correto - Em env variables
 env:
   API_KEY: ${{ secrets.API_KEY }}
@@ -363,11 +392,13 @@ run: ./deploy.sh
 
 # ❌ Errado - Inline (expõe em logs)
 run: echo "API_KEY=${{ secrets.API_KEY }}"
-```
+
+```text
 
 ### 5. OIDC para Cloud (Preferir)
 
 ```yaml
+
 # ✅ Preferir OIDC ao invés de credentials estáticas
 permissions:
   id-token: write
@@ -377,7 +408,8 @@ permissions:
   with:
     role-to-assume: arn:aws:iam::ACCOUNT:role/ROLE
     aws-region: us-east-1
-```
+
+```text
 
 ## 📊 Actions Recomendadas
 
@@ -432,7 +464,8 @@ jobs:
       - run: uv python install
       - run: uv sync
       - run: uv run pytest
-```
+
+```text
 
 ### Node.js
 
@@ -451,7 +484,8 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm test
-```
+
+```text
 
 ### Go
 
@@ -470,7 +504,8 @@ jobs:
           go-version: '1.21'
       - run: go mod download
       - run: go test -v ./...
-```
+
+```text
 
 ## 🔄 Manutenção e Atualizações
 
@@ -483,6 +518,7 @@ jobs:
 ### Configurar Dependabot (Recomendado)
 
 ```yaml
+
 # .github/dependabot.yml
 version: 2
 updates:
@@ -494,7 +530,8 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
-```
+
+```text
 
 ### Workflow de Atualização
 
@@ -549,29 +586,36 @@ updates:
 ### ❌ Complexidade Prematura
 
 ```yaml
+
 # NÃO fazer logo de início
 strategy:
   matrix:
     python-version: [3.9, 3.10, 3.11, 3.12]
     os: [ubuntu-latest, windows-latest, macos-latest]
+
 # Quando projeto só precisa Python 3.11 em ubuntu
-```
+
+```text
 
 ### ❌ Cache Desnecessário
 
 ```yaml
+
 # NÃO adicionar se install é rápido (<30s)
 - uses: actions/cache@v4
   # ... cache config
-```
+
+```text
 
 ### ❌ Versões Inseguras
 
 ```yaml
+
 # NUNCA usar
 uses: actions/checkout@latest  # ❌
 uses: actions/checkout@main    # ❌
-```
+
+```text
 
 ## 📞 Suporte
 
@@ -589,6 +633,6 @@ MIT
 - Email: cadu.gevaerd@gmail.com
 - GitHub: [@cadugevaerd](https://github.com/cadugevaerd)
 
----
 
 **Desenvolvido para claudecode_plugins marketplace** 🚀
+````

@@ -19,17 +19,20 @@ Este plugin fornece assistência abrangente para desenvolvimento com LangChain e
 
 O plugin requer `uvx` para executar o MCP server de documentação:
 
-```bash
+````bash
+
 # Instalar uv (inclui uvx)
 curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+
+```text
 
 ### 2. Instalar Plugin
 
 ```bash
 /plugin marketplace add cadugevaerd/claudecode_plugins
 /plugin install langchain-langgraph-specialist
-```
+
+```text
 
 ### 3. MCP Server (Automático) ✨
 
@@ -44,8 +47,10 @@ Verifique se está ativo:
 
 ```bash
 claude mcp list
+
 # Deve mostrar: langchain-docs
-```
+
+```text
 
 📖 **Troubleshooting**: Veja `mcp/README.md` no plugin para solução de problemas.
 
@@ -62,11 +67,13 @@ Referência rápida sobre LangChain v1:
 - Melhores práticas
 
 **Uso**:
+
 ```bash
 /langchain-help
 /langchain-help lcel
 /langchain-help migration
-```
+
+```text
 
 #### `/langgraph-help` - Ajuda Rápida LangGraph v1
 Referência rápida sobre LangGraph v1:
@@ -77,12 +84,14 @@ Referência rápida sobre LangGraph v1:
 - Checkpointing e persistência
 
 **Uso**:
+
 ```bash
 /langgraph-help
 /langgraph-help graphs
 /langgraph-help state
 /langgraph-help agents
-```
+
+```text
 
 #### `/lcel-builder` - Construtor de Chains LCEL
 Assistente interativo para construir chains LCEL:
@@ -93,11 +102,13 @@ Assistente interativo para construir chains LCEL:
 - Código gerado pronto para uso
 
 **Uso**:
+
 ```bash
 /lcel-builder criar uma chain que gera piada e traduz para português
 /lcel-builder chain RAG com retrieval de documentos técnicos
 /lcel-builder parallel execution de análise de sentimento e resumo
-```
+
+```text
 
 ### 🤖 Agente Especializado
 
@@ -110,13 +121,16 @@ Especialista completo para consultas complexas:
 - Migração v0 → v1
 
 **Uso via Task**:
+
 ```python
+
 # Delegar tarefa complexa ao especialista
 Task(
     agent="langchain-langgraph-expert",
     description="Criar sistema RAG completo com LangChain v1"
 )
-```
+
+```text
 
 ### ⚡ Skills Auto-invocadas (Capacidades Automáticas)
 
@@ -143,9 +157,11 @@ Claude invoca estas skills automaticamente baseado no contexto:
 
 ```bash
 /lcel-builder criar chain que responde perguntas sobre Python
-```
+
+```text
 
 **Resultado**:
+
 ```python
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
@@ -158,15 +174,18 @@ chain = (
 )
 
 answer = chain.invoke({"question": "What are decorators?"})
-```
+
+```text
 
 ### Exemplo 2: RAG Pipeline Completa
 
 ```bash
 /lcel-builder chain RAG com retrieval de documentos e citações
-```
+
+```text
 
 **Resultado**:
+
 ```python
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -194,13 +213,15 @@ rag_chain = (
 )
 
 answer = rag_chain.invoke("What is the main topic?")
-```
+
+```text
 
 ### Exemplo 3: LangGraph Multi-Agent System
 
 ```bash
 /langgraph-help agents
-```
+
+```text
 
 Depois de consultar a ajuda, use a skill automaticamente:
 
@@ -238,15 +259,18 @@ graph.set_entry_point("research")
 graph.set_finish_point("writer")
 
 app = graph.compile()
-```
+
+```text
 
 ### Exemplo 4: Debug de Erro LCEL
 
 Claude detecta automaticamente o erro e usa `langchain-debugger` skill:
 
 ```python
+
 # ❌ Código com erro
 chain = {"input": "value"} | prompt | llm
+
 # TypeError: unsupported operand type(s) for |: 'dict' and 'ChatPromptTemplate'
 
 # ✅ Claude identifica e corrige automaticamente
@@ -257,13 +281,15 @@ chain = (
     | prompt
     | llm
 )
-```
+
+```text
 
 ### Exemplo 5: Migração v0 → v1
 
 ```bash
 /langchain-help migration
-```
+
+```text
 
 Claude fornece guia detalhado:
 - ✅ Atualizar Python para 3.10+
@@ -329,7 +355,9 @@ Claude fornece guia detalhado:
 - **LangGraph**: v1.0+ (se usar grafos)
 
 **Instalação dos frameworks**:
+
 ```bash
+
 # LangChain v1
 pip install --upgrade langchain langchain-core
 
@@ -341,7 +369,8 @@ pip install langgraph
 
 # Legado (se necessário)
 pip install langchain-classic
-```
+
+```text
 
 ## Recursos Adicionais
 
@@ -365,22 +394,28 @@ pip install langchain-classic
 
 ### Erro: "Python 3.9 not supported"
 LangChain v1 requer Python 3.10+. Atualize:
+
 ```bash
 pyenv install 3.10
 pyenv global 3.10
-```
+
+```text
 
 ### Erro: "cannot import AgentExecutor"
 `AgentExecutor` foi deprecated. Migre para LangGraph:
+
 ```bash
 /langchain-help migration
-```
+
+```text
 
 ### Erro: "TypeError with pipe operator"
 Verifique type compatibility. Use:
+
 ```bash
 /lcel-builder [descrever sua chain]
-```
+
+```text
 
 ### Performance Issues
 Para chains lentas, considere:
@@ -398,8 +433,8 @@ Para chains lentas, considere:
 
 MIT License
 
----
 
 **Desenvolvido para Claude Code Marketplace** 🚀
 
 *Versão 1.1.0 - Outubro 2025*
+````

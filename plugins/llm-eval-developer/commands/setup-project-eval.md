@@ -9,6 +9,7 @@ Este comando configura o arquivo `CLAUDE.md` do projeto atual com instruções s
 ## 🎯 Objetivo
 
 Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
+
 - Desenvolva evaluators customizados (OpenEvals, LangSmith, custom)
 - Estruture evaluation suites adequadamente
 - Implemente métricas corretas (LLM-as-judge, similarity, rule-based)
@@ -18,15 +19,17 @@ Adicionar ao `CLAUDE.md` do projeto instruções claras para que Claude:
 
 ## 📋 Como usar
 
-```bash
+````bash
 /setup-project-eval
-```
+
+```text
 
 Ou com descrição do tipo de evaluation:
 
 ```bash
 /setup-project-eval "RAG system evaluation com LangSmith + OpenAI"
-```
+
+```text
 
 ## 🔍 Processo de Execução
 
@@ -46,6 +49,7 @@ Ou com descrição do tipo de evaluation:
 O comando deve adicionar a seguinte seção ao `CLAUDE.md`:
 
 ```markdown
+
 # LLM Evaluation Standards
 
 **IMPORTANTE**: Este projeto utiliza o plugin `llm-eval-developer` para desenvolvimento de evaluations de LLMs com padrões consistentes e frameworks profissionais.
@@ -65,7 +69,8 @@ O comando deve adicionar a seguinte seção ao `CLAUDE.md`:
 
 ### 📁 Estrutura de Diretórios
 
-```
+```text
+
 projeto/
 ├── src/                        # Código do sistema (LLM app, RAG, etc.)
 │   ├── __init__.py
@@ -94,7 +99,8 @@ projeto/
 │   └── generate_report.py
 └── .github/workflows/         # CI/CD
     └── eval_regression.yml
-```
+
+```text
 
 ### 🎯 Tipos de Evaluators
 
@@ -146,7 +152,8 @@ def hallucination_detector(run, example):
         "score": result["score"],
         "comment": result["reasoning"]
     }
-```
+
+```text
 
 #### 2. Similarity-Based
 
@@ -183,7 +190,8 @@ def semantic_similarity(run, example):
         "key": "semantic_similarity",
         "score": float(similarity)
     }
-```
+
+```text
 
 #### 3. Rule-Based
 
@@ -217,7 +225,8 @@ def answer_format_validator(run, example):
         "score": score,
         "comment": f"Validations: {validations}"
     }
-```
+
+```text
 
 ### 📊 Dataset Management
 
@@ -246,7 +255,8 @@ def answer_format_validator(run, example):
     }
   ]
 }
-```
+
+```text
 
 #### Synthetic Dataset Generation
 
@@ -285,7 +295,8 @@ def generate_synthetic_examples(topic: str, count: int):
         })
 
     return examples
-```
+
+```text
 
 ### 🧪 Testing Evaluators
 
@@ -324,7 +335,8 @@ def test_hallucination_detector_with_hallucination(mocker):
     """Deve retornar score baixo para resposta alucinada"""
     # Similar ao anterior, mas com score baixo
     pass
-```
+
+```text
 
 ### 🔄 CI/CD para Regression Testing
 
@@ -370,7 +382,8 @@ jobs:
         with:
           name: eval-results
           path: eval_results.json
-```
+
+```text
 
 ### 📈 Métricas Recomendadas por Tipo de Sistema
 
@@ -427,16 +440,17 @@ Este projeto usa o plugin `llm-eval-developer` com os seguintes recursos:
 - Rule-based (regex, format, length, keywords)
 - Composite (múltiplas métricas combinadas)
 
----
 
 **Filosofia**: Measure > Guess | Automate > Manual | Regression Tests > Hope
-```
+
+```text
 
 ### 3. Adicionar Contexto do Projeto (Se Fornecido)
 
 Se o usuário fornecer descrição do tipo de evaluation, adicionar seção customizada:
 
 ```markdown
+
 ## 📊 Contexto Deste Projeto
 
 **Tipo de Sistema**: [RAG/Agent/Summarization/Code Gen]
@@ -454,7 +468,8 @@ Se o usuário fornecer descrição do tipo de evaluation, adicionar seção cust
 - Golden examples: [quantidade recomendada]
 - Edge cases: [exemplos específicos]
 - Regression test cases: [baseline]
-```
+
+```text
 
 ### 4. Detectar Stack de Evaluation do Projeto
 
@@ -469,6 +484,7 @@ Analisar projeto para customizar instruções:
 **Adicionar ao CLAUDE.md**:
 
 ```markdown
+
 ## 🔧 Stack de Evaluation Detectada
 
 **Framework**: [OpenEvals/LangSmith/Custom]
@@ -481,13 +497,15 @@ Analisar projeto para customizar instruções:
 
 **Datasets Existentes**:
 - [listar datasets encontrados]
-```
+
+```text
 
 ### 5. Confirmar com Usuário
 
 Mostrar preview do que será adicionado:
 
-```
+```text
+
 ═══════════════════════════════════════════
 📝 SETUP LLM EVALUATION
 ═══════════════════════════════════════════
@@ -508,12 +526,12 @@ Datasets Existentes:
 - [Y] golden datasets encontrados
 
 Conteúdo a ser adicionado:
----
+
 [Preview das instruções]
----
 
 Adicionar ao CLAUDE.md? (s/n)
-```
+
+```text
 
 ### 6. Criar/Atualizar Arquivo
 
@@ -523,7 +541,8 @@ Se usuário confirmar:
 - Preservar conteúdo existente (NUNCA sobrescrever)
 - Validar que arquivo foi criado corretamente
 
-```
+```text
+
 ✅ CLAUDE.md configurado com sucesso!
 
 Instruções de LLM evaluation adicionadas.
@@ -553,7 +572,8 @@ Claude agora está orientado a:
 ✓ Gerenciar datasets de evaluation
 ✓ Testar evaluators com pytest
 ✓ Configurar CI/CD para regression testing
-```
+
+```text
 
 ## 📚 Exemplos de Uso
 
@@ -561,7 +581,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-eval "RAG system com LangSmith + OpenAI"
-```
+
+```text
 
 **Resultado**:
 - Cria `CLAUDE.md` na raiz do projeto
@@ -574,7 +595,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-eval "Conversational agent com OpenEvals"
-```
+
+```text
 
 **Resultado**:
 - Detecta `CLAUDE.md` existente
@@ -587,7 +609,8 @@ Claude agora está orientado a:
 
 ```bash
 /setup-project-eval "Code generation LLM"
-```
+
+```text
 
 **Resultado**:
 - Adiciona evaluators de syntax validation
@@ -637,6 +660,7 @@ O usuário terá:
 Após configurar o projeto, sempre teste evaluators antes de usar em production:
 
 ```bash
+
 # Criar evaluator customizado
 /create-evaluator
 
@@ -648,6 +672,8 @@ pytest evaluations/tests/
 
 # Executar evaluation
 python scripts/run_eval.py
-```
+
+```text
 
 Isso garantirá que evaluations são confiáveis e detectam regressões corretamente.
+````
