@@ -1,10 +1,13 @@
 # Agentc AI Developer
 
-Complete guide for developing AI agents from conception to production. This plugin features the **Brief Minimo** methodology - a lightweight but comprehensive 30-minute planning process that defines your agent's complete scope before any coding begins.
+Complete guide for developing AI agents from conception to production through structured **Microprocessos**. This plugin implements the **Brief Minimo** methodology with integrated commands for planning, setup, and execution.
 
 ## Overview
 
-Agentc AI Developer is your partner in building production-ready AI agents. It guides you through proven methodologies and best practices, starting with the Brief Minimo process.
+Agentc AI Developer is your partner in building production-ready AI agents through proven methodologies:
+
+- **Microprocesso 1.1** (`/brief`) - Agent planning with Brief Minimo methodology
+- **Microprocesso 1.2** (`/setup-local-observability`) - Environment setup with reproducibility and observability
 
 Works with **new agents** and integrates seamlessly with **existing projects**.
 
@@ -26,13 +29,36 @@ Brief Minimo is a structured planning methodology that answers 5 fundamental que
 
 ## Quick Start
 
-Start your agent planning session with:
+### Microprocesso 1.1: Planning with Brief Minimo
+
+Start your agent planning session:
 
 ```bash
 /brief
 ```
 
 This launches an interactive interview that guides you through the Brief Minimo process. The agent automatically detects your context and offers relevant options.
+
+**Result**: README.md with complete agent specification ✅
+
+### Microprocesso 1.2: Environment Setup & Observability
+
+After `/brief` creates your project repository, continue with environment setup:
+
+```bash
+/setup-local-observability
+```
+
+This guides you interactively through:
+- ✅ Python virtual environment setup
+- ✅ Dependency installation (langchain, anthropic, langsmith)
+- ✅ Environment configuration (.env + .gitignore)
+- ✅ LangSmith integration for observability
+- ✅ Complete validation and testing
+
+**Result**: Reproducible environment with complete observability ready for development! 🚀
+
+**Total time**: ~2 hours (planning + environment setup)
 
 ## How It Works
 
@@ -44,7 +70,7 @@ This launches an interactive interview that guides you through the Brief Minimo 
 
 ### 2. Interactive Interview
 
-The **brief-assistant** agent conducts a conversational interview:
+The command conducts a conversational interview directly:
 
 - Welcomes you and explains the process
 - Asks each of the 5 fundamental questions
@@ -70,6 +96,16 @@ Use the generated specification document as the reference for:
 - Development and implementation
 - Testing and validation
 - Production deployment
+
+### 5. Project Integration (Optional)
+
+After planning and environment setup, run `/update-claude-md` to integrate guidance into your project's CLAUDE.md:
+
+```bash
+/update-claude-md
+```
+
+This adds a concise section (≤40 lines) with command references and next steps for ongoing development.
 
 ## Features
 
@@ -340,17 +376,18 @@ Success example:
 
 ## Roadmap
 
-**Version 0.1.0** (Current)
-- Brief Minimo methodology with 4 operating modes
-- Context detection (new vs existing projects)
-- Interactive interview via `/brief` command
-- Brief generation for new agents
-- Agent update and refinement
-- Agent validation and assessment
-- Retroactive documentation for existing agents
+**Version 0.3.0** (Current)
+- **Microprocesso 1.1**: Brief Minimo planning methodology (fully interactive `/brief` command)
+- **Microprocesso 1.2**: Environment setup with Python venv, dependencies, and LangSmith observability
+- **Project Integration**: `/update-claude-md` command for CLAUDE.md setup (≤40 lines, progressive disclosure)
+- **Help Assistant**: Specialized support for guidance and troubleshooting (help-assistant agent)
+- Interactive commands: `/brief`, `/setup-local-observability`, `/update-claude-md`
 - Seamless integration with existing projects
+- Environment validation and reproducibility
+- Complete observability integration with LangSmith
 
 **Planned Features**
+- **Microprocesso 1.3**: Spike Agentic (agent building and testing)
 - Architecture & Design macroprocess
 - Multi-step agent design patterns
 - Testing and validation strategies
@@ -358,19 +395,73 @@ Success example:
 - Advanced agent patterns (multi-agent, hierarchical, self-improving)
 - Integration with version control (git history analysis)
 - Collaborative briefing for team alignment
+- CI/CD integration for automated validation
 
 ## Commands
 
 ### /brief
-Launches the Brief Minimo 30-minute agent planning interview.
+Launches the **Microprocesso 1.1** - Brief Minimo 30-minute agent planning interview.
 
 ```bash
 /brief
 ```
 
-Conducts an interactive session and generates a comprehensive agent specification document.
+Conducts an interactive session and generates a comprehensive agent specification document (README.md) with complete agent specification.
+
+### /setup-local-observability
+Launches the **Microprocesso 1.2** - Interactive environment setup and configuration guide.
+
+```bash
+/setup-local-observability
+```
+
+Guides you through 8 interactive activities:
+- Python virtual environment setup
+- Dependency installation (langchain, anthropic, langsmith, python-dotenv)
+- Environment variables configuration (.env + .env.example)
+- LangSmith integration for observability
+- Environment validation and testing
+
+Results in a fully reproducible environment with complete observability, ready for agent development.
+
+### /update-claude-md
+Adds concise project integration section to your CLAUDE.md file.
+
+```bash
+/update-claude-md
+```
+
+Reads your Brief Minimo specification from README.md and creates a focused CLAUDE.md section (≤40 lines) with:
+- Available Agentc commands and when to use them
+- Links to full plugin documentation
+- Next steps for ongoing development
+- Support for help-assistant
+
+Follows progressive disclosure pattern - keeps CLAUDE.md lightweight while referencing comprehensive docs.
 
 ## Agents
+
+### help-assistant
+Specialist agent for providing support, guidance, and troubleshooting during Microprocessos 1.1 and 1.2.
+
+**When to use**: When you need help with `/brief`, `/setup-local-observability`, or general guidance
+
+**Responsibilities**:
+- Explain Brief Minimo concepts and methodology
+- Clarify the 5 fundamental questions
+- Provide troubleshooting for errors during setup
+- Explain technical concepts (venv, .env, LangSmith, traces, Docker, etc.)
+- Offer practical alternatives and workarounds
+- Suggest best practices for completing microprocessos
+- Reference official documentation when needed
+
+**Key Capabilities**:
+- Context-aware help for all Microprocesso phases
+- Clear explanations of methodology and concepts
+- Practical troubleshooting for common issues
+- Encouraging support throughout the process
+
+## Legacy Agents
 
 ### brief-assistant
 Specialist agent that conducts the Brief Minimo interview and generates specifications, validation reports, or documentation.
@@ -403,7 +494,7 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 
 ## Support & Contributing
 
-This is version 0.1.0 of Agentc AI Developer. It features Brief Minimo methodology with 4 operating modes, seamlessly integrating with both new and existing projects.
+This is version 0.3.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), and `/update-claude-md` (project integration). Includes `help-assistant` for guidance throughout the process.
 
 For issues, suggestions, or contributions related to the Claude Code marketplace, visit the [plugin repository](https://github.com/cadugevaerd/claudecode_plugins).
 
@@ -422,7 +513,9 @@ Repository: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugi
 ## Quick Links
 
 - **Brief Minimo Methodology**: See `/brief` command for detailed explanation
-- **Agent Planning Guide**: See `agents/brief-assistant.md` for complete interview flow
+- **Quick Start**: Run `/brief` to begin agent planning
+- **Need Help?**: Use `help-assistant` for guidance during any microprocesso
+- **Project Integration**: Run `/update-claude-md` after environment setup
 - **Plugin Marketplace**: [claudecode_plugins](https://github.com/cadugevaerd/claudecode_plugins)
 
 Start planning your AI agent today with `/brief`!

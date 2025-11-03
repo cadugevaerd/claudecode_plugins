@@ -2,6 +2,76 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.3.0] - 2025-11-02
+
+### Adicionado
+- **Novo comando** `/update-claude-md` para integração de projeto (máx 40 linhas)
+  - Lê Brief Minimo do README.md gerado pelo `/brief`
+  - Cria seção concisa no CLAUDE.md com guia de uso
+  - Segue padrão progressive disclosure (conciso + referências)
+- **Novo agente** `help-assistant` para suporte e orientação
+  - Explica conceitos do Brief Minimo e metodologia
+  - Fornece troubleshooting para `/brief` e `/setup-local-observability`
+  - Esclarece conceitos técnicos (venv, .env, LangSmith, traces, Docker, etc.)
+  - Oferece práticas recomendadas e alternativas
+
+### Modificado
+- Comando `/brief` agora 100% interativo (sem delegação a agente)
+  - Todo o workflow de entrevista acontece no comando
+  - Sem referências a "brief-assistant agent"
+- Comando `/setup-local-observability` refletido com 3 modos funcionais
+  - Modo Guiado: você executa, comando orienta
+  - Modo Automático: descreve sem executar bash real
+  - Modo Misto: você escolhe por atividade
+- Descrição do plugin atualizada para refletir novo comando e agente
+- README.md reorganizado com seções de Commands, Agents e Legacy Agents
+- Keywords expandidas para incluir "help-assistant"
+
+### Removido
+- Agente `brief-assistant` (funcionalidade integrada no comando `/brief`)
+
+### Informação de Versão
+
+Este é o v0.3.0 (MINOR update) do Agentc AI Developer com:
+- Comando `/brief` 100% interativo no comando (sem agente)
+- Novo agente `help-assistant` para suporte especializado
+- Novo comando `/update-claude-md` para integração de projetos com progressive disclosure
+- Melhoria na arquitetura: separação clara de responsabilidades (commands/agents/skills)
+
+---
+
+## [0.2.0] - 2025-11-02
+
+### Adicionado
+- **Microprocesso 1.2**: Novo comando `/setup-local-observability` para setup de ambiente local
+  - Guia interativo através de 8 atividades (Git já criado pelo `/brief`)
+  - Setup Python venv com validações
+  - Instalação de dependências mínimas (langchain, anthropic, langsmith, python-dotenv)
+  - Configuração de variáveis de ambiente (.env + .env.example)
+  - Integração completa com LangSmith para observabilidade
+  - Validação de ambiente e testes automatizados
+  - Suporte para projetos novos e existentes
+  - Leitura de README.md do brief para contextualização
+
+### Modificado
+- Descrição do plugin agora reflete Microprocessos 1.1 (planning) e 1.2 (setup)
+- README.md reorganizado com seções de "Microprocesso 1.1" e "Microprocesso 1.2"
+- Roadmap expandido com menção a Microprocesso 1.3 (futuro)
+- Keywords expandidas para incluir "setup", "environment", "langsmith", "observability", "microprocessos", "interactive"
+
+### Melhorias
+- Integração perfeita entre `/brief` (cria repositório) e `/setup-local-observability` (configura ambiente)
+- Ambiente reproduzível garantido via requirements.txt
+- Observabilidade completa com LangSmith desde o início
+- Suporte a detecção automática de estado do projeto (novo vs existente)
+- Documentação com templates prontos para copiar/colar
+
+### Informação de Versão
+
+Este é o v0.2.0 (MINOR update) do Agentc AI Developer com o Microprocesso 1.2 totalmente implementado. Agora os usuários têm um fluxo completo: `/brief` (planning) → `/setup-local-observability` (environment) para começar o desenvolvimento de agentes agentic com confiança.
+
+---
+
 ## [0.1.0] - 2025-11-02
 
 ### Adicionado

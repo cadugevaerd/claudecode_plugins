@@ -1,7 +1,7 @@
 {
   "name": "agentc-ai-developer",
-  "version": "0.1.0",
-  "description": "Brief Minimo methodology with 4 operating modes: create new agents, update existing ones, validate specifications, or document legacy agents. Seamlessly integrates with both greenfield and existing projects.",
+  "version": "0.3.0",
+  "description": "Brief Minimo methodology with integrated setup: /brief for planning (Microprocesso 1.1) → /setup-local-observability for environment setup (Microprocesso 1.2) → /update-claude-md for project integration (Microprocesso 1.2). Three interactive commands with help-assistant for guidance. Full support for greenfield and existing projects.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"

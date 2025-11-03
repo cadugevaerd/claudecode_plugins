@@ -1,10 +1,10 @@
 ---
-description: Interactive guide through Brief Minimo - 5 fundamental questions to define your AI agent. Collects structured responses, then uses brief-assistant agent for validation and README.md generation.
+description: 100% interactive Brief Minimo interview - 5 fundamental questions to define your AI agent's scope. Collects structured responses, validates completeness, and generates production-ready README.md specification. No agent delegation - complete process in single command.
 ---
 
 # Brief Minimo - AI Agent Planning
 
-**Interactive command** that guides you through 5 fundamental questions to define your AI agent's scope, then delegates to the **brief-assistant** agent for validation and final documentation.
+**Fully interactive command** (no agent delegation) that guides you through a complete 30-minute Brief Minimo planning session. Asks 5 fundamental questions, validates your responses for specificity, and generates a production-ready README.md specification document.
 
 ## The 5 Fundamental Questions
 
@@ -18,37 +18,48 @@ The Brief Minimo methodology asks you to answer these 5 clear questions:
 
 ## How It Works
 
-When you run `/brief`:
+When you run `/brief`, you engage in a **fully self-contained interactive interview**:
 
-### Step 1: Interactive Interview (In This Command)
+### Step 1: Initial Context Detection
 
-You'll be guided through **5 questions** one at a time:
+Command checks:
+- Are you in a new project or existing project with agents?
+- This determines if you're creating new agent or updating existing
+
+### Step 2: Interactive Interview (Single Command)
+
+You'll be guided through **5 questions** one at a time, in conversation:
 
 - Clear explanation of what each question means
-- Examples of **good answers** (specific, concrete)
-- Examples of **bad answers** (vague, incomplete)
+- Examples of **good answers** (specific, concrete, measurable)
+- Examples of **bad answers** (vague, incomplete, wishful thinking)
 - Space for your detailed response
+- **If your answer is vague**: The command pushes back gently with follow-up questions
+  - "Can you show me a concrete example?"
+  - "What specific percentage or number?"
+  - "Which ONE tool would you start with?"
 
-**Time**: ~15-20 minutes to answer all 5 questions
+**Time**: ~30 minutes for complete interview + validation + generation
 
-### Step 2: Review & Confirmation
+### Step 3: Review & Confirmation
 
 After all 5 answers are collected:
 
-- Summary of your responses
+- Full summary of your responses
+- Validation check: Are all answers specific? (not vague)
+- Option to refine any answer before proceeding
 - Confirmation that everything is clear
-- Option to refine any answer
 
-### Step 3: Agent Validation & Generation
+### Step 4: README.md Generation
 
-Once confirmed, this command **calls the brief-assistant agent** to:
+Once confirmed, command **generates your production-ready specification** including:
 
-- Validate completeness of your responses
-- Ask follow-up questions if needed (pushback on vague answers)
-- Generate your final README.md with Brief Minimo specification
-- Provide next steps for development
-
-**Time**: ~10 minutes for agent validation + generation
+- Your agent's complete Brief Minimo specification
+- Input/output examples
+- Tool/API requirements
+- Success metrics and measurement strategy
+- Next steps for development
+- Everything you need to move to architecture and design phase
 
 ---
 
@@ -104,73 +115,81 @@ All packaged in a **production-ready README.md** specification.
 
 ---
 
-## Operating Modes (Agent-Detected)
+## Complete Interview Flow (All in This Command)
 
-After you provide your 5 answers, the **brief-assistant** agent will:
-
-1. **Detect your context** - New agent vs existing project
-2. **Ask follow-up questions** - Clarify any vague responses
-3. **Suggest improvements** - Pushback if needed for specificity
-4. **Generate documentation** - Create README.md or validation report
-5. **Provide next steps** - Ready for architecture/design phase
-
----
-
-## Example Flow
+When you run `/brief`, you go through this complete flow:
 
 ```text
-You run: /brief
+Step 1: Context Detection
+  ✓ Are you in new project or existing project?
+  ✓ Adjust questions accordingly
 
-Command says:
-  "Let's define your AI agent with 5 fundamental questions."
-  [Brief explanation of process]
+Step 2: Interactive Interview (5 Questions)
+  Q1: What does the agent DO?
+      [Explanation + good/bad examples]
+      Your answer: [You provide detailed response]
+      Command validates specificity - if vague, asks follow-ups
 
-Q1: What does the agent DO?
-  [Explanation + good/bad examples]
-  Your answer: [You type detailed response]
+  Q2: What is the INPUT?
+      [Explanation + good/bad examples]
+      Your answer: [You provide detailed response]
+      Command validates format and size details
 
-Q2: What is the INPUT?
-  [Explanation + good/bad examples]
-  Your answer: [You type detailed response]
+  Q3: What is the OUTPUT?
+      [Explanation + good/bad examples]
+      Your answer: [You provide detailed response]
+      Command validates structure clarity
 
-[... Questions 3, 4, 5 follow same pattern ...]
+  Q4: What is the TOOL/API?
+      [Explanation + good/bad examples]
+      Your answer: [You provide detailed response]
+      Command validates single tool focus, not multiple
 
-After Q5:
+  Q5: What is SUCCESS?
+      [Explanation + good/bad examples]
+      Your answer: [You provide detailed response]
+      Command validates quantifiable metrics
+
+Step 3: Review & Validation
   [Command summarizes all 5 answers]
-  "Ready to proceed? (y/n)"
+  [Checks for vagueness - asks follow-ups if needed]
+  "Everything clear? Ready to generate README.md? (y/n)"
 
-You answer: Yes
-
-Command says:
-  "Calling brief-assistant for validation and README.md generation..."
-
-Agent takes over:
-  - Validates completeness
-  - Asks follow-up questions if needed
-  - Generates your final README.md
-  - Provides next steps
+Step 4: README.md Generation
+  Command generates:
+  ✅ Complete Brief Minimo specification
+  ✅ Formatted and ready for production
+  ✅ Next steps for architecture & development
+  ✅ Saved to your project directory
 ```
 
----
-
-## Why This Two-Step Approach?
-
-**Command Step** (Interactive interview):
-
-- Provides clear structure and guidance
-- Ensures all 5 questions are answered
-- Collects responses efficiently
-- Sets stage for agent validation
-
-**Agent Step** (Validation + generation):
-
-- Applies intelligent analysis to responses
-- Pushes back on vague answers
-- Generates production-ready documentation
-- Provides contextual advice and next steps
-
-Together: **30 minutes of focused planning** that results in a **complete agent specification**.
+**Total time**: ~30 minutes from start to finished README.md
 
 ---
 
-After running `/brief`, you'll have everything needed to move forward with architecture and implementation. The brief becomes your specification reference throughout development.
+## Red Flags - Command Will Push Back
+
+If you answer vaguely, the command will gently push back:
+
+| If you say | Command pushes back |
+|-----------|-------------------|
+| "We'll figure it out later" | "Let's nail this now while thinking through requirements. This takes 2 minutes." |
+| "Maybe multiple tools" | "Let's start with ONE primary tool. You can add complexity later. Which one matters most?" |
+| "It should be accurate" | "What does accurate mean? 80%? 95%? How will you measure it?" |
+| "The input can be anything" | "What's the most common format? What's the maximum size? Let's be specific." |
+| "Success is when it works" | "Perfect. What does 'works' mean numerically? How many out of 100?" |
+
+This ensures your brief is **complete and specific**, not wishful thinking.
+
+---
+
+After running `/brief`, you'll have:
+
+✅ Complete Brief Minimo specification in README.md
+✅ Everything needed for architecture and design
+✅ Crystal-clear input/output examples
+✅ Quantifiable success metrics
+✅ Tool/API requirements validated
+✅ Ready for Microprocesso 1.2 (`/setup-local-observability`)
+
+The brief becomes your specification reference throughout development.
