@@ -92,10 +92,12 @@ Ao implementar código, verificar:
 
 ## 📚 Referência Detalhada
 
-Para exemplos completos:
+Para aprofundar em YAGNI:
+
 - **PATTERNS.md** - Padrões YAGNI com exemplos de código
-- **DETECTION-CHECKLIST.md** - Checklist passo-a-passo
-- **EXAMPLES.md** - Casos de invocação práticos
+- **PRINCIPLES.md** - Princípios core e regra dos 3
+- **EXAMPLES.md** - Exemplos práticos de bom vs ruim
+- **CHECKLIST.md** - Checklists para detectar over-engineering
 
 ## ⚡ Objetivo
 

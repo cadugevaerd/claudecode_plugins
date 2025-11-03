@@ -121,9 +121,9 @@ C) Documentar exceção
 ## 📚 Referência Detalhada
 
 Para instruções passo-a-passo:
-- **PHASES.md** - Detalhes sobre cada fase do PRD
+
+- **TEMPLATE.md** - Template completo de PRD com todas as fases
 - **PATTERNS.md** - Exemplos de invocação automática
-- **CHECKLIST.md** - Validação de completude por fase
 
 ## ⚡ Objetivo
 

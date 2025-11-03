@@ -136,9 +136,8 @@ NÃO vale se:
 ## 📚 Referência Detalhada
 
 Para exemplos completos e instruções detalhadas:
+
 - **PATTERNS.md** - Padrões de refatoração com exemplos
-- **DETECTION-CHECKLIST.md** - Checklist passo-a-passo
-- **EXAMPLES.md** - Casos de uso práticos
 
 ## ⚡ Lembre-se
 
