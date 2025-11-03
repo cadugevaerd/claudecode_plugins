@@ -2,6 +2,51 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.5.0] - 2025-11-03
+
+### Adicionado
+- **Novo Comando** `/spike-agentic` (Microprocesso 1.3)
+  - AUTONOMOUS command para validação de arquitetura agêntica
+  - Validates prerequisites from Microprocesso 1.2 completion
+  - Generates `docs/microprocesso-1.3-spike-agentic.md` com guia completo
+  - 4 fases: Setup (done), Graph (60-90min), Tests (30min), LangSmith validation (30min)
+  - Validates agentic loop (Think → Act → Observe → Think again)
+  - Time-boxed spike exploration (3-4 horas)
+- **Novo Skill** `spike-agentic` para conhecimento detalhado
+  - Complete knowledge base para implementação de agent spike com agentic loop
+  - Detailed explanation de State, 4 Nodes, Edges, Route Logic
+  - Mock tool patterns para validação de arquitetura
+  - Happy-path test patterns (with/without tool)
+  - LangSmith trace validation e tree structure inspection
+  - Red flags e troubleshooting para falhas de spike
+  - Auto-discovery por Claude durante implementação de agent
+  - Tools permitidas: Read, Grep, Glob, Write, Bash
+- **Arquivo de Suporte** `skills/spike-agentic/GENERATE_GUIDE.md`
+  - Template e instruções para gerar `docs/microprocesso-1.3-spike-agentic.md`
+  - Document structure e content guidelines
+  - Validation checklist para geração completa
+
+### Modificado
+- **README.md** - Adicionado `/spike-agentic` command documentation
+  - Quick start section com Microprocesso 1.1/1.2/1.3 flow
+  - Updated Roadmap para v0.5.0 com Microprocesso 1.3
+  - Updated "Support & Contributing" com v0.5.0 e spike-agentic skill
+  - Updated Commands section com `/spike-agentic` entry
+  - Updated Overview com Microprocesso 1.1/1.2/1.3
+  - Skills section agora inclui spike-agentic skill documentation
+
+### Melhorias
+- **Command Best Practices**: `/spike-agentic` segue padrões rigorosamente
+  - AUTONOMOUS badge com clara responsabilidade
+  - TL;DR section com processo resumido
+  - Progressive disclosure: detalhes em skill, documentação gerada
+  - Conciso (70 linhas) seguindo recommended 50-80 linhas pattern
+- **Architecture Validation**: Loop agêntico agora é primeira incerteza validada
+  - Foco em viabilidade da arquitetura (questão central)
+  - Mock tools removem variáveis de conectividade
+  - 2 testes suficientes para validar loop agêntico
+  - Happy-path focus (80% do spike) vs error handling (Microprocesso 1.4)
+
 ## [0.4.0] - 2025-11-02
 
 ### Adicionado

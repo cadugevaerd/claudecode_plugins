@@ -376,25 +376,25 @@ Success example:
 
 ## Roadmap
 
-**Version 0.4.0** (Current)
+**Version 0.5.0** (Current)
 - **Microprocesso 1.1**: Brief Minimo planning methodology (fully interactive `/brief` command)
 - **Microprocesso 1.2**: Environment setup with Python venv, dependencies, and LangSmith observability
 - **Microprocesso 1.2 Skill**: `microprocesso-1-2` skill with comprehensive setup knowledge and progressive disclosure
+- **Microprocesso 1.3**: Spike Agentic with agentic loop validation (autonomous `/spike-agentic` command + skill)
+- **Microprocesso 1.3 Skill**: `spike-agentic` skill with LangGraph architecture guidance and agentic loop knowledge
 - **Project Integration**: `/update-claude-md` command for CLAUDE.md setup (≤40 lines, progressive disclosure)
 - **Help Assistant**: Specialized support for guidance and troubleshooting (help-assistant agent)
-- **Command Best Practices**: Complete documentation in plugin-creator.md for command development standards
-- Interactive commands: `/brief`, `/setup-local-observability`, `/update-claude-md`
+- Interactive commands: `/brief`, `/setup-local-observability`, `/spike-agentic`, `/update-claude-md`
 - Skills with auto-discovery for detailed guidance
 - Seamless integration with existing projects
 - Environment validation and reproducibility
 - Complete observability integration with LangSmith
 
 **Planned Features**
-- **Microprocesso 1.3**: Spike Agentic (agent building and testing)
-- Architecture & Design macroprocess
+- **Microprocesso 1.4**: Agent Robustness (error handling, real tools, production tests)
+- **Microprocesso 1.5**: Stakeholder Validation
+- Architecture & Design documentation
 - Multi-step agent design patterns
-- Testing and validation strategies
-- Production deployment guides
 - Advanced agent patterns (multi-agent, hierarchical, self-improving)
 - Integration with version control (git history analysis)
 - Collaborative briefing for team alignment
@@ -441,6 +441,22 @@ Reads your Brief Minimo specification from README.md and creates a focused CLAUD
 - Support for help-assistant
 
 Follows progressive disclosure pattern - keeps CLAUDE.md lightweight while referencing comprehensive docs.
+
+### /spike-agentic
+Launches the **Microprocesso 1.3** - Agent spike with agentic loop validation (3-4 hours).
+
+```bash
+/spike-agentic
+```
+
+Validates that Microprocesso 1.2 is complete, then generates `docs/microprocesso-1.3-spike-agentic.md` with:
+- Prerequisites validation checklist
+- Phase 2: Build LangGraph with 4 nodes + agentic loop
+- Phase 3: Happy-path tests (with/without tool)
+- Phase 4: LangSmith observability validation
+- Complete code snippets ready to implement
+
+Validates architecture viability by confirming the **agentic loop** (Think → Act → Observe → Think again) works correctly.
 
 ## Agents
 
@@ -528,7 +544,7 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 
 ## Support & Contributing
 
-This is version 0.4.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), and `/update-claude-md` (project integration). Includes `help-assistant` agent and `microprocesso-1-2` skill for comprehensive guidance and detailed environment setup knowledge with progressive disclosure.
+This is version 0.5.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), `/spike-agentic` (Microprocesso 1.3 - architecture validation), and `/update-claude-md` (project integration). Includes `help-assistant` agent, `microprocesso-1-2` skill, and `spike-agentic` skill for comprehensive guidance with progressive disclosure.
 
 For issues, suggestions, or contributions related to the Claude Code marketplace, visit the [plugin repository](https://github.com/cadugevaerd/claudecode_plugins).
 
