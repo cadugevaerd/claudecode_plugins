@@ -62,6 +62,13 @@ Detectar divergências: código implementa feature fora do MVP?
 
 Se código implementa features **fora do MVP** definido no PRD
 
+### 6. Validar PRD contra Template
+
+- Checar completude por fase (v0.1, v1.0, v1.1, v1.x)
+- Reportar campos faltantes
+- Sugerir próximas ações
+- Detectar inconsistências de versão
+
 ## 📋 Fases do PRD
 
 ### Fase 0: Descoberta (v0.1)
@@ -130,6 +137,45 @@ B) Atualizar PRD (é essencial afinal)
 C) Documentar exceção
 
 ```text
+
+## 🔍 Validação Automática via `/prd validate`
+
+Use `/prd validate` para:
+- Detectar gaps automaticamente
+- Gerar relatório de completude com % por fase
+- Receber recomendações de próximas ações
+- Acompanhar progresso do projeto
+- Validar progressão de versão (v0.1 → v1.0 → v1.1 → v1.x)
+
+### Checklist de Validação
+
+#### Fase 0: Descoberta (v0.1)
+- [ ] Seção "Problema" preenchida (não vazia)
+- [ ] 3+ objetivos documentados
+- [ ] 2+ KPIs definidos com métricas
+
+#### Fase 1: Planejamento (v1.0)
+- [ ] Product Vision documentada
+- [ ] MVP claramente definido (3+ features essenciais)
+- [ ] Features fora do MVP listadas (YAGNI)
+- [ ] Épicos/user stories documentados
+
+#### Fase 2: Design (v1.1)
+- [ ] Arquitetura descrita ou diagramada
+- [ ] Stack tecnológica listada (backend, frontend, DB, infra)
+- [ ] Modelagem de dados documentada
+- [ ] APIs/contratos definidos
+- [ ] Pelo menos 1 ADR documentado
+
+#### Fase 3: Desenvolvimento (v1.x+)
+- [ ] Incrementos implementados documentados
+- [ ] Aprendizados por incremento registrados
+- [ ] ADRs para decisões técnicas importantes
+
+#### Fase 4: Finalizado (v2.0)
+- [ ] Lições aprendidas documentadas
+- [ ] Retrospectiva completa
+- [ ] Histórico de versões preenchido
 
 ## 💡 Princípios
 

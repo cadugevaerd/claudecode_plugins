@@ -1,7 +1,7 @@
 {
   "name": "incremental-dev",
-  "version": "2.0.0",
-  "description": "Master incremental development with YAGNI principles and Evolutionary Architecture - avoid over-engineering and promote simplicity. Consolidated 5 core commands for streamlined workflow: initialize projects, manage PRD, add features, check code quality, and update configuration.",
+  "version": "2.1.0",
+  "description": "Master incremental development with YAGNI principles and Evolutionary Architecture - avoid over-engineering and promote simplicity. Consolidated 5 core commands for streamlined workflow: initialize projects, manage PRD, add features, check code quality, and update configuration. NEW: Validate existing PRD.md against template structure.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
@@ -16,6 +16,9 @@
     "simplicity",
     "anti-overengineering",
     "prd",
+    "prd-validation",
+    "template-validation",
+    "completeness-check",
     "requirements",
     "documentation",
     "product-management",

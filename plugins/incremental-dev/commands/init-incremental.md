@@ -1,6 +1,6 @@
 ---
 description: Initialize incremental development for new or existing projects with auto-detection of project type
-argument-hint: "[project-description]"
+argument-hint: '[project-description]'
 ---
 
 # Initialize Incremental Development

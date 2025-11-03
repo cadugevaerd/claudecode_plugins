@@ -1,6 +1,6 @@
 ---
 description: Check code quality - identify over-engineering (YAGNI) or refactoring opportunities when patterns emerge
-argument-hint: "[check-type] [optional-path]"
+argument-hint: '[check-type] [optional-path]'
 ---
 
 # Code Quality Checks

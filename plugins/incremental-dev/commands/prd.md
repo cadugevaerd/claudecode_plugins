@@ -1,6 +1,6 @@
 ---
 description: Manage PRD (Product Requirements Document) - view, update, fix, and get help on development phases
-argument-hint: "[subcommand] [options]"
+argument-hint: '[subcommand] [options]'
 ---
 
 # PRD Management
@@ -24,6 +24,10 @@ Unified command for managing Product Requirements Document with multiple subcomm
 /prd update design          # Update design phase (v1.1)
 /prd update incremento      # Register completed increment (v1.x)
 /prd update final           # Finalize PRD as-built (v2.0)
+
+# Validate existing PRD
+/prd validate                    # Validate PRD.md in current directory
+/prd validate path/to/PRD.md     # Validate specific PRD file
 
 # Surgical fixes
 /prd fix "description of change"  # Targeted adjustment to specific section
@@ -75,6 +79,48 @@ Makes surgical targeted adjustments to specific PRD sections without rewriting e
 - ✅ Add a specific requirement
 - ✅ Update a metric
 - ❌ NOT for full phase rewrites (use `/prd update` instead)
+
+### `/prd validate [path]`
+
+Validates existing PRD.md against template structure and completeness.
+
+**Usage modes**:
+- `/prd validate` - Auto-detects and validates PRD.md in project root
+- `/prd validate ./docs/PRD.md` - Validate specific file
+
+**Validation checks**:
+- ✅ Required sections by phase (v0.1, v1.0, v1.1, v1.x)
+- ✅ Mandatory fields present and non-empty
+- ✅ Proper markdown structure
+- ✅ Version progression (0.1 → 1.0 → 1.1 → 1.x)
+- ✅ Field consistency across sections
+
+**Output includes**:
+- 📊 Completion percentage by phase
+- ⚠️ Missing fields with recommendations
+- 🎯 Next suggested phase updates
+- 💡 Quick fixes for common issues
+
+**Example output**:
+```
+✅ PRD VALIDATION REPORT
+
+📋 Project: my-project
+🔄 Version: 1.1
+📅 Last updated: 2025-11-03
+
+PHASES DETECTED:
+✅ Phase 1 (Discovery v0.1) - 100%
+✅ Phase 2 (Planning v1.0) - 90%
+⚠️  Phase 3 (Design v1.1) - 60%
+
+MISSING FIELDS:
+⚠️  MVP: Feature X still not documented
+⚠️  Design: ADR-002 file missing
+
+OVERALL PROGRESS: 83%
+NEXT STEP: Run `/prd update design`
+```
 
 ### `/prd help [question]`
 

@@ -133,6 +133,10 @@ Unified command for PRD management with multiple subcommands:
 /prd view status            # Current status & next steps
 /prd view timeline          # Evolution timeline
 
+# Validate existing PRD
+/prd validate                    # Auto-detect and validate PRD.md
+/prd validate path/to/PRD.md     # Validate specific file
+
 # Update PRD by phase
 /prd update descoberta      # Discovery phase (v0.1)
 /prd update planejamento    # Planning phase (v1.0)
@@ -154,6 +158,53 @@ Unified command for PRD management with multiple subcommands:
 - Update PRD as phases complete
 - Make targeted PRD adjustments
 - Answer questions about incremental dev
+
+### Validate PRD Feature
+
+Validate your existing PRD.md against template structure and completeness:
+
+```bash
+# Auto-detect and validate
+/prd validate
+
+# Validate specific file
+/prd validate ./docs/PRD.md
+```
+
+**What it checks**:
+- ✅ Required sections present by development phase
+- ✅ Mandatory fields populated (not empty placeholders)
+- ✅ Proper markdown structure
+- ✅ Version progression (0.1 → 1.0 → 1.1 → 1.x)
+- ✅ Consistency across related sections
+
+**Example output**:
+```
+✅ PRD VALIDATION REPORT
+
+📋 Project: incremental-dev
+🔄 Version: 2.0.0
+📅 Last updated: 2025-11-03
+
+PHASES DETECTED:
+✅ Phase 1 (Discovery v0.1) - 100%
+✅ Phase 2 (Planning v1.0) - 90%
+⚠️  Phase 3 (Design v1.1) - 60%
+❌ Phase 4 (Development) - 0%
+
+MISSING FIELDS:
+⚠️  MVP: Feature X still not documented
+⚠️  Design: ADR-002 file missing
+
+OVERALL PROGRESS: 83%
+NEXT STEP: Run `/prd update design` to complete Design phase
+```
+
+**When to use**:
+- After creating/updating PRD.md
+- To check completeness by development phase
+- To identify next required PRD updates
+- Before moving to next development phase
 
 ---
 
@@ -443,3 +494,4 @@ You're doing incremental development right when:
 ---
 
 **Master incremental development and build better software, faster.** 🚀
+````

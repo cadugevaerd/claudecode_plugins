@@ -1,7 +1,7 @@
 ---
 description: Commit and push rápido - ideal para commits pequenos e urgentes
 allowed-tools: Bash(git:*)
-argument-hint: ""
+argument-hint: ''
 ---
 
 # Quick Commit - Commit e Push Rápido
@@ -60,6 +60,7 @@ Conventional Commits básico).
 
 **Se usuário apertar Enter**: Analise arquivos modificados e
 auto-gere:
+
 - `docs: update` se maioria arquivos `.md`
 - `chore: update` se maioria arquivos de configuração (`.json`, `.yaml`, `.yml`)
 - `test: update` se maioria arquivos de teste
@@ -128,7 +129,7 @@ Ou cancele: git rebase --abort
 
 Você é responsável por garantir que as mudanças são seguras e testadas localmente.
 
----
+______________________________________________________________________
 
 Para documentação completa (quando usar, exemplos avançados,
 troubleshooting), consulte o README do plugin.

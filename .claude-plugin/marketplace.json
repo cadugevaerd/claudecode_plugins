@@ -65,14 +65,14 @@
     },
     {
       "name": "incremental-dev",
-      "description": "Master incremental development with YAGNI principles and Evolutionary Architecture - avoid over-engineering and promote simplicity. Consolidated 5 core commands for streamlined workflow: initialize projects, manage PRD, add features, check code quality, and update configuration.",
+      "description": "Master incremental development with YAGNI principles and Evolutionary Architecture - avoid over-engineering and promote simplicity. Consolidated 5 core commands for streamlined workflow: initialize projects, manage PRD, add features, check code quality, and update configuration. NEW: Validate existing PRD.md against template structure.",
       "source": "./plugins/incremental-dev",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering", "prd", "requirements", "documentation", "product-management", "notebooks", "spikes", "legacy", "retrofit", "adoption", "code-analysis", "progressive-disclosure", "performance", "workflow", "usability", "reference-docs", "claude-md", "setup"]
+      "tags": ["yagni", "incremental", "evolutionary", "agile", "mvp", "refactoring", "simplicity", "anti-overengineering", "prd", "prd-validation", "template-validation", "completeness-check", "requirements", "documentation", "product-management", "notebooks", "spikes", "legacy", "retrofit", "adoption", "code-analysis", "progressive-disclosure", "performance", "workflow", "usability", "reference-docs", "claude-md", "setup"]
     },
     {
       "name": "github-actions-cicd",

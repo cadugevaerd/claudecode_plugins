@@ -5,6 +5,77 @@ Todas as mudanças notáveis neste plugin serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [2.1.0] - 2025-11-03
+
+### ✨ Adicionado (MINOR - New Feature)
+
+#### Novo Subcommand: `/prd validate`
+
+Valida PRD.md existente contra a estrutura do template e verifica completude.
+
+**Funcionalidades**:
+
+- ✅ Auto-detecta PRD.md no diretório do projeto
+- ✅ Valida seções obrigatórias por fase de desenvolvimento (v0.1, v1.0, v1.1, v1.x)
+- ✅ Verifica campos obrigatórios preenchidos (não vazios)
+- ✅ Valida estrutura markdown
+- ✅ Valida progressão de versão (0.1 → 1.0 → 1.1 → 1.x)
+- ✅ Detecta campos faltantes com recomendações
+- ✅ Gera relatório de completude com percentual por fase
+- ✅ Sugere próximas ações baseado em progresso
+
+**Exemplo de relatório**:
+
+```
+✅ PRD VALIDATION REPORT
+📋 Project: incremental-dev
+🔄 Version: 2.0.0
+FASES: ✅ v0.1 (100%) | ✅ v1.0 (90%) | ⚠️ v1.1 (60%)
+OVERALL PROGRESS: 83%
+```
+
+**Uso**:
+
+- `/prd validate` - Auto-detecta e valida PRD.md
+- `/prd validate path/to/PRD.md` - Valida arquivo específico
+
+**Quando usar**:
+
+- Após criar ou atualizar PRD.md
+- Para verificar completude por fase
+- Antes de evoluir para próxima fase de desenvolvimento
+- Para identificar campos faltantes e próximas ações
+
+#### Extensão do Skill `prd-manager`
+
+- Nova responsabilidade: Validar PRD contra template
+- Novo checklist de validação com critérios por fase (v0.1-v2.0)
+- Nova seção: "Validação Automática via `/prd validate`"
+- Integração com progressão de versão do PRD
+
+### 🔧 Modificado
+
+#### Documentação Atualizada
+
+- `/prd` command: Adicionado uso de `/prd validate` com exemplos
+- README.md: Adicionada seção "Validate PRD Feature" com casos de uso
+- Skill `prd-manager`: Adicionada lógica de validação e checklist detalhado
+- Marketplace.json: Atualizada descrição mencionando validação
+
+### 📚 Benefícios
+
+- ✅ **PRD Completude**: Garante PRD tem todos campos obrigatórios por fase
+- ✅ **Guia de Progresso**: Identifica qual fase completar próximo
+- ✅ **Validação Automática**: Detecta gaps sem análise manual
+- ✅ **Melhores Práticas**: Força conformidade com template padrão
+- ✅ **Documentação Viva**: Mantém PRD sincronizado com desenvolvimento
+
+## [2.0.0] - 2025-10-XX
+
+### Breaking Changes - Consolidação de 12 Comandos em 5
+
+[conteúdo existente...]
+
 ## [1.9.0] - 2025-11-03
 
 ### ✨ Refatoração de Arquitetura
