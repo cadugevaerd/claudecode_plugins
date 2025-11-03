@@ -1,0 +1,12 @@
+{
+  "name": "agentc-ai-developer",
+  "version": "0.1.0",
+  "description": "Brief Minimo methodology with 4 operating modes: create new agents, update existing ones, validate specifications, or document legacy agents. Seamlessly integrates with both greenfield and existing projects.",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects"],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}

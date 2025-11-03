@@ -84,6 +84,17 @@
       },
       "category": "automation",
       "tags": ["cicd", "github-actions", "automation", "devops", "incremental", "workflows", "yagni", "security", "testing", "deployment", "best-practices"]
+    },
+    {
+      "name": "agentc-ai-developer",
+      "description": "Brief Minimo methodology with 4 operating modes: create new agents, update existing ones, validate specifications, or document legacy agents. Seamlessly integrates with both greenfield and existing projects.",
+      "source": "./plugins/agentc-ai-developer",
+      "version": "0.1.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "development",
+      "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects"]
     }
   ]
 }
