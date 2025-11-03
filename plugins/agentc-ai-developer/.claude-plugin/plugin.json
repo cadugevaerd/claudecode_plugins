@@ -1,6 +1,6 @@
 {
   "name": "agentc-ai-developer",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Brief Minimo methodology with integrated setup: /brief for planning (Microprocesso 1.1) → /setup-local-observability for environment setup (Microprocesso 1.2) with microprocesso-1-2 skill → /update-claude-md for project integration. Three commands with help-assistant agent and microprocesso-1-2 skill. Progressive disclosure with best practices. Full support for greenfield and existing projects.",
   "author": {
     "name": "Carlos Araujo",
