@@ -1,16 +1,14 @@
 ---
-description: Interactive guide to create or update AI agent briefs. Plans new agents in 30 minutes or refines existing ones. Detect context automatically (new vs existing project).
+description: Interactive guide through Brief Minimo - 5 fundamental questions to define your AI agent. Collects structured responses, then uses brief-assistant agent for validation and README.md generation.
 ---
 
 # Brief Minimo - AI Agent Planning
 
-This command guides you through the **Brief Minimo** methodology - a structured 30-minute process to define your AI agent's complete scope before writing any code.
+**Interactive command** that guides you through 5 fundamental questions to define your AI agent's scope, then delegates to the **brief-assistant** agent for validation and final documentation.
 
-It works with **new agents** and integrates seamlessly with **existing projects**.
+## The 5 Fundamental Questions
 
-## What is Brief Minimo?
-
-Brief Minimo is a lightweight but comprehensive agent planning methodology that answers 5 fundamental questions:
+The Brief Minimo methodology asks you to answer these 5 clear questions:
 
 1. **What does the agent DO?** - Core functionality in one clear action verb
 2. **What is the INPUT?** - Data type, format, maximum size, real example
@@ -18,57 +16,41 @@ Brief Minimo is a lightweight but comprehensive agent planning methodology that 
 4. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
 5. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
 
-## Usage Modes
-
-The **brief-assistant** agent automatically detects your context and offers appropriate options:
-
-### Mode 1: New Agent
-**When**: Starting a new agent from scratch
-**Output**: Complete specification document (README.md)
-**Time**: 30 minutes
-
-### Mode 2: Existing Agent Update
-**When**: Refining or updating an already developed agent
-**Use Case**: Document production agents, refine scope, plan improvements
-**Output**: Updated brief reflecting current implementation
-
-### Mode 3: Validate Agent
-**When**: Checking if existing agent matches Brief Minimo criteria
-**Use Case**: Quality assurance, scope verification, completeness check
-**Output**: Validation report with gaps and recommendations
-
-### Mode 4: Document Existing Agent
-**When**: Adding brief documentation to already-built agents
-**Use Case**: Retroactive documentation, team alignment, onboarding
-**Output**: Brief specification for existing implementation
-
 ## How It Works
 
-When you run `/brief`, the **brief-assistant** agent will:
+When you run `/brief`:
 
-1. **Detect Context** - Identify if you're in a new or existing project
-2. **Offer Options** - Present relevant modes based on detected context
-3. **Guide Workflow** - Conduct interactive interview for chosen mode
-4. **Collect Specifics** - Emphasize concrete examples and measurable criteria
-5. **Validate Data** - Ensure all essential information is complete
-6. **Generate Output** - Create appropriate documentation
+### Step 1: Interactive Interview (In This Command)
 
-## Output
+You'll be guided through **5 questions** one at a time:
 
-Depending on your mode:
+- Clear explanation of what each question means
+- Examples of **good answers** (specific, concrete)
+- Examples of **bad answers** (vague, incomplete)
+- Space for your detailed response
 
-- **New Agent** → Comprehensive README.md specification
-- **Existing Agent Update** → Updated brief reflecting current state
-- **Validate** → Validation report with recommendations
-- **Document Existing** → Brief specification retroactively created
+**Time**: ~15-20 minutes to answer all 5 questions
 
-All outputs include:
+### Step 2: Review & Confirmation
 
-- Agent's core purpose and functionality
-- Detailed input/output specifications with examples
-- Tool/API requirements and access details
-- Success metrics and measurement strategy
-- Next steps in development or improvement
+After all 5 answers are collected:
+
+- Summary of your responses
+- Confirmation that everything is clear
+- Option to refine any answer
+
+### Step 3: Agent Validation & Generation
+
+Once confirmed, this command **calls the brief-assistant agent** to:
+
+- Validate completeness of your responses
+- Ask follow-up questions if needed (pushback on vague answers)
+- Generate your final README.md with Brief Minimo specification
+- Provide next steps for development
+
+**Time**: ~10 minutes for agent validation + generation
+
+---
 
 ## Getting Started
 
@@ -78,14 +60,20 @@ Simply run:
 /brief
 ```
 
-The **brief-assistant** agent will detect your context and guide you through the process.
+**What to have ready**:
 
-Respond to each question with as much detail as possible:
+- 15-20 minutes of focused time
+- Clear idea of what your agent should do (or existing agent to document)
+- Concrete examples (not conceptual descriptions)
 
-- Provide concrete examples (not vague descriptions)
-- Be specific about formats and sizes
-- Include real data samples
-- Define measurable success criteria
+**Respond with**:
+
+- Specific details and examples
+- Real sample data (not generic descriptions)
+- Measurable metrics (not vague goals)
+- Concrete implementation details (not "we'll figure it out later")
+
+---
 
 ## Why Brief Minimo?
 
@@ -100,25 +88,89 @@ This methodology prevents common agent planning failures:
 | ❌ Hidden costs | ✅ Budget awareness from day one |
 | ❌ No documentation | ✅ Complete specification as-built |
 
-## Using in Existing Projects
+---
 
-If you're in a project that already has agents:
+## The Brief Minimo Output
 
-1. **Run `/brief`** - Agent detects your existing setup
-2. **Choose Mode** - Select from: Update, Validate, or Document Existing
-3. **Answer Questions** - Brief interview about your agent
-4. **Get Output** - Updated brief or validation report
-5. **Use Reference** - Keep brief as specification for future improvements
+After completion, you'll have:
 
-## Next Steps After Brief
+✅ **Agent Purpose** - Clear, single-sentence description with action verb
+✅ **Input Specification** - Type, format, size limits, real examples
+✅ **Output Specification** - Exact structure, success cases, error handling
+✅ **Tool/API Requirements** - Primary tool, auth, costs, backup plan
+✅ **Success Metrics** - Quantifiable targets, measurement method, validation strategy
 
-Once you complete your Brief Minimo:
-
-1. For **new agents**: Your specification is ready for architecture and design
-2. For **existing agents**: Brief serves as baseline for improvements and team alignment
-3. Documentation phase: Brief becomes the reference for maintenance
-4. Future work: Use brief as baseline for enhancements and scaling
+All packaged in a **production-ready README.md** specification.
 
 ---
 
-Use the **brief-assistant** agent to get started. This is a conversational, interactive process - be as detailed as possible with your answers.
+## Operating Modes (Agent-Detected)
+
+After you provide your 5 answers, the **brief-assistant** agent will:
+
+1. **Detect your context** - New agent vs existing project
+2. **Ask follow-up questions** - Clarify any vague responses
+3. **Suggest improvements** - Pushback if needed for specificity
+4. **Generate documentation** - Create README.md or validation report
+5. **Provide next steps** - Ready for architecture/design phase
+
+---
+
+## Example Flow
+
+```text
+You run: /brief
+
+Command says:
+  "Let's define your AI agent with 5 fundamental questions."
+  [Brief explanation of process]
+
+Q1: What does the agent DO?
+  [Explanation + good/bad examples]
+  Your answer: [You type detailed response]
+
+Q2: What is the INPUT?
+  [Explanation + good/bad examples]
+  Your answer: [You type detailed response]
+
+[... Questions 3, 4, 5 follow same pattern ...]
+
+After Q5:
+  [Command summarizes all 5 answers]
+  "Ready to proceed? (y/n)"
+
+You answer: Yes
+
+Command says:
+  "Calling brief-assistant for validation and README.md generation..."
+
+Agent takes over:
+  - Validates completeness
+  - Asks follow-up questions if needed
+  - Generates your final README.md
+  - Provides next steps
+```
+
+---
+
+## Why This Two-Step Approach?
+
+**Command Step** (Interactive interview):
+
+- Provides clear structure and guidance
+- Ensures all 5 questions are answered
+- Collects responses efficiently
+- Sets stage for agent validation
+
+**Agent Step** (Validation + generation):
+
+- Applies intelligent analysis to responses
+- Pushes back on vague answers
+- Generates production-ready documentation
+- Provides contextual advice and next steps
+
+Together: **30 minutes of focused planning** that results in a **complete agent specification**.
+
+---
+
+After running `/brief`, you'll have everything needed to move forward with architecture and implementation. The brief becomes your specification reference throughout development.
