@@ -1,83 +1,103 @@
 ---
-name: update-claude-md
-description: Update project's CLAUDE.md with incremental-dev plugin configuration following best practices
+description: Update project's CLAUDE.md with incremental-dev plugin configuration and YAGNI principles
 ---
 
 # Update CLAUDE.md
 
-Atualiza ou cria `CLAUDE.md` do projeto com instruções de desenvolvimento incremental e referências ao plugin `incremental-dev`.
+Updates or creates project's `CLAUDE.md` file with incremental development instructions and references to incremental-dev plugin commands.
 
-## Como usar
+## Usage
 
 ````bash
 /update-claude-md
 
 ```text
 
-## O que atualiza
+## What It Updates
 
-Adiciona ou atualiza em `CLAUDE.md`:
+Adds or updates in `CLAUDE.md`:
 
-### 1. Seção de Desenvolvimento Incremental
-- Princípios YAGNI explicados
-- Regra dos 3 para refatoração
-- MVP primeiro, depois iterar
+### 1. Incremental Development Section
+- YAGNI principles explained
+- Rule of 3 for refactoring
+- MVP-first approach
+- Evolutionary architecture
 
-### 2. Comandos do Plugin
-- Referência rápida dos 10 comandos
-- Quando usar cada um
-- Workflow recomendado
+### 2. Plugin Commands Reference
+- Quick reference of 5 consolidated commands
+- When to use each command
+- Recommended workflow
+- Workflow diagrams
 
-### 3. Links para Documentação
-- `/prd-help` para dúvidas
-- Exemplos de uso
-- Próximos passos
+### 3. Documentation Links
+- `/prd help` for questions
+- Command descriptions
+- Next steps
 
-### 4. Boas Práticas
-- Não sobre-engenheirar
-- Simples > Elegante
-- Funcionar > Perfeito
-- Agora > Futuro hipotético
+### 4. Best Practices
+- Don't over-engineer
+- Simple > Elegant
+- Works > Perfect
+- Now > Hypothetical future
 
-## Processo
+## Process
 
-1. **Ler CLAUDE.md atual** (se existir):
-   - Preservar conteúdo existente
-   - Adicionar seção incremental se falta
+1. **Read current CLAUDE.md** (if exists):
+   - Preserve existing content
+   - Update incremental section if present
 
-2. **Atualizar seções**:
-   - Adicionar/atualizar referências
-   - Manter coerência com projeto
-   - Validar links
+2. **Update sections**:
+   - Add/update command references
+   - Maintain project coherence
+   - Validate links
 
-3. **Salvar CLAUDE.md**:
-   - Manter < 40KB se possível
-   - Validar markdown
-   - Garantir organização
+3. **Save CLAUDE.md**:
+   - Keep < 40KB if possible
+   - Validate markdown
+   - Ensure clean organization
 
-## Output esperado
+## Updated Commands
 
-```text
+The incremental-dev plugin has been refactored to 5 core commands:
 
-✅ CLAUDE.md ATUALIZADO
+- `/init-incremental` - Initialize or adopt incremental development
+- `/prd` - Manage PRD (view, update, fix, help)
+- `/add-increment` - Add next feature incrementally
+- `/quality` - Check code quality (YAGNI, refactoring)
+- `/update-claude-md` - Update project configuration
 
-📝 Seções adicionadas:
-- Desenvolvimento Incremental (YAGNI)
-- Comandos disponíveis
-- Workflow recomendado
-- Links úteis
-
-🔗 Referências:
-- /prd-help - Central de ajuda
-- Documentação completa no README
-
-✨ Pronto para usar!
+## Output Expected
 
 ```text
 
-## Próximos comandos
+✅ CLAUDE.md UPDATED
 
-- `/setup-project-incremental` - Configuração completa
-- `/start-incremental` - Criar PRD
-- `/prd-help` - Aprender sobre o plugin
+📝 Sections added:
+- Incremental Development (YAGNI principles)
+- Available commands (consolidated)
+- Recommended workflows
+- Useful links
+
+🔗 References:
+- /prd help - Help center
+- Full documentation in README
+
+✨ Ready to use!
+
+```text
+
+## Next Commands
+
+- `/init-incremental` - Set up new or adopt incremental dev
+- `/prd help` - Get answers about the plugin
+- `/add-increment "feature"` - Start implementing features
+
+## Related Commands
+
+- `/init-incremental` - Bootstrap incremental development
+- `/prd` - Manage Product Requirements Document
+- `/add-increment` - Implement next feature
+- `/quality` - Code quality analysis
+
+**Keep your project configuration up-to-date!** 📚
 ````

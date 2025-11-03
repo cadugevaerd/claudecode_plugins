@@ -1,101 +1,149 @@
 ---
-description: Adicionar próxima funcionalidade incremental ao código existente seguindo YAGNI
+description: Add next incremental feature to codebase following YAGNI principles - minimal, simple, and focused
 allowed-tools: Read, Write, Edit, Bash(git:*)
 ---
 
 # Add Increment
 
-Adiciona a próxima funcionalidade incremental ao código existente, garantindo que apenas o necessário seja implementado (YAGNI).
+Implements the next incremental feature to existing codebase, ensuring only what's necessary is implemented (YAGNI).
 
-## Como usar
+## Usage
 
 ````bash
-/add-increment "descrição da funcionalidade"
+/add-increment "description of feature"
+/add-increment "Add user authentication"
+/add-increment "Create API endpoint for user profile"
 
 ```text
 
-## Pré-requisitos
+## Prerequisites
 
-Sempre validar ANTES de começar:
+Always validate BEFORE starting:
 
-1. **PRD existe?** `test -f docs/PRD.md || test -f PRD.md`
-2. **Git limpo?** `git status --porcelain` (sem mudanças)
-3. **MVP definido?** Deve estar no PRD
-4. **Código anterior funciona?** Testar incremento anterior
+1. **PRD exists?** `test -f docs/PRD.md || test -f PRD.md`
+2. **Git clean?** `git status --porcelain` (no uncommitted changes)
+3. **MVP defined?** Must be documented in PRD
+4. **Previous code works?** Test existing features
 
-Se algum pré-requisito falhar, sugira:
-- PRD: `/setup-project-incremental`
-- Git sujo: Commitar primeiro
-- MVP indefinido: `/prd-update planejamento`
+If any prerequisite fails, suggest:
+- No PRD: `/init-incremental "Your project description"`
+- Git dirty: Commit changes first
+- MVP undefined: `/prd update planejamento`
 
-## Processo
+## Process
 
-1. **Validar pré-requisitos** → STOP se falhar
-2. **Analisar estado atual** → Listar funcionalidades existentes
-3. **Definir incremento MÍNIMO**:
-   - ⏱️ 30 minutos a 2 horas de trabalho
-   - 📁 Modificar 1-3 arquivos máximo
-   - 📝 20-100 linhas de código novo
-   - 🧪 1-3 testes novos
+1. **Validate prerequisites** → STOP if any fail
+2. **Analyze current state** → List existing features
+3. **Define MINIMAL increment**:
+   - ⏱️ 30 minutes to 2 hours of work
+   - 📁 Modify 1-3 files maximum
+   - 📝 20-100 lines of new code
+   - 🧪 1-3 new tests
 
-4. **Questionar necessidade** → "É realmente necessário AGORA?"
-5. **Validar impacto** → Quais arquivos, testes necessários
-6. **Implementar** → Código simples, sem abstrações prematuras
-7. **Testar** → Funcionalidade funciona + código anterior intacto
-8. **Registrar no PRD** (opcional) → `/prd-update incremento`
-9. **Commit** → Mudança do incremento
+4. **Question necessity** → "Is this REALLY needed NOW?"
+5. **Validate impact** → Which files, tests needed
+6. **Implement** → Simple code, no premature abstractions
+7. **Test thoroughly** → New feature works + previous code intact
+8. **Register in PRD** (optional) → `/prd update incremento`
+9. **Commit** → Changes for this increment
 
-## ⚠️ Detectar Incremento Grande Demais
+## 🚩 Detecting Oversized Increment
 
-Se parecer grande:
-- 5+ arquivos a modificar
-- 200+ linhas de código
-- Múltiplas features
+If it seems too large:
+- 5+ files to modify
+- 200+ lines of new code
+- Multiple features
 
-→ **Quebrar em incrementos menores**
+→ **BREAK INTO SMALLER INCREMENTS**
 
-Exemplo:
-
-```text
-
-❌ GRANDE: "Adicionar autenticação OAuth com JWT e RBAC"
-✅ PEQUENO: "Adicionar autenticação com usuário hardcoded"
-✅ DEPOIS: "Gerar JWT tokens"
-✅ DEPOIS: "Implementar RBAC"
+Example:
 
 ```text
 
-## Regra dos 3 (Para Refatoração)
+❌ TOO LARGE: "Add OAuth authentication with JWT and RBAC"
+✅ MINIMAL: "Add simple auth with hardcoded user"
+✅ LATER: "Implement JWT token generation"
+✅ LATER: "Add RBAC role-based access"
 
-- **1 caso**: Deixar código inline
-- **2 casos**: Duplication OK, deixar como está
-- **3 casos**: AGORA abstrair padrão
+```text
 
-Não refatore durante incremento! Use `/refactor-now` depois.
+## YAGNI Anti-Patterns
 
-## ✅ Checklist Pós-Incremento
+**What NOT to do**:
+- ❌ Add optional fields "for the future"
+- ❌ Create abstractions for single use case
+- ❌ Build for scenarios not yet requested
+- ❌ Implement validation beyond MVP
+- ❌ Add configuration for future flexibility
 
-- [ ] Código compilou/executou
-- [ ] Funcionalidade funciona
-- [ ] Código anterior continua funcionando
-- [ ] Testes passam
-- [ ] Pronto para commit
+**What to do**:
+- ✅ Implement exact minimum needed
+- ✅ Hardcode values if OK for MVP
+- ✅ Keep code simple and direct
+- ✅ Add structure when pattern repeats (Rule of 3)
 
-## Próximos passos
+## Rule of 3 (Refactoring)
 
-Após implementar com sucesso:
+- **1 case**: Keep code inline (simple)
+- **2 cases**: Duplication is OK, keep separate
+- **3 cases**: NOW REFACTOR! Pattern emerged
+
+Don't refactor during increment! Use `/quality refactor` later.
+
+## ✅ Post-Increment Checklist
+
+- [ ] Code compiles/executes
+- [ ] New feature works correctly
+- [ ] Previous code still works
+- [ ] Tests pass
+- [ ] Ready for commit
+
+## Increment Workflow Loop
+
+```text
+1. /add-increment "feature"
+   └─ Implement feature
+
+2. /quality yagni
+   └─ Check for over-engineering (optional)
+
+3. /prd update incremento
+   └─ Register progress in PRD (optional)
+
+4. /commit
+   └─ Commit changes
+
+5. Repeat → /add-increment "next feature"
+   OR
+   /quality refactor
+   └─ Refactor if pattern emerged (3+ cases)
+```
+
+## Related Commands
+
+- `/init-incremental` - Bootstrap project setup
+- `/prd` - Manage PRD (view, update, fix)
+- `/quality` - Check code quality (YAGNI, refactoring)
+- `/update-claude-md` - Update project config
+
+## Key Principles
+
+- **Minimal**: Only what's needed NOW
+- **Simple**: No premature complexity
+- **Functional**: Works first, elegance later
+- **Present**: Build for today, not tomorrow
+
+## Next Steps
+
+After successful implementation:
 
 ```bash
-/prd-update incremento    # Registrar no PRD (opcional)
-/commit                   # Fazer commit
-/add-increment "próx"     # Próximo incremento OU
-/refactor-now            # Refatorar se padrão emergiu
+/prd update incremento     # Register in PRD (optional)
+/commit                    # Commit changes
+/add-increment "next"      # Next increment OR
+/quality refactor          # Refactor if pattern emerged
 
 ```text
 
-**Princípios**:
-- Mínimo necessário
-- Simples > Elegância
-- Funcionar > Padrões
-- Agora > Futuro
+**Small, focused increments lead to better code!** ✨
 ````
