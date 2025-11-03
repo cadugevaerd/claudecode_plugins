@@ -576,6 +576,16 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 - Quality assurance and validation
 - Team alignment and knowledge preservation
 
+## Work Keywords
+
+- **"create brief"** / **"agent specification"** / **"start planning"**: Execute `/brief`
+- **"setup environment"** / **"configure local"** / **"install dependencies"**: Execute `/setup-local-observability`
+- **"create spike"** / **"validate architecture"** / **"spike implementation"**: Execute `/spike-agentic`
+- **"create backlog"** / **"generate backlog"**: Execute `/backlog create`
+- **"update backlog"** / **"refresh backlog"**: Execute `/backlog update`
+- **"view backlog"** / **"show backlog"** / **"backlog status"**: Execute `/backlog view`
+- **"update project config"** / **"integrate agentc"**: Execute `/update-claude-md`
+
 ## Support & Contributing
 
 This is version 0.5.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), `/spike-agentic` (Microprocesso 1.3 - architecture validation), and `/update-claude-md` (project integration). Includes `help-assistant` agent, `microprocesso-1-2` skill, and `spike-agentic` skill for comprehensive guidance with progressive disclosure.

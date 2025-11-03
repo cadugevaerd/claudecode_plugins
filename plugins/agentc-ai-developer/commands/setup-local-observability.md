@@ -1,136 +1,96 @@
 ---
 description: Interactive guide through Microprocesso 1.2 (Setup Local + Observability) - Python venv, dependencies, .env configuration, LangSmith integration. Continues from /brief with 3 operating modes. ~1.5 hours to complete environment setup.
+allowed-tools: Read, Bash, Write
 ---
 
 # Microprocesso 1.2: Setup Local + Observability
 
-**INTERACTIVE**: Guides you through setting up a reproducible local development environment with complete observability.
+Interactive setup for reproducible Python environment with LangSmith observability.
 
-This command continues directly from `/brief`, skipping Git setup (already done) and walking you through 8 structured activities to create your production-ready local environment.
+## Prerequisites
 
-## TL;DR
+Verify before starting:
 
-`/setup-local-observability` → Choose mode → 1.5 hours → Reproducible environment ready
+- Completed `/brief` (Microprocesso 1.1)
+- README.md with Brief Minimo specification exists
+- Python 3.8+ installed
+- LangSmith account created (smith.langchain.com)
+- Anthropic API key available (console.anthropic.com)
+- 1.5 hours available
 
-**Time**: ~1.5 hours
-**Result**: Python venv + dependencies + .env + LangSmith integration
+## Execution
 
-## ⚠️ Prerequisites
+1. **Choose Operating Mode**
 
-- ✅ Completed `/brief` (Microprocesso 1.1)
-- ✅ README.md with Brief Minimo specification
-- ✅ Python 3.8+ installed
-- ✅ LangSmith account (free at smith.langchain.com)
-- ✅ 1.5 hours available
+   - Ask user: "Select mode - [G]uiado, [A]utomático, or [M]isto?"
+   - Guiado: Explain each step, user executes manually (~2h)
+   - Automático: Execute all commands automatically (~20min)
+   - Misto: Ask per activity: manual or automatic? (~1.5h)
 
-## What This Command Does
+1. **Execute 8 Activities** (in sequence)
 
-After running `/setup-local-observability`, you'll have:
+   - Activity 1: Create Python venv
+   - Activity 2: Activate venv
+   - Activity 3: Install dependencies (langchain, anthropic, langsmith, python-dotenv)
+   - Activity 4: Create .env file with API keys
+   - Activity 5: Create .env.example template
+   - Activity 6: Create requirements.txt
+   - Activity 7: Create/update .gitignore
+   - Activity 8: Test LangSmith integration
 
-1. **Python Virtual Environment** - Isolated Python environment for your project
-1. **Core Dependencies** - langchain, anthropic, langsmith, python-dotenv installed
-1. **.env Configuration** - Secure API keys and environment variables
-1. **.env.example** - Template for team members
-1. **requirements.txt** - Locked dependency versions
-1. **.gitignore** - Protects .env from being committed
-1. **LangSmith Integration** - Full observability and tracing
-1. **Validation Scripts** - Automated environment testing
+1. **Validate Each Activity**
 
-## 🎯 Three Operating Modes
+   - Verify files created correctly
+   - Check dependencies installed
+   - Test environment variables loaded
+   - Confirm LangSmith connection works
 
-Choose the mode that fits your style:
+1. **Create Validation Script**
 
-| Mode | Best For | What Happens | Time |
-|------|----------|-------------|------|
-| **Guiado (Guided)** | Learning, full control | I explain each step, you execute commands manually | ~2 hours |
-| **Automático (Automatic)** | Speed, reproducibility | I execute all commands automatically | ~20 minutes |
-| **Misto (Mixed)** | Flexibility | You choose manual or automatic per activity | ~1.5 hours |
+   - Generate validate_setup.py
+   - Run validation
+   - Report results
 
-## 🚀 Quick Start
+## Operating Mode Details
 
-### Run the Command
+**Guiado (Guided)**:
 
-````bash
-/setup-local-observability
+- Explain each activity step-by-step
+- Provide commands for user to execute
+- Wait for confirmation before proceeding
 
-```text
+**Automático (Automatic)**:
 
-The command will ask you:
-1. **Choose your mode**: Guiado, Automático, or Misto?
-2. **LangSmith API Key**: Get from smith.langchain.com
-3. **Anthropic API Key**: Get from console.anthropic.com
-4. **For each activity** (if Misto mode): Manual or Automatic?
+- Execute all commands without intervention
+- Show progress for each activity
+- Report final status
 
-### Example Flow
+**Misto (Mixed)**:
 
-```text
+- Before each activity, ask: "Manual or Automatic?"
+- Execute accordingly
+- Combine flexibility with speed
 
-/setup-local-observability
-→ "Which mode? [G]uiado [A]utomatico [M]isto?"
-→ Your response: A (Automático)
-→ "Installing dependencies..."
-→ [command executes: pip install langchain anthropic ...]
-→ "✅ Dependencies installed"
-→ [continue through all 8 activities]
-→ "✅ Environment ready! Run: python validate_setup.py"
+## Validation Criteria
 
-```text
+After completion, verify:
 
+- venv directory exists and is activated
+- All dependencies listed in requirements.txt
+- .env contains LANGSMITH_API_KEY and ANTHROPIC_API_KEY
+- .env.example exists (no secrets)
+- .gitignore protects .env
+- validate_setup.py runs successfully
+- LangSmith traces visible at smith.langchain.com
 
-## The 8 Activities (Overview)
-
-1. **Create Python venv** - Isolated Python environment
-2. **Activate venv** - Load the environment
-3. **Install dependencies** - Core LLM packages
-4. **Create .env** - Store API keys securely
-5. **Create .env.example** - Team template
-6. **Create requirements.txt** - Dependency lock
-7. **Create .gitignore** - Protect secrets
-8. **Test LangSmith** - Verify observability works
-
-Each activity has templates and validation.
-
-
-## 💡 Key Features
-
-**Progressive Disclosure**: Command guides overview, detailed knowledge in [skill: microprocesso-1-2]
-
-**Validation at Each Step**: Every activity is validated before proceeding
-
-**Templates Provided**: Copy/paste .env, .gitignore, validation script
-
-**Troubleshooting Built-in**: If something fails, get immediate guidance
-
-**Reproducible**: Team can use requirements.txt to recreate environment
-
-
-## 📚 For Detailed Guidance
-
-For detailed information about any activity:
-- **Step-by-step instructions** → See skill `microprocesso-1-2`
-- **Template files** → See skill `microprocesso-1-2`
-- **Troubleshooting common issues** → See skill `microprocesso-1-2`
-- **Validation scripts** → See skill `microprocesso-1-2`
-
-The skill contains all the knowledge needed for each activity.
-
-
-## What Happens Next
+## Next Steps
 
 After successful setup:
 
-✅ Your environment is reproducible (requirements.txt can recreate it)
-✅ All traces go to LangSmith automatically
-✅ You're ready for Microprocesso 1.3 (Spike Agentic)
-✅ Team can onboard quickly with requirements.txt
+- Run `/update-claude-md` to integrate guidance
+- Proceed to `/spike-agentic` (Microprocesso 1.3)
+- Share requirements.txt with team for reproducibility
 
+## Detailed Knowledge
 
-## See Also
-
-- `/brief` - Microprocesso 1.1 (agent planning)
-- Skill `microprocesso-1-2` - Complete knowledge base for all 8 activities
-- Full documentation: `README.md` in plugin directory
-
-
-**Next**: After completing setup, run `/update-claude-md` to integrate guidance into your project's CLAUDE.md
-````
+For step-by-step instructions, templates, and troubleshooting, see skill `microprocesso-1-2`.

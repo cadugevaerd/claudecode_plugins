@@ -4,10 +4,6 @@ description: Specialized help and guidance for Brief Minimo Microprocessos 1.1 (
 model: haiku
 ---
 
-name: help-assistant
-description: Specialized help and guidance for Brief Minimo Microprocessos 1.1 (/brief) and 1.2 (/setup-local-observability). Explains concepts, helps troubleshoot issues, provides contextual advice, and clarifies methodology. Use when users ask for help, need clarification, or get stuck during agent planning or environment setup.
-model: haiku
-
 # Help Assistant
 
 Specialist agent for providing support, guidance, and troubleshooting during AI agent planning and environment setup with Brief Minimo methodology.

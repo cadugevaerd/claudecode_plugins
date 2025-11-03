@@ -17,9 +17,9 @@ Create a PRD template file in `docs/PRD.TEMPLATE.md` for project reference with 
 ## What It Does
 
 1. Create `docs/` directory if needed
-2. Generate `docs/PRD.TEMPLATE.md` with complete PRD structure
-3. Add `docs/PRD.TEMPLATE.md` to `.gitignore`
-4. Display confirmation with location and next steps
+1. Generate `docs/PRD.TEMPLATE.md` with complete PRD structure
+1. Add `docs/PRD.TEMPLATE.md` to `.gitignore`
+1. Display confirmation with location and next steps
 
 ## Template Structure
 
@@ -35,21 +35,25 @@ The generated template follows **increment-focused design** aligned with YAGNI p
 This template enforces **true incremental development** and **YAGNI (You Ain't Gonna Need It)**:
 
 ### ✅ Design is Just-In-Time, Not Up-Front
+
 - Architecture, data models, and APIs are designed *within* each increment, not pre-planned
 - Prevents over-engineering by focusing on *actual* needs of current increment
 - Design emerges naturally as features are built, reducing waste
 
 ### ✅ Roadmap is Flexible (Now/Next/Later)
+
 - Replaces rigid Gantt charts with prioritized flexibility
 - Allows reprioritization based on learnings from previous increments
 - Focuses on outcomes, not output timelines
 
 ### ✅ No "Design Phase"
+
 - Eliminates false separation between planning and development
 - Design decisions are made *when building*, not beforehand
 - ADRs capture reasoning *as features are implemented*
 
 ### ✅ As-Built Reflects Reality
+
 - Section 4 documents what *actually exists*, not what was planned
 - Updated after each completed increment
 - Single source of truth for current system state
@@ -66,16 +70,16 @@ This template enforces **true incremental development** and **YAGNI (You Ain't G
 ### For New Projects
 
 1. Run `/prd-template` → Creates reference
-2. Run `/init-incremental "Your project"` → Creates actual PRD.md
-3. Reference template while filling sections
-4. Validate with `/prd validate`
+1. Run `/init-incremental "Your project"` → Creates actual PRD.md
+1. Reference template while filling sections
+1. Validate with `/prd validate`
 
 ### For Existing Projects
 
 1. Run `/prd-template` → Creates reference
-2. Run `/init-incremental` → Offers adoption for existing project
-3. Migrate current documentation to template structure
-4. Use template as reference for completeness
+1. Run `/init-incremental` → Offers adoption for existing project
+1. Migrate current documentation to template structure
+1. Use template as reference for completeness
 
 ## Template Preview
 

@@ -1,5 +1,6 @@
 ---
 description: Adds concise project integration guidance to CLAUDE.md (≤40 lines). Reads project's README.md from /brief, extracts Brief Minimo specification, and creates focused section with agent commands and next steps. Follows progressive disclosure pattern - concise + links to full docs.
+allowed-tools: Read, Write
 ---
 
 # /update-claude-md - Project Integration
