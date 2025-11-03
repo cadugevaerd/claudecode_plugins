@@ -1,13 +1,8 @@
 ---
 name: prd-manager
-description: Automatically manages and updates PRD (Product Requirements Document) by detecting appropriate update moments based on project phase. Use when working with PRD, requirements, product documentation, MVP definition, architectural decisions, learnings from increments, or transitioning between development phases (discovery, planning, design, increments). Trigger terms - requisitos, objetivos, MVP, incremento completo, decisões arquiteturais, aprendizados, lições aprendidas, ADR, Product Vision, épicos, User Stories.
+description: Automatically manages and updates PRD (Product Requirements Document) by detecting appropriate update moments based on project phase. Always use when you need to manage PRD (Update, create, validate, etc).
 allowed-tools: Read, Write, Edit, Grep, Bash
 ---
-
-name: prd-manager
-description: Manages PRD (Product Requirements Document) automatically, detecting update moments and validating consistency between code and documentation. Use when defining MVP, editing, creating or other manipulating PRD.md, completing increments, making architectural decisions, or transitioning development phases. Triggers - requisitos, MVP, incremento, decisões, aprendizados, PRD.
-allowed-tools: Read, Write, Edit, Grep, Bash
-version: 1.0.0
 
 # PRD Manager Skill
 
