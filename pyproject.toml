@@ -2,7 +2,7 @@
 name = "claudecode-plugins-ci"
 version = "1.0.0"
 description = "CI validation for claudecode plugins marketplace"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "pymarkdownlnt>=0.9.33",
     "mdformat>=0.7.17",
