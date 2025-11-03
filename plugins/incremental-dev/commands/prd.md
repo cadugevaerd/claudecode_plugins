@@ -1,5 +1,5 @@
 ---
-description: Manage PRD (Product Requirements Document) - view, update, fix, and get help on development phases
+description: Manage PRD (Product Requirements Document) - view, update, fix, validate, and get help on development phases
 argument-hint: '[subcommand] [options]'
 ---
 
@@ -33,6 +33,10 @@ Unified command for managing Product Requirements Document with multiple subcomm
 /prd fix "description of change"  # Targeted adjustment to specific section
 /prd fix "Move feature X out of scope"
 /prd fix "Update success metric to 500ms"
+
+# Template management
+/prd-template                # Create PRD template in docs/ for reference
+/prd-template --force        # Recreate template even if it exists
 
 # Get help
 /prd help                    # Interactive help menu
@@ -82,11 +86,15 @@ Makes surgical targeted adjustments to specific PRD sections without rewriting e
 
 ### `/prd validate [path]`
 
-Validates existing PRD.md against template structure and completeness.
+Validates existing PRD.md against template structure and completeness. Checks template existence and suggests creation if needed.
 
 **Usage modes**:
 - `/prd validate` - Auto-detects and validates PRD.md in project root
 - `/prd validate ./docs/PRD.md` - Validate specific file
+
+**Pre-validation checks**:
+- ✅ Verifies `docs/PRD.TEMPLATE.md` exists
+- ✅ If template missing: suggests running `/prd-template` to create reference
 
 **Validation checks**:
 - ✅ Required sections by phase (v0.1, v1.0, v1.1, v1.x)
@@ -100,6 +108,7 @@ Validates existing PRD.md against template structure and completeness.
 - ⚠️ Missing fields with recommendations
 - 🎯 Next suggested phase updates
 - 💡 Quick fixes for common issues
+- 📌 Template status (exists or needs creation)
 
 **Example output**:
 ```
@@ -121,6 +130,21 @@ MISSING FIELDS:
 OVERALL PROGRESS: 83%
 NEXT STEP: Run `/prd update design`
 ```
+
+### `/prd-template [--force]`
+
+Creates a PRD template file in `docs/PRD.TEMPLATE.md` for project reference and adds it to `.gitignore`.
+
+**Usage modes**:
+- `/prd-template` - Create template if it doesn't exist
+- `/prd-template --force` - Recreate template even if exists
+
+**What it does**:
+1. ✅ Creates `docs/` directory if needed
+2. ✅ Generates `docs/PRD.TEMPLATE.md` with complete structure
+3. ✅ Adds `docs/PRD.TEMPLATE.md` to `.gitignore`
+4. ✅ Shows confirmation with next steps
+
 
 ### `/prd help [question]`
 
