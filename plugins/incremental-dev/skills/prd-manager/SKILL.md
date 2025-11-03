@@ -1,6 +1,6 @@
 ---
 name: prd-manager
-description: Automatically manages and updates PRD (Product Requirements Document) by detecting appropriate update moments based on project phase. Always use when you need to manage PRD (Update, create, validate, etc).
+description: Automatically manages and updates PRD (Product Requirements Document) by detecting appropriate update moments based on project phase. Invokes automatically when validating PRD against code, checking best practices, synchronizing documentation after increments, or ensuring consistency between implementation and product vision. Always use when you need to create, validate, update, or align PRD with actual codebase implementation.
 allowed-tools: Read, Write, Edit, Grep, Bash
 ---
 
@@ -26,6 +26,9 @@ Invoque automaticamente quando:
 - "decisão arquitetural", "ADR"
 - "aprendizado", "retrospectiva"
 - "MVP", "Product Vision", "épicos"
+- "melhores práticas", "validar PRD", "sincronizar documentação"
+- "consistência código-docs", "conformidade", "alinhamento"
+- "@docs/PRD.md", "PRD.md", "documentação viva"
 
 ## 📊 Responsabilidades
 

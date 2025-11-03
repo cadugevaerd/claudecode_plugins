@@ -4,11 +4,6 @@ description: Detecta automaticamente quando código está sendo criado "para o f
 allowed-tools: Read, Grep, Glob
 ---
 
-name: yagni-enforcer
-description: Detecta automaticamente quando código está sendo criado "para o futuro" ou tem complexidade desnecessária. Use quando implementar funcionalidades, criar classes/abstrações, ou adicionar configurações. Detecta over-engineering, abstrações prematuras, e antecipação de requisitos futuros.
-allowed-tools: Read, Grep, Glob
-version: 1.0.0
-
 # YAGNI Enforcer
 
 Skill que detecta automaticamente quando código está prestes a violar YAGNI (You Aren't Gonna Need It), identificando over-engineering, abstrações prematuras, e funcionalidades antecipadas.

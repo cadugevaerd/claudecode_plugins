@@ -4,11 +4,6 @@ description: Detecta automaticamente quando padrões emergiram naturalmente no c
 allowed-tools: Read, Grep, Glob
 ---
 
-name: refactor-advisor
-description: Detecta automaticamente quando padrões emergiram naturalmente no código e sugere momento apropriado para refatorar. Use quando código tem duplicação, padrões repetidos, ou complexidade crescente. Aplica "Regra dos 3" e identifica quando refatoração adiciona valor real.
-allowed-tools: Read, Grep, Glob
-version: 1.0.0
-
 # Refactor Advisor
 
 Skill que detecta padrões emergentes e identifica o momento APROPRIADO para refatorar, aplicando a "Regra dos 3" para confirmar padrões reais antes de sugerir mudanças.
