@@ -4,7 +4,27 @@ description: 100% interactive Brief Minimo interview - 5 fundamental questions t
 
 # Brief Minimo - AI Agent Planning
 
-**Fully interactive command** (no agent delegation) that guides you through a complete 30-minute Brief Minimo planning session. Asks 5 fundamental questions, validates your responses for specificity, and generates a production-ready README.md specification document.
+**INTERACTIVE**: Guides you through a complete 30-minute Brief Minimo planning session - no agent delegation.
+
+Fully interactive command that asks 5 fundamental questions, validates your responses for specificity, and generates a production-ready README.md specification document.
+
+## TL;DR
+
+`/brief` → Answer 5 questions → Validation → README.md specification
+
+**Time**: ~30 minutes
+**Result**: Complete Brief Minimo specification ready for architecture & development
+
+---
+
+## ⚠️ Prerequisites
+
+- ✅ 15-20 minutes of focused time
+- ✅ Clear idea of what your agent should do (or existing agent to update/document)
+- ✅ Concrete examples ready (not conceptual descriptions)
+- ✅ Be prepared to think about specific metrics and tools
+
+---
 
 ## The 5 Fundamental Questions
 

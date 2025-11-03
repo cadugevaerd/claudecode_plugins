@@ -4,9 +4,18 @@ description: Adds concise project integration guidance to CLAUDE.md (≤40 lines
 
 # /update-claude-md - Project Integration
 
-Adds a concise section to your project's CLAUDE.md file with guidance for using Agentc AI Developer Microprocessos in your ongoing work. Integration takes <1 minute.
+**AUTONOMOUS**: Automatically integrates Agentc guidance into your project's CLAUDE.md.
 
-## What It Does
+## TL;DR
+
+`/update-claude-md` → Read Brief Minimo → Add guidance to CLAUDE.md → Done
+
+**Time**: <1 minute
+**Result**: Project guidance section in CLAUDE.md (≤40 lines)
+
+---
+
+## 🎯 What It Does
 
 When you run `/update-claude-md`, the command:
 
@@ -27,23 +36,25 @@ When you run `/update-claude-md`, the command:
    - Details reference `plugins/agentc-ai-developer/README.md`
    - Skills and commands auto-discovered when plugin is installed
 
-## Using the Command
+## 🚀 Usage
 
+**Run the command**:
 ```bash
 /update-claude-md
 ```
 
 **Prerequisites**:
-- You have run `/brief` in this project
-- README.md exists with Brief Minimo specification
-- Project's CLAUDE.md exists (or will be created)
+- ✅ Completed `/brief` (Microprocesso 1.1)
+- ✅ README.md exists with Brief Minimo specification
+- ✅ Project's CLAUDE.md exists (or will be created)
 
-**Result**:
-- New section added to CLAUDE.md (~35 lines)
-- Guidance visible to Claude when working on your project
-- Commands and next steps clearly documented
+**What happens**:
+1. Reads your README.md specification
+2. Creates concise guidance section (≤40 lines)
+3. Updates CLAUDE.md with commands and next steps
+4. **Total time**: <1 minute
 
-## What Gets Added to CLAUDE.md
+## 📝 What Gets Added to CLAUDE.md
 
 Example section added (≤40 lines):
 
@@ -69,15 +80,15 @@ Example section added (≤40 lines):
 ---
 ```
 
-## Key Features
+## ✨ Key Features
 
-✅ **Concise**: Never exceeds 40 lines (follows best practices)
-✅ **Contextual**: Reads your project's Brief Minimo specification
-✅ **Auto-discovery**: Mentions that skills/commands auto-load with plugin
-✅ **Progressive disclosure**: Details in separate docs, not in CLAUDE.md
-✅ **Future-proof**: Ready for Microprocesso 1.3 references
+- ✅ **Concise**: Never exceeds 40 lines (follows best practices)
+- ✅ **Contextual**: Reads your project's Brief Minimo specification
+- ✅ **Auto-discovery**: Mentions that skills/commands auto-load with plugin
+- ✅ **Progressive disclosure**: Details in separate docs, not in CLAUDE.md
+- ✅ **Future-proof**: Ready for Microprocesso 1.3 references
 
-## Troubleshooting
+## ⚠️ Troubleshooting
 
 **"README.md not found"**
 - Run `/brief` first to create your project specification

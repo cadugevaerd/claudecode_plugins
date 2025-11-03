@@ -87,14 +87,14 @@
     },
     {
       "name": "agentc-ai-developer",
-      "description": "Brief Minimo methodology with integrated commands: /brief for planning (Microprocesso 1.1) → /setup-local-observability for environment setup (Microprocesso 1.2) → /update-claude-md for project integration. Help assistant for guidance throughout. Interactive guides for agent development with full project integration.",
+      "description": "Brief Minimo methodology with integrated commands and skills: /brief (Microprocesso 1.1 planning) → /setup-local-observability (Microprocesso 1.2 setup) with microprocesso-1-2 skill → /update-claude-md (project integration). Help assistant for guidance. Progressive disclosure with best practices documentation. Interactive guides for agent development with full project integration.",
       "source": "./plugins/agentc-ai-developer",
-      "version": "0.3.0",
+      "version": "0.4.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "setup", "environment", "langsmith", "observability", "microprocessos", "interactive", "help-assistant"]
+      "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "setup", "environment", "langsmith", "observability", "microprocessos", "interactive", "help-assistant", "skills", "progressive-disclosure", "best-practices", "commands"]
     }
   ]
 }

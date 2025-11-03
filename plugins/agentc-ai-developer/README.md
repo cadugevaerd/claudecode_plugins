@@ -376,12 +376,15 @@ Success example:
 
 ## Roadmap
 
-**Version 0.3.0** (Current)
+**Version 0.4.0** (Current)
 - **Microprocesso 1.1**: Brief Minimo planning methodology (fully interactive `/brief` command)
 - **Microprocesso 1.2**: Environment setup with Python venv, dependencies, and LangSmith observability
+- **Microprocesso 1.2 Skill**: `microprocesso-1-2` skill with comprehensive setup knowledge and progressive disclosure
 - **Project Integration**: `/update-claude-md` command for CLAUDE.md setup (≤40 lines, progressive disclosure)
 - **Help Assistant**: Specialized support for guidance and troubleshooting (help-assistant agent)
+- **Command Best Practices**: Complete documentation in plugin-creator.md for command development standards
 - Interactive commands: `/brief`, `/setup-local-observability`, `/update-claude-md`
+- Skills with auto-discovery for detailed guidance
 - Seamless integration with existing projects
 - Environment validation and reproducibility
 - Complete observability integration with LangSmith
@@ -461,6 +464,37 @@ Specialist agent for providing support, guidance, and troubleshooting during Mic
 - Practical troubleshooting for common issues
 - Encouraging support throughout the process
 
+## Skills
+
+### microprocesso-1-2
+Complete knowledge base for Microprocesso 1.2 (Setup Local + Observability) - Python virtual environment setup, dependency installation, .env configuration, LangSmith integration, validation, and troubleshooting.
+
+**When Claude auto-invokes**: When you need detailed guidance on Microprocesso 1.2 setup activities, encounter errors during environment configuration, or need troubleshooting help with dependencies, .env files, or LangSmith integration.
+
+**Responsibilities**:
+- Provide step-by-step guidance for all 8 setup activities
+- Document Python venv creation and activation
+- Explain dependency installation (langchain, anthropic, langsmith, python-dotenv)
+- Guide .env file configuration with templates
+- Detail .env.example documentation
+- Explain requirements.txt creation and reproducibility
+- Document .gitignore setup for secret protection
+- Provide LangSmith integration testing
+- Supply comprehensive validation scripts
+- Offer troubleshooting for common setup issues
+- Explain all three operating modes (Guiado, Automático, Misto)
+
+**Key Capabilities**:
+- Hands-on environment setup guidance with copy/paste templates
+- Complete troubleshooting for Python venv, dependencies, and configuration
+- LangSmith integration testing and validation
+- Environment validation scripts (validate_setup.py)
+- Progressive disclosure pattern with detailed knowledge
+- Support for all three operating modes with mode-specific instructions
+- Real examples and sample code for every activity
+
+**Auto-discovery**: This skill is automatically used by Claude when you request help with Microprocesso 1.2, mention setup issues, or need detailed guidance on any of the 8 activities.
+
 ## Legacy Agents
 
 ### brief-assistant
@@ -494,7 +528,7 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 
 ## Support & Contributing
 
-This is version 0.3.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), and `/update-claude-md` (project integration). Includes `help-assistant` for guidance throughout the process.
+This is version 0.4.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), and `/update-claude-md` (project integration). Includes `help-assistant` agent and `microprocesso-1-2` skill for comprehensive guidance and detailed environment setup knowledge with progressive disclosure.
 
 For issues, suggestions, or contributions related to the Claude Code marketplace, visit the [plugin repository](https://github.com/cadugevaerd/claudecode_plugins).
 

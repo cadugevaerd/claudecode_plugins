@@ -2,6 +2,82 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.4.0] - 2025-11-02
+
+### Adicionado
+- **Novo Skill** `microprocesso-1-2` para conhecimento detalhado de setup (675 linhas)
+  - Complete knowledge base para as 8 atividades de Microprocesso 1.2
+  - Provides step-by-step guidance, templates, troubleshooting, validation
+  - Support para todos os 3 operating modes (Guiado, Automático, Misto)
+  - Auto-discovery por Claude para ajuda durante setup
+  - Tools permitidas: Read, Bash, Write para operações de ambiente
+- **Documentação de Best Practices** em plugin-creator.md
+  - Comprehensive "Command Best Practices" section (~400 linhas)
+  - Anatomia de excelentes commands, emojis para visual hierarchy
+  - Behavioral badges (INTERACTIVE, AUTONOMOUS, DELEGATED)
+  - Progressive disclosure pattern para commands >80 linhas
+  - 3 command templates por tipo, quality checklist
+  - Scoring de existing commands, anti-patterns
+  - Decision matrix para Skills vs Commands vs Agents
+
+### Modificado
+- **Refatoração do comando `/brief`** para seguir best practices
+  - Added INTERACTIVE badge e TL;DR section
+  - Visual prerequisites section com checkmarks
+  - Improved structure com emoji scanning
+  - Maintained all existing content com melhor organização
+- **Refatoração do comando `/setup-local-observability`** (556 → 146 linhas)
+  - Complete rewrite com progressive disclosure pattern
+  - Command agora é overview conciso, skill contém 675 linhas de detalhe
+  - Added INTERACTIVE badge e TL;DR
+  - 3 operating modes table para comparação rápida
+  - Links to skill microprocesso-1-2 para detailed guidance
+- **Refatoração do comando `/update-claude-md`** (94 linhas)
+  - Added AUTONOMOUS badge e TL;DR section
+  - Renamed "Using the Command" to "🚀 Usage"
+  - Visual improvements com emojis (📝, ✨, ⚠️)
+  - Better structure com visual hierarchy
+  - Prerequisite checklist com time estimate (<1 minute)
+- **README.md** completamente atualizado
+  - New "## Skills" section documentando microprocesso-1-2
+  - Detailed description de quando skill é auto-invocada
+  - Updated Roadmap para v0.4.0 com skill documentation
+  - Updated "Support & Contributing" com v0.4.0 e skill mention
+  - Better organization com Skills section entre Agents e Legacy Agents
+
+### Melhorias
+- **Progressive Disclosure Pattern**: 3 commands agora seguem padrão rigorosamente
+  - Commands ≤150 linhas com TL;DR, overview, quick start
+  - Skill contém 675 linhas de detailed knowledge
+  - Commands referenciam skill para detailed guidance
+- **Visual Hierarchy**: Consistent emoji usage e behavioral badges
+  - 🎯 What It Does, 🚀 Usage, 📝 What Gets Added, ✨ Key Features, ⚠️ Troubleshooting
+  - Badges indicam tipo de comando: INTERACTIVE, AUTONOMOUS
+  - TL;DR format padronizado: `action → process → result`
+- **Command Quality**: All commands agora seguem best practices documentadas
+  - Size limits respeitados (50-100 linhas ideal, max 150)
+  - Structure patterns consistentes
+  - Behavioral indicators claros
+  - Progressive disclosure com referências a skills/agents
+- **Documentation Completeness**:
+  - microprocesso-1-2 skill com 675 linhas covers 8 atividades detalhadamente
+  - Templates copy/paste prontos para todos os arquivos
+  - Real examples em Python, bash, markdown
+  - Troubleshooting coverage para 7+ common issues
+
+### Informação de Versão
+
+Este é o v0.4.0 (MINOR update) do Agentc AI Developer com:
+- Novo skill `microprocesso-1-2` para progressive disclosure de setup knowledge
+- Refatoração de todos 3 commands para seguir best practices
+- Comprehensive command best practices documentation em plugin-creator.md
+- Melhoria na arquitetura: commands como overview + skills como detailed knowledge
+- Progressive disclosure pattern aplicado rigorosamente
+- Visual hierarchy melhorada com badges e emojis
+- README.md completamente atualizado com skill documentation
+
+---
+
 ## [0.3.0] - 2025-11-02
 
 ### Adicionado
