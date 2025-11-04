@@ -70,12 +70,14 @@ For each slice, validate:
 
 For each slice, calculate how much it increases the success metric:
 
-**Step 1: Extract baseline from Brief Minimo**
+### Step 1: Extract baseline from Brief Minimo
+
 - Read README.md "What is SUCCESS?" section
 - Identify: Current baseline (if exists) and target metric
 - Example: "Current: 45% accuracy | Target: 85% accuracy | Gap: 40%"
 
-**Step 2: Estimate delta per slice**
+### Step 2: Estimate delta per slice
+
 - For each slice, ask: "What % of the target gap does this slice close?"
 - Assign estimated delta (conservative estimate):
   - Core functionality slices: 20-40% of gap
@@ -86,12 +88,14 @@ For each slice, calculate how much it increases the success metric:
   - Slice 2 (Edge cases): +10% (closes 25% of gap)
   - Slice 3 (Polish): +5% (closes 12.5% of gap)
 
-**Step 3: Validate cumulative coverage**
+### Step 3: Validate cumulative coverage
+
 - Sum all estimated deltas
 - Check: "Do all slices together meet or exceed target?"
 - Example: 25% + 10% + 5% = 40% ≥ Target 40% ✅
 
-**Step 4: Assign success_rate contribution**
+### Step 4: Assign success_rate contribution
+
 - Gate 5 PASS: Slice delta > 0% (measurable contribution)
 - Gate 5 FAIL: Slice delta = 0% (no measurable value)
 
