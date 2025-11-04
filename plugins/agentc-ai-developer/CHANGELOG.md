@@ -7,12 +7,14 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 ### Adicionado
 
 - **Novo modo `issues`** para comando `/backlog`
+
   - Gerencia issues de S2.9 (validação com PO) e S2.8 (rollback)
   - Rastreia problemas de forma estruturada em BACKLOG.md
   - Classifica por severidade (ALTA/MÉDIA/BAIXA)
   - Propõe próximas ações: refine, fast-track, defer, ou rollback
 
 - **Template estruturado de BACKLOG.md**
+
   - Seção 1: Features e Slices Priorizadas em formato tabular
   - Cálculo automático de Score (Impacto / Horas)
   - Coluna de Status com indicadores visuais (➡️ / 🔄 / ✅ / ⚪ / 🚀 / 🚨)
@@ -20,7 +22,8 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Seção 3: Notas de Integração com referências a SLICE_N_TRACKER.md
 
 - **Suporte a decisões de backlog**
-  - Fast-Track identification (<1h, low risk)
+
+  - Fast-Track identification (\<1h, low risk)
   - Critical rollback triggers
   - Issue-to-slice conversion
   - Deferred item tracking
@@ -36,6 +39,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 ### Adicionado
 
 - **Novo comando** `/analyze-slices` para validação de slices contra os gates S1.1
+
   - Gate 1: Duração 3-6 horas para ciclo padrão
   - Gate 2: Score de impacto >= 2.0 (razão impacto-esforço)
   - Gate 3: Implementação reversível com plano de rollback
@@ -44,6 +48,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
   - Três modos de análise: `validate`, `refine`, `auto`
 
 - **Modo refinement aprimorado** para comando `/backlog`
+
   - Novo modo `refine` para análise e refinamento de slices
   - Analisa falhas de gates para cada slice
   - Propõe refinamentos (divisão, aumento de impacto, isolamento)
