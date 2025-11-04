@@ -15,9 +15,10 @@ Verify README.md exists with complete Brief Minimo specification (from `/brief`)
 ## Create Backlog
 
 1. Read README.md and extract Brief Minimo specification
-2. Generate `docs/BACKLOG.md` with 3-5 increments
-3. Apply isolation validation for each increment
-4. Report completion with file path and validation status
+2. Extract global success criteria from "What is SUCCESS?" section in README.md
+3. Generate `docs/BACKLOG.md` with 3-5 increments (each linked to success criteria)
+4. Apply isolation validation for each increment
+5. Report completion with file path and validation status
 
 ## Isolation Validation Checklist
 
@@ -38,6 +39,13 @@ For each increment, verify **ALL** criteria below (YAGNI principle):
 
 Brief: [One-line agent purpose from README.md]
 
+## Success Criteria (from Brief Minimo)
+
+- **Metric**: [Quantifiable metric from README]
+- **Target**: [Minimum target value]
+- **Measurement**: [How success will be measured]
+- **Validation**: [How/when will be validated]
+
 ## Increments
 
 ### 1. [Increment Title]
@@ -46,6 +54,7 @@ Brief: [One-line agent purpose from README.md]
 - **Horas**: 3-6h
 - **Objetivo**: [Specific deliverable in one sentence]
 - **Isolamento**: [How this increment is architecturally isolated]
+- **Sucesso**: [How this increment contributes to global success criteria]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -57,6 +66,7 @@ Brief: [One-line agent purpose from README.md]
 - **Horas**: 3-6h
 - **Objetivo**: [Specific deliverable in one sentence]
 - **Isolamento**: [How this increment is architecturally isolated]
+- **Sucesso**: [How this increment contributes to global success criteria]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -68,6 +78,7 @@ Brief: [One-line agent purpose from README.md]
 - **Horas**: 3-6h
 - **Objetivo**: [Specific deliverable in one sentence]
 - **Isolamento**: [How this increment is architecturally isolated]
+- **Sucesso**: [How this increment contributes to global success criteria]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -77,6 +88,7 @@ Brief: [One-line agent purpose from README.md]
 
 - **Total Increments**: 3
 - **Total Hours**: ~9-18h
+- **Success Aligned**: All increments contribute to Brief Minimo metrics
 - **Next Increment**: Start with Increment 1
 ```
 
