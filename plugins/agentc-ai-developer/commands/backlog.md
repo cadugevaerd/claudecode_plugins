@@ -1,45 +1,51 @@
 ---
-description: Generate backlog with incremental steps based on Brief Minimo specification
+description: Create incremental backlog with isolated, independently deliverable slices following Brief Minimo specification
 allowed-tools: Read, Write
 argument-hint: '[create|view]'
 ---
 
-# Backlog Command
+# Create Incremental Backlog
 
-## Preconditions
+Generate increments as architecturally isolated slices with zero explicit dependencies.
 
-Verify README.md exists with Brief Minimo specification (from `/brief`).
+## Prerequisites
+
+Verify README.md exists with complete Brief Minimo specification (from `/brief`).
 
 ## Create Backlog
 
 1. Read README.md and extract Brief Minimo specification
-1. Generate `docs/BACKLOG.md` with 3-5 increments following the template below
-1. Each increment should be 3-6 hours (YAGNI principle)
-1. Report completion with file path
+2. Generate `docs/BACKLOG.md` with 3-5 increments
+3. Apply isolation validation for each increment
+4. Report completion with file path and validation status
 
-## View Backlog
+## Isolation Validation Checklist
 
-1. Read `docs/BACKLOG.md`
-1. Display summary:
-   - Total increments
-   - Total estimated hours
-   - Status distribution (⏳ Planejado / 🔄 Em Progresso / ✅ Completo)
-1. Show next increment to start
+For each increment, verify **ALL** criteria below (YAGNI principle):
+
+- **No explicit dependencies**: Increment does not require completion of other increments
+- **Standalone delivery**: Increment can be deployed/tested independently
+- **Clear boundaries**: Increment has defined inputs and outputs
+- **Decoupled logic**: Increment uses no shared state with other increments
+- **Self-contained scope**: All required code changes within increment scope
+- **Testable alone**: Increment can be unit tested without other increments
+- **No forward references**: Increment does not reference future features
 
 ## Backlog Template
 
 ```markdown
 # Backlog - [Agent Name]
 
-Brief extracted from: README.md
+Brief: [One-line agent purpose from README.md]
 
 ## Increments
 
 ### 1. [Increment Title]
 
 - **Status**: ⏳ Planejado
-- **Horas**: 3-4h
-- **Objetivo**: [One sentence describing what this delivers]
+- **Horas**: 3-6h
+- **Objetivo**: [Specific deliverable in one sentence]
+- **Isolamento**: [How this increment is architecturally isolated]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -48,8 +54,9 @@ Brief extracted from: README.md
 ### 2. [Increment Title]
 
 - **Status**: ⏳ Planejado
-- **Horas**: 4-5h
-- **Objetivo**: [One sentence describing what this delivers]
+- **Horas**: 3-6h
+- **Objetivo**: [Specific deliverable in one sentence]
+- **Isolamento**: [How this increment is architecturally isolated]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -59,7 +66,8 @@ Brief extracted from: README.md
 
 - **Status**: ⏳ Planejado
 - **Horas**: 3-6h
-- **Objetivo**: [One sentence describing what this delivers]
+- **Objetivo**: [Specific deliverable in one sentence]
+- **Isolamento**: [How this increment is architecturally isolated]
 - **Tarefas**:
   - [ ] Task 1
   - [ ] Task 2
@@ -68,13 +76,24 @@ Brief extracted from: README.md
 ## Summary
 
 - **Total Increments**: 3
-- **Total Hours**: ~12h
-- **Next Step**: Start with Increment 1
+- **Total Hours**: ~9-18h
+- **Next Increment**: Start with Increment 1
 ```
 
-## Increment Guidelines
+## View Backlog
 
-- **3-6 hours each** - Small enough to complete in one session
-- **Complete feature** - Each increment delivers working functionality
-- **Testable** - Each increment can be validated independently
-- **No dependencies** - Increments can be reordered if needed
+1. Read `docs/BACKLOG.md`
+2. Display:
+   - All increments and current status
+   - Total estimated hours
+   - Next recommended increment
+3. Flag any increments violating isolation criteria
+
+## Increment Design Rules
+
+- **Duration**: 3-6 hours maximum (one development session)
+- **Delivery**: Each increment produces working, testable code
+- **Isolation**: Zero dependencies on other increments
+- **Coupling**: No shared mutable state with other increments
+- **Reordering**: Increments can be executed in any order without side effects
+- **Testing**: Each increment has standalone test coverage
