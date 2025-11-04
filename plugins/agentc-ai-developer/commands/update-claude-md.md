@@ -1,7 +1,7 @@
 ---
 description: Integrates Agentc AI Developer guidance into project's CLAUDE.md (≤40 lines). Reads README.md from /brief, extracts Brief Minimo specification, creates focused section with commands and next steps. Progressive disclosure pattern with links to full documentation.
 allowed-tools: Read, Write
-argument-hint: "[silent|verbose]"
+argument-hint: '[silent|verbose]'
 ---
 
 # Update Project CLAUDE.md
@@ -13,31 +13,34 @@ Automatically integrate Agentc AI Developer guidance into your project's CLAUDE.
 Verify before execution:
 
 1. Completed `/brief` command (Microprocesso 1.1)
-2. README.md exists with Brief Minimo specification
-3. Project's CLAUDE.md exists or will be created automatically
+1. README.md exists with Brief Minimo specification
+1. Project's CLAUDE.md exists or will be created automatically
 
 ## Execution
 
-1. **Read project context**
-   - Locate README.md (from `/brief` command)
-   - Extract Brief Minimo specification (agent name, purpose)
+1. ## **Read project context**
+
+   - Extract Brief Minimo spLocate README.md (from `/brief` command)ecification (agent name, purpose)
    - Validate Microprocesso 1.1 completion
 
-2. **Generate CLAUDE.md section**
+1. **Generate CLAUDE.md section**
+
    - Create concise guidance section (≤40 lines)
    - Include available Agentc commands: `/brief`, `/setup-local-observability`, `/spike-agentic`, `/backlog`
    - Add usage context: when to use each command
    - Link to `plugins/agentc-ai-developer/README.md` for details
 
-3. **Update or create CLAUDE.md**
+1. **Update or create CLAUDE.md**
+
    - If CLAUDE.md exists: Add Agentc section (update if already present)
    - If CLAUDE.md missing: Create with Agentc section only
    - Preserve existing content, never remove
 
-4. **Report completion**
+1. **Report completion**
+
    - Confirm CLAUDE.md location and updated section
    - Show generated content
-   - Display execution time (<1 minute)
+   - Display execution time (\<1 minute)
 
 ## Generated Section Example
 

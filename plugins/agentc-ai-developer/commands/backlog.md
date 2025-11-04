@@ -1,103 +1,111 @@
 ---
-description: Generate or update incremental development backlog from Brief Minimo specification. Creates BACKLOG.md with YAGNI-compliant increments.
-allowed-tools: Read, Write
-argument-hint: '[create|update|view]'
+description: Generate, update, view, or refine incremental development backlog with impact assessment and estimated hours
+allowed-tools: Read, Write, Grep
+argument-hint: '[create|update|view|refine]'
 ---
 
 # Backlog Management
 
-Generate or update incremental development backlog for AI agent projects.
+## Preconditions
 
-## Modes
+1. Verify README.md exists (from `/brief` or project)
+1. Verify docs/SPIKE.md exists (from `/spike-agentic`) - optional
+1. Ensure Brief Minimo specification is complete
 
-**Mode 1: Create** - Generate new docs/BACKLOG.md from Brief Minimo specification
+If prerequisites missing: Stop and guide user to run `/brief` first.
 
-**Mode 2: Update** - Update existing backlog with completed increments or new features
-
-**Mode 3: View** - Display current backlog status and progress
-
-## Prerequisites
-
-Validate before execution:
-
-1. Check README.md exists (from `/brief`)
-1. Check docs/SPIKE.md exists (from `/spike-agentic`) - optional
-1. Verify Brief Minimo specification is complete
-
-If missing: Guide user to run `/brief` first.
-
-## Execution: Mode 1 - Create New Backlog
+## Create New Backlog
 
 1. Read README.md and extract Brief Minimo specification
 1. Read docs/SPIKE.md if exists
-1. Generate docs/BACKLOG.md with:
-   - Agent context (from Brief Minimo summary)
-   - 3-5 initial increments (YAGNI-compliant, independently deliverable)
-   - Each increment: Objective, Scope, Success Criteria, Duration
-1. Validate backlog follows incremental development principles
-1. Report creation success with file path
+1. Generate docs/BACKLOG.md with following structure for each increment:
 
-## Execution: Mode 2 - Update Existing Backlog
+### Increment Structure
+
+For each of 3-5 increments, generate:
+
+- **Name**: Clear, action-oriented increment name
+- **Status**: ⏳ PLANEJADO / 🔄 EM PROGRESSO / ✅ COMPLETO
+- **Objetivo**: What it delivers
+- **Escopo**: Feature checklist
+- **Critérios de Sucesso**: Validation criteria
+- **Horas Estimadas**: Auto-generated based on:
+  - Simple data fetching/display: 2-4 hours
+  - Medium complexity (API + processing): 4-8 hours
+  - Complex logic (state management + integration): 8-16 hours
+- **Impacto**: Auto-generated assessment:
+  - HIGH: Critical feature, enables core functionality
+  - MEDIUM: Important feature, supports primary workflow
+  - LOW: Nice-to-have, polish or utility
+
+1. Validate all increments follow YAGNI principles
+1. Report creation with file path and summary
+
+## Update Existing Backlog
 
 1. Read existing docs/BACKLOG.md
-1. Ask user: "What changed? (completed increments, new features, adjustments)"
-1. Update BACKLOG.md:
+1. Identify changes needed:
    - Mark completed increments as ✅ COMPLETO
    - Update in-progress as 🔄 EM PROGRESSO
    - Add new planned increments as ⏳ PLANEJADO
+1. For new increments: Generate Horas Estimadas and Impacto automatically
 1. Preserve implementation notes section
 1. Report update success
 
-## Execution: Mode 3 - View Status
+## View Backlog Status
 
 1. Read docs/BACKLOG.md
 1. Display summary:
-   - Completed: X increments ✅
-   - In-progress: Y increments 🔄
-   - Planned: Z increments ⏳
-1. Show next recommended increment
-1. Display progress percentage
+   - Count: Completed ✅ / In-progress 🔄 / Planned ⏳
+   - Total estimated hours for all increments
+   - Impact distribution (HIGH/MEDIUM/LOW count)
+1. Show next recommended increment to start
+1. Calculate and display progress percentage
 
-## Backlog Generation Rules
+## Refine Existing Backlog
 
-Apply YAGNI principles:
+Triggered by `/analyze-slices` when slices fail S1.1 gates.
 
-- Each increment independently deliverable
-- Start with smallest viable feature
-- Maximum 2-4 hours per increment initially
-- Avoid premature optimization
-- Focus on happy path first
+1. Read existing docs/BACKLOG.md
+1. Read list of failing slices (provided as context)
+1. For each failing slice, analyze which gates failed:
+   - **Duration issue** (not 3-6h): Recommend splitting large slices or grouping small ones
+   - **Score issue** (\<2.0): Re-assess impact or reduce estimated hours
+   - **Reversibility issue**: Add rollback plan documentation
+   - **Coupling issue**: Reduce dependencies, focus scope
+   - **Success rate issue**: Reframe objective to align with MVP metrics
+1. Propose refinement for each failing slice:
+   - Break large slices (>6h) into 2-3 smaller increments
+   - Increase estimated impact or reduce hours for low-score slices
+   - Add reversibility/rollback documentation
+   - Clarify scope isolation and dependencies
+   - Align objective with MVP success metrics
+1. Update docs/BACKLOG.md with refined slices
+1. Re-run analysis to validate improvements
+1. Report refinement results and next steps
 
-## BACKLOG.md Format
+## Impact Assessment Rules
 
-Generate with this structure:
+Assign impact level based on:
 
-```
-# Backlog - [Agent Name]
+- **HIGH**: Delivers core agent functionality, enables critical workflows, foundational feature
+- **MEDIUM**: Enhances existing features, important workflow improvement, extends core functionality
+- **LOW**: Polish, utilities, optional improvements, non-blocking features
 
-## Contexto
-[Brief Minimo summary extracted from README.md]
+## Hour Estimation Rules
 
-## Incrementos Planejados
+Apply these guidelines:
 
-### Incremento 1: [Name] - ✅ COMPLETO
-**Objetivo:** [What it delivers]
-**Escopo:**
-- [x] Feature 1
-- [x] Feature 2
-**Critérios de Sucesso:** [How to validate]
-**Duração estimada:** 2-4h
+- **2-4h**: Simple single-function features (basic retrieval, display, validation)
+- **4-8h**: Medium complexity (API integration, data processing, moderate UI)
+- **8-16h**: Complex features (state management, multi-step workflows, system integration)
+- Maximum 16h per increment (break larger work into smaller increments)
 
-[Repeat for other increments with status: 🔄 EM PROGRESSO or ⏳ PLANEJADO]
+## Output
 
-## Notas de Implementação
-[Technical decisions, trade-offs, learnings]
-```
+Display completion summary:
 
-## Next Steps
-
-After backlog creation:
-
-- Recommend starting Increment 1
-- Suggest reviewing after each completed increment
-- Mention `/spike-agentic` if spike not done yet
+- File path where backlog was created/updated
+- Total increments generated
+- Aggregated hours and impact distribution
+- Validation status
