@@ -66,6 +66,62 @@ For each slice, validate:
 
 1. For each NO-GO slice, list which gates failed and why
 
+## Fast-Track Validation (S1.1 Fast-Track)
+
+After validating against standard gates, check if slices qualify for Fast-Track (quick validation path for trivial work):
+
+### Fast-Track Criteria
+
+For each GO slice (passed all 5 gates), validate Fast-Track eligibility:
+
+- **Duration < 1h?**: Estimated hours must be under 1 hour
+
+  - FAIL: Slice takes 1h or longer (use standard development path)
+  - PASS: Slice is truly trivial (\<1h)
+
+- **Risk Level LOW?**: Assess risk classification
+
+  - FAIL: Slice has medium/high risk (modifies core logic, API changes, etc.)
+  - PASS: Low risk work (documentation, simple fixes, tests, minor refactors)
+
+- **No Architecture Changes?**: Verify slice doesn't modify system design
+
+  - FAIL: Slice changes interfaces, schemas, or architectural decisions
+  - PASS: Slice operates within existing architecture boundaries
+
+- **Clear Success Criteria?**: Validate acceptance criteria are simple and testable
+
+  - FAIL: Vague success definition or complex validation needed
+  - PASS: Simple, obvious success criteria (e.g., "button renders", "test passes")
+
+### Fast-Track Decision
+
+- **All criteria PASS**: Slice is FAST-TRACK eligible
+
+  - Development continues in Fast-Track workflow (minimal validation, quick iteration)
+  - Skip full testing cycle, use smoke tests only
+  - Enable quick feedback loops for trivial work
+
+- **Any criterion FAIL**: Slice is NOT Fast-Track eligible
+
+  - Development returns to standard cycle (all 5 gates + full validation)
+  - Requires standard testing and review process
+  - Follow regular development workflow
+
+### Fast-Track Examples
+
+**FAST-TRACK PASS** (✅ Quick Path):
+
+- "Add docstring to utility function" (\<1h, low risk, no architecture change, obvious success)
+- "Fix typo in error message" (\<1h, low risk, no architecture change, obvious success)
+- "Add test for existing function" (\<1h, low risk, no architecture change, clear success)
+
+**FAST-TRACK FAIL** (❌ Standard Path):
+
+- "Implement core classifier algorithm" (>6h, high risk, architecture-dependent, complex validation)
+- "Refactor API response schema" (1-2h, medium risk, architecture change, requires testing)
+- "Add optional parameter to function" (1h, medium risk, interface change, requires validation)
+
 ## Success Rate Calculation
 
 For each slice, calculate how much it increases the success metric:
@@ -134,5 +190,9 @@ Display analysis results:
   - Estimated success_rate delta for each slice (% contribution)
   - Cumulative success_rate if all slices execute sequentially
   - Validation: Total estimated delta meets or exceeds target gap
-- Recommendation: Next action (execute or refine)
+- **Fast-Track Classification**:
+  - FAST-TRACK eligible slices (\<1h, low risk, no architecture changes, clear success)
+  - Standard path slices (all others)
+  - Workflow recommendation for each slice
+- Recommendation: Next action (execute, fast-track, or refine)
 - Gate failure distribution (helps identify pattern issues)
