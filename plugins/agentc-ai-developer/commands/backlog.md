@@ -1,7 +1,7 @@
 ---
-description: Generate, update, view, or refine incremental development backlog with impact assessment and estimated hours
+description: Generate, update, view, refine incremental development backlog with prioritization scores and issue tracking for Macrofluxo 1
 allowed-tools: Read, Write, Grep
-argument-hint: '[create|update|view|refine]'
+argument-hint: '[create|update|view|refine|issues]'
 ---
 
 # Backlog Management
@@ -83,6 +83,58 @@ Triggered by `/analyze-slices` when slices fail S1.1 gates.
 1. Update docs/BACKLOG.md with refined slices
 1. Re-run analysis to validate improvements
 1. Report refinement results and next steps
+
+## Manage Issues and Feedback
+
+Manage issues from S2.9 (PO Validation) or rollback items from S2.8:
+
+1. Read docs/BACKLOG.md (Issues section if exists)
+2. Add new issues:
+   - Issue ID (auto-generate from existing count)
+   - Related slice ID (which slice triggered the issue)
+   - Severity (ALTA/MÉDIA/BAIXA)
+   - Problem summary
+   - Next step (refine, fast-track, or defer)
+3. Track issues in separate section of BACKLOG.md
+4. Issues can be:
+   - **Converted to new slices**: Create new slice with lower complexity
+   - **Fast-Track**: Trivial fix (<1h) with low risk
+   - **Deferred**: Low priority, wait for next planning cycle
+   - **Critical**: Trigger rollback process if blocking main
+5. Update issue status as resolution progresses
+6. Report issue summary: Total / Open / Resolved
+
+## Backlog Template Structure
+
+Generate BACKLOG.md with three main sections:
+
+### Section 1: Features and Prioritized Slices
+
+Table format with columns:
+- ID: Slice identifier (SL-001, SL-002, etc.)
+- Título: Feature name
+- Tipo: Feature type (Core / Technical Debt / Quality / etc.)
+- Impacto: 1-5 scale
+- Horas Estimadas: Estimated hours
+- Score: Impact/Hours ratio (auto-calculated)
+- Status: ➡️ / 🔄 / ✅ / ⚪ / 🚀 / 🚨
+- Notas: Context and dependencies
+
+### Section 2: Issues and Feedback (Optional)
+
+Table format with columns:
+- Issue ID: Auto-numbered (#123, #124, etc.)
+- Slice Original: Which slice (SL-XXX) caused issue
+- Severidade: ALTA / MÉDIA / BAIXA with indicator
+- Resumo do Problema: Issue description
+- Próximo Passo: Resolution action
+
+### Section 3: Integration Notes
+
+- Process flow integration
+- References to SLICE_N_TRACKER.md files
+- Fast-Track eligibility criteria
+- Rollback decision criteria
 
 ## Impact Assessment Rules
 

@@ -87,14 +87,14 @@
     },
     {
       "name": "agentc-ai-developer",
-      "description": "Brief Minimo methodology with integrated microprocessos: /brief (Microprocesso 1.1 planning) → /setup-local-observability (Microprocesso 1.2 setup) → /spike-agentic (Microprocesso 1.3 spike) → /backlog (incremental development) with skills. Five commands with help-assistant agent. microprocesso-1-2 and spike-agentic skills for progressive disclosure. Agentic loop validation, architecture exploration, LangGraph patterns. Full support for greenfield and existing projects.",
+      "description": "Brief Minimo methodology with integrated microprocessos: /brief (Microprocesso 1.1 planning) → /setup-local-observability (Microprocesso 1.2 setup) → /spike-agentic (Microprocesso 1.3 spike) → /backlog (incremental development with prioritization scores and issue tracking) with skills. Six commands with /analyze-slices for S1.1 gate validation, /backlog with create/update/view/refine/issues modes. help-assistant agent. microprocesso-1-2 and spike-agentic skills for progressive disclosure. Agentic loop validation, architecture exploration, LangGraph patterns. Full support for greenfield and existing projects.",
       "source": "./plugins/agentc-ai-developer",
-      "version": "0.6.0",
+      "version": "0.8.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "development",
-      "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "setup", "environment", "langsmith", "observability", "microprocessos", "interactive", "help-assistant", "skills", "progressive-disclosure", "best-practices", "commands", "langgraph", "agentic-loop", "spike-exploration"]
+      "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "setup", "environment", "langsmith", "observability", "microprocessos", "interactive", "help-assistant", "skills", "progressive-disclosure", "best-practices", "commands", "langgraph", "agentic-loop", "spike-exploration", "slice-validation", "s1-gates", "backlog-refinement", "backlog-template", "prioritization-score", "issue-tracking", "macrofluxo"]
     }
   ]
 }
