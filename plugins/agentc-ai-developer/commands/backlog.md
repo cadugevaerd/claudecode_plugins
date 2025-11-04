@@ -14,8 +14,8 @@ Verify README.md exists with complete Brief Minimo specification (from `/brief`)
 
 ## Create Backlog
 
-1. Read README.md and extract Brief Minimo specification
-1. Extract global success criteria from "What is SUCCESS?" section in README.md
+1. Read BRIEF_AGENTE_EMAIL.md and SPIKE.md to undestand the project and create Increments.
+1. Extract global success criteria from "What is SUCCESS?" section
 1. Assess impact level for each increment (HIGH/MEDIUM/LOW)
 1. Generate `docs/BACKLOG.md` with 3-5 increments (each linked to success criteria and impact)
 1. Apply isolation validation for each increment
