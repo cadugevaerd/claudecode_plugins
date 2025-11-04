@@ -15,10 +15,10 @@ Verify README.md exists with complete Brief Minimo specification (from `/brief`)
 ## Create Backlog
 
 1. Read README.md and extract Brief Minimo specification
-2. Extract global success criteria from "What is SUCCESS?" section in README.md
-3. Generate `docs/BACKLOG.md` with 3-5 increments (each linked to success criteria)
-4. Apply isolation validation for each increment
-5. Report completion with file path and validation status
+1. Extract global success criteria from "What is SUCCESS?" section in README.md
+1. Generate `docs/BACKLOG.md` with 3-5 increments (each linked to success criteria)
+1. Apply isolation validation for each increment
+1. Report completion with file path and validation status
 
 ## Isolation Validation Checklist
 
@@ -95,11 +95,11 @@ Brief: [One-line agent purpose from README.md]
 ## View Backlog
 
 1. Read `docs/BACKLOG.md`
-2. Display:
+1. Display:
    - All increments and current status
    - Total estimated hours
    - Next recommended increment
-3. Flag any increments violating isolation criteria
+1. Flag any increments violating isolation criteria
 
 ## Increment Design Rules
 
