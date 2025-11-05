@@ -1,7 +1,7 @@
 {
   "name": "agentc-ai-developer",
-  "version": "0.8.0",
-  "description": "Brief Minimo methodology with integrated microprocessos: /brief (Microprocesso 1.1) → /setup-local-observability (Microprocesso 1.2) → /spike-agentic (Microprocesso 1.3) → /backlog (incremental development with prioritization scores and issue tracking) with skills. Six commands with /analyze-slices for S1.1 gate validation, /backlog with create/update/view/refine/issues modes. help-assistant agent. spike-agentic and microprocesso-1-2 skills for progressive disclosure. Agentic loop validation, architecture exploration, LangGraph patterns. Full support for greenfield and existing projects.",
+  "version": "0.9.0",
+  "description": "Brief Minimo methodology with integrated microprocessos: /brief (Microprocesso 1.1) → /setup-local-observability (Microprocesso 1.2) → /spike-agentic (Microprocesso 1.3) → /backlog (incremental development with prioritization scores and issue tracking) → /analyz-slices (S2.1 validation) → /iniciar-slice (S2.2 dev start) → /novo-incremento (S2.2 incremental loop) → /finalizar-incremento (S2.2 validation loop). Eight commands with gates validation, metrics tracking, coverage validation (≥70%), regression detection, and automatic decision logic. help-assistant agent. spike-agentic and microprocesso-1-2 skills for progressive disclosure. Agentic loop validation, architecture exploration, LangGraph patterns. Full incremental development workflow with metrics validation.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"

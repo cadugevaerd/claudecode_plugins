@@ -492,6 +492,111 @@ Validates that Microprocesso 1.2 is complete, then generates `docs/microprocesso
 
 Validates architecture viability by confirming the **agentic loop** (Think → Act → Observe → Think again) works correctly.
 
+### /backlog
+Manages development backlog with slice creation, prioritization, and tracking.
+
+```bash
+/backlog create       # Create BACKLOG.md with initial slices
+/backlog view        # View current backlog status
+/backlog update      # Update slice priorities and status
+
+```text
+
+Organizes slices for Microprocesso Stage 2 (development) with features:
+- Auto-generated slice templates with acceptance criteria
+- Prioritization scoring (Impact × Success Weight)
+- Fast-Track identification for quick wins
+- Issue tracking and dependencies
+
+### /analyze-slices
+Validates slices against S1.1 decision gates and prepares them for development.
+
+```bash
+/analyze-slices          # Analyze all slices
+/analyze-slices validate # Validate specific slice gates
+/analyze-slices refine   # Suggest refinements for failed gates
+/analyze-slices auto     # Auto-refine and update status
+
+```text
+
+Executes 5 decision gates:
+1. **Gate 1**: Duration 3-6h
+2. **Gate 2**: Score ≥ 2.0 (Impact / Hours/3)
+3. **Gate 3**: Reversible (rollback plan exists)
+4. **Gate 4**: Isolated (low coupling)
+5. **Gate 5**: Increases success_rate
+
+Creates `docs/slices/SLICE_N_TRACKER.md` for each GO slice with:
+- Planning section (Section 1)
+- Placeholder for development tracking (Section 2+)
+- Decision gates evaluation results
+
+### /iniciar-slice
+Begins development on next slice from backlog.
+
+```bash
+/iniciar-slice       # Interactive mode - select slice and confirm
+/iniciar-slice auto  # Auto-select highest priority TODO slice
+
+```text
+
+For selected slice:
+1. Creates git branch: `slice-{N}-{kebab-case-title}`
+2. Captures baseline metrics (success_rate, test_count, latency)
+3. Updates `SLICE_N_TRACKER.md` Section 2 (DESENVOLVIMENTO)
+4. Initializes development checklist and environment setup
+
+Results in:
+- Active git branch with baseline metrics
+- Ready-to-code development environment
+- Tracked progress in SLICE_TRACKER.md
+
+### /novo-incremento
+Creates the next incremental development task within active slice.
+
+```bash
+/novo-incremento       # Interactive - review and accept AI suggestion
+/novo-incremento auto  # Auto-accept AI suggestion
+
+```text
+
+Analysis-driven increment creation:
+1. **Analyzes current state**: Pending criteria, git history, code direction
+2. **Suggests next increment**: Ensures ≤30 lines, 15-20 min, testable
+3. **Creates Section 3**: Documents Incremento with checklist
+4. **Validates criteria**: Acceptance criteria, reversibility, testability
+
+Each increment addresses 1-2 acceptance criteria with specific activities:
+- Atomic code changes (≤30 lines)
+- Testing requirements (TDD approach)
+- Regression validation checkpoints
+
+### /finalizar-incremento
+Completes current increment with comprehensive validation.
+
+```bash
+/finalizar-incremento   # Interactive - review all validations
+
+```text
+
+Validation pipeline:
+1. **Metrics Collection**: Runs CI.py to capture success_rate, test_count, latency
+2. **Coverage Validation** (BLOCKING): Ensures test coverage ≥70% with pytest-cov
+3. **Regression Detection**: Confirms no tests broken, maintains test_count
+4. **Self-Review Checklist**: Code quality, testing completeness, architecture
+5. **Automatic Decision**: Applies 3 stopping criteria:
+   - Success rate ≥ target?
+   - Regressão = 0?
+   - Self-review ✅?
+
+Updates `SLICE_TRACKER.md` Section 3 with:
+- Final metrics and deltas
+- Coverage report
+- Regression analysis
+- Decision: Continue or Conclude Slice
+
+**If all 3 criteria met**: Suggests `/concluir-slice` to finalize
+
 ## Agents
 
 ### help-assistant
@@ -584,11 +689,23 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 - **"create backlog"** / **"generate backlog"**: Execute `/backlog create`
 - **"update backlog"** / **"refresh backlog"**: Execute `/backlog update`
 - **"view backlog"** / **"show backlog"** / **"backlog status"**: Execute `/backlog view`
+- **"analyze slices"** / **"validate gates"** / **"slice validation"**: Execute `/analyze-slices`
+- **"start slice"** / **"begin development"** / **"start coding slice"**: Execute `/iniciar-slice`
+- **"create increment"** / **"next increment"** / **"start increment"**: Execute `/novo-incremento`
+- **"complete increment"** / **"finish increment"** / **"validate increment"**: Execute `/finalizar-incremento`
 - **"update project config"** / **"integrate agentc"**: Execute `/update-claude-md`
 
 ## Support & Contributing
 
-This is version 0.5.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos: `/brief` (Microprocesso 1.1 - planning), `/setup-local-observability` (Microprocesso 1.2 - environment setup), `/spike-agentic` (Microprocesso 1.3 - architecture validation), and `/update-claude-md` (project integration). Includes `help-assistant` agent, `microprocesso-1-2` skill, and `spike-agentic` skill for comprehensive guidance with progressive disclosure.
+This is version 0.9.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos and stage 2 development workflow:
+- **Microprocesso 1.1** - `/brief` (Planning)
+- **Microprocesso 1.2** - `/setup-local-observability` (Environment setup)
+- **Microprocesso 1.3** - `/spike-agentic` (Architecture validation)
+- **Stage 2 Development** - `/backlog`, `/analyze-slices`, `/iniciar-slice` (Slice management)
+- **Stage 2 Dev Loop** - `/novo-incremento`, `/finalizar-incremento` (Incremental development with metrics validation)
+- **Project Integration** - `/update-claude-md` (CLAUDE.md setup)
+
+Includes `help-assistant` agent, `microprocesso-1-2` and `spike-agentic` skills for comprehensive guidance with progressive disclosure. Full incremental development workflow with automatic metrics validation, coverage checking (≥70%), regression detection, and decision logic.
 
 For issues, suggestions, or contributions related to the Claude Code marketplace, visit the [plugin repository](https://github.com/cadugevaerd/claudecode_plugins).
 
