@@ -196,3 +196,126 @@ Display analysis results:
   - Workflow recommendation for each slice
 - Recommendation: Next action (execute, fast-track, or refine)
 - Gate failure distribution (helps identify pattern issues)
+
+## POST-VALIDATION: Slice Tracking
+
+After validation analysis, automatically update project files based on GO/NO-GO decisions:
+
+### For GO Slices (All Gates Passed)
+
+1. **Create Slice Tracker**:
+
+   - Create directory: `docs/slices/` (if doesn't exist)
+   - Create file: `docs/slices/SLICE_{N}_TRACKER.md` for each GO slice
+   - Use slice number from BACKLOG.md increment (e.g., "### 1." → SLICE_1_TRACKER.md)
+
+1. **Populate Tracker - Section 1 (Planning)**:
+
+   - **Slice ID**: Extract from increment number (e.g., 1)
+   - **Slice Name**: Copy from "### N. [Title]" in BACKLOG.md
+   - **Status**: Set to "➡️ Em Progresso"
+   - **Objetivo**: Copy from "- **Objetivo**:" field in BACKLOG.md (exact 1-sentence copy)
+   - **Critérios de Aceitação**: Extract 3 checkpoints from "- **Tarefas**:" checklist (convert 3 tasks to acceptance criteria)
+   - **Reversibilidade**: Extract from Gate 3 validation result (rollback plan)
+   - **Timestamp Início**: Current ISO 8601 timestamp (e.g., `2025-11-05T17:30:45`)
+
+1. **Populate Tracker - Gate Validation Section**:
+
+   - Copy all 5 Gate validation results from analysis
+   - Include PASS/FAIL status, criteria met, and score
+
+1. **Update BACKLOG.md**:
+
+   - Find increment in BACKLOG.md (by number)
+   - Replace status from "⏳ Planejado" to "📋 TODO"
+   - Add new field: `- **Tracker**: [SLICE_{N}_TRACKER.md](./slices/SLICE_{N}_TRACKER.md)`
+
+### For NO-GO Slices (Any Gate Failed)
+
+1. **Update BACKLOG.md**:
+
+   - Find increment in BACKLOG.md (by number)
+   - Replace status from "⏳ Planejado" to "🔄 Revalidar"
+   - Add field: `- **Gates Falhadas**: [Gate 1, Gate 3]` (list which gates failed)
+   - Do NOT create tracker file (tracker only created for GO slices)
+
+1. **Display Summary**:
+
+   - Show which gates failed
+   - Suggest user run `/backlog refine` to fix issues
+
+### Fast-Track Slices (GO + All Fast-Track Criteria Pass)
+
+1. **Update BACKLOG.md**:
+   - Add field: `- **Fast-Track**: 🚀 Elegível para Fast-Track`
+   - Note: This is in addition to "📋 TODO" and tracker creation
+
+### Tracker File Template
+
+Create tracker with this structure:
+
+```markdown
+# Slice {N} Tracker - {Slice Title}
+
+## Metadata
+- **Slice ID**: {N}
+- **Status**: ➡️ Em Progresso
+- **Iniciado em**: {ISO_TIMESTAMP}
+
+## Planejamento (Section 1)
+
+### Nome
+{Slice Title}
+
+### Objetivo
+{1-sentence objective from BACKLOG.md}
+
+### Critérios de Aceitação
+- [ ] {Acceptance Criterion 1 from task 1}
+- [ ] {Acceptance Criterion 2 from task 2}
+- [ ] {Acceptance Criterion 3 from task 3}
+
+### Reversibilidade
+{Rollback plan from Gate 3 validation}
+
+### Timestamp Início
+{ISO_TIMESTAMP}
+
+## Validação S1.1 (Gates)
+
+### Gate 1 - Duration (3-6h)
+- **Status**: ✅ PASS / ❌ FAIL
+- **Horas Estimadas**: {X}h
+- **Validação**: {Why passed or failed}
+
+### Gate 2 - Score >= 2.0
+- **Status**: ✅ PASS / ❌ FAIL
+- **Nível de Impacto**: HIGH / MEDIUM / LOW ({numeric value})
+- **Score**: {calculated score}
+- **Validação**: {Why passed or failed}
+
+### Gate 3 - Reversível
+- **Status**: ✅ PASS / ❌ FAIL
+- **Plano de Rollback**: {Description}
+- **Validação**: {Why passed or failed}
+
+### Gate 4 - Isolado
+- **Status**: ✅ PASS / ❌ FAIL
+- **Nível de Acoplamento**: LOW / MEDIUM / HIGH
+- **Validação**: {Why passed or failed}
+
+### Gate 5 - Contribui para Success Rate
+- **Status**: ✅ PASS / ❌ FAIL
+- **Delta Estimado**: {+X}% (closes Y% of gap)
+- **Validação**: {Why passed or failed}
+
+## Classificação Fast-Track
+- **Elegível**: ✅ YES / ❌ NO
+- **Motivo**: {Why fast-track eligible or not}
+
+## Development Log
+- `{ISO_TIMESTAMP}` - Slice approved (GO decision)
+
+## Notas
+[Developer notes will be added during development]
+```
