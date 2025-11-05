@@ -1,531 +1,366 @@
-# Microprocesso 1.2: Detailed Activity Reference
+# Microprocesso 1.2: Activity Reference
 
-Complete step-by-step instructions for all 8 setup activities.
+Complete step-by-step instructions for all 4 setup activities.
 
-## Activity 1: Create Python Virtual Environment
+## Activity 1: Verify Prerequisites
 
-**Purpose**: Isolate project dependencies from system Python
+**Purpose**: Ensure all requirements are met before starting setup
 
-**Commands**:
-
-````bash
-python -m venv venv
-
-```text
-
-On Windows, if `python` doesn't work:
+**Verification Checklist**:
 
 ```bash
-python3 -m venv venv
+# Check Brief Minimo exists
+ls -la README.md || ls -la BRIEF.md
 
-```text
+# Check Python version
+python --version
+# Should be 3.8 or higher
+
+# Check langgraph-cli is installed
+langgraph version
+
+# Check LangSmith account
+echo "Visit smith.langchain.com to verify your account"
+
+# Check LLM API key exists
+echo "Verify your LLM provider API key (OpenAI, Anthropic, Google, etc)"
+```
+
+**Success Criteria**:
+
+- ✅ README.md or BRIEF.md exists with your project specification
+- ✅ Python 3.8+ installed
+- ✅ `langgraph --version` outputs a version number
+- ✅ LangSmith account created and verified
+- ✅ LLM provider API key ready to use
+
+**Troubleshooting**:
+
+- If Python not found: Install from python.org
+- If langgraph-cli not found: Run `pip install langgraph`
+- If no LangSmith account: Visit smith.langchain.com and sign up (free)
+
+______________________________________________________________________
+
+## Activity 2: Initialize Project
+
+**Purpose**: Create LangGraph project structure with `langgraph new` (uv handles virtual environment automatically)
+
+**Prerequisites Check**:
+
+Before running, verify:
+
+```bash
+# Check if project already exists
+ls -la langgraph.json 2>/dev/null && echo "Project exists - SKIP THIS ACTIVITY"
+ls -la src/ 2>/dev/null && echo "Project exists - SKIP THIS ACTIVITY"
+```
+
+**If project exists**: Skip to Activity 3 (Configure Secrets)
+
+**If project doesn't exist**: Execute initialization
+
+**Command**:
+
+```bash
+# Option 1: Interactive mode (recommended)
+langgraph new my-agent-project
+
+# Option 2: With specific template
+langgraph new my-agent-project --template new-langgraph-project-python
+
+# Option 3: In current directory
+cd my-agent-project
+langgraph new .
+```
+
+**What `langgraph new` creates**:
+
+- `langgraph.json` - Project configuration file
+- `.env.example` - Environment variable template
+- `.gitignore` - Git ignore rules (protects .env, __pycache__)
+- `pyproject.toml` - Python package configuration
+- `uv.lock` - Dependency lock file (managed by uv automatically)
+- `src/agent/graph.py` - Your LangGraph implementation skeleton
 
 **Verification**:
 
 ```bash
+# Check project created
+ls -la langgraph.json
 
-# Check venv exists
-ls -la venv/
-
-# On Windows
-dir venv\
-
-```text
-
-**Troubleshooting**:
-- If `python -m venv` fails: Try `python3 -m venv venv`
-- If permission denied: Use `chmod +x venv/bin/activate`
-- If venv already exists: Delete with `rm -rf venv/` and create new
-
-
-## Activity 2: Activate Virtual Environment
-
-**Purpose**: Load the isolated environment so pip installs go to venv, not system
-
-**On Linux/macOS**:
-
-```bash
-source venv/bin/activate
-
-```text
-
-**On Windows (PowerShell)**:
-
-```powershell
-venv\Scripts\activate
-
-```text
-
-**On Windows (cmd.exe)**:
-
-```cmd
-venv\Scripts\activate.bat
-
-```text
-
-**Verification** (you should see `(venv)` prefix in terminal):
-
-```bash
-(venv) $ which python
-/path/to/project/venv/bin/python
-
-(venv) $ python --version
-Python 3.10.x
-
-```text
-
-**Troubleshooting**:
-- If prompt doesn't show `(venv)`: Not activated, run command again
-- If "command not found": Wrong path or venv not created yet
-- If permission denied on macOS/Linux: Run `chmod +x venv/bin/activate`
-
-
-## Activity 3: Install Core Dependencies
-
-**Purpose**: Install packages needed for LLM development and observability
-
-**Command** (with venv activated):
-
-```bash
-pip install langchain anthropic langsmith python-dotenv
-
-```text
-
-**Full install with additional packages** (optional):
-
-```bash
-pip install langchain anthropic langsmith python-dotenv pydantic pytest
-
-```text
-
-**Verification**:
-
-```bash
-pip list | grep -E "langchain|anthropic|langsmith|python-dotenv"
-
-```text
-
-Expected output:
-
-```text
-
-anthropic           0.34.x
-langchain           0.1.x
-langsmith           0.1.x
-python-dotenv       1.0.x
-
-```text
-
-**Troubleshooting**:
-- If installation is slow: Network issue or PyPI slow
-- If version conflicts: `pip cache purge` then try again
-- If specific package fails: Install packages individually
-  ```bash
-  pip install langchain
-  pip install anthropic
-  pip install langsmith
-  pip install python-dotenv
-````
-
-## Activity 4: Create .env File
-
-**Purpose**: Store API keys and configuration locally (NOT committed to git)
-
-**Location**: Project root directory
-
-**Template** (create file named `.env`):
-
-````bash
-
-# LangSmith Configuration
-LANGSMITH_API_KEY=your-key-from-smith.langchain.com
-LANGSMITH_PROJECT="your-project-name"
-LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-
-# Anthropic Configuration
-ANTHROPIC_API_KEY=your-key-from-console.anthropic.com
-
-# Environment
-ENVIRONMENT=development
-
-```text
-
-**How to create**:
-
-Using VS Code: Create file `.env` in project root, paste template
-
-Using command line:
-
-```bash
-cat > .env << 'EOF'
-LANGSMITH_API_KEY=your-key
-LANGSMITH_PROJECT="your-project"
-LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-ANTHROPIC_API_KEY=your-key
-ENVIRONMENT=development
-EOF
-
-```text
-
-**Get API Keys**:
-1. **LangSmith**: Visit smith.langchain.com → Sign up (free) → Settings → Create API key
-2. **Anthropic**: Visit console.anthropic.com → Login → API Keys → Create new key
-
-**Verification**:
-
-```bash
-
-# Check file exists
-ls -la .env
-
-# Check it has content
-cat .env
-
-# Test loading in Python
-python << 'EOF'
-from dotenv import load_dotenv
-import os
-load_dotenv()
-print("LANGSMITH_API_KEY:", bool(os.getenv('LANGSMITH_API_KEY')))
-print("ANTHROPIC_API_KEY:", bool(os.getenv('ANTHROPIC_API_KEY')))
-EOF
-
-```text
-
-**Troubleshooting**:
-- If keys not loading: Check file is in project root (not subfolder)
-- If `load_dotenv` fails: Install with `pip install python-dotenv`
-- If wrong keys: Verify from console.anthropic.com and smith.langchain.com
-
-
-## Activity 5: Create .env.example
-
-**Purpose**: Documentation for team members (template without secrets)
-
-**Location**: Project root (same directory as .env)
-
-**Template** (create file named `.env.example`):
-
-```bash
-
-# LangSmith Configuration
-LANGSMITH_API_KEY=your-api-key-here
-LANGSMITH_PROJECT=your-project-name
-LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-
-# Anthropic Configuration
-ANTHROPIC_API_KEY=your-api-key-here
-
-# Environment
-ENVIRONMENT=development
-
-```text
-
-**Purpose for team**:
-1. New team member clones repo
-2. Copies `.env.example` to `.env`
-3. Fills in their own API keys
-4. Never needs to ask "what env variables do I need?"
-
-**How to create**:
-
-Using command line:
-
-```bash
-cat > .env.example << 'EOF'
-LANGSMITH_API_KEY=your-api-key-here
-LANGSMITH_PROJECT=your-project-name
-LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-ANTHROPIC_API_KEY=your-api-key-here
-ENVIRONMENT=development
-EOF
-
-```text
-
-**Verification**:
-
-```bash
-
-# Check file exists
+# Check .env.example exists
 ls -la .env.example
 
-# Compare with .env
-diff .env .env.example
-
-# Should show only differences are actual values vs placeholders
-
-```text
-
-**Important**: `.env.example` IS committed to git (it has no secrets)
-
-
-## Activity 6: Create requirements.txt
-
-**Purpose**: Lock exact dependency versions for reproducibility
-
-**Location**: Project root
-
-**Command** (with venv activated):
-
-```bash
-pip freeze > requirements.txt
-
-```text
-
-**Result** (typical content):
-
-```text
-
-anthropic==0.34.0
-langchain==0.1.14
-langchain-community==0.0.32
-langsmith==0.1.75
-python-dotenv==1.0.0
-pydantic==2.5.0
-pydantic-core==2.14.1
-...
-
-```text
-
-**Why this matters**:
-- Locks exact versions of all packages
-- Team member runs `pip install -r requirements.txt` → exact same versions
-- Prevents "works on my machine" problems
-
-**For team onboarding**:
-
-```bash
-
-# New team member setup
-python -m venv venv
-source venv/bin/activate  # or Windows equivalent
-pip install -r requirements.txt
-
-# Now they have exact same environment as you
-
-```text
-
-**Verification**:
-
-```bash
-
-# Check file exists and has content
-ls -la requirements.txt
-wc -l requirements.txt
-
-```text
-
-**Important**: Commit `requirements.txt` to git (no secrets, safe to share)
-
-
-## Activity 7: Create .gitignore
-
-**Purpose**: Prevent accidentally committing secrets and unnecessary files
-
-**Location**: Project root
-
-**Minimal template** (copy this):
-
-```text
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
-venv/
-ENV/
-env/
-.venv
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Project specific
-*.log
-.cache/
-tmp/
-
-```text
-
-**How to create**:
-
-```bash
-cat > .gitignore << 'EOF'
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-
-# Virtual Environment
-venv/
-ENV/
-env/
-.venv
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-EOF
-
-```text
-
-**Critical files to ignore**:
-- `.env` - MUST be ignored (has secrets)
-- `venv/` - Don't commit (15GB+, recreate with requirements.txt)
-- `__pycache__/` - Generated by Python
-- `.vscode/, .idea/` - IDE configuration
-
-**Verification**:
-
-```bash
-
-# Check file exists
+# Check .gitignore exists
 ls -la .gitignore
 
-# Simulate git add (won't actually add ignored files)
-git add .
-git status
+# Check uv.lock exists
+ls -la uv.lock
+```
 
-# Should NOT show .env or venv/
+**Success Criteria**:
 
-```text
+- ✅ `langgraph.json` exists and is valid JSON
+- ✅ `.env.example` exists (no secrets)
+- ✅ `.gitignore` protects sensitive files
+- ✅ `uv.lock` exists (uv manages dependencies automatically)
+- ✅ `pyproject.toml` exists
 
 **Troubleshooting**:
-- If .env keeps showing in git: Remove from staging: `git reset .env`
-- If too much ignored: Start with minimal, add more as needed
 
+- If `langgraph new` fails: Check Python 3.8+ and `pip install --upgrade langgraph`
+- If permission denied: Try `python -m langgraph new my-project`
+- If directory already exists: Choose different directory name or use `langgraph new . --force`
 
-## Activity 8: Test LangSmith Integration
+______________________________________________________________________
 
-**Purpose**: Verify observability setup works end-to-end
+## Activity 3: Configure Secrets
 
-**Create test file** (`test_langsmith.py` in project root):
+**Purpose**: Add LLM provider API key to .env for local development
 
-```python
-import os
+### Step 1: Create .env from .env.example
+
+```bash
+# Copy template
+cp .env.example .env
+
+# Verify it was created
+ls -la .env
+cat .env
+```
+
+### Step 2: Edit .env with your API keys
+
+Using VS Code or your editor:
+
+```bash
+# Open in editor
+code .env          # VS Code
+nano .env          # nano
+vim .env           # vim
+```
+
+### Step 3: Add Required Variables
+
+Minimum required (update with your actual keys):
+
+```text
+# LangSmith Configuration
+LANGSMITH_API_KEY=lsv2_your_actual_key_from_smith_langchain_com
+
+# LLM Provider (choose one and add your key)
+OPENAI_API_KEY=sk-proj-your-openai-key           # For OpenAI
+# OR
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key      # For Anthropic
+# OR
+GOOGLE_API_KEY=your-google-gemini-key            # For Google
+```
+
+### How to Get API Keys
+
+1. **LangSmith**: Visit smith.langchain.com → Settings → Create API Key
+1. **OpenAI**: Visit platform.openai.com → API keys → Create new key
+1. **Anthropic**: Visit console.anthropic.com → API Keys → Create new key
+1. **Google**: Visit ai.google.dev → Get API Key
+
+### Step 4: Verify .env is Protected
+
+```bash
+# Check .gitignore protects .env
+cat .gitignore | grep "^.env"
+# Should output: .env
+
+# Verify .env won't be committed
+git status
+# Should NOT show .env in Untracked files
+```
+
+### Step 5: Test Loading in Python
+
+```bash
+# Test loading (uv runs in environment automatically)
+uv run python << 'EOF'
 from dotenv import load_dotenv
-from anthropic import Anthropic
+import os
 
-# Load environment variables
 load_dotenv()
 
-# Initialize Anthropic client
-client = Anthropic()
+print("LANGSMITH_API_KEY loaded:", bool(os.getenv('LANGSMITH_API_KEY')))
+print("LLM API key loaded:", bool(
+    os.getenv('OPENAI_API_KEY') or
+    os.getenv('ANTHROPIC_API_KEY') or
+    os.getenv('GOOGLE_API_KEY')
+))
+EOF
+```
 
-# Simple test
-print("Testing LangSmith integration...")
-message = client.messages.create(
-    model="claude-3-haiku-20240307",
-    max_tokens=100,
-    messages=[
-        {"role": "user", "content": "Say hello!"}
-    ]
-)
+**Success Criteria**:
 
-print("✅ LangSmith integration working!")
-print(f"Response: {message.content[0].text}")
-print(f"Check your traces at: https://smith.langchain.com")
-
-```text
-
-**Run test** (with venv activated):
-
-```bash
-python test_langsmith.py
-
-```text
-
-**Expected output**:
-
-```text
-
-Testing LangSmith integration...
-✅ LangSmith integration working!
-Response: Hello! How can I help you today?
-Check your traces at: https://smith.langchain.com
-
-```text
-
-**Verify in LangSmith**:
-1. Go to smith.langchain.com
-2. Login
-3. Click on your project
-4. Should see trace of your API call
-5. Shows: input, output, latency, tokens used
+- ✅ `.env` file exists in project root
+- ✅ Contains LANGSMITH_API_KEY with valid key
+- ✅ Contains LLM provider API key (OpenAI, Anthropic, Google, or other)
+- ✅ `.env` is protected by .gitignore
+- ✅ Python can load variables from .env
+- ✅ `git status` does NOT show .env
 
 **Troubleshooting**:
-- If connection fails: Check LANGSMITH_API_KEY is correct
-- If 401 error: API key revoked, create new one at smith.langchain.com
-- If timeout: Check internet connection
-- If "module not found": `pip install anthropic langsmith`
 
+- If keys not loading: Ensure .env is in project root, not subdirectory
+- If `load_dotenv` not found: Install with `pip install python-dotenv`
+- If wrong API key: Verify from provider's console and copy exact string
+- If git keeps tracking .env: Remove with `git rm --cached .env`
 
-## Quick Command Checklist
+______________________________________________________________________
+
+## Activity 4: Validate Setup
+
+**Purpose**: Verify LangSmith connection and confirm observability works
+
+### Step 1: Test LangSmith Connection
+
+Option A: Using langgraph CLI:
 
 ```bash
+langgraph test
+```
 
-# 1. Create venv
-python -m venv venv
+Option B: Using Python with uv:
 
-# 2. Activate (Linux/macOS)
-source venv/bin/activate
+```bash
+uv run python << 'EOF'
+import os
+from dotenv import load_dotenv
 
-# 3. Install dependencies
-pip install langchain anthropic langsmith python-dotenv
+# Load environment
+load_dotenv()
 
-# 4-5. Create .env and .env.example (use editor or cat command above)
+# Check if API keys loaded
+langsmith_key = os.getenv('LANGSMITH_API_KEY')
+llm_key = (os.getenv('OPENAI_API_KEY') or
+           os.getenv('ANTHROPIC_API_KEY') or
+           os.getenv('GOOGLE_API_KEY'))
 
-# 6. Create requirements.txt
-pip freeze > requirements.txt
+print(f"✅ LangSmith API Key loaded: {bool(langsmith_key)}")
+print(f"✅ LLM API Key loaded: {bool(llm_key)}")
 
-# 7. Create .gitignore (use editor or cat command above)
+if langsmith_key and llm_key:
+    print("\n✅ Setup validation passed!")
+    print("📊 View traces at: https://smith.langchain.com/projects")
+else:
+    print("\n❌ Setup incomplete - missing API keys")
+    exit(1)
+EOF
+```
 
-# 8. Test
-python test_langsmith.py
+### Step 2: Run Development Server
 
-```text
+```bash
+# Start local development server
+langgraph dev
 
-All activities complete when you see ✅ output and traces appear in smith.langchain.com!
-````
+# In another terminal, run your code
+uv run python your_script.py
+```
+
+### Step 3: Verify Traces in LangSmith
+
+1. Open smith.langchain.com in browser
+1. Login with your account
+1. Click on your project
+1. Scroll down - should see recent traces
+1. Click a trace to view input, output, latency, tokens
+
+**Success Criteria**:
+
+- ✅ No "ModuleNotFoundError" when importing langchain
+- ✅ LANGSMITH_API_KEY environment variable loaded
+- ✅ LLM provider API key environment variable loaded
+- ✅ `langgraph dev` starts without errors
+- ✅ Traces appear in smith.langchain.com within 30 seconds
+
+**Troubleshooting**:
+
+If traces not appearing:
+
+```bash
+# Check API key is correct
+echo $LANGSMITH_API_KEY
+
+# Check .env is being loaded
+uv run python -c "from dotenv import load_dotenv; load_dotenv(); import os; print(os.getenv('LANGSMITH_API_KEY')[:10])"
+
+# Wait 30 seconds and refresh dashboard
+# Sometimes traces take time to propagate
+
+# Check network connectivity
+ping smith.langchain.com
+
+# Verify LangSmith account access
+# Visit smith.langchain.com directly to test login
+```
+
+If `langgraph dev` fails:
+
+```bash
+# Sync dependencies with uv
+uv sync
+
+# Try reinstalling with uv
+uv pip install -e .
+
+# Check langgraph-cli version
+langgraph --version
+```
+
+______________________________________________________________________
+
+## Quick Activity Summary
+
+| Activity | Command | Time | Key Files Created |
+|----------|---------|------|-------------------|
+| 1. Verify Prerequisites | `langgraph version` | 2 min | None |
+| 2. Initialize Project | `langgraph new PROJECT` | 5 min | langgraph.json, .env.example, .gitignore |
+| 3. Configure Secrets | `cp .env.example .env` + edit | 3 min | .env |
+| 4. Validate Setup | `langgraph test` or `langgraph dev` | 5 min | None (view in LangSmith) |
+
+**Total estimated time**: ~15 minutes
+
+______________________________________________________________________
+
+## When to Skip Activities
+
+**Skip Activity 2** if:
+
+- `langgraph.json` already exists in current directory
+- `src/` directory already exists
+- You have existing LangGraph project
+
+→ Go directly to Activity 3 (Configure Secrets)
+
+**Skip Activity 3** if:
+
+- `.env` file already exists with API keys
+- You're using environment variables set elsewhere
+
+→ Go directly to Activity 4 (Validate Setup)
+
+______________________________________________________________________
+
+## File Structure Reference
+
+```
+project-root/
+├── langgraph.json                    # ← Check this in Activity 2
+├── .env                              # ← Create/edit in Activity 3
+├── .env.example                      # ← Already exists, don't modify
+├── .gitignore                        # ← Already exists, protects .env
+├── pyproject.toml                    # ← Defines dependencies
+├── uv.lock                           # ← Dependency lock file (managed by uv)
+├── src/
+│   └── agent/
+│       └── graph.py                  # ← Your agent code here
+└── README.md                         # ← Your Brief Minimo spec
+```
+
+All 4 activities complete when you see traces in smith.langchain.com! 🎉

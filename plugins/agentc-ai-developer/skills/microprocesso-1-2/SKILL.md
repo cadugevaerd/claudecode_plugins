@@ -1,11 +1,11 @@
 ---
 name: microprocesso-1-2
-description: Complete knowledge about Microprocesso 1.2 (Setup Local + Observability) - Python virtual environment setup, dependency installation, .env configuration, LangSmith integration, validation, and troubleshooting. Use when user needs detailed guidance on any of the 8 setup activities or encounters errors during environment setup.
+description: Complete knowledge about Microprocesso 1.2 (Setup Local + Observability) - LangGraph project initialization, .env configuration, LangSmith integration, validation, and troubleshooting. Use when user needs detailed guidance on setup activities or encounters errors during environment setup.
 allowed-tools: Read, Bash, Write
 ---
 
 name: microprocesso-1-2
-description: Complete knowledge about Microprocesso 1.2 (Setup Local + Observability) - Python virtual environment setup, dependency installation, .env configuration, LangSmith integration, validation, and troubleshooting. Use when user needs detailed guidance on any of the 8 setup activities or encounters errors during environment setup.
+description: Complete knowledge about Microprocesso 1.2 (Setup Local + Observability) - LangGraph project initialization, .env configuration, LangSmith integration, validation, and troubleshooting. Use when user needs detailed guidance on setup activities or encounters errors during environment setup.
 allowed-tools: Read, Bash, Write
 
 # Microprocesso 1.2: Setup Local + Observability
@@ -14,17 +14,17 @@ Complete knowledge base for implementing Microprocesso 1.2 - the environment set
 
 ## Purpose
 
-Microprocesso 1.2 guides you through setting up a reproducible, fully observable local development environment for your AI agent project.
+Microprocesso 1.2 guides you through setting up a reproducible, fully observable LangGraph project with LangSmith integration.
 
 **Key outcomes**:
 
-- ✅ Python virtual environment with isolation
-- ✅ Dependencies: LangChain, Anthropic, LangSmith, python-dotenv
-- ✅ Environment configuration (.env + .gitignore)
+- ✅ LangGraph project scaffolded with `langgraph new`
+- ✅ Environment configuration (.env + .gitignore created automatically)
+- ✅ LLM provider API key configured (your chosen provider)
 - ✅ LangSmith integration for observability
-- ✅ Complete validation and testing
+- ✅ Project ready for agent development
 
-**Total time**: ~1.5 hours | **Result**: Production-ready local environment with full observability
+**Total time**: ~15 minutes | **Result**: Production-ready LangGraph project with full observability
 
 ## Prerequisites
 
@@ -32,60 +32,28 @@ Before starting Microprocesso 1.2:
 
 ✅ Completed `/brief` command (Microprocesso 1.1)
 ✅ README.md with Brief Minimo specification
-✅ Project repository created
-✅ Python 3.10+ installed
+✅ Python 3.8+ installed
 ✅ LangSmith account (free: smith.langchain.com)
-✅ 1.5 hours available
+✅ LLM provider API key (your chosen provider)
+✅ `langgraph-cli` installed (`pip install langgraph`)
 
-## The 8 Setup Activities - Quick Overview
+## The 4 Setup Activities - Quick Overview
 
-1. **Create Python venv** - Isolated Python environment
-1. **Activate venv** - Load the isolated environment
-1. **Install dependencies** - Core packages: langchain, anthropic, langsmith, python-dotenv
-1. **Create .env** - Store API keys (LANGSMITH_API_KEY, ANTHROPIC_API_KEY)
-1. **Create .env.example** - Template for team (no secrets)
-1. **Create requirements.txt** - Lock dependency versions
-1. **Create .gitignore** - Protect secrets from git commits
-1. **Test LangSmith** - Verify observability works
+1. **Verify Prerequisites** - Check all requirements before starting
+1. **Initialize Project** - Run `langgraph new PROJECT_NAME` (skip if project exists)
+1. **Configure Secrets** - Add LANGSMITH_API_KEY and LLM_API_KEY to .env
+1. **Validate Setup** - Test LangSmith connection and verify observability works
 
 For detailed step-by-step instructions on each activity, see: **REFERENCE.md**
 
-## Operating Modes
-
-### Guiado (Guided - Full Manual Control)
-
-**Best for**: Learning, understanding each step
-
-- Command explains what to do
-- You execute commands manually
-- Command validates results
-- You maintain full control
-
-### Automático (Automatic - Hands-Off)
-
-**Best for**: Speed, reproducibility
-
-- Command describes what will happen
-- Executes bash commands automatically
-- You monitor progress
-- Fastest approach (~20 minutes)
-
-### Misto (Mixed - Choose Per Activity)
-
-**Best for**: Flexibility
-
-- For each activity: Choose Manual or Automatic
-- You control learning/speed trade-off
-- Balanced approach (~1.5 hours)
-
 ## Key Concepts
 
-**Virtual Environment (venv)**
+**LangGraph Project Structure**
 
-- Isolated Python environment specific to your project
-- Each project has its own packages and versions
-- Prevents conflicts between projects
-- Always activate before working: `source venv/bin/activate`
+- `langgraph.json` defines your project configuration
+- Auto-generated virtual environment with dependencies isolated
+- Supports multiple language targets (Python, JavaScript)
+- Ready for local development and LangGraph cloud deployment
 
 **Environment Variables (.env)**
 
@@ -100,13 +68,13 @@ For detailed step-by-step instructions on each activity, see: **REFERENCE.md**
 - All traces automatically sent and visible in dashboard
 - Free tier generous and production-ready
 - Requires: API key from smith.langchain.com
-- Activated: `@trace` decorator on functions
+- Activated: `@traceable` decorator on functions or automatic with LangGraph
 
-**Reproducibility**
+**Flexibility with LLM Providers**
 
-- requirements.txt locks exact dependency versions
-- Team members use `pip install -r requirements.txt` to recreate environment
-- Ensures consistent behavior across machines
+- Choose any LLM provider: Anthropic Claude, OpenAI GPT, Google Gemini, etc.
+- Configure via environment variable (LLM_API_KEY or provider-specific)
+- Switch providers without changing codebase structure
 
 ## Common Issues and Quick Fixes
 
@@ -142,52 +110,57 @@ For comprehensive troubleshooting: See **TROUBLESHOOTING.md**
 
 ````bash
 
-# Activate environment
-source venv/bin/activate          # Linux/macOS
-venv\Scripts\activate             # Windows
+# Initialize a new LangGraph project
+langgraph new my-agent-project
 
-# Install dependencies
+# Check if langgraph-cli is installed
+langgraph version
+
+# Run local development server
+langgraph dev
+
+# Activate virtual environment
+source .venv/bin/activate        # Linux/macOS (if using .venv)
+.venv\Scripts\activate           # Windows
+
+# Install dependencies from lock file
 pip install -r requirements.txt
-
-# Lock current dependencies
-pip freeze > requirements.txt
-
-# Test setup
-python validate_setup.py
 
 # Check API keys loaded
 python -c "import os; print(os.getenv('LANGSMITH_API_KEY'))"
 
-# Run LangSmith tests
-python test_langsmith.py
+# Validate LangSmith connection
+langgraph test
 
 ```text
 
 
 ## Next Steps After Setup
 
-After completing all 8 activities:
+After completing all 4 activities:
 
-1. **Verify everything works** - Run `python validate_setup.py`
-2. **Check LangSmith dashboard** - Visit smith.langchain.com/projects
-3. **Start coding** - Begin Microprocesso 1.3 (coming soon)
-4. **Share with team** - They use `requirements.txt` to setup
-5. **Monitor observability** - View all traces in LangSmith
+1. **Verify LangSmith connection** - Check smith.langchain.com/projects
+2. **Review langgraph.json** - Understand your project configuration
+3. **Start developing** - Begin Microprocesso 1.3 (Spike Agentic)
+4. **Monitor observability** - View all traces in LangSmith dashboard
+5. **Test locally** - Run `langgraph dev` for local testing
 
 
-## File Structure Created
+## File Structure Created by `langgraph new`
 
 ```text
 
 project-root/
-├── venv/                    # Virtual environment (NOT committed)
-├── .env                     # Secrets (NOT committed)
-├── .env.example            # Template (committed)
-├── .gitignore              # Prevents committing .env
-├── requirements.txt        # Locked dependencies
-├── test_langsmith.py       # Integration test
-├── validate_setup.py       # Setup validation
-└── README.md               # Your Brief Minimo spec
+├── langgraph.json              # Project configuration
+├── .env                        # Your secrets (NOT committed)
+├── .env.example                # Template (committed)
+├── .gitignore                  # Protects .env, __pycache__, etc
+├── pyproject.toml             # Python package configuration
+├── requirements.txt           # Locked dependencies (if using pip)
+├── src/                       # Your source code
+│   └── agent/
+│       └── graph.py           # Your LangGraph implementation
+└── README.md                  # Your Brief Minimo spec
 
 ```text
 
@@ -196,9 +169,9 @@ project-root/
 
 For detailed guidance on specific topics:
 
-- **Step-by-step instructions**: See **REFERENCE.md** (8 activities with templates)
+- **Step-by-step instructions**: See **REFERENCE.md** (4 activities with templates)
 - **Troubleshooting guide**: See **TROUBLESHOOTING.md** (common issues and solutions)
-- **Validation scripts**: See **VALIDATION.md** (setup testing and verification)
+- **LangGraph documentation**: https://langchain-ai.github.io/langgraph/
 
 
 This skill provides guidance for `/setup-local-observability` command and help when users encounter setup issues. See plugin README.md for complete overview.

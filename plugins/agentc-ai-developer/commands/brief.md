@@ -1,7 +1,7 @@
 ---
-description: "Interactive Brief Minimo interview - answer 5 fundamental questions to define your AI agent's scope and generate production-ready README.md specification"
+description: Interactive Brief Minimo interview - answer 5 fundamental questions to define your AI agent's scope and generate production-ready README.md specification
 allowed-tools: Read, Write, AskUserQuestion, Glob, Grep
-argument-hint: ""
+argument-hint: ''
 ---
 
 # Brief Minimo - Agent Planning Session
@@ -54,7 +54,7 @@ Quantifiable success metrics
 **Steps 1-2**: Quick-path if brief already defined
 
 1. Search the repository for existing Brief Minimo documentation (BRIEF.md, README.md, docs/)
-2. If all 5 questions are found and documented:
+1. If all 5 questions are found and documented:
    - Confirm understanding with user
    - If confirmed → Skip to Phase 3 (Generation)
    - If not confirmed → Proceed to Phase 2
@@ -64,6 +64,7 @@ Quantifiable success metrics
 **Steps 3-4**: Detailed planning session if starting fresh
 
 3. Interview user to collect all 5 questions:
+
    - Ask each question sequentially
    - After each response:
      - Provide feedback on specificity level
@@ -71,7 +72,8 @@ Quantifiable success metrics
      - Request real examples if description is too generic
      - Continue to next question only when response meets specificity threshold
 
-4. Set clear expectations during interview:
+1. Set clear expectations during interview:
+
    - All metrics must be measurable (not subjective)
    - All examples must be concrete (not generic)
    - Answers define the entire architecture going forward
@@ -81,6 +83,7 @@ Quantifiable success metrics
 **Steps 5-6**: Create official Brief Minimo specification
 
 5. Generate official Brief Minimo documentation:
+
    - **Location**: Create `docs/BRIEF.md` (or update `README.md` in project root)
    - **Sections**:
      - **Agent Purpose**: Single sentence with action verb from Q1
@@ -94,7 +97,8 @@ Quantifiable success metrics
      - Verify all metrics are measurable and achievable
      - Confirm all responses are concrete and action-oriented
 
-6. Post-Generation Review (final step):
+1. Post-Generation Review (final step):
+
    - Display generated documentation to user for review
    - Offer option to refine any section
    - Confirm file is saved to project repository
