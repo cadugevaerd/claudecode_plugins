@@ -1,87 +1,118 @@
 ---
-description: 100% interactive Brief Minimo interview - 5 fundamental questions to define your AI agent's scope. Collects structured responses, validates completeness, and generates production-ready README.md specification. No agent delegation - complete process in single command.
-allowed-tools: Read, Write, AskUserQuestion
+description: "Interactive Brief Minimo interview - answer 5 fundamental questions to define your AI agent's scope and generate production-ready README.md specification"
+allowed-tools: Read, Write, AskUserQuestion, Glob, Grep
+argument-hint: ""
 ---
 
-# Brief Minimo - AI Agent Planning
+# Brief Minimo - Agent Planning Session
 
-**INTERACTIVE**: Guides you through a complete 30-minute Brief Minimo planning session - no agent delegation.
+Run a complete, structured Brief Minimo planning session to define your AI agent's scope with precision.
 
-Fully interactive command that asks 5 fundamental questions, validates your responses for specificity, and generates a production-ready README.md specification document.
+## Core Questions Framework
 
-## TL;DR
+The Brief Minimo process revolves around 5 fundamental questions that establish precise scope:
 
-`/brief` → Answer 5 questions → Validation → README.md specification
+### Question 1: What does the agent DO?
 
-**Time**: ~30 minutes
-**Result**: Complete Brief Minimo specification ready for architecture & development
+Core functionality as single action verb (e.g., "Extract", "Validate", "Transform")
 
-## ⚠️ Prerequisites
+- **Request**: Concrete description with one clear responsibility
+- **Validate**: Must be action-oriented, not conceptual
 
-- ✅ 15-20 minutes of focused time
-- ✅ Clear idea of what your agent should do (or existing agent to update/document)
-- ✅ Concrete examples ready (not conceptual descriptions)
-- ✅ Be prepared to think about specific metrics and tools
+### Question 2: What is the INPUT?
 
-## The 5 Fundamental Questions
+Complete input specification
 
-The Brief Minimo methodology asks you to answer these 5 clear questions:
+- **Request**: Data type, exact format, maximum size, real example
+- **Validate**: Must include specific data structure or sample
 
-1. **What does the agent DO?** - Core functionality in one clear action verb
-1. **What is the INPUT?** - Data type, format, maximum size, real example
-1. **What is the OUTPUT?** - Expected structure, success example, error example
-1. **What is the TOOL/API?** - Single tool, access confirmation, cost, backup alternative
-1. **What is SUCCESS?** - Quantifiable metric, minimum target, measurement method, dataset availability
+### Question 3: What is the OUTPUT?
 
-## Execution Flow
+Complete output specification
 
-1. **Context Detection** - Check if new project or existing agent
-1. **Interactive Interview** - Answer 5 questions with validation feedback
-1. **Review & Refinement** - Verify answers are specific and complete
-1. **Generate README.md** - Produce production-ready specification
+- **Request**: Expected structure, success example, error example
+- **Validate**: Must show concrete output samples, not descriptions
 
-## Getting Started
+### Question 4: What is the TOOL/API?
 
-Simply run:
+Primary external tool or API dependency
 
-````bash
-/brief
+- **Request**: Single tool name, access requirements, costs, backup alternative
+- **Validate**: Must have confirmation of tool access availability
 
-```text
+### Question 5: What is SUCCESS?
 
-**What to have ready**:
+Quantifiable success metrics
 
-- 15-20 minutes of focused time
-- Clear idea of what your agent should do (or existing agent to document)
-- Concrete examples (not conceptual descriptions)
+- **Request**: Specific metric, minimum acceptable target, measurement method, dataset for validation
+- **Validate**: Must be measurable, not subjective
 
-**Respond with**:
+## Execution Workflow
 
-- Specific details and examples
-- Real sample data (not generic descriptions)
-- Measurable metrics (not vague goals)
-- Concrete implementation details (not "we'll figure it out later")
+### Phase 1: Discovery & Validation
 
-## The Brief Minimo Output
+**Steps 1-2**: Quick-path if brief already defined
 
-After completion, you'll have:
+1. Search the repository for existing Brief Minimo documentation (BRIEF.md, README.md, docs/)
+2. If all 5 questions are found and documented:
+   - Confirm understanding with user
+   - If confirmed → Skip to Phase 3 (Generation)
+   - If not confirmed → Proceed to Phase 2
 
-✅ **Agent Purpose** - Clear, single-sentence description with action verb
-✅ **Input Specification** - Type, format, size limits, real examples
-✅ **Output Specification** - Exact structure, success cases, error handling
-✅ **Tool/API Requirements** - Primary tool, auth, costs, backup plan
-✅ **Success Metrics** - Quantifiable targets, measurement method, validation strategy
+### Phase 2: Interactive Interview
 
-All packaged in a **production-ready README.md** specification.
+**Steps 3-4**: Detailed planning session if starting fresh
 
-After running `/brief`, you'll have:
+3. Interview user to collect all 5 questions:
+   - Ask each question sequentially
+   - After each response:
+     - Provide feedback on specificity level
+     - Flag vague or conceptual responses as needing more detail
+     - Request real examples if description is too generic
+     - Continue to next question only when response meets specificity threshold
 
-✅ Complete Brief Minimo specification in README.md
-✅ Everything needed for architecture and design
-✅ Crystal-clear input/output examples
-✅ Quantifiable success metrics
-✅ Tool/API requirements validated
-✅ Ready for Microprocesso 1.2 (`/setup-local-observability`)
+4. Set clear expectations during interview:
+   - All metrics must be measurable (not subjective)
+   - All examples must be concrete (not generic)
+   - Answers define the entire architecture going forward
 
-The brief becomes your specification reference throughout development.
-````
+### Phase 3: Documentation Generation
+
+**Steps 5-6**: Create official Brief Minimo specification
+
+5. Generate official Brief Minimo documentation:
+   - **Location**: Create `docs/BRIEF.md` (or update `README.md` in project root)
+   - **Sections**:
+     - **Agent Purpose**: Single sentence with action verb from Q1
+     - **Input Specification**: Complete details from Q2 with real examples
+     - **Output Specification**: Structure and samples from Q3 (both success & error cases)
+     - **Tool/API Requirements**: Details from Q4 with access confirmation
+     - **Success Metrics**: Quantifiable targets from Q5 with measurement method
+     - **Next Steps**: Reference to `/setup-local-observability` for environment setup
+   - **Quality Assurance**:
+     - Ensure all examples use real, specific data (not generic placeholders)
+     - Verify all metrics are measurable and achievable
+     - Confirm all responses are concrete and action-oriented
+
+6. Post-Generation Review (final step):
+   - Display generated documentation to user for review
+   - Offer option to refine any section
+   - Confirm file is saved to project repository
+   - Provide reference: *"Brief Minimo specification is now your source of truth for architecture and development"*
+   - Suggest next step: `/setup-local-observability` to configure local environment
+
+## Quality Checkpoints
+
+| Question | Specificity Check | Real Data | Example Required |
+|----------|------------------|-----------|------------------|
+| Q1 (DO) | Action verb present | Yes | Responsibility statement |
+| Q2 (INPUT) | Data structure defined | Yes | Sample data |
+| Q3 (OUTPUT) | Both success & error | Yes | Sample outputs |
+| Q4 (TOOL/API) | Access confirmed | Yes | Tool requirements |
+| Q5 (SUCCESS) | Measurable metric | Yes | Measurement method |
+
+## Integration
+
+- **Previous step**: Project initialization or architecture planning
+- **Next step**: `/setup-local-observability` for local environment configuration
+- **Related**: `/spike-agentic` to implement agent with agentic loop based on Brief Minimo
