@@ -319,3 +319,49 @@ Create tracker with this structure:
 ## Notas
 [Developer notes will be added during development]
 ```
+
+## Next Steps - Start Development
+
+After all GO slices are validated and trackers created:
+
+**Execute `/iniciar-slice` to start development**:
+
+1. **Automatic slice selection**:
+
+   - Selects next eligible slice with status `📋 TODO`
+   - Prioritizes Fast-Track slices for quick wins
+   - Orders by Impact level (HIGH → MEDIUM → LOW)
+
+1. **Initialize development environment**:
+
+   - Creates git branch: `slice-{N}-{kebab-case-title}`
+   - Captures baseline metrics via CI.py
+   - Updates BACKLOG.md: `📋 TODO` → `➡️ Em Progresso`
+   - Populates Section 2 (DESENVOLVIMENTO) in SLICE_TRACKER.md
+
+1. **Ready for TDD development**:
+
+   - Write tests first (recommended)
+   - Implement functionality
+   - Track progress in SLICE_TRACKER.md Development Log
+
+### Command Usage
+
+```bash
+# Interactive mode (ask for confirmation)
+/iniciar-slice
+
+# Auto mode (skip confirmation)
+/iniciar-slice auto
+```
+
+### Workflow Integration
+
+```text
+1. /brief                   → Define agent scope
+2. /backlog create          → Create BACKLOG.md with slices
+3. /analyze-slices validate → Validate slices against S1.1 gates
+4. /iniciar-slice           ← CREATE SLICE TRACKERS AND START HERE
+5. [Development]            → Write code and tests
+6. (Future) /concluir-slice → Record completion metrics
+```
