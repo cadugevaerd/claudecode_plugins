@@ -1,12 +1,12 @@
 ---
-description: Finalize current increment with metrics validation, coverage check (≥70%), regression tests, and automatic decision on next steps
+description: Finalize current increment with metrics validation, regression detection, and automatic decision on next steps
 allowed-tools: Read, Bash, Write, Grep, AskUserQuestion
 argument-hint: ''
 ---
 
 # Finalizar Incremento - Complete Increment Validation Loop
 
-Finalize the current increment by validating metrics, ensuring test coverage ≥70%, checking for regressions, and automatically determining whether to continue or conclude the slice.
+Finalize the current increment by validating metrics, checking for regressions, and automatically determining whether to continue or conclude the slice.
 
 ## Preconditions
 
@@ -15,9 +15,8 @@ Verify before starting:
 1. **SLICE_N_TRACKER.md exists** - Slice must be initialized
 1. **Section 3 (INCREMENTOS) exists** - Must have created incremento with `/novo-incremento`
 1. **Incremento N exists with status "Em Progresso"** - Current increment active
-1. **At least one commit since incremento start** - Code changes made
+1. **At least one commit since incremento start** - Code changes made (validates implementation)
 1. **Git working directory is clean** - No uncommitted changes
-1. **pytest-cov installed** - For coverage validation: `pip install pytest-cov`
 1. **CI.py exists in project root** - For metrics collection
 
 If any precondition fails: Stop and guide user to complete prerequisites.
@@ -71,32 +70,7 @@ Execute CI.py to capture final metrics:
      - Test Count Delta: (Final - Baseline)
      - Latency Delta: (Final - Baseline)ms
 
-### Step 3: Validate Test Coverage (BLOCKING)
-
-Validate that test coverage >= 70%:
-
-1. **Run pytest with coverage**:
-
-   ```bash
-   uv run pytest --cov --cov-report=json --cov-report=term
-   ```
-
-1. **Extract coverage %**:
-
-   - Parse output: `TOTAL` coverage line
-   - Extract percentage: {Z}%
-
-1. **Validate >= 70%**:
-
-   - If coverage >= 70%:
-     - Continue to Step 4
-   - If coverage < 70%:
-     - **BLOCK**: "❌ Coverage too low: {Z}% < 70% minimum"
-     - Display: "Add more tests to reach 70% coverage"
-     - Display: Missing coverage areas
-     - Exit with error (do NOT continue)
-
-### Step 4: Validate Regressions
+### Step 3: Validate Regressions
 
 Check for breaking changes:
 
@@ -127,7 +101,7 @@ Check for breaking changes:
    - If no regressions: `✅ Regressão = 0`
    - If regressions: `⚠️ Regressão = {count}`
 
-### Step 5: Self-Review Validation
+### Step 4: Self-Review Validation
 
 Present interactive checklist:
 
@@ -159,7 +133,7 @@ Resultado: ✅ APPROVED | ❌ NEEDS REVISION
 
 User must answer all 4 questions before proceeding.
 
-### Step 6: Apply Stopping Criteria
+### Step 5: Apply Stopping Criteria
 
 Evaluate the 3 decision criteria:
 
@@ -185,7 +159,7 @@ All checklist items: ✅ PASS
 Result: ✅ PASS
 ```
 
-### Step 7: Make Automatic Decision
+### Step 6: Make Automatic Decision
 
 Based on 3 criteria:
 
@@ -248,7 +222,6 @@ After all validations complete, update Section 3.N:
 #### Métricas Finalizadas
 - **Success Rate**: {Y}% (delta: +{Y-baseline}%)
 - **Test Count**: {N} (delta: +{N-baseline})
-- **Coverage**: {Z}%
 - **Avg Latency**: {W}ms (delta: {W-baseline}ms)
 - **Capturado em**: {ISO_TIMESTAMP}
 ```
@@ -257,7 +230,6 @@ After all validations complete, update Section 3.N:
 
 ```markdown
 #### Validações
-- ✅ Coverage ≥ 70%: {Z}%
 - ✅ Regressão = 0: {count} detected
 - ✅ Self-review: [PASSED/FAILED per item]
 ```
@@ -296,12 +268,10 @@ Show user comprehensive summary:
 📊 MÉTRICAS CAPTURADAS:
    Success Rate: {Y}% (baseline: {X}%, delta: +{Y-X}%)
    Test Count: {N} tests (baseline: {B}, delta: +{N-B})
-   Coverage: {Z}% (✅ >= 70% required)
    Latency: {W}ms
    Timestamp: {ISO_TIMESTAMP}
 
 ✓ VALIDAÇÕES:
-   ✅ Coverage >= 70%: {Z}%
    ✅ Regressão = 0: {regressão_count} detected
    ✅ Self-review checklist: ALL PASSED
 
@@ -355,13 +325,6 @@ Show user comprehensive summary:
 - Ask: "Fix tests and try again? (y/n)"
 - If no: Offer to manually set metrics
 
-**If coverage < 70%**:
-
-- Block with error message
-- Suggest areas needing more tests
-- Do NOT update incremento status
-- User must add tests and re-run
-
 **If regressions detected**:
 
 - Display broken tests
@@ -394,39 +357,9 @@ Show user comprehensive summary:
 1. Loop: goto 2 for Incremento 2, 3, etc
 1. After all criteria met: `/concluir-slice` → Section 4 created, merge to main
 
-## Configuration Requirements
-
-### pytest-cov Setup
-
-If not already present, project should have:
-
-**pytest.ini or pyproject.toml**:
-
-```ini
-[tool:pytest]
-addopts = --cov=. --cov-report=json --cov-report=html
-testpaths = tests
-```
-
-Or in pyproject.toml:
-
-```toml
-[tool.pytest.ini_options]
-addopts = "--cov=. --cov-report=json --cov-report=html"
-testpaths = ["tests"]
-```
-
-### Installation
-
-If pytest-cov not installed:
-
-```bash
-uv add pytest-cov --dev
-```
-
 ## Tips for Best Results
 
-1. **Run frequently**: Don't wait until end to check coverage
+1. **Validate early and often**: Check metrics and regressions frequently
 1. **TDD approach**: Write tests before code
 1. **Check regressions**: Ensure no existing tests break
 1. **Review code**: Self-review checklist is important

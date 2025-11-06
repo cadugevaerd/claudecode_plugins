@@ -307,11 +307,41 @@ Captured at: {ISO_TIMESTAMP}
 - [ ] Branch created and verified
 
 ### Development Checkpoints
-- [ ] Tests written (TDD approach recommended)
+
+#### Testing Tasks (Slice-Level Quality Gates)
+- [ ] **Smoke tests** created for critical paths
+- [ ] **Unit tests** written for all new functions/classes
+- [ ] **Integration tests** (if applicable - see criteria below)
+- [ ] **Regression tests** added to prevent breaking changes
+- [ ] **Test coverage** validated: ≥70% coverage achieved
+- [ ] All tests passing locally (pytest)
+
+#### Implementation Tasks
 - [ ] Core implementation complete
 - [ ] Edge cases handled
-- [ ] Code reviewed
+- [ ] Code follows project patterns
+
+#### Quality Review
+- [ ] Code reviewed (self or peer)
 - [ ] CI.py validation passed with no regressions
+- [ ] Documentation updated (if applicable)
+
+---
+
+**Integration Tests Criteria** (when to include):
+
+Add integration tests if your slice involves:
+- ✅ External APIs or services (HTTP, gRPC, webhooks)
+- ✅ Database operations (multiple tables, transactions)
+- ✅ Multiple components interaction (e.g., LangChain chains + tools)
+- ✅ Message queues or async processing
+- ✅ Authentication/authorization flows
+- ✅ File system operations with side effects
+
+Skip integration tests if:
+- ❌ Pure business logic (use unit tests)
+- ❌ Single component/class (use unit tests)
+- ❌ No external dependencies
 
 ### Metrics Delta (Target vs Actual)
 - **Target Success Rate Delta**: [from Brief Minimo Gate 5]
@@ -319,14 +349,14 @@ Captured at: {ISO_TIMESTAMP}
 - **Expected Contribution**: [% of gap closed by this slice]
 ```
 
-3. **Update Metadata status**:
+1. **Update Metadata status**:
 
    - Find: `- **Status**: ➡️ Em Progresso` in Metadata
    - Ensure timestamp is recent: `- **Iniciado em**: {current_ISO_TIMESTAMP}`
 
 1. **Display confirmation**:
 
-```
+```markdown
 📝 SLICE_TRACKER.md Updated:
    ✓ Section 2 (DESENVOLVIMENTO) added
    ✓ Baseline metrics recorded
@@ -374,7 +404,7 @@ After all updates completed:
 
 1. **Display success summary**:
 
-```
+```markdown
 ✅ Slice {N} initialized successfully!
 
 📂 Files Updated:
