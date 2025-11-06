@@ -2,6 +2,45 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.10.0] - 2025-11-06
+
+### Adicionado
+
+- **Integração MCP (Model Context Protocol)** para LangChain e LangGraph
+  - Acesso em tempo real à documentação oficial do LangChain/LangGraph
+  - Configuração automática via `.mcp.json` usando `mcpdoc`
+  - Transporte stdio (standard input/output) sem instalação manual
+  - Fontes:
+    - LangChain: `https://python.langchain.com/llms.txt`
+    - LangGraph: `https://langchain-ai.github.io/langgraph/llms.txt`
+  - Disponível automaticamente durante:
+    - `/spike-agentic`: Padrões de arquitetura LangGraph e exemplos de código
+    - `/novo-incremento`: Referências de API durante implementação
+    - Desenvolvimento: Consulta on-demand através do Claude Code
+
+### Modificado
+
+- **plugin.json** atualizado para versão 0.10.0
+  - Adicionado campo `"mcp": ".mcp.json"`
+  - Descrição expandida para mencionar integração MCP
+  - Keywords expandidas: `"mcp"`, `"model-context-protocol"`
+- **README.md** com nova seção "MCP Integration"
+  - O que é MCP e seus benefícios
+  - Como funciona a integração
+  - Casos de uso durante desenvolvimento
+  - Seção "Support & Contributing" atualizada para v0.10.0
+
+### Melhorias
+
+- **Documentação sempre atualizada**: Acesso à documentação oficial mais recente do LangChain/LangGraph
+- **Desenvolvimento mais rápido**: Acesso rápido a assinaturas de API e padrões de uso
+- **Ajuda contextual**: Exemplos relevantes durante spike e incrementos
+- **Zero configuração**: Funciona automaticamente após instalação do plugin
+
+### Informação de Versão
+
+Este é o v0.10.0 (MINOR update) do Agentc AI Developer com integração MCP para documentação em tempo real do LangChain e LangGraph. Agora os desenvolvedores têm acesso automático às melhores práticas e APIs mais recentes durante todo o ciclo de desenvolvimento.
+
 ## [0.8.0] - 2025-11-03
 
 ### Adicionado

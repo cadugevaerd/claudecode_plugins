@@ -1,6 +1,8 @@
 ---
-description: Generate agent spike implementation plan (SPIKE.md) with suggested code structure, file organization, and agentic loop architecture based on Brief Minimo specification
+description: Generate agent spike plan (SPIKE.md) with file structure and agentic loop
 allowed-tools: Read, Write, Bash(mkdir:*)
+argument-hint: ''
+model: ''
 ---
 
 # Microprocesso 1.3: Spike Agentic
@@ -72,3 +74,34 @@ Creates `docs/SPIKE.md` containing:
 ## Next Steps
 
 After generation, open `docs/SPIKE.md` and follow the implementation plan phase by phase using suggested code structure and file organization.
+
+## 📝 Exemplo
+
+```bash
+# No diretório do projeto após /brief e /setup-local-observability
+/spike-agentic
+
+# Resultado esperado:
+# ✅ README.md lido com sucesso
+# ✅ Brief Minimo extraído (agent name, purpose, tools)
+# ✅ docs/ criado
+# ✅ docs/SPIKE.md gerado com:
+#    - Agent context from README.md
+#    - Suggested Python file structure
+#    - Agentic loop architecture (Pensar→Agir→Observar)
+#    - Implementation timeline (3-4h breakdown)
+#    - LangSmith integration steps
+```
+
+## ✅ Critérios de Sucesso
+
+- [ ] README.md existe e foi lido com sucesso
+- [ ] Brief Minimo extraído (agent name, purpose, tools, success criteria)
+- [ ] docs/ directory criado (se não existia)
+- [ ] docs/SPIKE.md gerado com estrutura completa
+- [ ] Section 1: Agent Context presente com dados do README.md
+- [ ] Section 2: Directory Structure com layout Python sugerido
+- [ ] Section 3: Implementation Plan com 5 fases detalhadas (3-4h total)
+- [ ] Section 4: Code Patterns com templates LangGraph (TypedDict, nodes, graph)
+- [ ] Arquivo SPIKE.md legível e bem formatado em Markdown
+- [ ] Próximos passos claros para começar implementação

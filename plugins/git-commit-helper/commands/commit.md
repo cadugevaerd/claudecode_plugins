@@ -1,5 +1,8 @@
 ---
 description: Realiza commit com validações completas via agente especializado
+allowed-tools: Task, Bash, Read, Grep, Glob
+model: ''
+argument-hint: (sem argumentos necessários)
 ---
 
 # Comando: /commit
@@ -41,6 +44,54 @@ Execute o processo completo sem interrupções, a menos que encontre:
 - Conflitos no push (PARE e instrua resolução)
 
 Ao final, mostre resumo completo com estatísticas.
+
+## 📊 Formato de Saída
+
+Ao final da execução, você receberá:
+
+```text
+✅ Commit realizado com sucesso!
+
+📊 Resumo:
+- Arquivos modificados: X
+- Linhas adicionadas: +X
+- Linhas removidas: -X
+- Tipo de commit: feat/fix/docs/chore/refactor/style/test
+- Mensagem: "tipo(escopo): descrição"
+
+🚀 Push disponível: [Sim/Não]
+```
+
+Em caso de erros:
+
+```text
+❌ Erro: Arquivos sensíveis detectados
+📁 Arquivos: .env, credentials.json
+💡 Ação: Remova do staging antes de continuar
+```
+
+```text
+❌ Erro: Testes falhando
+📊 Falhas: X testes
+💡 Ação: Corrija os erros antes de commitar
+```
+
+```text
+❌ Erro: Conflito no push
+🔀 Status: Seu branch está atrás do remote
+💡 Ação: Execute git pull --rebase antes de fazer push
+```
+
+## ✅ Critérios de Sucesso
+
+- [ ] Nenhum arquivo sensível detectado (.env, \*.key, credentials)
+- [ ] CI/CD executado sem erros (testes, linting, build)
+- [ ] Git diff analisado e mudanças categorizadas
+- [ ] Documentação verificada e atualizada (se necessário)
+- [ ] Mensagem de commit gerada seguindo Conventional Commits
+- [ ] Commit executado com sucesso
+- [ ] Push realizado (se solicitado) ou disponível para execução
+- [ ] Resumo de estatísticas apresentado ao usuário
 
 ## 📚 Documentação Completa
 

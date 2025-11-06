@@ -28,6 +28,44 @@ Brief Minimo is a structured planning methodology that answers 5 fundamental que
 
 ```text
 
+## MCP Integration
+
+**Model Context Protocol (MCP)** integration provides real-time access to LangChain and LangGraph documentation during development.
+
+### What is MCP?
+
+MCP (Model Context Protocol) is an open standard that connects LLMs with external tools and data sources. This plugin uses MCP to access:
+
+- **LangChain Documentation**: Latest Python LangChain API reference and guides
+- **LangGraph Documentation**: Up-to-date LangGraph patterns and best practices
+
+### Benefits
+
+✅ **Always Up-to-Date**: Access latest documentation without manual updates
+✅ **Context-Aware Help**: Get relevant examples during `/spike-agentic` and development
+✅ **Faster Development**: Quick access to API signatures and usage patterns
+✅ **Best Practices**: Learn from official documentation and examples
+
+### How It Works
+
+The MCP server is automatically configured when you install the plugin. It uses:
+
+- **Transport**: stdio (standard input/output)
+- **Tool**: `mcpdoc` via `uvx` (no manual installation needed)
+- **Sources**:
+  - LangChain: `https://python.langchain.com/llms.txt`
+  - LangGraph: `https://langchain-ai.github.io/langgraph/llms.txt`
+
+### Usage
+
+MCP documentation is automatically available during:
+
+- **`/spike-agentic`**: Get LangGraph architecture patterns and code examples
+- **`/novo-incremento`**: Access API references while implementing features
+- **Development**: Query LangChain/LangGraph docs on-demand through Claude Code
+
+No additional configuration required - it just works! 🚀
+
 ## Quick Start
 
 ### Microprocesso 1.1: Planning with Brief Minimo
@@ -697,15 +735,16 @@ Specialist agent that conducts the Brief Minimo interview and generates specific
 
 ## Support & Contributing
 
-This is version 0.9.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos and stage 2 development workflow:
+This is version 0.10.0 of Agentc AI Developer. It features Brief Minimo methodology with integrated microprocessos and stage 2 development workflow:
 - **Microprocesso 1.1** - `/brief` (Planning)
 - **Microprocesso 1.2** - `/setup-local-observability` (Environment setup)
 - **Microprocesso 1.3** - `/spike-agentic` (Architecture validation)
 - **Stage 2 Development** - `/backlog`, `/analyze-slices`, `/iniciar-slice` (Slice management)
 - **Stage 2 Dev Loop** - `/novo-incremento`, `/finalizar-incremento` (Incremental development with metrics validation)
 - **Project Integration** - `/update-claude-md` (CLAUDE.md setup)
+- **MCP Integration** - Real-time LangChain/LangGraph documentation access
 
-Includes `help-assistant` agent, `microprocesso-1-2` and `spike-agentic` skills for comprehensive guidance with progressive disclosure. Full incremental development workflow with automatic metrics validation, coverage checking (≥70%), regression detection, and decision logic.
+Includes `help-assistant` agent, `microprocesso-1-2` and `spike-agentic` skills for comprehensive guidance with progressive disclosure. Full incremental development workflow with automatic metrics validation, coverage checking (≥70%), regression detection, and decision logic. MCP support for always-updated LangChain/LangGraph docs.
 
 For issues, suggestions, or contributions related to the Claude Code marketplace, visit the [plugin repository](https://github.com/cadugevaerd/claudecode_plugins).
 

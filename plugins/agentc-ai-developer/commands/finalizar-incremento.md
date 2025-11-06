@@ -367,6 +367,168 @@ Show user comprehensive summary:
 1. Loop: goto 2 for Incremento 2, 3, etc
 1. After all criteria met: `/concluir-slice` → Section 4 created, merge to main
 
+## Exemplos
+
+### Exemplo 1: Incremento bem-sucedido - todos critérios atingidos
+
+```bash
+/finalizar-incremento
+```
+
+**Cenário:**
+
+- Incremento 1 implementado com sucesso
+- Testes passando (12/12)
+- Success rate acima do target (95% vs 85%)
+- Sem regressões detectadas
+
+**Resultado:**
+
+```
+✅ Incremento 1 Finalizado!
+
+📊 MÉTRICAS CAPTURADAS:
+   Success Rate: 95% (baseline: 80%, delta: +15%)
+   Test Count: 12 tests (baseline: 10, delta: +2)
+   Avg Latency: 145ms (baseline: 150ms, delta: -5ms)
+   Timestamp: 2025-01-15T14:32:18Z
+
+✓ VALIDAÇÕES:
+   ✅ Regressão = 0: 0 detected
+   ✅ Self-review checklist: ALL PASSED
+
+🎯 CRITÉRIOS DE PARADA:
+   Critério 1 (Success Rate): ✅ PASS (95% >= 85%)
+   Critério 2 (Regressão): ✅ PASS (0 regressions)
+   Critério 3 (Self-Review): ✅ PASS
+
+➡️ DECISÃO AUTOMÁTICA:
+   🎉 SLICE PODE SER CONCLUÍDA!
+
+   Todos 3 critérios atingidos. Você pode:
+   1. Executar: /concluir-slice
+      └─ Para finalizar e fazer merge
+   2. Executar: /novo-incremento
+      └─ Para adicionar mais melhorias (opcional)
+
+📝 FILES UPDATED:
+   ✓ docs/slices/SLICE_1_TRACKER.md
+     • Section 3.1 metrics updated
+     • Status: ✅ Finalizado
+     • Decision recorded
+
+🚀 PRÓXIMOS PASSOS:
+   1. Review changes: git log --oneline -5
+   2. Run /concluir-slice para finalizar
+   3. Ou continue com /novo-incremento
+```
+
+______________________________________________________________________
+
+### Exemplo 2: Incremento que requer continuação - success rate abaixo do target
+
+```bash
+/finalizar-incremento
+```
+
+**Cenário:**
+
+- Incremento 1 implementado
+- Testes passando (11/11)
+- Success rate abaixo do target (72% vs 85%)
+- Sem regressões detectadas
+
+**Resultado:**
+
+```
+✅ Incremento 1 Finalizado!
+
+📊 MÉTRICAS CAPTURADAS:
+   Success Rate: 72% (baseline: 70%, delta: +2%)
+   Test Count: 11 tests (baseline: 10, delta: +1)
+   Avg Latency: 148ms
+   Timestamp: 2025-01-15T10:15:42Z
+
+✓ VALIDAÇÕES:
+   ✅ Regressão = 0: 0 detected
+   ✅ Self-review checklist: ALL PASSED
+
+🎯 CRITÉRIOS DE PARADA:
+   Critério 1 (Success Rate): ❌ FAIL (72% < 85%)
+   Critério 2 (Regressão): ✅ PASS
+   Critério 3 (Self-Review): ✅ PASS
+
+➡️ DECISÃO AUTOMÁTICA:
+   ⏳ CONTINUAR COM PRÓXIMO INCREMENTO
+
+   Critério(s) não atingido(s):
+   ❌ Success rate: 72% < 85% (faltam 13%)
+
+   Próximo passo: /novo-incremento
+
+📝 FILES UPDATED:
+   ✓ docs/slices/SLICE_1_TRACKER.md
+     • Section 3.1 metrics updated
+     • Status: ✅ Finalizado
+     • Decision: CONTINUAR
+
+🚀 PRÓXIMOS PASSOS:
+   1. Review metrics delta
+   2. Run /novo-incremento para próximo incremento
+   3. Focus: Improve success rate by 13%
+```
+
+______________________________________________________________________
+
+### Exemplo 3: Incremento com regressões detectadas
+
+```bash
+/finalizar-incremento
+```
+
+**Cenário:**
+
+- Incremento 2 implementado
+- 2 testes quebrados (8/10 passando)
+- Success rate OK (88% >= 85%)
+
+**Resultado:**
+
+```
+⚠️ Incremento 2 - Regressões Detectadas!
+
+📊 MÉTRICAS CAPTURADAS:
+   Success Rate: 88% (baseline: 80%, delta: +8%)
+   Test Count: 10 tests (baseline: 12, delta: -2)
+   Avg Latency: 142ms
+   Timestamp: 2025-01-15T16:45:30Z
+
+✓ VALIDAÇÕES:
+   ❌ Regressão = 2: 2 tests removed/broken
+      • test_user_authentication_flow
+      • test_data_validation_edge_case
+   ⚠️ Self-review: NEEDS ATTENTION
+
+🎯 CRITÉRIOS DE PARADA:
+   Critério 1 (Success Rate): ✅ PASS (88% >= 85%)
+   Critério 2 (Regressão): ❌ FAIL (2 regressions)
+   Critério 3 (Self-Review): ❌ FAIL
+
+➡️ DECISÃO AUTOMÁTICA:
+   ⏳ CONTINUAR COM PRÓXIMO INCREMENTO
+
+   Critério(s) não atingido(s):
+   ❌ Regressão: 2 testes quebrados
+   ❌ Self-review: Testes removidos sem justificativa
+
+❓ AÇÃO REQUERIDA:
+   Some tests were removed. Continue anyway? (y/n)
+
+   Recomendação: Restaurar testes ou justificar remoção
+```
+
+______________________________________________________________________
+
 ## Tips for Best Results
 
 1. **Validate early and often**: Check metrics and regressions frequently

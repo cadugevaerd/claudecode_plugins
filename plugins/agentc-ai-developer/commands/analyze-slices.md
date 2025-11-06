@@ -1,12 +1,28 @@
 ---
 description: Validate backlog slices against S1.1 decision gates and trigger refinement if needed
-allowed-tools: Read, Write, Grep
+allowed-tools: Read, Write, Edit, Grep
 argument-hint: '[validate|refine|auto]'
+model: ''
 ---
 
 # Analyze Slices Against S1.1 Gates
 
-## Preconditions
+## 🎯 Objetivo
+
+Validar cada slice (incremento) do backlog contra os 5 Decision Gates da metodologia Brief Minimo (S1.1) para garantir que:
+
+- ✅ Duração está entre 3-6 horas (Gate 1)
+- ✅ Score impacto/esforço ≥ 2.0 (Gate 2)
+- ✅ Slice é reversível (Gate 3)
+- ✅ Arquitetura está isolada/baixo acoplamento (Gate 4)
+- ✅ Contribui para métrica de sucesso (Gate 5)
+- 🚀 Identifica slices elegíveis para Fast-Track (\<1h, baixo risco)
+- 📋 Cria trackers automáticos para slices aprovados (GO)
+- 🔄 Identifica slices que precisam de refinamento (NO-GO)
+
+**Resultado esperado**: Relatório de análise com decisão GO/NO-GO para cada slice e próxima ação recomendada.
+
+## ⚙️ Preconditions
 
 1. Verify docs/BACKLOG.md exists
 1. Verify Brief Minimo specification is complete in README.md
@@ -58,7 +74,7 @@ For each slice, validate:
     - Slice 2: "Add edge case handling" → estimated delta +15%
     - Slice 3: "Code review polish" → estimated delta +5%
 
-3. Generate analysis report:
+1. Generate analysis report:
 
    - Slices that PASS all gates (GO): Ready for execution
    - Slices that FAIL any gate (NO-GO): Blockers identified
@@ -320,7 +336,137 @@ Create tracker with this structure:
 [Developer notes will be added during development]
 ```
 
-## Next Steps - Start Development
+## 📝 Exemplos de Uso
+
+### Exemplo 1: Modo Validate (Padrão)
+
+```bash
+/analyze-slices validate
+# ou simplesmente
+/analyze-slices
+```
+
+**Output esperado:**
+
+```text
+🔍 Analisando slices contra S1.1 Decision Gates...
+
+✅ Slice 1: Implementar core classifier
+   Gate 1 (Duration): ✅ PASS (4h, dentro de 3-6h)
+   Gate 2 (Score): ✅ PASS (Score: 2.25, Impact: HIGH)
+   Gate 3 (Reversible): ✅ PASS (Rollback: restore from backup)
+   Gate 4 (Isolated): ✅ PASS (Low coupling)
+   Gate 5 (Success Rate): ✅ PASS (+25% accuracy delta)
+   Fast-Track: ❌ NO (>1h, high complexity)
+   → Status: GO (Tracker criado: docs/slices/SLICE_1_TRACKER.md)
+
+⚠️ Slice 2: Add edge case handling
+   Gate 1 (Duration): ✅ PASS (3h)
+   Gate 2 (Score): ❌ FAIL (Score: 1.5, Impact: MEDIUM, Effort: 3h)
+   Gate 3 (Reversible): ✅ PASS
+   Gate 4 (Isolated): ✅ PASS
+   Gate 5 (Success Rate): ✅ PASS (+10% delta)
+   → Status: NO-GO (Gate 2 failed: low impact/effort ratio)
+
+📊 Resumo:
+- Total: 2 slices
+- GO: 1 slice (50%)
+- NO-GO: 1 slice (50%)
+- Fast-Track: 0 slices
+
+🔄 Próxima ação: Refinar Slice 2 ou iniciar Slice 1 com /iniciar-slice
+```
+
+### Exemplo 2: Modo Refine
+
+```bash
+/analyze-slices refine
+```
+
+**Output esperado:**
+
+```text
+🔍 Analisando slices... (mesmo output acima)
+
+❌ Slice 2 falhou Gate 2 (Score < 2.0)
+
+🔧 Deseja refinar slices que falharam? (y/n)
+> y
+
+🚀 Executando /backlog refine para Slice 2...
+[Processo de refinement iniciado]
+```
+
+### Exemplo 3: Modo Auto
+
+```bash
+/analyze-slices auto
+```
+
+**Output esperado:**
+
+```text
+🔍 Analisando slices automaticamente...
+
+✅ Slice 1: GO
+⚠️ Slice 2: NO-GO (Gate 2 failed)
+
+🤖 AUTO MODE: Refinando automaticamente slices NO-GO...
+🚀 Executando /backlog refine [Slice 2]
+
+[Após refinamento]
+✅ Todos os slices prontos para execução!
+📋 Próximo slice recomendado: Slice 1 (Impact: HIGH)
+💡 Execute /iniciar-slice para começar desenvolvimento
+```
+
+### Exemplo 4: Todos Slices GO + Fast-Track
+
+```bash
+/analyze-slices
+```
+
+**Output esperado:**
+
+```text
+🔍 Analisando slices...
+
+✅ Slice 1: Implementar classifier (GO, Standard Path)
+✅ Slice 2: Add docstring (GO, 🚀 FAST-TRACK)
+✅ Slice 3: Fix typo in error message (GO, 🚀 FAST-TRACK)
+
+📊 Resumo:
+- Total: 3 slices
+- GO: 3 slices (100%)
+- NO-GO: 0 slices
+- Fast-Track: 2 slices (66%)
+
+🎉 Todos os slices aprovados!
+🚀 2 slices elegíveis para Fast-Track (desenvolvimento rápido)
+📋 Trackers criados: SLICE_1_TRACKER.md, SLICE_2_TRACKER.md, SLICE_3_TRACKER.md
+
+💡 Próxima ação: Execute /iniciar-slice para começar com Slice 2 (Fast-Track)
+```
+
+## ✅ Critérios de Sucesso
+
+Validação de que o comando `/analyze-slices` foi executado corretamente:
+
+- [ ] BACKLOG.md localizado e lido com sucesso
+- [ ] Brief Minimo extraído do README.md (métrica de sucesso identificada)
+- [ ] Todos os slices validados contra os 5 Decision Gates
+- [ ] Score de impacto calculado para cada slice (Gate 2: Impact/Effort ≥ 2.0)
+- [ ] Contribuição para success_rate calculada para cada slice (Gate 5: Delta > 0%)
+- [ ] Classificação Fast-Track determinada para slices GO (\<1h, baixo risco, sem mudanças arquiteturais)
+- [ ] Trackers criados para slices GO (`docs/slices/SLICE_{N}_TRACKER.md`)
+- [ ] BACKLOG.md atualizado com status correto:
+  - `📋 TODO` para slices GO
+  - `🔄 Revalidar` para slices NO-GO
+  - `🚀 Elegível para Fast-Track` para slices Fast-Track
+- [ ] Relatório de análise apresentado (GO/NO-GO summary, gate failure distribution)
+- [ ] Próxima ação recomendada identificada (`/iniciar-slice` ou `/backlog refine`)
+
+## 🔗 Next Steps - Start Development
 
 After all GO slices are validated and trackers created:
 

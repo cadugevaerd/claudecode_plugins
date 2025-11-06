@@ -1,5 +1,5 @@
 ---
-description: Create new increment with AI-suggested tasks based on pending acceptance criteria and current code state
+description: Create AI-suggested increment from pending acceptance criteria
 allowed-tools: Read, Grep, Bash, Write, AskUserQuestion
 argument-hint: '[auto|interactive]'
 ---
@@ -282,6 +282,44 @@ If validation fails: Ask user to adjust or accept anyway with warning.
 1. `/finalizar-incremento` → Validates + updates status
 1. Loop back to `/novo-incremento` for next increment
 1. After slice complete: `/concluir-slice`
+
+## ✅ Critérios de Sucesso
+
+Após executar `/novo-incremento`, verifique:
+
+**Análise e Sugestão**:
+
+- [ ] SLICE_TRACKER.md foi lido e analisado corretamente
+- [ ] Estado atual (acceptance criteria, incrementos passados) identificado
+- [ ] Git log analisado (últimos commits e arquivos modificados)
+- [ ] Critérios pendentes identificados e priorizados
+- [ ] Sugestão de incremento gerada com título, duração e atividades
+
+**Incremento Criado**:
+
+- [ ] Section 3 existe ou foi criada em SLICE_TRACKER.md
+- [ ] Incremento N adicionado com status "➡️ Em Progresso"
+- [ ] Timestamp de início registrado (ISO format)
+- [ ] Duração estimada: 15-20 min
+- [ ] Linhas estimadas: ≤30 linhas
+- [ ] Checklist de atividades sugeridas criado (3-5 + testes + CI)
+- [ ] Critérios de aceitação relacionados listados
+- [ ] Métricas esperadas definidas (success_rate, test_count, coverage)
+- [ ] Commit base registrado (hash atual)
+
+**Validação**:
+
+- [ ] Incremento validado contra critérios (≤30 linhas, 15-20 min)
+- [ ] Incremento endereça pelo menos 1 acceptance criterion
+- [ ] Incremento é independente e testável
+- [ ] Incremento é reversível (git revert)
+- [ ] Incremento inclui task de testes
+
+**Confirmação ao Usuário**:
+
+- [ ] Mensagem de sucesso exibida com resumo das mudanças
+- [ ] Next steps apresentados claramente
+- [ ] Path para SLICE_TRACKER.md Section 3.N indicado
 
 ## Tips for Best Results
 
