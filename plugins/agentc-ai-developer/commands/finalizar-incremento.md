@@ -101,37 +101,43 @@ Check for breaking changes:
    - If no regressions: `✅ Regressão = 0`
    - If regressions: `⚠️ Regressão = {count}`
 
-### Step 4: Self-Review Validation
+### Step 4: Automatic Code Quality Check
 
-Present interactive checklist:
+Perform automated validation of implementation quality:
 
-```
-📋 Self-Review Checklist (3 min):
+1. **Verify Implementation Exists**:
 
-1. Código segue padrões do projeto?
-   [ ] Naming conventions OK
-   [ ] Indentation/formatting OK
-   [ ] No code duplication
+   - Execute: `git diff {base_commit} HEAD --stat`
+   - Verify: ≥1 file modified with real changes
+   - Confirm: Incremento size within ≤30 lines
+   - Result: 🟢 Implementation found OR ❌ No changes detected
 
-2. Testes adicionados adequadamente?
-   [ ] Tests cover happy path
-   [ ] Tests cover edge cases
-   [ ] Tests are isolated
+1. **Run Lint Check (if available)**:
 
-3. Componente é isolável?
-   [ ] Low coupling to other modules
-   [ ] Can be tested in isolation
-   [ ] Changes are reversible
+   - Execute: `uv run CI.py --lint` (or `python CI.py --lint`)
+   - Capture: Lint output with errors and warnings
+   - Classify:
+     - 🟢 No errors (warnings allowed)
+     - 🟡 Minor issues (line length, unused imports)
+     - ❌ Critical errors (syntax, undefined names)
 
-4. Sem breaking changes?
-   [ ] Existing APIs unchanged
-   [ ] Backward compatible
-   [ ] No deprecated features removed
+1. **Generate Auto-Review Report**:
 
-Resultado: ✅ APPROVED | ❌ NEEDS REVISION
-```
+   Display results:
 
-User must answer all 4 questions before proceeding.
+   ```
+   #### Self-Review Automático
+
+   ✅ Implementation Detected: {N} files modified, {lines} lines changed
+   ✅ Code Quality: Lint {PASSED/WARNINGS/ERRORS}
+
+   {If warnings}:
+      ⚠️  Warning list (auto-generated from lint output)
+
+   **Result**: {✅ APPROVED / 🟡 APPROVED_WITH_WARNINGS / ❌ NEEDS_REVIEW}
+   ```
+
+**Note**: Comprehensive code review (testing quality, component isolation, breaking changes) deferred to `/concluir-slice` at slice completion level.
 
 ### Step 5: Apply Stopping Criteria
 
@@ -152,12 +158,15 @@ Regressions detected: {count}
 Result: {count == 0 ? ✅ PASS : ❌ FAIL}
 ```
 
-**Critério 3**: Self-review OK?
+**Critério 3**: Code Quality OK (Automatic)?
 
 ```
-All checklist items: ✅ PASS
-Result: ✅ PASS
+Implementation detected: ✅ YES
+Lint check: {PASSED / WARNINGS / ERRORS}
+Result: {✅ PASS / 🟡 PASS_WITH_WARNINGS / ❌ FAIL}
 ```
+
+**Note**: This is automatically validated in Step 4. User intervention only if critical errors detected.
 
 ### Step 6: Make Automatic Decision
 
@@ -332,11 +341,12 @@ Show user comprehensive summary:
 - If no: git revert and start over
 - If yes: Continue (with warning)
 
-**If self-review fails**:
+**If lint check fails (critical errors)**:
 
-- Ask user to fix specific items
-- Offer to re-run checklist
-- Do NOT update incremento status
+- Display lint errors
+- Ask: "Fix code quality issues and try again? (y/n)"
+- If no: Do NOT update incremento status
+- If yes: User fixes issues and re-runs `/finalizar-incremento`
 
 **If git issues**:
 

@@ -225,6 +225,30 @@ if __name__ == "__main__":
 1. Execute: `python CI.py` (or `uv run CI.py`)
 1. Verify exit code is 0
 
+### Step 1B: Ensure Lint Support in CI.py
+
+After CI.py is verified to exist, add lint support for code quality checks:
+
+1. **Check if CI.py supports --lint flag**:
+
+   - Test: `uv run CI.py --lint --help` (or `python CI.py --lint --help`)
+   - If fails or returns error: Lint support is NOT available
+
+1. **Add lint support to CI.py (if missing)**:
+
+   - Detect available linters (in order of preference):
+     1. `flake8` (if installed)
+     1. `pylint` (if installed)
+     1. Fallback to `python -m py_compile` for syntax validation
+   - Add `run_lint()` function to CI.py that uses available linter
+   - Add `--lint` argument to CLI argument parser
+   - Display: "✅ Lint support added to CI.py"
+
+1. **Verify lint support**:
+
+   - Test: `uv run CI.py --lint`
+   - Confirm: Command runs without errors
+
 ### Step 2: Execute CI.py and capture metrics
 
 1. **Run CI.py**:
