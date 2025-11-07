@@ -11,6 +11,8 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 
 ## 🎯 Objetivo
 
+- **Configure pyproject.toml exclusions** (antes de criar CI.py)
+- Add exclusions for `tests/` and `CI.py` in Black, Ruff, MyPy
 - Create `CI.py` script with complete CI/CD automation
 - **Auto-fix code with Black formatting** (executa fix automático)
 - **Auto-fix lint issues with Ruff** (executa `--fix` quando possível)
@@ -22,17 +24,55 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 
 ## 🔧 Instruções
 
-### 1. Create CI Script Structure
+### 1. Configure pyproject.toml Exclusions
 
-1.1 Create `CI.py` file in project root or specified path
-1.2 Add shebang and imports for subprocess, sys, pathlib
-1.3 Define main function with step orchestration
-1.4 Add colored output utilities for better readability
-1.5 Implement exit code handling for CI/CD pipelines
+**CRÍTICO**: Antes de criar CI.py, configure exceções no pyproject.toml para evitar que linters/formatters processem arquivos de CI/CD.
 
-### 2. Implement Code Quality Checks with Auto-Fix
+1.1 **Verificar se pyproject.toml existe**
+- Se não existir, criar com estrutura básica
 
-2.1 **Black Formatting with Auto-Fix**
+1.2 **Adicionar exclusões para Black**
+```toml
+[tool.black]
+extend-exclude = '''
+/(
+    tests
+  | CI\.py
+)/
+'''
+```
+
+1.3 **Adicionar exclusões para Ruff**
+```toml
+[tool.ruff]
+extend-exclude = ["tests", "CI.py"]
+```
+
+1.4 **Adicionar exclusões para MyPy**
+```toml
+[tool.mypy]
+exclude = [
+    "tests",
+    "CI\\.py"
+]
+```
+
+1.5 **Preservar configurações existentes**
+- NUNCA sobrescrever seções existentes
+- Apenas adicionar/atualizar campos `exclude` ou `extend-exclude`
+- Validar sintaxe TOML após edição
+
+### 2. Create CI Script Structure
+
+2.1 Create `CI.py` file in project root or specified path
+2.2 Add shebang and imports for subprocess, sys, pathlib
+2.3 Define main function with step orchestration
+2.4 Add colored output utilities for better readability
+2.5 Implement exit code handling for CI/CD pipelines
+
+### 3. Implement Code Quality Checks with Auto-Fix
+
+3.1 **Black Formatting with Auto-Fix**
 
 - **Run `uv run black .` to automatically format code** (NÃO usar `--check`)
 - Log output showing files that were reformatted
@@ -40,7 +80,7 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 - Display list of files modified by Black
 - **IMPORTANTE**: Black sempre aplica fixes, nunca apenas checa
 
-2.2 **Ruff Linting with Auto-Fix**
+3.2 **Ruff Linting with Auto-Fix**
 
 - **Run `uv run ruff check --fix .` to auto-fix lint issues**
 - Show detailed lint errors that were auto-fixed
@@ -49,7 +89,7 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 - Display summary: fixed vs. manual intervention needed
 - **IMPORTANTE**: Use `--fix` para aplicar correções automáticas
 
-2.3 **MyPy Type Checking (Report Only)**
+3.3 **MyPy Type Checking (Report Only)**
 
 - Run `uv run mypy .` for type checking
 - Display type errors with file locations
@@ -57,56 +97,56 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 - Show summary of type issues by category
 - **IMPORTANTE**: MyPy não tem auto-fix, apenas reporta
 
-### 3. Validate pyproject.toml
+### 4. Validate pyproject.toml
 
-3.1 Check if `pyproject.toml` exists in project root
-3.2 Validate TOML syntax using Python's `tomllib` (Python 3.11+) or `tomli`
-3.3 Verify required sections exist:
+4.1 Check if `pyproject.toml` exists in project root
+4.2 Validate TOML syntax using Python's `tomllib` (Python 3.11+) or `tomli`
+4.3 Verify required sections exist:
 
 - `[tool.black]` configuration
 - `[tool.ruff]` configuration
 - `[tool.mypy]` configuration
 - `[tool.pytest.ini_options]` configuration
-  3.4 Log validation results with clear success/failure messages
-  3.5 Return exit code 1 if validation fails
+4.4 Log validation results with clear success/failure messages
+4.5 Return exit code 1 if validation fails
 
-### 4. Execute Test Suite
+### 5. Execute Test Suite
 
-4.1 Run `uv run pytest` with verbose output
-4.2 Display test execution logs in real-time
-4.3 Show test summary with pass/fail counts
-4.4 Generate coverage report if configured
-4.5 Return exit code 1 if any tests fail
-4.6 Log test execution time
+5.1 Run `uv run pytest` with verbose output
+5.2 Display test execution logs in real-time
+5.3 Show test summary with pass/fail counts
+5.4 Generate coverage report if configured
+5.5 Return exit code 1 if any tests fail
+5.6 Log test execution time
 
-### 5. Docker Build Process
+### 6. Docker Build Process
 
-5.1 Check if `Dockerfile` exists in project root
-5.2 Only execute if all previous steps passed successfully
-5.3 Run `docker build -t <image-name> .` with build logs
-5.4 Stream build output showing each layer
-5.5 Display final image size and build time
-5.6 Return exit code 1 if build fails
-5.7 Skip silently if no Dockerfile present
+6.1 Check if `Dockerfile` exists in project root
+6.2 Only execute if all previous steps passed successfully
+6.3 Run `docker build -t <image-name> .` with build logs
+6.4 Stream build output showing each layer
+6.5 Display final image size and build time
+6.6 Return exit code 1 if build fails
+6.7 Skip silently if no Dockerfile present
 
-### 6. Logging Implementation
+### 7. Logging Implementation
 
-6.1 Use structured logging with timestamps
-6.2 Color-code output: GREEN for success, RED for errors, YELLOW for warnings
-6.3 Print section headers for each CI step
-6.4 Stream subprocess output in real-time (not buffered)
-6.5 Log final summary with pass/fail status for each step
-6.6 Include execution time for each major step
+7.1 Use structured logging with timestamps
+7.2 Color-code output: GREEN for success, RED for errors, YELLOW for warnings
+7.3 Print section headers for each CI step
+7.4 Stream subprocess output in real-time (not buffered)
+7.5 Log final summary with pass/fail status for each step
+7.6 Include execution time for each major step
 
-### 7. Error Handling and Exit Codes
+### 8. Error Handling and Exit Codes
 
-7.1 Fail fast: Stop execution if critical step fails
-7.2 Return appropriate exit codes:
+8.1 Fail fast: Stop execution if critical step fails
+8.2 Return appropriate exit codes:
 
 - 0: All checks passed
 - 1: One or more checks failed
-  7.3 Log stack traces for unexpected errors
-  7.4 Provide actionable error messages with fix suggestions
+8.3 Log stack traces for unexpected errors
+8.4 Provide actionable error messages with fix suggestions
 
 ## 📊 Formato de Saída
 
@@ -190,6 +230,23 @@ if __name__ == "__main__":
 
 ```text
 ============================================================
+Step 1: Configuring pyproject.toml Exclusions
+============================================================
+
+✓ pyproject.toml found
+✓ Added Black exclusions: tests/, CI.py
+✓ Added Ruff exclusions: tests/, CI.py
+✓ Added MyPy exclusions: tests/, CI.py
+✓ Configuration validated
+
+============================================================
+Step 2: Creating CI.py Script
+============================================================
+
+✓ CI.py created successfully
+✓ Made executable (chmod +x)
+
+============================================================
 Running: Black Formatting (Auto-Fix)
 ============================================================
 
@@ -270,6 +327,11 @@ All checks passed! ✨
 
 ## ✅ Critérios de Sucesso
 
+- [ ] **pyproject.toml exclusions configured** (ANTES de criar CI.py)
+- [ ] **Black exclusions added** (`tests/`, `CI.py`)
+- [ ] **Ruff exclusions added** (`tests/`, `CI.py`)
+- [ ] **MyPy exclusions added** (`tests/`, `CI.py`)
+- [ ] **Existing pyproject.toml sections preserved** (não sobrescrever)
 - [ ] CI.py script created with proper structure
 - [ ] **Black auto-fix implemented** (executa `black .` sem `--check`)
 - [ ] **Ruff auto-fix implemented** (executa `ruff check --fix .`)
@@ -426,7 +488,41 @@ def main() -> int:
 /create-ci-script
 ```
 
-Cria `CI.py` no diretório raiz do projeto atual.
+**O que acontece**:
+1. Verifica se `pyproject.toml` existe
+2. Adiciona exclusões para `tests/` e `CI.py` em Black, Ruff, MyPy
+3. Cria `CI.py` no diretório raiz do projeto atual
+4. Torna o script executável
+
+### pyproject.toml Atualizado
+
+Depois de executar o comando, seu `pyproject.toml` terá:
+
+```toml
+[tool.black]
+line-length = 88
+extend-exclude = '''
+/(
+    tests
+  | CI\.py
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+extend-exclude = ["tests", "CI.py"]
+
+[tool.mypy]
+python_version = "3.11"
+exclude = [
+    "tests",
+    "CI\\.py"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# ... outras configurações
+```
 
 ### Com Caminho Customizado
 
