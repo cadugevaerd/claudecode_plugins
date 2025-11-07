@@ -2,7 +2,7 @@
 description: Cria smoke tests focados em Happy Paths para validação rápida de funcionalidades críticas
 allowed-tools: Read, Write, Grep, Glob, Skill
 model: claude-sonnet-4-5
-argument-hint: "[TARGET_PATH] [--framework pytest|unittest]"
+argument-hint: '[TARGET_PATH] [--framework pytest|unittest]'
 ---
 
 # Create Smoke Tests
@@ -24,11 +24,13 @@ Especialista em criar smoke tests **apenas para Happy Paths**, garantindo valida
 Antes de gerar testes, consultar skills relevantes:
 
 1.1 **Verificar Skills de Teste Disponíveis**
+
 - Usar `Skill` tool para buscar conhecimento sobre testes Python
 - Priorizar: `langchain-test-specialist` se projeto usa LangChain/LangGraph
 - Extrair padrões de mock, fixtures e estrutura AAA
 
 1.2 **Analisar Projeto**
+
 - Identificar framework de teste (pytest, unittest)
 - Detectar fixtures existentes em `conftest.py`
 - Verificar padrões de mock já utilizados
@@ -36,11 +38,13 @@ Antes de gerar testes, consultar skills relevantes:
 ### 2. **Identificar Funcionalidades Críticas**
 
 2.1 **Analisar Código-Fonte**
+
 - Se `TARGET_PATH` fornecido: focar nesse módulo/diretório
 - Se não fornecido: analisar projeto inteiro
 - Usar `Grep` para encontrar funções/classes públicas
 
 2.2 **Priorizar por Criticidade**
+
 - Funções em `__init__.py` (API pública)
 - Classes principais do domínio
 - Endpoints de API (FastAPI, Flask, Django)
@@ -50,6 +54,7 @@ Antes de gerar testes, consultar skills relevantes:
 ### 3. **Gerar Smoke Tests (Happy Path Apenas)**
 
 3.1 **Estrutura AAA (Arrange-Act-Assert)**
+
 ```python
 def test_feature_happy_path():
     """Smoke test: Valida cenário de sucesso básico"""
@@ -64,6 +69,7 @@ def test_feature_happy_path():
 ```
 
 3.2 **Características dos Smoke Tests**
+
 - ✅ **Apenas Happy Paths**: Cenários onde tudo funciona
 - ✅ **Execução rápida**: < 5 segundos por teste
 - ✅ **Mocks simples**: GenericFakeChatModel, unittest.mock
@@ -74,6 +80,7 @@ def test_feature_happy_path():
 3.3 **Padrões de Mock para Smoke Tests**
 
 **LangChain/LangGraph (se aplicável)**:
+
 ```python
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 from langchain_core.messages import AIMessage
@@ -84,6 +91,7 @@ mock_llm = GenericFakeChatModel(messages=iter([
 ```
 
 **APIs HTTP (se aplicável)**:
+
 ```python
 from unittest.mock import Mock, patch
 
@@ -96,11 +104,13 @@ def test_api_call(mock_get):
 ### 4. **Organizar e Salvar Testes**
 
 4.1 **Estrutura de Arquivos**
+
 - Criar em `tests/smoke/` ou `tests/`
 - Nomear: `test_smoke_<module>.py`
 - Um arquivo por módulo principal
 
 4.2 **Adicionar Markers pytest**
+
 ```python
 import pytest
 
@@ -113,11 +123,13 @@ def test_critical_feature():
 ### 5. **Validar e Reportar**
 
 5.1 **Executar Testes Gerados**
+
 - Rodar: `pytest tests/smoke/ -m smoke -v`
 - Validar que todos passam
 - Medir tempo de execução total
 
 5.2 **Reportar Resultados**
+
 - Listar testes criados
 - Mostrar tempo de execução
 - Indicar próximos passos (commit, CI/CD)
@@ -125,6 +137,7 @@ def test_critical_feature():
 ## 📊 Formato de Saída
 
 **Durante execução:**
+
 ```text
 🔍 Consultando skills de teste...
 ✅ Skill langchain-test-specialist encontrada
@@ -145,6 +158,7 @@ def test_critical_feature():
 ```
 
 **Saída final:**
+
 ```text
 ═══════════════════════════════════════════
 ✅ SMOKE TESTS CRIADOS COM SUCESSO
@@ -198,27 +212,35 @@ def test_critical_feature():
 ## 📝 Exemplos
 
 **Exemplo 1 - Projeto inteiro:**
+
 ```bash
 /create-smoke-tests
 ```
+
 Analisa projeto completo e gera smoke tests para módulos principais.
 
 **Exemplo 2 - Módulo específico:**
+
 ```bash
 /create-smoke-tests src/api
 ```
+
 Gera smoke tests apenas para módulo `src/api`.
 
 **Exemplo 3 - Framework específico:**
+
 ```bash
 /create-smoke-tests --framework unittest
 ```
+
 Força uso de `unittest` em vez de detecção automática.
 
 **Exemplo 4 - LangChain/LangGraph:**
+
 ```bash
 /create-smoke-tests src/agent
 ```
+
 Detecta LangChain/LangGraph, consulta `langchain-test-specialist`, usa GenericFakeChatModel.
 
 ## ❌ Anti-Patterns

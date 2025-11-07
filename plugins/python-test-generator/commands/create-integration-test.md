@@ -2,7 +2,7 @@
 description: Generate integration tests with VCR recording for Python projects
 allowed-tools: [Read, Grep, Glob, Write, Edit, Bash]
 model: sonnet
-argument-hint: "TARGET_PATH [--coverage-threshold PERCENT]"
+argument-hint: TARGET_PATH [--coverage-threshold PERCENT]
 ---
 
 # Create Integration Tests
@@ -23,18 +23,21 @@ Generate comprehensive integration tests for Python projects with VCR HTTP recor
 ### 1. Analyze Target Code and Project Structure
 
 1.1 **Read Target File/Module**
+
 - Use `Read` to analyze the target code structure
 - Identify functions, classes, and external dependencies
 - Detect HTTP calls, LLM integrations, database connections
 - Map external services requiring mocking or VCR recording
 
 1.2 **Detect Test Framework Configuration**
+
 - Use `Glob` to find `pytest.ini`, `pyproject.toml`, or `conftest.py`
 - Use `Read` to analyze existing test patterns and fixtures
 - Identify coverage configuration and thresholds
 - Check for existing VCR configuration
 
 1.3 **Validate Dependencies**
+
 - Use `Grep` to search for imports: `pytest`, `pytest-recording`, `vcrpy`
 - Check `pyproject.toml` or `requirements.txt` for test dependencies
 - If missing: Add to TODO list to install dependencies
@@ -44,25 +47,30 @@ Generate comprehensive integration tests for Python projects with VCR HTTP recor
 Based on code analysis, select appropriate test patterns:
 
 **Pattern A: VCR Recording for HTTP/LLM APIs**
+
 - Use when: Code makes HTTP calls to external APIs (OpenAI, Anthropic, REST APIs)
 - Benefits: Deterministic tests, no API costs in CI/CD, fast execution
 - Record modes: `once`, `new_episodes`, `none`, `all`
 
 **Pattern B: Database Integration Testing**
+
 - Use when: Code interacts with databases (PostgreSQL, MongoDB, Redis)
 - Strategies: In-memory databases, Docker containers, fixtures
 
 **Pattern C: Multi-Service Integration**
+
 - Use when: Code orchestrates multiple services
 - Strategies: Test containers, mocking boundaries, partial integration
 
 **Pattern D: LangChain/LangGraph Integration**
+
 - Use when: Code uses LangChain chains or LangGraph workflows
 - Strategies: VCR for LLM calls, trajectory validation, state persistence
 
 ### 3. Generate VCR Configuration (if needed)
 
 3.1 **Create/Update conftest.py**
+
 - Check if `conftest.py` exists in test directory
 - Add VCR fixture configuration:
 
@@ -81,6 +89,7 @@ def vcr_config():
 ```
 
 3.2 **Configure Cassette Directory**
+
 - Create `tests/cassettes/` directory if not exists
 - Add `.gitignore` entry if cassettes should not be committed (sensitive data)
 - Or commit cassettes for deterministic CI/CD
@@ -88,6 +97,7 @@ def vcr_config():
 ### 4. Generate Integration Test File
 
 4.1 **Create Test File Structure**
+
 - Name: `test_integration_[module_name].py`
 - Location: `tests/integration/` or `tests/`
 - Follow AAA pattern (Arrange-Act-Assert)
@@ -97,6 +107,7 @@ def vcr_config():
 For each integration point, create:
 
 **Basic VCR Test:**
+
 ```python
 import pytest
 
@@ -115,6 +126,7 @@ def test_api_integration_basic():
 ```
 
 **LangChain/LangGraph VCR Test:**
+
 ```python
 @pytest.mark.vcr()
 def test_langchain_agent_integration():
@@ -131,6 +143,7 @@ def test_langchain_agent_integration():
 ```
 
 **Database Integration Test:**
+
 ```python
 @pytest.fixture
 def test_db():
@@ -155,12 +168,14 @@ def test_database_integration(test_db):
 ```
 
 4.3 **Add Docstrings**
+
 - Every test: Clear description of scenario
 - Format: `"""Test: [What is being tested]"""`
 
 ### 5. Generate Test Fixtures
 
 5.1 **Create Reusable Fixtures**
+
 - Identify common setup patterns
 - Create fixtures in `conftest.py` for reuse
 - Use appropriate scopes: `function`, `module`, `session`
@@ -176,6 +191,7 @@ def integration_config():
 ```
 
 5.2 **Create Mock Data Fixtures**
+
 - Generate realistic test data
 - Use factories or builders for complex objects
 
@@ -198,31 +214,37 @@ addopts = [
 ```
 
 6.2 **Add Coverage Thresholds**
+
 - Use `--coverage-threshold` argument or default 80%
 - Configure per-module thresholds if needed
 
 ### 7. Validate and Run Tests
 
 7.1 **Validate Syntax**
+
 - Use `Bash` to run: `uv run python -m pytest --collect-only tests/integration/`
 - Check all tests are discovered correctly
 
 7.2 **Run Tests (First Time - Record)**
+
 - Use `Bash`: `uv run python -m pytest tests/integration/ --record-mode=once -v`
 - This records HTTP cassettes on first run
 - Verify cassettes created in `tests/cassettes/`
 
 7.3 **Run Tests (Replay)**
+
 - Use `Bash`: `uv run python -m pytest tests/integration/ -v`
 - Tests use recorded cassettes (fast, deterministic)
 
 7.4 **Check Coverage**
+
 - Use `Bash`: `uv run python -m pytest tests/integration/ --cov --cov-report=term-missing`
 - Verify coverage meets threshold
 
 ### 8. Generate CI/CD Recommendations
 
 8.1 **Add CI/CD Instructions**
+
 - Document how to run in CI: `pytest --record-mode=none`
 - Ensure cassettes are committed or API keys available
 - Add to test output as comments
@@ -412,13 +434,14 @@ def test_agent_answers_question():
 ```
 
 **O que acontece:**
+
 1. Analisa `rag_agent.py` e detecta LangChain/LLM calls
-2. Cria `tests/integration/test_integration_rag_agent.py`
-3. Configura VCR para gravar chamadas LLM
-4. Gera testes com `@pytest.mark.vcr()`
-5. Cria fixtures em `conftest.py`
-6. Executa testes (primeira vez grava cassettes)
-7. Valida coverage >= 80%
+1. Cria `tests/integration/test_integration_rag_agent.py`
+1. Configura VCR para gravar chamadas LLM
+1. Gera testes com `@pytest.mark.vcr()`
+1. Cria fixtures em `conftest.py`
+1. Executa testes (primeira vez grava cassettes)
+1. Valida coverage >= 80%
 
 ### Exemplo 2: Integration tests with custom coverage threshold
 
@@ -427,12 +450,13 @@ def test_agent_answers_question():
 ```
 
 **O que acontece:**
+
 1. Analisa `api_client.py` (HTTP client)
-2. Detecta chamadas HTTP externas
-3. Configura VCR com filtros de headers sensíveis
-4. Gera testes com diferentes record modes
-5. Define threshold de 90% (ao invés de 80%)
-6. Valida coverage >= 90%
+1. Detecta chamadas HTTP externas
+1. Configura VCR com filtros de headers sensíveis
+1. Gera testes com diferentes record modes
+1. Define threshold de 90% (ao invés de 80%)
+1. Valida coverage >= 90%
 
 ### Exemplo 3: Database integration tests
 
@@ -441,9 +465,10 @@ def test_agent_answers_question():
 ```
 
 **O que acontece:**
+
 1. Analisa `user_repo.py` e detecta database calls
-2. Cria fixtures para database de teste
-3. Gera testes com setup/teardown
-4. Usa in-memory database ou test containers
-5. Valida transações e rollback
-6. Verifica coverage >= 80%
+1. Cria fixtures para database de teste
+1. Gera testes com setup/teardown
+1. Usa in-memory database ou test containers
+1. Valida transações e rollback
+1. Verifica coverage >= 80%

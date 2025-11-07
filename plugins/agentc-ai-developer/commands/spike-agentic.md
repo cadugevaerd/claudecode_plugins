@@ -1,7 +1,7 @@
 ---
 description: Generate agent spike plan (SPIKE.md) with file structure and agentic loop
 allowed-tools: Read, Write, Bash(mkdir:*)
-argument-hint: 
+argument-hint:
 model: sonnet
 ---
 
