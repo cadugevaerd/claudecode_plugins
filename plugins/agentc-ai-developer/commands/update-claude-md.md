@@ -2,7 +2,7 @@
 description: Update CLAUDE.md with Agentc AI Developer commands and MCP integration
 allowed-tools: Read, Write
 argument-hint: '[mode: silent|verbose] - controle de verbosidade'
-model: ''
+model: sonnet
 ---
 
 # Update Project CLAUDE.md
