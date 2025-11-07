@@ -7,19 +7,6 @@
     "email": "cadu.gevaerd@gmail.com"
   },
   "license": "MIT",
-  "category": "development",
-  "tags": [
-    "kubernetes",
-    "k8s",
-    "containers",
-    "orchestration",
-    "devops",
-    "troubleshooting",
-    "resource-management",
-    "mcp",
-    "model-context-protocol"
-  ],
-  "mcp": ".mcp.json",
   "commands": [
     {
       "name": "k8s-diagnose",
