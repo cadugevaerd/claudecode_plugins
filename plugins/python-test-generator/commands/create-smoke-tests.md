@@ -1,5 +1,5 @@
 ---
-description: Cria smoke tests para features/slices completas validando Happy Path end-to-end
+description: Cria arquivos de smoke tests em memória (não modifica código de produção) validando Happy Paths end-to-end
 allowed-tools: Read, Write, Grep, Glob, Skill
 model: claude-sonnet-4-5
 argument-hint: '[TARGET_PATH] [--framework pytest|unittest]'
@@ -7,30 +7,38 @@ argument-hint: '[TARGET_PATH] [--framework pytest|unittest]'
 
 # Create Smoke Tests
 
-Especialista em criar smoke tests **apenas para Happy Paths**, garantindo validação rápida das funcionalidades críticas sem cobrir edge cases ou cenários de erro.
+Especialista em criar **apenas arquivos de teste** em `tests/` para smoke tests de Happy Paths, **sem modificar código de produção**. Gera testes rápidos que validam funcionalidades críticas sem cobrir edge cases ou cenários de erro.
 
 ## 🎯 Objetivo
 
-- Gerar smoke tests focados em cenários de sucesso (Happy Paths)
-- Validar funcionalidades críticas rapidamente (execução < 30s)
+**Este comando cria APENAS arquivos de teste** - não modifica a aplicação:
+
+- Gerar **arquivos de smoke tests** em `tests/` focados em Happy Paths
+- Criar testes que validam funcionalidades críticas rapidamente (execução < 30s)
 - Usar padrões de teste detectados automaticamente no projeto
 - Pesquisar em skills existentes para conhecimento sobre testes
 - Integrar com fixtures e mocks já configurados
+- **Todos os testes são criados em memória** (arquivos `.py` em `tests/`)
+- **Zero modificações** no código de produção (`src/`, `app/`, etc.)
 
-## ⚠️ RESTRIÇÕES CRÍTICAS
+## ⚠️ RESTRIÇÕES CRÍTICAS - Apenas Arquivos de Teste
+
+**Este comando opera SOMENTE em arquivos de teste - sem tocar no código da aplicação:**
 
 **❌ NUNCA modificar código de produção** (arquivos em `src/`, `app/`, etc.)
-**✅ APENAS criar/modificar:**
 
-- Arquivos de teste em `tests/`
-- Configuração de markers em `pyproject.toml` ou `pytest.ini`
-- Fixtures em `conftest.py` (dentro de `tests/`)
+**✅ APENAS criar/modificar arquivos de teste:**
 
-**Se precisar de mudanças no código de produção:**
+- **Arquivos `.py` em `tests/`** - smoke tests gerados em memória
+- **Configuração de markers** em `pyproject.toml` ou `pytest.ini`
+- **Fixtures** em `conftest.py` (dentro de `tests/`)
 
-- ❌ NÃO modificar diretamente
-- ✅ Reportar ao usuário quais mudanças são necessárias
-- ✅ Deixar usuário decidir se implementa
+**Fluxo quando código de produção precisa de ajustes:**
+
+1. ❌ **NÃO modificar** `src/`, `app/`, ou outros diretórios de produção
+1. ✅ **Reportar ao usuário** quais mudanças seriam necessárias
+1. ✅ **Deixar usuário decidir** se implementa manualmente
+1. ✅ **Criar testes** assumindo código atual como está
 
 ## 🔧 Instruções
 
@@ -195,53 +203,62 @@ markers =
 ✅ Skill langchain-test-specialist encontrada (projeto usa LangChain)
 ✅ Padrões de mock identificados
 
-📂 Analisando projeto em: src/my_module
+📂 Analisando código fonte em: src/my_module
+⚠️  LENDO APENAS - código de produção NÃO será modificado
 ✅ Framework detectado: pytest
 ✅ 3 funcionalidades críticas identificadas
 
-🧪 Gerando smoke tests (Happy Paths apenas):
-  ✅ test_smoke_main.py (2 testes)
-  ✅ test_smoke_api.py (3 testes)
-  ✅ test_smoke_agent.py (2 testes)
+🧪 Criando arquivos de smoke tests em tests/ (Happy Paths apenas):
+  ✅ tests/smoke/test_smoke_main.py (2 testes criados)
+  ✅ tests/smoke/test_smoke_api.py (3 testes criados)
+  ✅ tests/smoke/test_smoke_agent.py (2 testes criados)
+  📝 Total: 7 arquivos .py gerados em memória
 
 ⚡ Executando testes gerados...
   ✅ 7/7 testes passaram
   ⏱️ Tempo total: 12.4s
+  ✅ Código de produção permanece intocado
 ```
 
 **Saída final:**
 
 ```text
 ═══════════════════════════════════════════
-✅ SMOKE TESTS CRIADOS COM SUCESSO
+✅ ARQUIVOS DE SMOKE TESTS CRIADOS COM SUCESSO
 ═══════════════════════════════════════════
 
 📊 RESUMO:
-├─ Testes criados: 7
+├─ Arquivos de teste criados: 7
 ├─ Módulos cobertos: 3
 ├─ Framework: pytest
 ├─ Markers: @pytest.mark.smoke
 ├─ Tempo de execução: 12.4s
-└─ Localização: tests/smoke/
+├─ Localização: tests/smoke/
+└─ ✅ Código de produção NÃO modificado
 
-🧪 TESTES GERADOS:
-  📄 test_smoke_main.py
+🧪 ARQUIVOS .PY GERADOS EM MEMÓRIA:
+  📄 tests/smoke/test_smoke_main.py
      • test_process_data_happy_path()
      • test_validate_input_happy_path()
 
-  📄 test_smoke_api.py
+  📄 tests/smoke/test_smoke_api.py
      • test_get_users_success()
      • test_create_user_success()
      • test_health_check_success()
 
-  📄 test_smoke_agent.py
+  📄 tests/smoke/test_smoke_agent.py
      • test_agent_basic_query()
      • test_chain_execution()
 
+⚠️  IMPORTANTE:
+✅ Apenas arquivos em tests/ foram criados
+✅ Código de produção (src/, app/) permanece intocado
+✅ Testes prontos para execução sem modificar aplicação
+
 📝 PRÓXIMOS PASSOS:
 1. Executar: pytest tests/smoke/ -m smoke -v
-2. Revisar testes gerados
-3. Commit: git add tests/smoke/ && git commit -m "test: add smoke tests for happy paths"
+2. Revisar testes gerados em tests/smoke/
+3. Commit: git add tests/ && git commit -m "test: add smoke tests for happy paths"
 4. Integrar no CI/CD (workflow rápido)
 
 ═══════════════════════════════════════════
@@ -249,30 +266,33 @@ markers =
 
 ## ✅ Critérios de Sucesso
 
-**Restrições Respeitadas:**
+**Restrições de Arquivos (CRÍTICO):**
 
-- [ ] ❌ NENHUM arquivo de código de produção modificado (`src/`, `app/`, etc.)
-- [ ] ✅ Apenas arquivos em `tests/` criados/modificados
-- [ ] ✅ Apenas `pyproject.toml` ou `pytest.ini` atualizados (configuração)
-- [ ] ✅ Se mudanças em código de produção necessárias: reportado ao usuário
+- [ ] ❌ **ZERO modificações** em código de produção (`src/`, `app/`, `lib/`, etc.)
+- [ ] ✅ **Apenas arquivos `.py` em `tests/`** criados/modificados
+- [ ] ✅ **Apenas configurações de teste** atualizadas (`pyproject.toml` ou `pytest.ini`)
+- [ ] ✅ **Fixtures em `tests/conftest.py`** criados/atualizados (nunca em produção)
+- [ ] ✅ Se código de produção precisa de ajustes: **reportado ao usuário**
+- [ ] ✅ Usuário pode executar testes **sem modificar aplicação**
 
 **Geração de Testes:**
 
 - [ ] Skill `smoke-test` consultada OBRIGATORIAMENTE antes de gerar testes
 - [ ] Princípios de smoke testing aplicados (rápido, critical paths, fail fast)
 - [ ] Skills complementares consultadas (langchain-test-specialist se aplicável)
+- [ ] Código fonte **apenas lido** (não modificado) para identificar funcionalidades
 - [ ] Framework de teste detectado automaticamente
 - [ ] Fixtures existentes identificados e reutilizados
 - [ ] Apenas Happy Paths cobertos (sem edge cases)
 - [ ] Testes seguem padrão AAA (Arrange-Act-Assert)
-- [ ] Mocks simples e determinísticos
-- [ ] Markers `@pytest.mark.smoke` aplicados
+- [ ] Mocks simples e determinísticos (em memória)
+- [ ] Markers `@pytest.mark.smoke` aplicados em todos os testes
 - [ ] Markers configurados em `pyproject.toml` (preferido) ou `pytest.ini` (fallback)
 - [ ] Verificado se `pyproject.toml` existe antes de criar `pytest.ini`
 - [ ] Todos os testes gerados passam
 - [ ] Tempo de execução total < 30 segundos
-- [ ] Arquivos salvos em `tests/smoke/`
-- [ ] Relatório final com próximos passos
+- [ ] **Arquivos `.py` salvos em `tests/smoke/`** (não em produção)
+- [ ] Relatório final confirmando que código de produção permanece intocado
 
 ## 📝 Exemplos
 
