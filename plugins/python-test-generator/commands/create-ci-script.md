@@ -1,7 +1,7 @@
 ---
 description: Create CI.py script with lint, type check, tests and Docker build automation
 allowed-tools: Write, Read, Bash, Grep, Glob
-model: sonnet
+model: claude-sonnet-4-5
 argument-hint: '[PROJECT_PATH]'
 ---
 
