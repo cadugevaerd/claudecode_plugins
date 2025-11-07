@@ -180,10 +180,12 @@ Based on 3 criteria:
 
 Este é o último incremento necessário?
 Você pode:
-  1. Executar /concluir-slice para finalizar
-  2. Criar novo incremento se quiser mais melhorias
+  1. Criar teste de aceitação para validar o slice completo
+  2. Executar /concluir-slice para finalizar após teste criado
+  3. Criar novo incremento se quiser mais melhorias
 
 Status: Slice pode ser CONCLUÍDA
+Próximo passo recomendado: Criar teste de aceitação end-to-end
 ```
 
 **IF any 1+ is FAIL**:
@@ -295,11 +297,13 @@ Show user comprehensive summary:
 {IF all 3 PASS}:
    🎉 SLICE PODE SER CONCLUÍDA!
 
-   Todos 3 critérios atingidos. Você pode:
-   1. Executar: /concluir-slice
-      └─ Para finalizar e fazer merge
-   2. Executar: /novo-incremento
-      └─ Para adicionar mais melhorias (opcional)
+   Todos 3 critérios atingidos. Próximos passos:
+   1. Criar teste de aceitação end-to-end
+      └─ Validar todo o fluxo do slice implementado
+   2. Executar: /concluir-slice
+      └─ Para finalizar e fazer merge após teste criado
+   3. Executar: /novo-incremento (opcional)
+      └─ Para adicionar mais melhorias
 
 {IF any FAIL}:
    ⏳ CONTINUAR COM PRÓXIMO INCREMENTO
@@ -317,9 +321,10 @@ Show user comprehensive summary:
 
 🚀 PRÓXIMOS PASSOS:
    {IF all pass}:
-      1. Review changes: git log --oneline -5
-      2. Run /concluir-slice para finalizar
-      3. Ou continue com /novo-incremento
+      1. Criar teste de aceitação end-to-end para o slice
+      2. Review changes: git log --oneline -5
+      3. Run /concluir-slice para finalizar (após teste criado)
+      4. Ou continue com /novo-incremento para melhorias adicionais
 
    {IF continue}:
       1. Review metrics delta
@@ -406,11 +411,13 @@ Show user comprehensive summary:
 ➡️ DECISÃO AUTOMÁTICA:
    🎉 SLICE PODE SER CONCLUÍDA!
 
-   Todos 3 critérios atingidos. Você pode:
-   1. Executar: /concluir-slice
-      └─ Para finalizar e fazer merge
-   2. Executar: /novo-incremento
-      └─ Para adicionar mais melhorias (opcional)
+   Todos 3 critérios atingidos. Próximos passos:
+   1. Criar teste de aceitação end-to-end
+      └─ Validar todo o fluxo do slice implementado
+   2. Executar: /concluir-slice
+      └─ Para finalizar e fazer merge após teste criado
+   3. Executar: /novo-incremento (opcional)
+      └─ Para adicionar mais melhorias
 
 📝 FILES UPDATED:
    ✓ docs/slices/SLICE_1_TRACKER.md
@@ -419,9 +426,10 @@ Show user comprehensive summary:
      • Decision recorded
 
 🚀 PRÓXIMOS PASSOS:
-   1. Review changes: git log --oneline -5
-   2. Run /concluir-slice para finalizar
-   3. Ou continue com /novo-incremento
+   1. Criar teste de aceitação end-to-end para o slice
+   2. Review changes: git log --oneline -5
+   3. Run /concluir-slice para finalizar (após teste criado)
+   4. Ou continue com /novo-incremento para melhorias adicionais
 ```
 
 ______________________________________________________________________

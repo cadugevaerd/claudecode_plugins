@@ -2,6 +2,21 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.11.1] - 2025-11-07
+
+### Modificado
+
+- **finalizar-incremento command** melhorias de clareza e instruções
+  - Quando todos os 3 critérios forem atingidos, agora prioriza criação de teste de aceitação
+  - Novo passo: "Criar teste de aceitação end-to-end para validar o slice completo"
+  - Reorganizado a ordem de próximos passos para melhor fluxo de trabalho
+  - Adicionado recomendação explícita: "Próximo passo recomendado: Criar teste de aceitação end-to-end"
+  - Atualizado exemplo (Exemplo 1) com nova sequência de passos
+
+### Informação de Versão
+
+Este é o v0.11.1 (PATCH update) que melhora a clareza do comando `/finalizar-incremento` garantindo que testes de aceitação sejam criados antes de concluir o slice.
+
 ## [0.11.0] - 2025-11-06
 
 ### Adicionado

@@ -89,7 +89,7 @@
       "name": "agentc-ai-developer",
       "description": "Brief Minimo methodology with integrated microprocessos: /brief (Microprocesso 1.1 planning) → /setup-local-observability (Microprocesso 1.2 setup) → /spike-agentic (Microprocesso 1.3 spike) → /backlog (incremental development with prioritization scores and issue tracking) → /analyze-slices (S2.1 validation) → /iniciar-slice (S2.2 dev start) → /novo-incremento (S2.2 incremental loop) → /finalizar-incremento (S2.2 validation loop). Eight commands with gates validation, metrics tracking, coverage validation (≥70%), regression detection, and automatic decision logic. help-assistant agent with PROACTIVE MCP integration - auto-fetches LangChain/LangGraph docs. microprocesso-1-2 and spike-agentic skills for progressive disclosure. Full incremental development workflow with metrics validation. MCP integration via langchain-docs server.",
       "source": "./plugins/agentc-ai-developer",
-      "version": "0.11.0",
+      "version": "0.11.1",
       "author": {
         "name": "Carlos Araujo"
       },
