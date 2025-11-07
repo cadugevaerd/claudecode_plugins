@@ -245,7 +245,8 @@ All commands are auto-discovered on Claude startup. Available commands:
 - `/create-unit-tests` - Create isolated unit tests with 70% coverage target
 - `/create-integration-test` - Generate integration tests with VCR recording
 - `/create-smoke-tests` - Create smoke tests for Happy Path validation
-- `/setup-pytest-config` - Configure pytest.ini or pyproject.toml automatically
+- `/create-acceptance-tests` - Create acceptance tests for features/slices with BDD patterns
+- `/setup-pytest-config` - Configure pytest, mypy, ruff and black in pyproject.toml
 - `/update-claude-md` - Update CLAUDE.md with plugin configuration
 
 **Skills**: Auto-discovered when plugin is installed via `/plugin install` - no manual setup needed.
@@ -516,7 +517,8 @@ cd /path/to/project
 - `/create-unit-tests` - Create isolated unit tests with 70% coverage target
 - `/create-integration-test` - Generate integration tests with VCR recording
 - `/create-smoke-tests` - Create smoke tests for Happy Path validation
-- `/setup-pytest-config` - Configure pytest.ini or pyproject.toml automatically
+- `/create-acceptance-tests` - Create acceptance tests for features/slices with BDD patterns
+- `/setup-pytest-config` - Configure pytest, mypy, ruff and black in pyproject.toml
 
 ## Best Practices
 

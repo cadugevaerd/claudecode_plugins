@@ -1,17 +1,24 @@
 ---
-description: Configura pytest.ini ou pyproject.toml com configurações otimizadas
+description: Configura pyproject.toml com pytest, mypy, ruff e black otimizados
 model: claude-sonnet-4-5
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob
-argument-hint: '[--coverage THRESHOLD] [--force-ini]'
+argument-hint: '[--coverage THRESHOLD] [--tools pytest,mypy,ruff,black]'
 ---
 
-# Setup Pytest Configuration
+# Setup Python Development Tools Configuration
 
-Este comando cria ou atualiza a configuração do pytest, priorizando `pyproject.toml` (moderno) ou criando `pytest.ini` (fallback).
+Este comando cria ou atualiza a configuração de ferramentas Python de desenvolvimento em `pyproject.toml`:
+
+- **pytest**: Framework de testes
+- **mypy**: Type checker estático
+- **ruff**: Linter rápido (substitui flake8, isort, etc)
+- **black**: Code formatter
 
 ## 🎯 Objetivo
 
-Configurar pytest automaticamente com:
+Configurar ferramentas Python modernas em `pyproject.toml`:
+
+**pytest**:
 
 - Coverage habilitado
 - Testes paralelos (pytest-xdist)
@@ -19,18 +26,41 @@ Configurar pytest automaticamente com:
 - Configuração async (se detectado)
 - Paths e patterns otimizados
 
+**mypy**:
+
+- Type checking estrito
+- Suporte para pytest e testes
+- Overrides por módulo
+
+**ruff**:
+
+- Linting rápido (substitui flake8, isort, etc)
+- Line-length consistente com black
+- Regras selecionadas (E, F, I, N, W)
+
+**black**:
+
+- Code formatting automático
+- Line-length = 88 (padrão)
+
 ## 📋 Como usar
 
 ````bash
 
-# Configuração automática
+# Configuração automática (todas as ferramentas)
 /setup-pytest-config
+
+# Apenas pytest
+/setup-pytest-config --tools pytest
+
+# Pytest + mypy + ruff + black
+/setup-pytest-config --tools pytest,mypy,ruff,black
 
 # Com customização de coverage threshold
 /setup-pytest-config --coverage 90
 
-# Forçar pytest.ini mesmo se pyproject.toml existe
-/setup-pytest-config --force-ini
+# Apenas mypy e ruff
+/setup-pytest-config --tools mypy,ruff
 
 ```text
 
@@ -208,6 +238,54 @@ DJANGO_SETTINGS_MODULE = "config.settings.test"
 
 # Timeout (se detectado pytest-timeout)
 timeout = 300
+
+# =========================
+# Mypy Configuration
+# =========================
+[tool.mypy]
+python_version = "3.13"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_equality = true
+
+# Relaxar para testes
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+ignore_errors = false
+
+# =========================
+# Ruff Configuration
+# =========================
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "W",   # pycodestyle warnings
+]
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# =========================
+# Black Configuration
+# =========================
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+include = '\.pyi?$'
 
 ```text
 
@@ -422,36 +500,53 @@ testpaths = ["tests"]
 ```text
 
 ═══════════════════════════════════════════
-✅ CONFIGURAÇÃO PYTEST APLICADA
+✅ FERRAMENTAS PYTHON CONFIGURADAS
 ═══════════════════════════════════════════
 
 Arquivo: pyproject.toml
-Seção: [tool.pytest.ini_options]
 
-Configurações:
+**pytest** [tool.pytest.ini_options]:
 ✓ Coverage: ≥70%
 ✓ Parallel: pytest-xdist (-n auto)
 ✓ Async: pytest-asyncio (auto mode)
 ✓ Markers: 5 customizados (unit, integration, smoke, slow, e2e)
 
+**mypy** [tool.mypy]:
+✓ Type checking estrito habilitado
+✓ Python version: 3.13
+✓ Overrides para tests.*
+
+**ruff** [tool.ruff]:
+✓ Line-length: 88 (consistente com black)
+✓ Regras: E, F, I, N, W
+✓ Target version: py313
+
+**black** [tool.black]:
+✓ Line-length: 88
+✓ Target version: py313
+
 ═══════════════════════════════════════════
 
 🚀 Próximos Passos
 
-1. Validar configuração:
+1. Validar pytest:
    pytest --version
    pytest --markers
 
-2. Executar testes:
-   pytest
-
-3. Ver cobertura:
+2. Executar testes com coverage:
    pytest --cov
 
-4. Executar apenas testes rápidos:
-   pytest -m "not slow"
+3. Type check com mypy:
+   mypy src/
 
-5. Gerar testes automaticamente:
+4. Lint com ruff:
+   ruff check .
+   ruff format --check .
+
+5. Format com black:
+   black .
+
+6. Gerar testes automaticamente:
    /py-test
 
 ═══════════════════════════════════════════
@@ -777,9 +872,9 @@ addopts = [
 # Instalar tomli (Python < 3.11)
 pip install tomli
 
-# Ou usar tomllib (Python 3.11+)
+# Ou usar tomllib (Python 3.11+, incluído no Python 3.13)
 
-# Já incluído no Python 3.11+
+# tomllib já incluído no Python 3.11+
 
 ```text
 
@@ -827,11 +922,25 @@ addopts = ["--cov=.", "--cov-config=.coveragerc"]
 
 ## 📖 Referências
 
+**pytest**:
 - [pytest docs](https://docs.pytest.org/)
 - [pytest.ini reference](https://docs.pytest.org/en/stable/reference/customize.html)
 - [pyproject.toml spec (PEP 518)](https://peps.python.org/pep-0518/)
 - [pytest-cov](https://pytest-cov.readthedocs.io/)
 - [pytest-xdist](https://pytest-xdist.readthedocs.io/)
+
+**mypy**:
+- [mypy docs](https://mypy.readthedocs.io/)
+- [mypy configuration](https://mypy.readthedocs.io/en/stable/config_file.html)
+
+**ruff**:
+- [ruff docs](https://docs.astral.sh/ruff/)
+- [ruff configuration](https://docs.astral.sh/ruff/configuration/)
+- [ruff rules](https://docs.astral.sh/ruff/rules/)
+
+**black**:
+- [black docs](https://black.readthedocs.io/)
+- [black configuration](https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html)
 
 **Desenvolvido por Carlos Araujo para python-test-generator** 🧪
 ````
