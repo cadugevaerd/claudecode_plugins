@@ -8,6 +8,5 @@
   },
   "keywords": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "skills", "progressive-disclosure", "best-practices", "langgraph", "agentic-loop", "microprocessos", "spike-exploration", "slice-validation", "s1-gates", "backlog-refinement", "backlog-template", "prioritization-score", "issue-tracking", "macrofluxo", "mcp", "model-context-protocol"],
   "license": "MIT",
-  "homepage": "https://github.com/cadugevaerd/claudecode_plugins",
-  "mcp": ".mcp.json"
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
 }
