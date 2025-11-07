@@ -2,6 +2,7 @@
 description: Finalize current increment with metrics validation, regression detection, and automatic decision on next steps
 allowed-tools: Read, Bash, Write, Grep, AskUserQuestion
 argument-hint: ''
+model: claude-sonnet-4-5
 ---
 
 # Finalizar Incremento - Complete Increment Validation Loop

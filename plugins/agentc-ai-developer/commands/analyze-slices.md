@@ -2,7 +2,7 @@
 description: Validate backlog slices against S1.1 decision gates and trigger refinement if needed
 allowed-tools: Read, Write, Edit, Grep
 argument-hint: '[validate|refine|auto]'
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Analyze Slices Against S1.1 Gates

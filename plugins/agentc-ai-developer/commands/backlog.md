@@ -2,6 +2,7 @@
 description: Create incremental backlog with isolated, independently deliverable slices following Brief Minimo specification
 allowed-tools: Read, Write
 argument-hint: '[create|view]'
+model: claude-sonnet-4-5
 ---
 
 # Create Incremental Backlog

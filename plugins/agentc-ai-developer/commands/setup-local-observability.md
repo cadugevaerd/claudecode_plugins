@@ -1,6 +1,7 @@
 ---
 description: Automated setup for LangGraph projects with LangSmith observability. Uses langgraph new to initialize project, configure environment, and validate setup. Continues from /brief. ~15 minutes total setup time.
 allowed-tools: Read, Bash, Write
+model: claude-sonnet-4-5
 ---
 
 # Microprocesso 1.2: Setup Local + Observability

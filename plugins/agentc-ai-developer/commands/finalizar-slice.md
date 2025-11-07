@@ -2,7 +2,7 @@
 description: Complete slice validation with success rate verification, regression detection, and automatic BACKLOG.md update
 allowed-tools: Read, Bash, Write, Edit, Grep, AskUserQuestion
 argument-hint: ''
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Finalizar Slice - Complete Slice Validation and Closure

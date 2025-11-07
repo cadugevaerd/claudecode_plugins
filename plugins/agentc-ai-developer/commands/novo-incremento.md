@@ -2,6 +2,7 @@
 description: Create AI-suggested increment from pending acceptance criteria
 allowed-tools: Read, Grep, Bash, Write, AskUserQuestion
 argument-hint: '[auto|interactive]'
+model: claude-sonnet-4-5
 ---
 
 # Novo Incremento - Start Incremental Development Loop

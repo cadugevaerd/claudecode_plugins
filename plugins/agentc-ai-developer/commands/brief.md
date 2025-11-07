@@ -2,6 +2,7 @@
 description: Interactive Brief Minimo interview - answer 5 fundamental questions to define your AI agent's scope and generate production-ready README.md specification
 allowed-tools: Read, Write, AskUserQuestion, Glob, Grep
 argument-hint: ''
+model: claude-sonnet-4-5
 ---
 
 # Brief Minimo - Agent Planning Session

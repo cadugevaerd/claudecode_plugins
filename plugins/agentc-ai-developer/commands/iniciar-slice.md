@@ -2,6 +2,7 @@
 description: Select next slice from BACKLOG.md, create git branch, capture baseline metrics, and initialize development tracking
 allowed-tools: Read, Write, Bash, Grep
 argument-hint: '[auto|interactive]'
+model: claude-sonnet-4-5
 ---
 
 # Iniciar Slice - Start Development Workflow

@@ -2,7 +2,7 @@
 description: Generate agent spike plan (SPIKE.md) with file structure and agentic loop
 allowed-tools: Read, Write, Bash(mkdir:*)
 argument-hint:
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Microprocesso 1.3: Spike Agentic
