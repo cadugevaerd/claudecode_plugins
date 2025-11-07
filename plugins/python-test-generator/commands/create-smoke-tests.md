@@ -17,6 +17,19 @@ Especialista em criar smoke tests **apenas para Happy Paths**, garantindo valida
 - Pesquisar em skills existentes para conhecimento sobre testes
 - Integrar com fixtures e mocks já configurados
 
+## ⚠️ RESTRIÇÕES CRÍTICAS
+
+**❌ NUNCA modificar código de produção** (arquivos em `src/`, `app/`, etc.)
+**✅ APENAS criar/modificar:**
+- Arquivos de teste em `tests/`
+- Configuração de markers em `pyproject.toml` ou `pytest.ini`
+- Fixtures em `conftest.py` (dentro de `tests/`)
+
+**Se precisar de mudanças no código de produção:**
+- ❌ NÃO modificar diretamente
+- ✅ Reportar ao usuário quais mudanças são necessárias
+- ✅ Deixar usuário decidir se implementa
+
 ## 🔧 Instruções
 
 ### 1. **Buscar Conhecimento em Skills**
@@ -120,6 +133,32 @@ def test_critical_feature():
     ...
 ```
 
+4.3 **Configurar Markers (pyproject.toml preferido)**
+
+**PRIORIDADE**: Sempre usar `pyproject.toml` se disponível. Apenas criar `pytest.ini` se `pyproject.toml` não existir.
+
+**Opção 1 - pyproject.toml (PREFERIDA)**:
+
+```toml
+[tool.pytest.ini_options]
+markers = [
+    "smoke: Smoke tests for critical Happy Path validations"
+]
+```
+
+**Opção 2 - pytest.ini (APENAS se pyproject.toml não existir)**:
+
+```ini
+[pytest]
+markers =
+    smoke: Smoke tests for critical Happy Path validations
+```
+
+**Lógica de decisão**:
+1. Verificar se `pyproject.toml` existe no projeto
+2. Se SIM: adicionar/atualizar seção `[tool.pytest.ini_options]`
+3. Se NÃO: criar `pytest.ini` com markers
+
 ### 5. **Validar e Reportar**
 
 5.1 **Executar Testes Gerados**
@@ -197,6 +236,13 @@ def test_critical_feature():
 
 ## ✅ Critérios de Sucesso
 
+**Restrições Respeitadas:**
+- [ ] ❌ NENHUM arquivo de código de produção modificado (`src/`, `app/`, etc.)
+- [ ] ✅ Apenas arquivos em `tests/` criados/modificados
+- [ ] ✅ Apenas `pyproject.toml` ou `pytest.ini` atualizados (configuração)
+- [ ] ✅ Se mudanças em código de produção necessárias: reportado ao usuário
+
+**Geração de Testes:**
 - [ ] Skills de teste consultadas antes de gerar
 - [ ] Framework de teste detectado automaticamente
 - [ ] Fixtures existentes identificados e reutilizados
@@ -204,6 +250,8 @@ def test_critical_feature():
 - [ ] Testes seguem padrão AAA (Arrange-Act-Assert)
 - [ ] Mocks simples e determinísticos
 - [ ] Markers `@pytest.mark.smoke` aplicados
+- [ ] Markers configurados em `pyproject.toml` (preferido) ou `pytest.ini` (fallback)
+- [ ] Verificado se `pyproject.toml` existe antes de criar `pytest.ini`
 - [ ] Todos os testes gerados passam
 - [ ] Tempo de execução total < 30 segundos
 - [ ] Arquivos salvos em `tests/smoke/`
@@ -244,6 +292,43 @@ Força uso de `unittest` em vez de detecção automática.
 Detecta LangChain/LangGraph, consulta `langchain-test-specialist`, usa GenericFakeChatModel.
 
 ## ❌ Anti-Patterns
+
+### ❌ Erro 0: Modificar Código de Produção (CRÍTICO)
+
+**NUNCA** modifique arquivos de código de produção ao gerar smoke tests:
+
+```python
+# ❌ CRÍTICO - NUNCA modificar código em src/
+# Arquivo: src/api/users.py
+def get_users():
+    # ... código existente ...
+    pass  # ❌ NÃO adicionar logs, prints, ou mudanças aqui!
+
+# ✅ CORRETO - Apenas criar testes
+# Arquivo: tests/smoke/test_smoke_api.py
+@pytest.mark.smoke
+def test_get_users_success():
+    """Smoke test: Valida que get_users retorna dados"""
+    users = get_users()
+    assert users is not None
+```
+
+**Se código de produção precisa de ajustes:**
+
+```text
+❌ ERRADO - Modificar diretamente:
+  Edit src/api/users.py
+  # Adicionar logging, ajustar imports, etc.
+
+✅ CORRETO - Reportar ao usuário:
+  "⚠️ ATENÇÃO: Para testar get_users(), o código de produção precisa:
+   1. Adicionar import logging em src/api/users.py
+   2. Expor função _validate_user() como pública
+
+   Deseja que eu implemente essas mudanças? [Sim/Não]
+
+   Se Não: Testes gerados assumem código atual como está."
+```
 
 ### ❌ Erro 1: Incluir Edge Cases
 
@@ -315,6 +400,33 @@ def test_critical_feature():
 def test_critical_feature():
     """Smoke test: Valida funcionalidade crítica"""
     assert feature() == "ok"
+```
+
+### ❌ Erro 4.1: Ignorar pyproject.toml
+
+Não crie `pytest.ini` sem verificar se `pyproject.toml` existe:
+
+```bash
+# ❌ ERRADO - Criar pytest.ini diretamente
+cat > pytest.ini << EOF
+[pytest]
+markers =
+    smoke: Smoke tests
+EOF
+
+# ✅ CORRETO - Verificar pyproject.toml primeiro
+if [ -f "pyproject.toml" ]; then
+    # Adicionar markers em pyproject.toml
+    echo "[tool.pytest.ini_options]" >> pyproject.toml
+    echo 'markers = ["smoke: Smoke tests"]' >> pyproject.toml
+else
+    # Apenas se pyproject.toml NÃO existir
+    cat > pytest.ini << EOF
+[pytest]
+markers =
+    smoke: Smoke tests
+EOF
+fi
 ```
 
 ### ❌ Erro 5: Cobertura Excessiva

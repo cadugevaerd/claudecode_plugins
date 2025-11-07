@@ -1,7 +1,7 @@
 ---
 name: update-claude-md
 description: Update project's CLAUDE.md with python-test-generator plugin configuration following best practices (imperative - no prompts)
-model: sonnet
+model: claude-sonnet-4-5
 ---
 
 # Update CLAUDE.md with Python-Test-Generator Configuration
