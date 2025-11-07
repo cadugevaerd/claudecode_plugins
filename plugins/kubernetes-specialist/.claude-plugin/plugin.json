@@ -6,46 +6,5 @@
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
   },
-  "license": "MIT",
-  "commands": [
-    {
-      "name": "k8s-diagnose",
-      "description": "Diagnose Kubernetes problems and provide actionable solutions",
-      "path": "commands/k8s-diagnose.md"
-    },
-    {
-      "name": "k8s-create-resource",
-      "description": "Generate and deploy Kubernetes resources following best practices",
-      "path": "commands/k8s-create-resource.md"
-    },
-    {
-      "name": "k8s-optimize",
-      "description": "Analyze and optimize Kubernetes resource allocation and costs",
-      "path": "commands/k8s-optimize.md"
-    }
-  ],
-  "agents": [
-    {
-      "name": "k8s-resource-analyzer",
-      "description": "Analyzes Kubernetes resources and identifies configuration issues and performance bottlenecks",
-      "path": "agents/k8s-resource-analyzer.md"
-    },
-    {
-      "name": "k8s-troubleshooter",
-      "description": "Diagnoses and resolves Kubernetes pod failures by analyzing logs and events",
-      "path": "agents/k8s-troubleshooter.md"
-    }
-  ],
-  "skills": [
-    {
-      "name": "k8s-best-practices",
-      "description": "Comprehensive Kubernetes 2025 best practices for resource management, security, and optimization. Use when designing K8s deployments, right-sizing resources (CPU/memory), implementing security controls (RBAC, SecurityContext), configuring health checks, setting up HPA, optimizing costs, or troubleshooting resource issues (OOMKilled, throttling).",
-      "path": "skills/k8s-best-practices"
-    },
-    {
-      "name": "k8s-troubleshooting-patterns",
-      "description": "Diagnostic patterns and solutions for common Kubernetes pod failures. Use when troubleshooting CrashLoopBackOff, OOMKilled, ImagePullBackOff, Pending pods, CreateContainerConfigError. Includes kubectl diagnostic commands, kubectl debug for ephemeral containers, debugging techniques, and prevention strategies for production workloads.",
-      "path": "skills/k8s-troubleshooting-patterns"
-    }
-  ]
+  "license": "MIT"
 }
