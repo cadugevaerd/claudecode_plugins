@@ -1,13 +1,20 @@
 ---
-description: Commit and push rápido - ideal para commits pequenos e urgentes
+description: Commit e push rápido com validação mínima
 allowed-tools: Bash(git:*)
-argument-hint: ''
+model: claude-sonnet-4-5
 ---
 
 # Quick Commit - Commit e Push Rápido
 
 Executa commit + push rápido com validação de segurança essencial,
 sem testes ou verificações completas.
+
+## 🎯 Objetivo
+
+- Executar commit e push rápido (< 1 minuto)
+- Validar segurança essencial (arquivos sensíveis)
+- Gerar mensagem de commit conveniente
+- Sincronizar com remote via rebase
 
 ## Procedimento de Execução
 
@@ -116,6 +123,45 @@ Ou cancele: git rebase --abort
 └─ Push: ✅ REALIZADO
 
 ═══════════════════════════════════════════
+```
+
+## ✅ Critérios de Sucesso
+
+- [ ] Nenhum arquivo sensível detectado
+- [ ] Mudanças resumidas apresentadas ao usuário
+- [ ] Mensagem de commit gerada ou fornecida pelo usuário
+- [ ] git add -A executado com sucesso
+- [ ] Commit criado com sucesso
+- [ ] Rebase com origin realizado sem conflitos
+- [ ] Push para remote concluído
+- [ ] Resultado final exibido com resumo completo
+
+## 📝 Exemplos de Uso
+
+### Exemplo 1: Commit com mensagem customizada
+
+```bash
+/quick-commit
+# Digite mensagem: fix: corrige erro de validação
+# → Commit e push realizados
+```
+
+### Exemplo 2: Commit com auto-geração
+
+```bash
+/quick-commit
+# Digite mensagem: [Enter]
+# → Analisa mudanças
+# → Gera: "docs: update README"
+# → Commit e push realizados
+```
+
+### Exemplo 3: Bloqueio por arquivo sensível
+
+```bash
+/quick-commit
+# → ⚠️ ALERTA: .env detectado
+# → Comando BLOQUEADO
 ```
 
 ## Segurança
