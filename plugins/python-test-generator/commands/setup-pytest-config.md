@@ -1,5 +1,8 @@
 ---
-description: Configura pytest.ini ou pyproject.toml com configurações otimizadas para testes Python
+description: Configura pytest.ini ou pyproject.toml com configurações otimizadas
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Grep, Glob
+argument-hint: "[--coverage THRESHOLD] [--force-ini]"
 ---
 
 # Setup Pytest Configuration

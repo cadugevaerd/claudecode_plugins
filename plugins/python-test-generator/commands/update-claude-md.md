@@ -1,6 +1,7 @@
 ---
 name: update-claude-md
 description: Update project's CLAUDE.md with python-test-generator plugin configuration following best practices (imperative - no prompts)
+model: "sonnet"
 ---
 
 # Update CLAUDE.md with Python-Test-Generator Configuration
@@ -240,9 +241,11 @@ Create the python-test-generator section following best practices.
 
 ## Commands Available
 
-All commands are auto-discovered on Claude startup. Key commands:
-- `/py-test` - Analyze coverage and generate Python tests (respects 80% threshold v2.0+)
-- `/setup-pytest-config` - Create pytest configuration automatically
+All commands are auto-discovered on Claude startup. Available commands:
+- `/create-unit-tests` - Create isolated unit tests with 70% coverage target
+- `/create-integration-test` - Generate integration tests with VCR recording
+- `/create-smoke-tests` - Create smoke tests for Happy Path validation
+- `/setup-pytest-config` - Configure pytest.ini or pyproject.toml automatically
 - `/update-claude-md` - Update CLAUDE.md with plugin configuration
 
 **Skills**: Auto-discovered when plugin is installed via `/plugin install` - no manual setup needed.
@@ -510,8 +513,10 @@ cd /path/to/project
 
 ## Related Commands
 
-- `/py-test` - Analyze coverage and generate tests
-- `/setup-pytest-config` - Create pytest configuration
+- `/create-unit-tests` - Create isolated unit tests with 70% coverage target
+- `/create-integration-test` - Generate integration tests with VCR recording
+- `/create-smoke-tests` - Create smoke tests for Happy Path validation
+- `/setup-pytest-config` - Configure pytest.ini or pyproject.toml automatically
 
 ## Best Practices
 
