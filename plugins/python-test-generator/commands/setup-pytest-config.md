@@ -1,6 +1,6 @@
 ---
 description: Configura pytest.ini ou pyproject.toml com configurações otimizadas
-model: sonnet
+model: claude-sonnet-4-5
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob
 argument-hint: '[--coverage THRESHOLD] [--force-ini]'
 ---

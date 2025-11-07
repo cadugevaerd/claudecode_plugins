@@ -1,7 +1,7 @@
 ---
 description: Generate integration tests with VCR recording for Python projects
 allowed-tools: [Read, Grep, Glob, Write, Edit, Bash]
-model: sonnet
+model: claude-sonnet-4-5
 argument-hint: TARGET_PATH [--coverage-threshold PERCENT]
 ---
 

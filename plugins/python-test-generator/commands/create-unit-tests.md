@@ -1,7 +1,7 @@
 ---
 description: Creates isolated unit tests for Python functions and classes with 70% coverage target
 allowed-tools: Read, Write, Grep, Glob, Skill, Task
-model: sonnet
+model: claude-sonnet-4-5
 argument-hint: '[TARGET_PATH] [--coverage-target 70]'
 ---
 
