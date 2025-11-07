@@ -1,5 +1,5 @@
 ---
-description: Cria smoke tests focados em Happy Paths para validação rápida de funcionalidades críticas
+description: Cria smoke tests para features/slices completas validando Happy Path end-to-end
 allowed-tools: Read, Write, Grep, Glob, Skill
 model: claude-sonnet-4-5
 argument-hint: '[TARGET_PATH] [--framework pytest|unittest]'
@@ -21,11 +21,13 @@ Especialista em criar smoke tests **apenas para Happy Paths**, garantindo valida
 
 **❌ NUNCA modificar código de produção** (arquivos em `src/`, `app/`, etc.)
 **✅ APENAS criar/modificar:**
+
 - Arquivos de teste em `tests/`
 - Configuração de markers em `pyproject.toml` ou `pytest.ini`
 - Fixtures em `conftest.py` (dentro de `tests/`)
 
 **Se precisar de mudanças no código de produção:**
+
 - ❌ NÃO modificar diretamente
 - ✅ Reportar ao usuário quais mudanças são necessárias
 - ✅ Deixar usuário decidir se implementa
@@ -36,13 +38,19 @@ Especialista em criar smoke tests **apenas para Happy Paths**, garantindo valida
 
 Antes de gerar testes, consultar skills relevantes:
 
-1.1 **Verificar Skills de Teste Disponíveis**
+1.1 **Consultar Skill smoke-test (OBRIGATÓRIO)**
 
-- Usar `Skill` tool para buscar conhecimento sobre testes Python
-- Priorizar: `langchain-test-specialist` se projeto usa LangChain/LangGraph
-- Extrair padrões de mock, fixtures e estrutura AAA
+- **SEMPRE** usar `Skill` tool para consultar `smoke-test` antes de gerar testes
+- Extrair princípios core: testes rápidos (\<1s), critical paths only, fail fast
+- Identificar o que incluir/excluir em smoke tests (core imports, health checks vs edge cases)
+- Verificar padrões de pytest markers e CI integration
 
-1.2 **Analisar Projeto**
+1.2 **Verificar Skills Complementares**
+
+- Se projeto usa LangChain/LangGraph: consultar `langchain-test-specialist`
+- Extrair padrões de mock, fixtures e estrutura AAA específicos do projeto
+
+1.3 **Analisar Projeto**
 
 - Identificar framework de teste (pytest, unittest)
 - Detectar fixtures existentes em `conftest.py`
@@ -155,9 +163,10 @@ markers =
 ```
 
 **Lógica de decisão**:
+
 1. Verificar se `pyproject.toml` existe no projeto
-2. Se SIM: adicionar/atualizar seção `[tool.pytest.ini_options]`
-3. Se NÃO: criar `pytest.ini` com markers
+1. Se SIM: adicionar/atualizar seção `[tool.pytest.ini_options]`
+1. Se NÃO: criar `pytest.ini` com markers
 
 ### 5. **Validar e Reportar**
 
@@ -178,8 +187,12 @@ markers =
 **Durante execução:**
 
 ```text
-🔍 Consultando skills de teste...
-✅ Skill langchain-test-specialist encontrada
+🔍 Consultando skill smoke-test (OBRIGATÓRIO)...
+✅ Princípios de smoke testing carregados
+✅ Padrões identificados: testes rápidos (<1s), critical paths only, fail fast
+
+🔍 Verificando skills complementares...
+✅ Skill langchain-test-specialist encontrada (projeto usa LangChain)
 ✅ Padrões de mock identificados
 
 📂 Analisando projeto em: src/my_module
@@ -237,13 +250,17 @@ markers =
 ## ✅ Critérios de Sucesso
 
 **Restrições Respeitadas:**
+
 - [ ] ❌ NENHUM arquivo de código de produção modificado (`src/`, `app/`, etc.)
 - [ ] ✅ Apenas arquivos em `tests/` criados/modificados
 - [ ] ✅ Apenas `pyproject.toml` ou `pytest.ini` atualizados (configuração)
 - [ ] ✅ Se mudanças em código de produção necessárias: reportado ao usuário
 
 **Geração de Testes:**
-- [ ] Skills de teste consultadas antes de gerar
+
+- [ ] Skill `smoke-test` consultada OBRIGATORIAMENTE antes de gerar testes
+- [ ] Princípios de smoke testing aplicados (rápido, critical paths, fail fast)
+- [ ] Skills complementares consultadas (langchain-test-specialist se aplicável)
 - [ ] Framework de teste detectado automaticamente
 - [ ] Fixtures existentes identificados e reutilizados
 - [ ] Apenas Happy Paths cobertos (sem edge cases)
@@ -365,18 +382,39 @@ def test_api_integration(mock_get):
     assert result is not None
 ```
 
-### ❌ Erro 3: Não Usar Skills Disponíveis
+### ❌ Erro 3: Não Consultar Skill smoke-test (CRÍTICO)
 
-Não ignore skills de teste existentes:
+**NUNCA** gere smoke tests sem consultar a skill `smoke-test`:
 
 ```python
-# ❌ ERRADO - Criar mocks sem consultar skills
+# ❌ CRÍTICO - Criar testes sem consultar skill smoke-test
+def test_feature():
+    # Implementação sem seguir princípios de smoke testing
+    # Pode resultar em testes lentos, complexos ou incorretos
+    ...
+
+# ✅ CORRETO - Consultar skill smoke-test primeiro
+# 1. Usar Skill tool: Skill(skill="smoke-test")
+# 2. Extrair princípios: rápido (<1s), critical paths, fail fast
+# 3. Aplicar padrões identificados
+def test_feature_smoke():
+    """Smoke test: Valida funcionalidade crítica (Happy Path)"""
+    # Teste rápido, simples, focado em critical path
+    ...
+```
+
+### ❌ Erro 4: Não Usar Skills Complementares
+
+Não ignore skills complementares quando aplicável:
+
+```python
+# ❌ ERRADO - Criar mocks sem consultar skills complementares
 def test_langchain_chain():
     # Mock incorreto ou sub-ótimo
     mock_llm = Mock()
     ...
 
-# ✅ CORRETO - Consultar langchain-test-specialist primeiro
+# ✅ CORRETO - Consultar langchain-test-specialist se projeto usa LangChain
 # Usar GenericFakeChatModel conforme skill recomenda
 from langchain_core.language_models.fake_chat_models import GenericFakeChatModel
 
@@ -386,7 +424,7 @@ def test_langchain_chain():
     ]))
 ```
 
-### ❌ Erro 4: Não Usar Markers pytest
+### ❌ Erro 5: Não Usar Markers pytest
 
 Não deixe de marcar smoke tests:
 
@@ -402,7 +440,7 @@ def test_critical_feature():
     assert feature() == "ok"
 ```
 
-### ❌ Erro 4.1: Ignorar pyproject.toml
+### ❌ Erro 5.1: Ignorar pyproject.toml
 
 Não crie `pytest.ini` sem verificar se `pyproject.toml` existe:
 
@@ -429,7 +467,7 @@ EOF
 fi
 ```
 
-### ❌ Erro 5: Cobertura Excessiva
+### ❌ Erro 6: Cobertura Excessiva
 
 Não tente cobrir tudo em smoke tests:
 
