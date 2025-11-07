@@ -1,5 +1,5 @@
 ---
-description: Create CI.py script with lint, type check, tests and Docker build automation
+description: Create CI.py script with auto-fix, lint, type check, tests and Docker build
 allowed-tools: Write, Read, Bash, Grep, Glob
 model: claude-sonnet-4-5
 argument-hint: '[PROJECT_PATH]'
@@ -7,13 +7,14 @@ argument-hint: '[PROJECT_PATH]'
 
 # Create CI Script
 
-Create a comprehensive CI.py script that automates code quality checks, testing, and Docker build process with full logging.
+Create a comprehensive CI.py script that automates code quality checks with auto-fix, testing, and Docker build process with full logging.
 
 ## 🎯 Objetivo
 
 - Create `CI.py` script with complete CI/CD automation
-- Execute Black formatting and Ruff linting checks
-- Run MyPy type checking validation
+- **Auto-fix code with Black formatting** (executa fix automático)
+- **Auto-fix lint issues with Ruff** (executa `--fix` quando possível)
+- Run MyPy type checking validation (apenas reporta, sem fix)
 - Validate pyproject.toml configuration
 - Execute automated test suite
 - Build Docker image if Dockerfile exists
@@ -29,28 +30,32 @@ Create a comprehensive CI.py script that automates code quality checks, testing,
 1.4 Add colored output utilities for better readability
 1.5 Implement exit code handling for CI/CD pipelines
 
-### 2. Implement Code Quality Checks
+### 2. Implement Code Quality Checks with Auto-Fix
 
-2.1 **Black Formatting Check**
+2.1 **Black Formatting with Auto-Fix**
 
-- Run `uv run black --check .` to verify code formatting
-- Log output showing files that need formatting
-- Return exit code 1 if formatting issues found
-- Display diff for formatting changes needed
+- **Run `uv run black .` to automatically format code** (NÃO usar `--check`)
+- Log output showing files that were reformatted
+- Return exit code 0 (Black sempre fixa automaticamente)
+- Display list of files modified by Black
+- **IMPORTANTE**: Black sempre aplica fixes, nunca apenas checa
 
-2.2 **Ruff Linting Check**
+2.2 **Ruff Linting with Auto-Fix**
 
-- Run `uv run ruff check .` for linting validation
-- Show detailed lint errors with file paths and line numbers
-- Return exit code 1 if lint errors found
-- Display summary of error types and counts
+- **Run `uv run ruff check --fix .` to auto-fix lint issues**
+- Show detailed lint errors that were auto-fixed
+- Show lint errors that require manual intervention
+- Return exit code 1 if unfixable lint errors remain
+- Display summary: fixed vs. manual intervention needed
+- **IMPORTANTE**: Use `--fix` para aplicar correções automáticas
 
-2.3 **MyPy Type Checking**
+2.3 **MyPy Type Checking (Report Only)**
 
 - Run `uv run mypy .` for type checking
 - Display type errors with file locations
 - Return exit code 1 if type errors found
 - Show summary of type issues by category
+- **IMPORTANTE**: MyPy não tem auto-fix, apenas reporta
 
 ### 3. Validate pyproject.toml
 
@@ -135,11 +140,15 @@ def run_command(cmd: List[str], step_name: str) -> bool:
     pass
 
 def check_black() -> bool:
-    """Run Black formatting check."""
+    """Run Black formatting with auto-fix."""
+    # Run: uv run black .
+    # Always returns True (Black auto-fixes)
     pass
 
 def check_ruff() -> bool:
-    """Run Ruff linting check."""
+    """Run Ruff linting with auto-fix."""
+    # Run: uv run ruff check --fix .
+    # Returns False if unfixable errors remain
     pass
 
 def check_mypy() -> bool:
@@ -161,8 +170,8 @@ def build_docker() -> bool:
 def main() -> int:
     """Main CI pipeline orchestration."""
     steps = [
-        ("Black Formatting", check_black),
-        ("Ruff Linting", check_ruff),
+        ("Black Formatting (Auto-Fix)", check_black),
+        ("Ruff Linting (Auto-Fix)", check_ruff),
         ("MyPy Type Checking", check_mypy),
         ("pyproject.toml Validation", validate_pyproject),
         ("Test Suite", run_tests),
@@ -181,16 +190,28 @@ if __name__ == "__main__":
 
 ```text
 ============================================================
-Running: Black Formatting
+Running: Black Formatting (Auto-Fix)
 ============================================================
 
-✓ All files formatted correctly
+Reformatted 3 files:
+  - src/main.py
+  - src/utils.py
+  - tests/test_example.py
+
+✓ All files formatted
 
 ============================================================
-Running: Ruff Linting
+Running: Ruff Linting (Auto-Fix)
 ============================================================
 
-✓ No linting errors found
+Fixed 5 issues automatically:
+  - F401: Unused import removed (3 files)
+  - E501: Line too long fixed (2 files)
+
+⚠️  1 issue requires manual fix:
+  - E711: Comparison to None should be 'if cond is None:' (src/main.py:42)
+
+✓ Auto-fixable issues resolved
 
 ============================================================
 Running: MyPy Type Checking
@@ -237,12 +258,12 @@ Successfully built image-name:latest
 CI PIPELINE SUMMARY
 ============================================================
 
-✓ Black Formatting      PASSED
-✓ Ruff Linting         PASSED
-✓ MyPy Type Checking   PASSED
-✓ pyproject.toml       PASSED
-✓ Test Suite           PASSED
-✓ Docker Build         PASSED
+✓ Black Formatting (Auto-Fix)     PASSED (3 files reformatted)
+✓ Ruff Linting (Auto-Fix)        PASSED (5 issues auto-fixed)
+✓ MyPy Type Checking             PASSED
+✓ pyproject.toml                 PASSED
+✓ Test Suite                     PASSED
+✓ Docker Build                   PASSED
 
 All checks passed! ✨
 ```
@@ -250,9 +271,10 @@ All checks passed! ✨
 ## ✅ Critérios de Sucesso
 
 - [ ] CI.py script created with proper structure
-- [ ] Black formatting check implemented with logging
-- [ ] Ruff linting check implemented with error details
-- [ ] MyPy type checking implemented with issue reporting
+- [ ] **Black auto-fix implemented** (executa `black .` sem `--check`)
+- [ ] **Ruff auto-fix implemented** (executa `ruff check --fix .`)
+- [ ] **Auto-fix summary logged** (quantos issues foram corrigidos)
+- [ ] MyPy type checking implemented with issue reporting (report only)
 - [ ] pyproject.toml validation implemented
 - [ ] Pytest test suite execution implemented
 - [ ] Docker build process implemented (conditional)
@@ -261,7 +283,7 @@ All checks passed! ✨
 - [ ] Proper exit codes returned (0 for success, 1 for failure)
 - [ ] Fail-fast behavior on critical errors
 - [ ] Execution time logged for each step
-- [ ] Final summary report generated
+- [ ] Final summary report generated with auto-fix stats
 - [ ] Script is executable and uses uv run for Python commands
 
 ## ❌ Anti-Patterns
@@ -286,25 +308,38 @@ for line in process.stdout:
     print(line, end='')
 ```
 
-### ❌ Erro 2: Missing Error Details
+### ❌ Erro 2: Using --check Instead of Auto-Fix
 
-Do not hide error details - show actionable information:
+Do not just check - always apply auto-fix when available:
 
 ```python
-# ❌ Errado - erro genérico
-if result.returncode != 0:
-    print("Check failed")
-    return False
+# ❌ Errado - apenas checa, não corrige
+def check_black() -> bool:
+    result = subprocess.run(["uv", "run", "black", "--check", "."])
+    if result.returncode != 0:
+        print("Black formatting needed")
+        return False
+    return True
 
-# ✅ Correto - detalhes acionáveis
-if result.returncode != 0:
-    print(f"{RED}✗ Black formatting failed{RESET}")
-    print(f"\nRun '{GREEN}uv run black .{RESET}' to fix formatting issues")
-    print(f"\nFiles needing formatting:")
-    for line in output_lines:
-        if "would reformat" in line:
-            print(f"  - {line.strip()}")
-    return False
+# ✅ Correto - aplica auto-fix automaticamente
+def check_black() -> bool:
+    result = subprocess.run(["uv", "run", "black", "."], capture_output=True, text=True)
+
+    # Parse output para contar arquivos reformatados
+    reformatted_files = []
+    for line in result.stdout.splitlines():
+        if "reformatted" in line.lower():
+            # Extract filename
+            reformatted_files.append(line)
+
+    if reformatted_files:
+        print(f"{GREEN}✓ Black formatted {len(reformatted_files)} files{RESET}")
+        for file in reformatted_files:
+            print(f"  - {file}")
+    else:
+        print(f"{GREEN}✓ All files already formatted{RESET}")
+
+    return True  # Black always succeeds (auto-fixes)
 ```
 
 ### ❌ Erro 3: Ignoring pyproject.toml Validation
