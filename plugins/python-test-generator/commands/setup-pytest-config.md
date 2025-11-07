@@ -177,7 +177,7 @@ addopts = [
     "--cov=src",
     "--cov-report=term-missing",
     "--cov-report=html",
-    "--cov-fail-under=80",
+    "--cov-fail-under=70",
 
     # Verbosity
     "-v",
@@ -195,6 +195,7 @@ addopts = [
 markers = [
     "unit: Unit tests (fast, isolated)",
     "integration: Integration tests (slower, external deps)",
+    "smoke: Smoke tests for Happy Path validations",
     "slow: Slow tests (skip in CI with -m 'not slow')",
     "e2e: End-to-end tests",
 ]
@@ -252,7 +253,7 @@ addopts =
     --cov=src
     --cov-report=term-missing
     --cov-report=html
-    --cov-fail-under=80
+    --cov-fail-under=70
 
     # Verbosity
     -v
@@ -269,6 +270,7 @@ addopts =
 markers =
     unit: Unit tests (fast, isolated)
     integration: Integration tests (slower, external deps)
+    smoke: Smoke tests for Happy Path validations
     slow: Slow tests (skip in CI with -m 'not slow')
     e2e: End-to-end tests
 
@@ -306,7 +308,7 @@ addopts = [
     "--cov=src",
     "--cov-report=term-missing",
     "--cov-report=html",
-    "--cov-fail-under=80",
+    "--cov-fail-under=70",
     "-v",
     "--tb=short",
     "-n auto",
@@ -316,16 +318,17 @@ addopts = [
 markers = [
     "unit: Unit tests",
     "integration: Integration tests",
+    "smoke: Smoke tests for Happy Path validations",
     "slow: Slow tests",
 ]
 
 asyncio_mode = "auto"
 
 Características:
-✅ Coverage habilitado (≥80%)
+✅ Coverage habilitado (≥70%)
 ✅ Testes paralelos (pytest-xdist)
 ✅ Async support (pytest-asyncio)
-✅ Markers customizados (3)
+✅ Markers customizados (4: unit, integration, smoke, slow)
 ✅ Warnings configurados
 
 ═══════════════════════════════════════════
@@ -343,7 +346,7 @@ Aplicar configuração? (s/n/editar)
 
 O que deseja ajustar?
 
-1. Coverage threshold (atual: 80%)
+1. Coverage threshold (atual: 70%)
 2. Adicionar/remover markers
 3. Ajustar addopts
 4. Mudar testpaths
@@ -426,10 +429,10 @@ Arquivo: pyproject.toml
 Seção: [tool.pytest.ini_options]
 
 Configurações:
-✓ Coverage: ≥80%
+✓ Coverage: ≥70%
 ✓ Parallel: pytest-xdist (-n auto)
 ✓ Async: pytest-asyncio (auto mode)
-✓ Markers: 4 customizados
+✓ Markers: 5 customizados (unit, integration, smoke, slow, e2e)
 
 ═══════════════════════════════════════════
 
@@ -596,12 +599,13 @@ Aplicar? s
 testpaths = ["tests"]
 addopts = [
     "--cov=app",
-    "--cov-fail-under=80",
+    "--cov-fail-under=70",
     "-v",
 ]
 markers = [
     "api: API endpoint tests",
     "unit: Unit tests",
+    "smoke: Smoke tests for Happy Path validations",
 ]
 
 ```text
@@ -613,13 +617,14 @@ markers = [
 testpaths = ["tests"]
 addopts = [
     "--cov=src",
-    "--cov-fail-under=80",
+    "--cov-fail-under=70",
     "-v",
 ]
 markers = [
     "llm: Tests that call LLMs",
     "trajectory: Trajectory validation",
     "unit: Unit tests with mocks",
+    "smoke: Smoke tests for Happy Path validations",
 ]
 asyncio_mode = "auto"
 
@@ -633,7 +638,7 @@ testpaths = ["tests"]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 addopts = [
     "--cov=apps",
-    "--cov-fail-under=80",
+    "--cov-fail-under=70",
     "--reuse-db",
     "-v",
 ]
@@ -641,6 +646,7 @@ markers = [
     "db: Database tests",
     "views: View tests",
     "models: Model tests",
+    "smoke: Smoke tests for Happy Path validations",
 ]
 
 ```text
