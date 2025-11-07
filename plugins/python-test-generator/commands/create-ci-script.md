@@ -29,9 +29,11 @@ Create a comprehensive CI.py script that automates code quality checks with auto
 **CRÍTICO**: Antes de criar CI.py, configure exceções no pyproject.toml para evitar que linters/formatters processem arquivos de CI/CD.
 
 1.1 **Verificar se pyproject.toml existe**
+
 - Se não existir, criar com estrutura básica
 
 1.2 **Adicionar exclusões para Black**
+
 ```toml
 [tool.black]
 extend-exclude = '''
@@ -43,12 +45,14 @@ extend-exclude = '''
 ```
 
 1.3 **Adicionar exclusões para Ruff**
+
 ```toml
 [tool.ruff]
 extend-exclude = ["tests", "CI.py"]
 ```
 
 1.4 **Adicionar exclusões para MyPy**
+
 ```toml
 [tool.mypy]
 exclude = [
@@ -58,6 +62,7 @@ exclude = [
 ```
 
 1.5 **Preservar configurações existentes**
+
 - NUNCA sobrescrever seções existentes
 - Apenas adicionar/atualizar campos `exclude` ou `extend-exclude`
 - Validar sintaxe TOML após edição
@@ -107,8 +112,8 @@ exclude = [
 - `[tool.ruff]` configuration
 - `[tool.mypy]` configuration
 - `[tool.pytest.ini_options]` configuration
-4.4 Log validation results with clear success/failure messages
-4.5 Return exit code 1 if validation fails
+  4.4 Log validation results with clear success/failure messages
+  4.5 Return exit code 1 if validation fails
 
 ### 5. Execute Test Suite
 
@@ -145,8 +150,8 @@ exclude = [
 
 - 0: All checks passed
 - 1: One or more checks failed
-8.3 Log stack traces for unexpected errors
-8.4 Provide actionable error messages with fix suggestions
+  8.3 Log stack traces for unexpected errors
+  8.4 Provide actionable error messages with fix suggestions
 
 ## 📊 Formato de Saída
 
@@ -489,10 +494,11 @@ def main() -> int:
 ```
 
 **O que acontece**:
+
 1. Verifica se `pyproject.toml` existe
-2. Adiciona exclusões para `tests/` e `CI.py` em Black, Ruff, MyPy
-3. Cria `CI.py` no diretório raiz do projeto atual
-4. Torna o script executável
+1. Adiciona exclusões para `tests/` e `CI.py` em Black, Ruff, MyPy
+1. Cria `CI.py` no diretório raiz do projeto atual
+1. Torna o script executável
 
 ### pyproject.toml Atualizado
 

@@ -95,6 +95,17 @@
       },
       "category": "development",
       "tags": ["ai-agents", "agent-development", "architecture", "planning", "methodology", "brief", "specification", "documentation", "validation", "existing-projects", "setup", "environment", "langsmith", "observability", "microprocessos", "interactive", "help-assistant", "skills", "progressive-disclosure", "best-practices", "commands", "langgraph", "agentic-loop", "spike-exploration", "slice-validation", "s1-gates", "backlog-refinement", "backlog-template", "prioritization-score", "issue-tracking", "macrofluxo", "mcp", "model-context-protocol"]
+    },
+    {
+      "name": "kubernetes-specialist",
+      "description": "Advanced plugin for Kubernetes resource management, troubleshooting, and best practices implementation with MCP integration. Features: diagnostic commands for pod failures, resource optimization for cost reduction, manifest generation with security hardening, 2 agents with MCP kubernetes-toolkit integration and skill-first knowledge loading, 2 comprehensive skills for best practices and troubleshooting patterns, and MCP server for direct Kubernetes API access. 2025 best practices addressing 99.94% industry over-provisioning issue.",
+      "source": "./plugins/kubernetes-specialist",
+      "version": "1.1.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "devops",
+      "tags": ["kubernetes", "k8s", "containers", "orchestration", "devops", "troubleshooting", "resource-management", "cost-optimization", "best-practices", "production", "reliability", "diagnostics", "manifest-generation", "security-hardening", "rbac", "resource-quotas", "health-checks", "observability", "mcp", "model-context-protocol", "api-integration", "2025-patterns"]
     }
   ]
 }
