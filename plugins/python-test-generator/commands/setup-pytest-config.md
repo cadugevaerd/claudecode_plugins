@@ -9,10 +9,12 @@ argument-hint: '[--coverage THRESHOLD] [--tools pytest,mypy,ruff,black]'
 
 Este comando cria ou atualiza a configuração de ferramentas Python de desenvolvimento em `pyproject.toml`:
 
-- **pytest**: Framework de testes
-- **mypy**: Type checker estático
+- **black**: Code formatter (PRINCIPAL para formatação)
 - **ruff**: Linter rápido (substitui flake8, isort, etc)
-- **black**: Code formatter
+- **mypy**: Type checker estático
+- **pytest**: Framework de testes
+
+**IMPORTANTE**: As ferramentas serão validadas e instaladas automaticamente via UV se não estiverem presentes.
 
 ## 🎯 Objetivo
 
@@ -45,9 +47,12 @@ Configurar ferramentas Python modernas em `pyproject.toml`:
 
 ## 📋 Como usar
 
+**IMPORTANTE**: O comando valida automaticamente se as ferramentas estão instaladas. Se não estiverem, instala via UV e executa `uv sync`.
+
 ````bash
 
 # Configuração automática (todas as ferramentas)
+# Valida instalação → Instala se necessário → Configura pyproject.toml
 /setup-pytest-config
 
 # Apenas pytest
@@ -66,7 +71,57 @@ Configurar ferramentas Python modernas em `pyproject.toml`:
 
 ## 🔍 Processo de Execução
 
-### 1. Detecção de Ambiente
+### 1. Validar e Instalar Ferramentas
+
+**CRÍTICO**: Antes de configurar, validar instalação das ferramentas.
+
+```bash
+# Verificar se ferramentas estão instaladas
+uv run black --version
+uv run ruff --version
+uv run mypy --version
+uv run pytest --version
+```
+
+**Se alguma ferramenta não estiver instalada**:
+
+```text
+⚠️  Ferramentas Python não detectadas
+
+Instalando via UV:
+  - black (code formatter)
+  - ruff (linter)
+  - mypy (type checker)
+  - pytest (test framework)
+  - pytest-cov (coverage)
+  - pytest-xdist (parallel tests)
+
+Executando: uv add --dev black ruff mypy pytest pytest-cov pytest-xdist
+```
+
+**Após instalação, executar sync**:
+
+```bash
+uv sync
+```
+
+**Output esperado**:
+
+```text
+✅ Ferramentas instaladas com sucesso
+
+Versões detectadas:
+  - black: 24.1.0
+  - ruff: 0.1.14
+  - mypy: 1.8.0
+  - pytest: 7.4.3
+  - pytest-cov: 4.1.0
+  - pytest-xdist: 3.5.0
+
+✅ uv sync executado
+```
+
+### 2. Detecção de Ambiente
 
 ```text
 
@@ -529,22 +584,22 @@ Arquivo: pyproject.toml
 
 🚀 Próximos Passos
 
-1. Validar pytest:
-   pytest --version
-   pytest --markers
+1. Format com black (PRINCIPAL):
+   uv run black .
 
-2. Executar testes com coverage:
-   pytest --cov
+2. Lint com ruff:
+   uv run ruff check .
+   uv run ruff format --check .
 
 3. Type check com mypy:
-   mypy src/
+   uv run mypy src/
 
-4. Lint com ruff:
-   ruff check .
-   ruff format --check .
+4. Validar pytest:
+   uv run pytest --version
+   uv run pytest --markers
 
-5. Format com black:
-   black .
+5. Executar testes com coverage:
+   uv run pytest --cov
 
 6. Gerar testes automaticamente:
    /py-test
