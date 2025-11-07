@@ -62,17 +62,41 @@ For each slice, validate:
   - FAIL: Slice depends on multiple external components
   - PASS: Slice focuses on single isolated component (low coupling)
 
-- **Gate 5 - Increases success_rate?**: Calculate contribution to success metrics
+- **Gate 5 - Increases success_rate?**: Validate measurable contribution to success metrics
 
   - Extract success metric from README.md (Pergunta 5 do Brief Minimo)
+  - **CRITICAL RULE**: Slice MUST have delta > 0% to pass this gate
   - For each slice, assess: "How does this slice move the metric toward the target?"
-  - FAIL: Slice has no measurable contribution to success metric (0% delta)
-  - PASS: Slice measurably improves success metric (>0% estimated delta)
-  - Example:
-    - Brief Target: "85% accuracy on email classification"
-    - Slice 1: "Implement core classifier logic" → estimated delta +40%
-    - Slice 2: "Add edge case handling" → estimated delta +15%
-    - Slice 3: "Code review polish" → estimated delta +5%
+  - Calculation:
+    1. Get Brief Target metric (e.g., "85% accuracy on email classification")
+    2. Identify current baseline (if exists, e.g., "Current: 45%")
+    3. Calculate gap: 85% - 45% = 40% improvement needed
+    4. Estimate slice contribution: "What % of gap does this slice close?"
+    5. Assign delta: Core features (20-40%), Enhancements (10-20%), Polish (5-15%)
+  - **FAIL**: Slice has NO measurable contribution (delta = 0%, contributes 0% to target)
+    - Example FAIL: "Code formatting cleanup" with no metric impact
+    - Example FAIL: "Update documentation" with 0% delta
+    - Example FAIL: "Refactor internal function" with no success metric relationship
+    - **DECISION**: Automatic NO-GO assignment
+  - **PASS**: Slice measurably improves success metric (delta > 0%)
+    - Example PASS: "Implement core classifier logic" → estimated delta +40%
+    - Example PASS: "Add edge case handling" → estimated delta +15%
+    - Example PASS: "Polish algorithm" → estimated delta +5%
+    - **DECISION**: Continues to other gates for GO/NO-GO determination
+  - **Validation Rule**: If cumulative delta from all slices < target gap, alert that project cannot meet target
+    - Example: Target gap = 40%, but slices only cover 30% → Warning issued
+
+1. **GO Decision Logic** (CRITICAL VALIDATION):
+
+   Before approving any slice as GO, ALL 5 gates MUST pass:
+
+   - **Rule 1**: ALL gates must return ✅ PASS (if ANY gate is ❌ FAIL → NO-GO)
+   - **Rule 2**: Gate 5 failure is AUTOMATIC NO-GO:
+     - If slice delta = 0% → Immediately fail Gate 5 → NO-GO decision
+     - If slice has no success metric relationship → Immediately fail Gate 5 → NO-GO decision
+     - Example: "Code formatting" slice with 0% delta → **AUTOMATIC NO-GO**
+   - **Rule 3**: NO exceptions - all 5 gates are mandatory
+   - **Rule 4**: Document which gate(s) failed for each NO-GO slice
 
 1. Generate analysis report:
 
@@ -80,7 +104,13 @@ For each slice, validate:
    - Slices that FAIL any gate (NO-GO): Blockers identified
    - Summary: X GO slices / Y NO-GO slices total
 
-1. For each NO-GO slice, list which gates failed and why
+1. For each NO-GO slice, list which gates failed and why:
+
+   - **Gate 1 FAIL**: Duration outside 3-6h range (too short or too long)
+   - **Gate 2 FAIL**: Impact/effort ratio < 2.0 (low ROI)
+   - **Gate 3 FAIL**: No clear rollback strategy or shared state modifications
+   - **Gate 4 FAIL**: High coupling with external components
+   - **Gate 5 FAIL**: Success rate delta = 0% (no metric contribution)
 
 ## Fast-Track Validation (S1.1 Fast-Track)
 
@@ -350,31 +380,48 @@ Create tracker with this structure:
 
 ```text
 🔍 Analisando slices contra S1.1 Decision Gates...
+📊 Brief Target: "85% accuracy on email classification" (Current: 45% | Gap: 40%)
 
 ✅ Slice 1: Implementar core classifier
    Gate 1 (Duration): ✅ PASS (4h, dentro de 3-6h)
    Gate 2 (Score): ✅ PASS (Score: 2.25, Impact: HIGH)
    Gate 3 (Reversible): ✅ PASS (Rollback: restore from backup)
    Gate 4 (Isolated): ✅ PASS (Low coupling)
-   Gate 5 (Success Rate): ✅ PASS (+25% accuracy delta)
+   Gate 5 (Success Rate): ✅ PASS (+25% accuracy delta, closes 62.5% of gap)
    Fast-Track: ❌ NO (>1h, high complexity)
    → Status: GO (Tracker criado: docs/slices/SLICE_1_TRACKER.md)
 
-⚠️ Slice 2: Add edge case handling
+⚠️ Slice 2: Code formatting and cleanup
+   Gate 1 (Duration): ✅ PASS (2h)
+   Gate 2 (Score): ✅ PASS (Score: 2.5)
+   Gate 3 (Reversible): ✅ PASS
+   Gate 4 (Isolated): ✅ PASS
+   Gate 5 (Success Rate): ❌ FAIL (Delta = 0%, no metric relationship)
+   → Status: NO-GO (Gate 5 failed: AUTOMATIC NO-GO - success rate contribution = 0%)
+   → Motivo: Esta slice apenas formata código, não contribui para métrica de acurácia
+
+❌ Slice 3: Add edge case handling
    Gate 1 (Duration): ✅ PASS (3h)
    Gate 2 (Score): ❌ FAIL (Score: 1.5, Impact: MEDIUM, Effort: 3h)
    Gate 3 (Reversible): ✅ PASS
    Gate 4 (Isolated): ✅ PASS
-   Gate 5 (Success Rate): ✅ PASS (+10% delta)
+   Gate 5 (Success Rate): ✅ PASS (+10% delta, closes 25% of gap)
    → Status: NO-GO (Gate 2 failed: low impact/effort ratio)
 
 📊 Resumo:
-- Total: 2 slices
-- GO: 1 slice (50%)
-- NO-GO: 1 slice (50%)
+- Total: 3 slices
+- GO: 1 slice (33%)
+- NO-GO: 2 slices (67%)
+  - Slice 2: Gate 5 FAIL (success rate delta = 0%)
+  - Slice 3: Gate 2 FAIL (low ROI)
 - Fast-Track: 0 slices
 
-🔄 Próxima ação: Refinar Slice 2 ou iniciar Slice 1 com /iniciar-slice
+⚠️ Success Rate Analysis:
+- Target Gap: 40% improvement needed
+- GO Slices Delta: +25% (only 62.5% of target)
+- ⚠️ WARNING: Current slices insufficient to meet target. Need additional slices or refinement.
+
+🔄 Próxima ação: Refinar Slice 2 (remover ou conectar a métrica) e Slice 3 (melhorar ROI) ou iniciar Slice 1
 ```
 
 ### Exemplo 2: Modo Refine
