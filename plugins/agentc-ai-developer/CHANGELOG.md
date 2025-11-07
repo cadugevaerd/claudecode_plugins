@@ -2,6 +2,54 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.11.0] - 2025-11-06
+
+### Adicionado
+
+- **Uso PROATIVO de MCP** no help-assistant agent
+  - Agente agora usa automaticamente documentação LangChain/LangGraph via MCP server `langchain-docs`
+  - Detecção automática de triggers:
+    - **Code Analysis**: Detecta imports `from langchain` ou `from langgraph` em código
+    - **Questions**: Detecta perguntas sobre LangChain/LangGraph APIs, features ou best practices
+    - **Development Context**: Durante `/spike-agentic`, `/novo-incremento` e code review
+  - Workflow automático: Detect → Identify Topic → Fetch Docs → Synthesize → Respond
+  - Integração com `WebFetch` para acessar documentação oficial
+  - Exemplos práticos de workflow integrados
+
+### Modificado
+
+- **help-assistant agent** frontmatter YAML atualizado
+  - Descrição menciona "PROACTIVE MCP integration"
+  - `allowed-tools` expandido: Read, Grep, Glob, WebFetch
+- **help-assistant agent** nova seção "🚀 PROACTIVE MCP USAGE (CRITICAL)"
+  - Triggers automáticos documentados (Code Analysis, Questions, Development)
+  - Instruções detalhadas de como acessar documentação LangChain/LangGraph
+  - Access methods: WebFetch (primary) e MCP Resources (when available)
+  - Workflow completo com exemplo prático
+- **plugin.json** descrição atualizada para "PROACTIVE MCP integration - automatically fetches LangChain/LangGraph docs"
+- **marketplace.json** atualizado para versão 0.11.0
+
+### Informação de Versão
+
+Este é o v0.11.0 (MINOR update) que transforma o help-assistant em um agente proativo que busca automaticamente documentação oficial do LangChain/LangGraph quando detecta código ou perguntas relacionadas, garantindo respostas sempre atualizadas e precisas.
+
+## [0.10.1] - 2025-11-06
+
+### Modificado
+
+- **help-assistant agent** agora inclui conhecimento sobre MCP (Model Context Protocol)
+  - Seção completa "MCP Integration" com configuração e uso
+  - Troubleshooting comum de MCP (servidor não disponível, docs desatualizadas, erro stdio)
+  - Orientações de quando usar MCP (LangChain/LangGraph features durante `/spike-agentic`)
+  - Best practices para combinar MCP docs + skills
+  - Novos triggers relacionados a MCP adicionados à seção "When to Use This Agent"
+- **plugin.json** descrição atualizada para mencionar "help-assistant agent with MCP troubleshooting support"
+- **marketplace.json** atualizado para versão 0.10.1
+
+### Informação de Versão
+
+Este é o v0.10.1 (PATCH update) que expande o help-assistant agent com conhecimento completo sobre integração MCP, permitindo melhor suporte a usuários durante desenvolvimento com LangChain/LangGraph.
+
 ## [0.10.0] - 2025-11-06
 
 ### Adicionado
