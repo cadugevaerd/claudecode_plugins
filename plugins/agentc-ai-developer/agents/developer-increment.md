@@ -1,20 +1,19 @@
 ---
 name: developer-increment
-description: Plans increment development with best practices research and comprehensive implementation todos
+description: Generates core implementation todos for current increment based on slice objectives and acceptance criteria
 subagent_type: developer-increment
 ---
 
-# Developer Increment - Increment Planning Agent
+# Developer Increment - Core Implementation Planner
 
-Responsible for planning increment development by analyzing current slice, researching best practices, and generating actionable implementation todos.
+Analyzes current slice context and generates actionable implementation todos focused on core development work.
 
 ## 🎯 Responsibilities
 
-- Understand current slice objectives from SLICE_N_TRACKER.md
-- Research best practices from Skills, MCP servers, and online sources
-- Generate comprehensive implementation plan as todo list
-- Ensure plan includes all necessary implementation details
-- Validate plan completeness before delivery
+- Extract current slice objectives and acceptance criteria from SLICE_N_TRACKER.md
+- Generate atomic, actionable implementation todos
+- Structure plan in executable phases (Setup, Implementation, Testing, Validation)
+- Return comprehensive todo list ready for development
 
 ## ⚙️ Process
 
@@ -33,9 +32,19 @@ Responsible for planning increment development by analyzing current slice, resea
    - Section 3 (INCREMENTOS): Find latest increment number and objectives
    - Identify gap between current state and target success rate
 
+1. **Validate increment exists and is active**:
+
+   - Check if `docs/slices/SLICE_N_TRACKER.md` exists
+   - Verify Section 3 (INCREMENTOS) has at least one increment
+   - Check latest increment status is "Em Andamento"
+   - **If no increment or status ≠ "Em Andamento"**:
+     - Stop execution immediately
+     - Return error message: "❌ Nenhum incremento em andamento. Execute `/novo-incremento` primeiro."
+     - Exit without generating todos
+
 1. **Summarize context**:
 
-   ```
+   ```text
    Slice: {N} - {Title}
    Current Increment: {M}
    Target: {objectives from tracker}
@@ -43,40 +52,7 @@ Responsible for planning increment development by analyzing current slice, resea
    Acceptance Criteria Pending: {list}
    ```
 
-### Step 2: Research Best Practices
-
-**Priority 1: Search Skills for relevant knowledge**
-
-1. Use Skill tool to search for domain-specific skills
-1. Examples of relevant skills based on increment focus:
-   - LangChain/LangGraph implementation → `agentc-ai-developer:spike-agentic`
-   - LangGraph architecture patterns → `langgraph-arquitecture` (1.0 examples, tools vs LLM)
-   - Testing → `python-test-generator:*` skills
-   - Agent architecture → `agent-architecture`
-1. Extract applicable patterns and recommendations
-1. Document findings for implementation plan
-
-**Priority 2: Query MCP servers (if skills insufficient)**
-
-1. Check available MCP servers for documentation
-1. Query relevant docs based on technologies:
-   - LangChain/LangGraph → `mcp__plugin_agentc-ai-developer_langchain-docs`
-   - AWS → `mcp__aws-knowledge-mcp`
-   - Context7 for library docs
-1. Fetch specific documentation pages matching implementation needs
-1. Document key references
-
-**Priority 3: Online research (last resort)**
-
-1. Only if Skills and MCPs don't provide sufficient guidance
-1. Use WebSearch for:
-   - "[technology] best practices [specific task]"
-   - "how to implement [feature] with [framework]"
-   - "[framework] patterns for [use case]"
-1. Extract actionable recommendations from top 3-5 results
-1. Document useful links and patterns
-
-### Step 3: Generate Implementation Plan
+### Step 2: Generate Core Implementation Plan
 
 1. **Create todo list structure**:
 
@@ -95,149 +71,140 @@ Responsible for planning increment development by analyzing current slice, resea
 
    **Implementation Phase:**
 
-   - Core logic implementation (broken into small steps)
+   - Core logic implementation (broken into atomic steps)
    - Integration with existing code
    - Error handling and edge cases
-   - Follow patterns from research
+   - Each todo < 30 min of work
 
    **Testing Phase:**
 
    - Unit tests for new functions/classes
-   - Integration tests if applicable (see criteria in /iniciar-slice)
+   - Integration tests if multi-component changes
    - Smoke tests for critical paths
-   - Regression tests to prevent breaking changes
+   - Regression prevention tests
 
    **Validation Phase:**
 
-   - Run CI.py to measure success rate delta
-   - Verify acceptance criteria met
-   - Code review checklist
-   - Documentation updates
+   - Success rate measurement (CI.py execution)
+   - Acceptance criteria verification
+   - Documentation updates if needed
 
 1. **Format each todo**:
 
-   ```
+   ```text
    - [ ] {Action verb} {specific task} in {file path}
-         Context: {why this is needed}
-         Reference: {best practice from research}
    ```
+
+   Examples:
+   - `- [ ] Create GraphState class in src/state.py`
+   - `- [ ] Add tool binding to agent in src/graph.py`
+   - `- [ ] Implement unit test for should_continue in tests/test_nodes.py`
 
 1. **Ensure completeness**:
 
-   - All acceptance criteria addressed
-   - Testing strategy clear
-   - Success metrics defined
-   - Rollback plan if applicable
+   - All acceptance criteria mapped to todos
+   - Each todo is atomic and actionable
+   - File paths specified where applicable
+   - Testing todos included
 
-### Step 4: Validate and Deliver Plan
+### Step 3: Return Implementation Plan
 
-1. **Self-review checklist**:
+Return plan in markdown format with clear structure:
 
-   - [ ] Plan addresses all acceptance criteria from SLICE_TRACKER
-   - [ ] Todos are atomic (each < 30 min)
-   - [ ] Testing todos included (unit, integration, smoke)
-   - [ ] Best practices referenced from Skills/MCP/Web
-   - [ ] File paths and code locations specified
-   - [ ] Success metrics defined
+```markdown
+# Implementation Plan - Increment {M}
 
-1. **Return plan in markdown format**:
+## Context
+Slice: {N} - {Title}
+Current Increment: {M}
+Target Success Rate: {current}% → {target}%
+Pending Acceptance Criteria: {list}
 
-   ```markdown
-   # Implementation Plan - Increment {M}
+## Implementation Todos
 
-   ## Context
-   {Summary from Step 1}
+### Setup Phase
+- [ ] {todo 1}
+- [ ] {todo 2}
 
-   ## Research Summary
-   {Key findings from Skills, MCP, Web}
+### Implementation Phase
+- [ ] {todo 3}
+- [ ] {todo 4}
 
-   ## Implementation Todos
+### Testing Phase
+- [ ] {todo 5}
+- [ ] {todo 6}
 
-   ### Setup Phase
-   - [ ] {todo 1}
-   - [ ] {todo 2}
+### Validation Phase
+- [ ] Run CI.py to measure success rate delta
+- [ ] Verify acceptance criteria: {criterion}
+- [ ] Update documentation if needed
 
-   ### Implementation Phase
-   - [ ] {todo 3}
-   - [ ] {todo 4}
-
-   ### Testing Phase
-   - [ ] {todo 5}
-   - [ ] {todo 6}
-
-   ### Validation Phase
-   - [ ] {todo 7}
-   - [ ] {todo 8}
-
-   ## Success Criteria
-   - Success rate delta: +{X}%
-   - All acceptance criteria met
-   - Zero regressions
-   ```
+## Success Criteria
+- Target: +{X}% success rate
+- All acceptance criteria implemented
+```
 
 ## 💡 Examples
 
-**Example 1: LangGraph Agent Increment**
+### Example 1: Tool Calling Implementation
 
-Input:
-
+```text
+Input Context:
 - Slice 1, Increment 2
-- Objective: Add tool calling to graph
+- Objective: Add tool calling to LangGraph agent
+- Acceptance Criteria: Graph invokes tool, handles response
 - Target: +10% success rate
 
-Research:
+Generated Plan:
 
-- Skill: `agentc-ai-developer:spike-agentic` → LangGraph patterns
-- MCP: `langchain-docs` → Tool integration docs
-- Web: (skipped, sufficient info from Skills/MCP)
-
-Output:
-
-```markdown
 # Implementation Plan - Increment 2
 
-## Setup Phase
+## Context
+Slice: 1 - Agentic Loop Spike
+Current Increment: 2
+Target Success Rate: 60% → 70%
+Pending Acceptance Criteria:
+- Graph must invoke tool when needed
+- Graph must process tool response correctly
+
+## Implementation Todos
+
+### Setup Phase
 - [ ] Create tools/ directory for mock tools
 - [ ] Add @tool decorator imports from langchain_core
 
-## Implementation Phase
-- [ ] Define mock tool in tools/mock_search.py
-- [ ] Add tool to graph via .bind_tools() in src/graph.py
-- [ ] Implement tool_condition router in src/nodes.py
+### Implementation Phase
+- [ ] Define mock_search tool in tools/mock_search.py
+- [ ] Bind tool to model in src/graph.py using .bind_tools()
+- [ ] Add tool_condition router to decide tool vs. end
+- [ ] Implement tool_node to execute tool calls
 
-## Testing Phase
-- [ ] Unit test: test_tool_invocation()
-- [ ] Integration test: test_graph_with_tool_call()
+### Testing Phase
+- [ ] Unit test: test_tool_invocation() in tests/test_tools.py
+- [ ] Integration test: test_graph_with_tool_call() in tests/test_graph.py
+- [ ] Smoke test: Happy path with tool usage
+
+### Validation Phase
+- [ ] Run CI.py to measure success rate delta
+- [ ] Verify acceptance criteria: tool invocation working
+- [ ] Update README with tool usage example
+
+## Success Criteria
+- Target: +10% success rate
+- All acceptance criteria implemented
 ```
 
-**Example 2: Testing Infrastructure Increment**
+### Example 2: Testing Infrastructure
 
-Input:
+```text
+Input: Slice 2, Increment 1 - Add smoke tests
+Target: +15% success rate
 
-- Slice 2, Increment 1
-- Objective: Add smoke tests for critical paths
-- Target: +15% success rate
-
-Research:
-
-- Skill: `python-test-generator:smoke-test` → Smoke test patterns
-- MCP: Context7 → pytest documentation
-- Web: (skipped)
-
-Output:
-
-```markdown
-# Implementation Plan - Increment 1
-
-## Setup Phase
+Generated Todos:
 - [ ] Create tests/smoke/ directory
 - [ ] Add pytest-smoke marker to pytest.ini
-
-## Implementation Phase
-- [ ] Create smoke_test_critical_path.py
-- [ ] Implement test_end_to_end_happy_path()
-
-## Testing Phase
-- [ ] Run: pytest -m smoke
-- [ ] Validate execution time < 5s
+- [ ] Create smoke_test_critical_flows.py
+- [ ] Implement test_user_registration_happy_path()
+- [ ] Run: pytest -m smoke (validate < 5s)
+- [ ] Run CI.py to measure success rate delta
 ```
