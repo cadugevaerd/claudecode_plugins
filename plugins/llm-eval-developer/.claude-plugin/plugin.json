@@ -7,8 +7,5 @@
   },
   "license": "MIT",
   "keywords": ["llm", "evaluation", "benchmark", "langchain", "langgraph", "langsmith", "testing", "ai"],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/anthropics/claude-code-marketplace"
-  }
+  "repository": "https://github.com/anthropics/claude-code-marketplace"
 }
