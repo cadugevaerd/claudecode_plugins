@@ -50,6 +50,7 @@ Responsible for planning increment development by analyzing current slice, resea
 1. Use Skill tool to search for domain-specific skills
 1. Examples of relevant skills based on increment focus:
    - LangChain/LangGraph implementation → `agentc-ai-developer:spike-agentic`
+   - LangGraph architecture patterns → `langgraph-arquitecture` (1.0 examples, tools vs LLM)
    - Testing → `python-test-generator:*` skills
    - Agent architecture → `agent-architecture`
 1. Extract applicable patterns and recommendations
