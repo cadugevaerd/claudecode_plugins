@@ -66,11 +66,12 @@ print(result)
 ```
 
 **Conceitos demonstrados**:
+
 - State como TypedDict
 - Nodes como funções puras
 - Sequential edges (START → clean → count → format → END)
 
----
+______________________________________________________________________
 
 ## Exemplo 2: Conditional Routing (Decision Making)
 
@@ -146,11 +147,12 @@ for i in range(3):
 ```
 
 **Conceitos demonstrados**:
+
 - Conditional edges com router function
 - Literal type hints para type safety
 - Routing dinâmico baseado em state
 
----
+______________________________________________________________________
 
 ## Exemplo 3: Agentic Loop (ReAct Pattern)
 
@@ -242,12 +244,13 @@ for msg in result["messages"]:
 ```
 
 **Conceitos demonstrados**:
+
 - Agentic loop (LLM ↔ Tools)
 - Messages reducer (add_messages)
 - Loop back edge (tools → llm)
 - Conditional routing para terminar loop
 
----
+______________________________________________________________________
 
 ## Exemplo 4: Persistence & Memory (Checkpointing)
 
@@ -317,12 +320,13 @@ for msg in result2["messages"]:
 ```
 
 **Conceitos demonstrados**:
+
 - MemorySaver checkpointer
 - thread_id para separar conversas
 - State persistence entre invocações
 - Messages acumulam automaticamente (add_messages reducer)
 
----
+______________________________________________________________________
 
 ## Exemplo 5: Human-in-the-Loop (Approval Workflow)
 
@@ -411,12 +415,13 @@ print(resumed2["result"])  # "Action cancelled"
 ```
 
 **Conceitos demonstrados**:
+
 - interrupt() para pausar execução
 - Command(resume=...) para fornecer input humano
 - Checkpointer obrigatório para HITL
 - Workflow de aprovação
 
----
+______________________________________________________________________
 
 ## Exemplo 6: Streaming Real-Time Updates
 
@@ -471,11 +476,12 @@ for chunk in graph.stream({"step": 0, "status": "Starting"}):
 ```
 
 **Conceitos demonstrados**:
+
 - graph.stream() para real-time updates
 - Cada chunk = output de um node
 - Útil para UIs com progress indicators
 
----
+______________________________________________________________________
 
 ## Exemplo 7: Prebuilt ReAct Agent (Production-Ready)
 
@@ -518,12 +524,13 @@ print(result["messages"][-1].content)
 ```
 
 **Conceitos demonstrados**:
+
 - create_react_agent() prebuilt
 - @tool decorator para definir tools
 - Agent decide automaticamente quando usar tools
 - Production-ready com model failover, retry, etc
 
----
+______________________________________________________________________
 
 ## 📊 Comparação de Padrões
 
@@ -539,12 +546,12 @@ print(result["messages"][-1].content)
 ## 🎯 Best Practices
 
 1. **Start Simple**: Comece com sequential flow, adicione complexity gradualmente
-2. **Type Safety**: Use TypedDict + Literal para evitar bugs
-3. **Reducers**: Use add_messages para chat, operator.add para listas
-4. **Checkpointing**: Adicione cedo se precisar memory ou HITL
-5. **Streaming**: Sempre considere UX com streaming
-6. **Prebuilt**: Use create_react_agent() para prototipagem rápida
-7. **Testing**: Teste cada node isoladamente antes de integrar
+1. **Type Safety**: Use TypedDict + Literal para evitar bugs
+1. **Reducers**: Use add_messages para chat, operator.add para listas
+1. **Checkpointing**: Adicione cedo se precisar memory ou HITL
+1. **Streaming**: Sempre considere UX com streaming
+1. **Prebuilt**: Use create_react_agent() para prototipagem rápida
+1. **Testing**: Teste cada node isoladamente antes de integrar
 
 ## 📚 Resources
 

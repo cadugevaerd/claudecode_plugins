@@ -1,26 +1,14 @@
 {
   "name": "llm-eval-developer",
   "version": "1.2.0",
-  "description": "Assistente especializado para desenvolver evaluations de LLMs com OpenEvals, LangSmith e melhores práticas - gera código, padrões e estruturas completas de evaluation - NOVO: Benchmarking comparativo com LangChain/LangGraph",
+  "description": "Plugin especializado em criar benchmarks comparativos de LLMs e evaluations com LangChain/LangGraph e LangSmith para tracking automático",
   "author": {
-    "name": "Carlos Araujo",
-    "email": "cadu.gevaerd@gmail.com"
+    "name": "Carlos Araujo"
   },
-  "keywords": [
-    "evaluation",
-    "llm",
-    "development",
-    "openevals",
-    "langsmith",
-    "metrics",
-    "testing",
-    "scaffolding",
-    "code-generation",
-    "benchmarking",
-    "comparative-evaluation",
-    "langchain",
-    "langgraph"
-  ],
   "license": "MIT",
-  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+  "keywords": ["llm", "evaluation", "benchmark", "langchain", "langgraph", "langsmith", "testing", "ai"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/claude-code-marketplace"
+  }
 }

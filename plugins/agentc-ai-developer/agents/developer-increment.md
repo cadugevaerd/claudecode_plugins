@@ -42,6 +42,12 @@ Analyzes current slice context and generates actionable implementation todos foc
      - Return error message: "❌ Nenhum incremento em andamento. Execute `/novo-incremento` primeiro."
      - Exit without generating todos
 
+1. **Detect LLM manipulation context**:
+
+   - Check if increment objectives mention: "LLM", "prompt", "model", "chain", "agent", "generation"
+   - Check acceptance criteria for: prompt engineering, LLM evaluation, model testing
+   - Flag as **LLM-related** if any match found
+
 1. **Summarize context**:
 
    ```text
@@ -50,6 +56,7 @@ Analyzes current slice context and generates actionable implementation todos foc
    Target: {objectives from tracker}
    Success Rate Gap: {current}% → {target}%
    Acceptance Criteria Pending: {list}
+   LLM Context: {Yes/No}
    ```
 
 ### Step 2: Generate Core Implementation Plan
@@ -76,6 +83,14 @@ Analyzes current slice context and generates actionable implementation todos foc
    - Error handling and edge cases
    - Each todo < 30 min of work
 
+   **LLM Evaluation & Prompt Engineering Phase** (only if LLM context detected):
+
+   - Prompt engineering: Design and test prompts for new LLM features
+   - Create evaluation datasets: Input/output pairs for testing
+   - Implement LLM evaluators: Accuracy, relevance, consistency metrics
+   - LangSmith integration: Track LLM calls, latency, cost
+   - Regression tests: Prevent prompt/model degradation
+
    **Testing Phase:**
 
    - Unit tests for new functions/classes
@@ -96,6 +111,7 @@ Analyzes current slice context and generates actionable implementation todos foc
    ```
 
    Examples:
+
    - `- [ ] Create GraphState class in src/state.py`
    - `- [ ] Add tool binding to agent in src/graph.py`
    - `- [ ] Implement unit test for should_continue in tests/test_nodes.py`
@@ -129,6 +145,13 @@ Pending Acceptance Criteria: {list}
 ### Implementation Phase
 - [ ] {todo 3}
 - [ ] {todo 4}
+
+### LLM Evaluation & Prompt Engineering Phase
+(Only if LLM context detected)
+- [ ] Design prompts for {feature}
+- [ ] Create evaluation dataset with {N} examples
+- [ ] Implement evaluator for {metric}
+- [ ] Integrate LangSmith tracking
 
 ### Testing Phase
 - [ ] {todo 5}
@@ -178,6 +201,13 @@ Pending Acceptance Criteria:
 - [ ] Bind tool to model in src/graph.py using .bind_tools()
 - [ ] Add tool_condition router to decide tool vs. end
 - [ ] Implement tool_node to execute tool calls
+
+### LLM Evaluation & Prompt Engineering Phase
+- [ ] Design system prompt for agent reasoning in prompts/system.py
+- [ ] Create eval dataset: 10 tool-calling scenarios in evals/datasets/tool_calling.json
+- [ ] Implement correctness evaluator in evals/evaluators/tool_accuracy.py
+- [ ] Add LangSmith tracing to graph invocation
+- [ ] Test prompt variations: measure tool selection accuracy
 
 ### Testing Phase
 - [ ] Unit test: test_tool_invocation() in tests/test_tools.py

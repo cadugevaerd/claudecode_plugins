@@ -15,6 +15,7 @@ allowed-tools:
 ## 📋 When to Use Me
 
 Invoque esta skill quando:
+
 - Construir agentes com LangGraph 1.0
 - Implementar StateGraph e state machines
 - Desenhar agentic loops (Pensar→Agir→Observar→Pensar)
@@ -34,9 +35,9 @@ Invoque esta skill quando:
 LangGraph representa **workflows como grafos** onde:
 
 1. **State** = Dados compartilhados fluindo entre nodes
-2. **Nodes** = Funções Python que processam e atualizam state
-3. **Edges** = Conexões que definem fluxo de execução
-4. **Graph** = Combinação compiled de state + nodes + edges
+1. **Nodes** = Funções Python que processam e atualizam state
+1. **Edges** = Conexões que definem fluxo de execução
+1. **Graph** = Combinação compiled de state + nodes + edges
 
 ### Primitivos Principais (LangGraph 1.0)
 
@@ -108,11 +109,13 @@ def my_node(state: State) -> dict:
 ### Edge Types
 
 **1. Direct Edges** (transição fixa):
+
 ```python
 builder.add_edge("node_a", "node_b")
 ```
 
 **2. Conditional Edges** (routing dinâmico):
+
 ```python
 from typing import Literal
 
@@ -125,6 +128,7 @@ builder.add_conditional_edges("node", router)
 ```
 
 **3. Special Edges**:
+
 - `START`: Entry point do grafo
 - `END`: Terminal node (finaliza execução)
 
@@ -135,12 +139,14 @@ builder.add_conditional_edges("node", router)
 **Conceitos fundamentais**:
 
 1. **LLM é o CORE do agente**, não uma ferramenta
+
    - LLM node: Node que invoca o modelo de linguagem
    - Responsabilidade: Raciocinar, decidir próximas ações
    - É o "cérebro" do agente
    - Executado repetidamente no loop
 
-2. **Tools são FUNÇÕES que o agente invoca dinamicamente**
+1. **Tools são FUNÇÕES que o agente invoca dinamicamente**
+
    - Exemplos: buscar em database, fazer API call, calcular, etc
    - Executadas em nodes separados (tool_executor node)
    - NÃO são chamadas diretas ao LLM
@@ -201,6 +207,7 @@ START → Think (LLM) → Decide → Act (Tool) → Observe → Think → ...
 ```
 
 Implementação típica:
+
 ```python
 builder.add_node("think", llm_node)
 builder.add_node("act", tool_executor)
@@ -244,10 +251,11 @@ def human_review_node(state):
 ```
 
 **Workflow típico**:
+
 1. Graph executa até interrupt()
-2. State é salvo (checkpointer)
-3. Humano fornece input
-4. Execução resume do ponto exato
+1. State é salvo (checkpointer)
+1. Humano fornece input
+1. Execução resume do ponto exato
 
 ### Streaming
 
@@ -362,11 +370,11 @@ Ao criar LangGraph agent:
 ## 🎯 Princípios de Design
 
 1. **State é Central**: Todo o sistema gira em torno do state compartilhado
-2. **Nodes são Puros**: Funções sem side-effects complexos
-3. **Edges Definem Lógica**: Routing é explícito via edges
-4. **Persistence é Opcional**: Adicione checkpointer quando precisar memory
-5. **Streaming é Default**: Tudo pode ser streamed em real-time
-6. **Type Safety**: Use TypedDict e Literal para robustez
+1. **Nodes são Puros**: Funções sem side-effects complexos
+1. **Edges Definem Lógica**: Routing é explícito via edges
+1. **Persistence é Opcional**: Adicione checkpointer quando precisar memory
+1. **Streaming é Default**: Tudo pode ser streamed em real-time
+1. **Type Safety**: Use TypedDict e Literal para robustez
 
 ## 📖 Next Steps
 

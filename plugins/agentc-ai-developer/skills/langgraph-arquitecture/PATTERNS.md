@@ -9,6 +9,7 @@ Padrões arquiteturais e best practices para construir sistemas complexos com La
 **Quando usar**: Coordenar múltiplos agentes especializados com um supervisor central.
 
 **Estrutura**:
+
 ```
         Supervisor (LLM)
             ↓
@@ -83,21 +84,24 @@ graph = builder.compile()
 ```
 
 **Vantagens**:
+
 - ✅ Especialização clara de responsabilidades
 - ✅ Supervisor controla fluxo
 - ✅ Fácil adicionar novos agentes
 
 **Desvantagens**:
+
 - ⚠️ Supervisor é single point of failure
 - ⚠️ Pode ter overhead de routing
 
----
+______________________________________________________________________
 
 ### Pattern 2: Hierarchical Agents (Nested Subgraphs)
 
 **Quando usar**: Agentes complexos que precisam de sub-workflows.
 
 **Estrutura**:
+
 ```
 Main Agent
 ├── Subgraph: Data Processing
@@ -170,15 +174,17 @@ graph = builder.compile()
 ```
 
 **Vantagens**:
+
 - ✅ Encapsulação de lógica complexa
 - ✅ Reutilização de subgraphs
 - ✅ Testing isolado
 
 **Desvantagens**:
+
 - ⚠️ State mapping entre parent/subgraph pode ser complexo
 - ⚠️ Debugging mais difícil
 
----
+______________________________________________________________________
 
 ## 🔄 Loop Patterns
 
@@ -245,7 +251,7 @@ result = graph.invoke({"attempt": 0, "max_attempts": 5, "result": "", "error": "
 print(result)
 ```
 
----
+______________________________________________________________________
 
 ### Pattern 4: Iterative Refinement
 
@@ -308,7 +314,7 @@ result = graph.invoke({
 print(f"Final draft: {result['draft']} (score: {result['score']:.2f})")
 ```
 
----
+______________________________________________________________________
 
 ## 🌊 Parallel Execution Patterns
 
@@ -364,7 +370,7 @@ print(result["final_result"])
 # Output: "Processed: A | Processed: B | Processed: C | Processed: D"
 ```
 
----
+______________________________________________________________________
 
 ## 🎯 Specialized Patterns
 
@@ -433,7 +439,7 @@ result = graph.invoke({
 print(result["answer"])
 ```
 
----
+______________________________________________________________________
 
 ### Pattern 7: Self-Correction Loop
 
@@ -505,7 +511,7 @@ print(f"Final draft: {result['draft']}")
 print(f"Approved: {result['approved']}, Iterations: {result['iterations']}")
 ```
 
----
+______________________________________________________________________
 
 ## 🔒 Production Patterns
 
@@ -558,7 +564,7 @@ builder.add_edge("fallback", END)
 graph = builder.compile()
 ```
 
----
+______________________________________________________________________
 
 ### Pattern 9: Rate Limiting & Throttling
 
@@ -620,7 +626,7 @@ builder.add_conditional_edges(
 graph = builder.compile()
 ```
 
----
+______________________________________________________________________
 
 ## 📊 Pattern Selection Guide
 
@@ -639,34 +645,40 @@ graph = builder.compile()
 ## ✅ Best Practices
 
 ### State Design
+
 1. **Keep State Minimal**: Apenas campos necessários
-2. **Use Reducers**: Para acumulação (add_messages, operator.add)
-3. **Type Safety**: TypedDict sempre
+1. **Use Reducers**: Para acumulação (add_messages, operator.add)
+1. **Type Safety**: TypedDict sempre
 
 ### Node Design
+
 1. **Pure Functions**: Evite side effects quando possível
-2. **Single Responsibility**: Um node = uma tarefa
-3. **Error Handling**: Try/catch dentro de nodes críticos
+1. **Single Responsibility**: Um node = uma tarefa
+1. **Error Handling**: Try/catch dentro de nodes críticos
 
 ### Edge Design
+
 1. **Explicit Routing**: Conditional edges com Literal types
-2. **Avoid Infinite Loops**: Sempre tenha condição de parada
-3. **Clear Decisions**: Router functions com lógica clara
+1. **Avoid Infinite Loops**: Sempre tenha condição de parada
+1. **Clear Decisions**: Router functions com lógica clara
 
 ### Performance
+
 1. **Parallel When Possible**: Use Send API
-2. **Lazy Loading**: Carregue recursos sob demanda
-3. **Caching**: Cache resultados de operations caras
+1. **Lazy Loading**: Carregue recursos sob demanda
+1. **Caching**: Cache resultados de operations caras
 
 ### Production
+
 1. **Checkpointing**: Sempre em produção
-2. **Observability**: Log state transitions
-3. **Testing**: Unit tests para nodes, integration tests para graphs
-4. **Monitoring**: Track execution time, errors, retry rates
+1. **Observability**: Log state transitions
+1. **Testing**: Unit tests para nodes, integration tests para graphs
+1. **Monitoring**: Track execution time, errors, retry rates
 
 ## 🚀 Advanced Patterns
 
 Para padrões mais avançados:
+
 - **Multi-tenant**: Isolamento de state por tenant
 - **A/B Testing**: Routing baseado em feature flags
 - **Circuit Breaker**: Proteção contra cascading failures
