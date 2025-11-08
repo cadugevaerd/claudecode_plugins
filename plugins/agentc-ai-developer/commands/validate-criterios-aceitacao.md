@@ -36,40 +36,46 @@ If missing: Stop and guide user to run `/iniciar-slice` first.
 ### 1. **Identify Target Slice**
 
 1.1 **If SLICE_ID provided**:
-   - Use provided SLICE_ID (e.g., `1`, `2`, `3`)
-   - Validate `docs/slices/SLICE_{SLICE_ID}_TRACKER.md` exists
-   - If not exists: Display error and list available slices
+
+- Use provided SLICE_ID (e.g., `1`, `2`, `3`)
+- Validate `docs/slices/SLICE_{SLICE_ID}_TRACKER.md` exists
+- If not exists: Display error and list available slices
 
 1.2 **If NO SLICE_ID provided** (auto-detect):
-   - Search `docs/BACKLOG.md` for slice with status `➡️ Em Progresso`
-   - Extract slice number from matching increment
-   - If multiple slices in progress: Ask user to select one
-   - If no slice in progress: Display error and suggest `/iniciar-slice`
+
+- Search `docs/BACKLOG.md` for slice with status `➡️ Em Progresso`
+- Extract slice number from matching increment
+- If multiple slices in progress: Ask user to select one
+- If no slice in progress: Display error and suggest `/iniciar-slice`
 
 ### 2. **Load Acceptance Criteria**
 
 2.1 **Read SLICE_TRACKER.md**:
-   - Open `docs/slices/SLICE_{N}_TRACKER.md`
-   - Locate "Critérios de Aceitação" section
-   - Extract all checklist items (format: `- [ ] {criterion}`)
+
+- Open `docs/slices/SLICE_{N}_TRACKER.md`
+- Locate "Critérios de Aceitação" section
+- Extract all checklist items (format: `- [ ] {criterion}`)
 
 2.2 **Parse Criteria**:
-   - Count total criteria (should be 3 according to agentc-ai-developer workflow)
-   - For each criterion, extract:
-     - Criterion ID (1, 2, 3)
-     - Criterion description (text after `- [ ]`)
-     - Current status (checked `[x]` or unchecked `[ ]`)
+
+- Count total criteria (should be 3 according to agentc-ai-developer workflow)
+- For each criterion, extract:
+  - Criterion ID (1, 2, 3)
+  - Criterion description (text after `- [ ]`)
+  - Current status (checked `[x]` or unchecked `[ ]`)
 
 2.3 **Validate Criteria Exist**:
-   - If no criteria found: Display error
-   - If criteria already all checked: Warn user (already validated?)
-   - Continue regardless (re-validation allowed)
+
+- If no criteria found: Display error
+- If criteria already all checked: Warn user (already validated?)
+- Continue regardless (re-validation allowed)
 
 ### 3. **Execute Each Criterion**
 
 For each acceptance criterion, validate execution:
 
 3.1 **Display Criterion**:
+
 ```text
 📋 Critério {N}/3: {criterion_description}
 ```
@@ -77,32 +83,36 @@ For each acceptance criterion, validate execution:
 3.2 **Determine Validation Method**:
 
 - **Automated Validation** (if criterion is code-verifiable):
+
   - Examples: "Tests pass", "Build succeeds", "Lint passes", "Coverage > 80%"
   - Execute corresponding command (e.g., `pytest`, `npm run build`, `ruff check`)
   - Parse command output to determine PASS/FAIL
   - Show command output summary
 
 - **Manual Validation** (if criterion requires human verification):
+
   - Examples: "UI renders correctly", "User can login", "Documentation updated"
   - Display criterion to user
   - Use `AskUserQuestion` tool to ask: "Does this criterion pass? (yes/no)"
   - Record user response as PASS/FAIL
 
 3.3 **Record Result**:
-   - ✅ PASS: Criterion validated successfully
-   - ❌ FAIL: Criterion not met, requires fixes
-   - ⏭️ SKIP: User chooses to skip this criterion (counts as incomplete)
+
+- ✅ PASS: Criterion validated successfully
+- ❌ FAIL: Criterion not met, requires fixes
+- ⏭️ SKIP: User chooses to skip this criterion (counts as incomplete)
 
 ### 4. **Generate Validation Report**
 
 After validating all criteria, generate report:
 
 4.1 **Calculate Summary**:
-   - Total criteria: 3
-   - Passed: X criteria ✅
-   - Failed: Y criteria ❌
-   - Skipped: Z criteria ⏭️
-   - Validation rate: (X / 3) * 100%
+
+- Total criteria: 3
+- Passed: X criteria ✅
+- Failed: Y criteria ❌
+- Skipped: Z criteria ⏭️
+- Validation rate: (X / 3) * 100%
 
 4.2 **Display Report**:
 
@@ -179,8 +189,9 @@ If user accepts: Execute `/create-acceptance-tests` command with SLICE_TRACKER p
 ### 6. **Update SLICE_TRACKER.md**
 
 6.1 **Update Acceptance Criteria Checkboxes**:
-   - For each PASS criterion: Change `- [ ]` to `- [x]`
-   - For FAIL/SKIP: Keep as `- [ ]` (unchecked)
+
+- For each PASS criterion: Change `- [ ]` to `- [x]`
+- For FAIL/SKIP: Keep as `- [ ]` (unchecked)
 
 6.2 **Add Validation Log Entry**:
 
@@ -191,6 +202,7 @@ In "Development Log" section, add:
 ```
 
 Example:
+
 ```markdown
 - `2025-11-07T18:45:30` - Validation executed: 3/3 criteria passed ✅
 ```
@@ -497,11 +509,13 @@ Este comando integra-se ao workflow incremental:
 ```
 
 **When to use:**
+
 - After implementing functionality for a slice
 - Before creating acceptance tests
 - Before finalizing slice with `/finalizar-slice`
 - To verify all acceptance criteria are met
 
 **Output used by:**
+
 - `/create-acceptance-tests` (uses validated criteria to generate tests)
 - `/finalizar-slice` (verifies 100% validation before allowing completion)

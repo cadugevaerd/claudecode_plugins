@@ -69,10 +69,10 @@ For each slice, validate:
   - For each slice, assess: "How does this slice move the metric toward the target?"
   - Calculation:
     1. Get Brief Target metric (e.g., "85% accuracy on email classification")
-    2. Identify current baseline (if exists, e.g., "Current: 45%")
-    3. Calculate gap: 85% - 45% = 40% improvement needed
-    4. Estimate slice contribution: "What % of gap does this slice close?"
-    5. Assign delta: Core features (20-40%), Enhancements (10-20%), Polish (5-15%)
+    1. Identify current baseline (if exists, e.g., "Current: 45%")
+    1. Calculate gap: 85% - 45% = 40% improvement needed
+    1. Estimate slice contribution: "What % of gap does this slice close?"
+    1. Assign delta: Core features (20-40%), Enhancements (10-20%), Polish (5-15%)
   - **FAIL**: Slice has NO measurable contribution (delta = 0%, contributes 0% to target)
     - Example FAIL: "Code formatting cleanup" with no metric impact
     - Example FAIL: "Update documentation" with 0% delta

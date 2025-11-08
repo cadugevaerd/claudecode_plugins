@@ -232,35 +232,169 @@ After SLICE_TRACKER.md updated:
 
 After all documentation updated:
 
-1. **Display next steps**:
+1. **Ask user for merge workflow**:
 
-```
+```text
 ✅ Slice {N} Finalizada com Sucesso!
 
 📝 FILES UPDATED:
    ✓ docs/slices/SLICE_{N}_TRACKER.md (Section 4 added)
    ✓ docs/BACKLOG.md (Status: ✅ Concluído)
 
-🌿 GIT WORKFLOW:
-   Current Branch: slice-{N}-{title}
-   Ready for: Merge to main
+🌿 CURRENT STATE:
+   Branch: slice-{N}-{title}
+   Status: Ready for merge
 
-🚀 PRÓXIMOS PASSOS:
-   1. Review changes: git log --oneline
-   2. Merge to main:
-      git checkout main
-      git merge slice-{N}-{title}
-      git push origin main
-   3. Delete branch (optional):
-      git branch -d slice-{N}-{title}
-   4. Start next slice: /iniciar-slice
+🔀 MERGE OPTIONS:
+   1. Automatic: Merge to main and delete branch
+   2. Manual: Show instructions for manual merge
 ```
 
-1. **Ask user for automatic merge** (optional):
+Ask: "Realizar merge automático para main? (y/n)"
 
-   - Ask: "Merge slice branch to main automatically? (y/n)"
-   - If yes: Execute merge workflow
-   - If no: Display manual merge instructions
+**If user selects "y" (Automatic Merge)**:
+
+2. **Execute merge workflow**:
+
+   a. **Verify main branch exists**:
+
+   ```bash
+   git rev-parse --verify main
+   ```
+
+   - If fails: Check for `master` branch as fallback
+   - If neither exist: Error and ask user for correct branch name
+
+   b. **Switch to main and update**:
+
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+   - Display pull result
+   - If pull fails: Ask if proceed anyway or abort
+
+   c. **Merge slice branch**:
+
+   ```bash
+   git merge slice-{N}-{title} --no-ff -m "feat(slice-{N}): {slice_title} - Final SR: {Y}%"
+   ```
+
+   - Use `--no-ff` to preserve slice branch history
+   - Include final success rate in commit message
+   - Display merge result
+
+   d. **Handle merge conflicts** (if any):
+
+   ```text
+   ⚠️ MERGE CONFLICT DETECTED
+
+   Conflicting files:
+      {list files from git status}
+
+   ❌ Automatic merge aborted
+
+   Manual resolution required:
+      1. Resolve conflicts in listed files
+      2. git add <resolved-files>
+      3. git commit
+      4. git push origin main
+   ```
+
+   - Stop execution
+   - Return to slice branch: `git checkout slice-{N}-{title}`
+   - Display instructions for manual resolution
+
+   e. **Push to remote** (if merge successful):
+
+   ```bash
+   git push origin main
+   ```
+
+   - Display push result
+   - If push fails: Display error and suggest manual push
+
+1. **Ask user for branch deletion** (only if merge successful):
+
+   ```text
+   ✅ Merge concluído com sucesso!
+
+   🗑️  Deletar branch slice-{N}-{title}? (y/n)
+      • Local branch será removida
+      • Remote branch não será afetada
+   ```
+
+1. **Delete local branch** (if user confirms):
+
+   ```bash
+   git branch -d slice-{N}-{title}
+   ```
+
+   - Use `-d` (safe delete) to prevent accidental deletion of unmerged branches
+   - Display deletion confirmation
+   - If fails (unmerged changes): Ask if use `-D` (force delete)
+
+1. **Display final summary**:
+
+```text
+🎉 WORKFLOW COMPLETO!
+
+✅ Ações executadas:
+   ✓ Slice {N} validada e finalizada
+   ✓ Documentação atualizada (SLICE_TRACKER.md, BACKLOG.md)
+   ✓ Merged to main: slice-{N}-{title} → main
+   ✓ Pushed to origin/main
+   ✓ Branch slice-{N}-{title} deletada localmente
+
+📊 MÉTRICAS FINAIS:
+   Success Rate: {Y}% (delta: +{delta}%)
+   Commits: {M} incrementos
+   Branch: main (updated)
+
+🚀 PRÓXIMOS PASSOS:
+   1. Verificar CI/CD pipeline: [link se disponível]
+   2. Monitorar deployment em production
+   3. Iniciar próxima slice: /iniciar-slice
+```
+
+**If user selects "n" (Manual Merge)**:
+
+6. **Display manual merge instructions**:
+
+```text
+✅ Slice {N} Finalizada - Pronta para Merge Manual
+
+📝 FILES UPDATED:
+   ✓ docs/slices/SLICE_{N}_TRACKER.md (Section 4 added)
+   ✓ docs/BACKLOG.md (Status: ✅ Concluído)
+
+🔧 MERGE MANUAL - Siga os passos:
+
+1. Review changes:
+   git log --oneline main..slice-{N}-{title}
+
+2. Switch to main and update:
+   git checkout main
+   git pull origin main
+
+3. Merge slice branch:
+   git merge slice-{N}-{title} --no-ff
+
+4. Resolve conflicts (if any):
+   git status
+   # Edit conflicting files
+   git add <resolved-files>
+   git commit
+
+5. Push to remote:
+   git push origin main
+
+6. Delete branch (optional):
+   git branch -d slice-{N}-{title}
+
+🚀 NEXT: /iniciar-slice
+```
 
 ## 📊 Error Handling
 

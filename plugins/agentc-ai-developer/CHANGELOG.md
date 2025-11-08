@@ -2,6 +2,40 @@
 
 Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
 
+## [0.12.0] - 2025-11-07
+
+### Adicionado
+
+- **developer-increment agent** (novo agente especializado)
+
+  - Automatiza planejamento de incrementos análise de slice atual
+  - Pesquisa melhores práticas via Skills, MCP servers e web
+  - Gera plano de implementação baseado em todos os acceptance criteria
+  - Subagent invocável via Task tool com `subagent_type: "developer-increment"`
+  - Documentação completa com exemplos de LangGraph e Testing Infrastructure
+
+- **update-claude-md command** melhoria
+
+  - Agora documenta agente especializado `developer-increment`
+  - Nova seção "Specialized Agents" na saída gerada
+  - Inclui invocation pattern e responsabilidades do agente
+
+### Modificado
+
+- **plugin.json** descrição atualizada
+
+  - Menciona novo agente "developer-increment" junto com "help-assistant"
+  - Keywords expandidas com "developer-increment" e "increment-planning"
+
+- **marketplace.json**
+
+  - Descrição atualizada para "auto-fetch LangChain/LangGraph docs and automate increment planning"
+  - Tags expandidas com "developer-increment" e "increment-planning"
+
+### Informação de Versão
+
+Este é o v0.12.0 (MINOR update) que adiciona o agente `developer-increment` para automatizar planejamento de incrementos com pesquisa de melhores práticas e geração de planos de implementação detalhados. O comando `/update-claude-md` foi melhorado para documentar este novo agente especializado no CLAUDE.md dos projetos.
+
 ## [0.11.1] - 2025-11-07
 
 ### Modificado

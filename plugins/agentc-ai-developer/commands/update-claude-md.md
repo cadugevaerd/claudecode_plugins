@@ -1,5 +1,5 @@
 ---
-description: Update CLAUDE.md with Agentc AI Developer commands and MCP integration
+description: Update CLAUDE.md with Agentc AI Developer commands, agents and MCP integration
 allowed-tools: Read, Write
 argument-hint: '[mode: silent|verbose] - controle de verbosidade'
 model: claude-sonnet-4-5
@@ -13,6 +13,7 @@ Automatically integrate Agentc AI Developer guidance into your project's CLAUDE.
 
 - Integrar guidance do Agentc AI Developer no CLAUDE.md do projeto
 - Adicionar referências aos 8 comandos disponíveis (Stage 1: /brief, /setup-local-observability, /spike-agentic, /backlog; Stage 2: /analyze-slices, /iniciar-slice, /novo-incremento, /finalizar-incremento)
+- Documentar agente especializado `developer-increment` para planejamento automatizado
 - Documentar integração MCP langchain-docs para acesso à documentação LangChain/LangGraph
 - Manter documentação concisa (≤60 linhas)
 - Preservar conteúdo existente do CLAUDE.md
@@ -40,6 +41,7 @@ Verificar antes da execução:
    - Include all 8 Agentc commands organized by stage:
      - Stage 1 (Planning): `/brief`, `/setup-local-observability`, `/spike-agentic`, `/backlog`
      - Stage 2 (Development): `/analyze-slices`, `/iniciar-slice`, `/novo-incremento`, `/finalizar-incremento`
+   - Document specialized agent: `developer-increment` for automated increment planning
    - Document MCP langchain-docs integration for LangChain/LangGraph documentation access
    - Add usage context: when to use each command
    - Link to `plugins/agentc-ai-developer/README.md` for details
@@ -77,6 +79,14 @@ Complete workflow for AI agent development from planning to production-ready imp
 - **`/novo-incremento`**: Execute incremental development loop (PASSO A-E)
 - **`/finalizar-incremento`**: Finalize increment with validation and regression tests
 
+### Specialized Agents
+
+**developer-increment** agent automates increment planning:
+- Analyzes current slice objectives from SLICE_N_TRACKER.md
+- Researches best practices from Skills, MCP servers, and web
+- Generates comprehensive todo-based implementation plan
+- Invocation: Use Task tool with `subagent_type: "developer-increment"`
+
 ### MCP Integration
 
 **langchain-docs** server provides real-time access to LangChain/LangGraph documentation:
@@ -102,8 +112,9 @@ Complete workflow for AI agent development from planning to production-ready imp
 # ✅ CLAUDE.md atualizado com seção Agentc AI Developer
 # ✅ Seção organizada por Stage 1 (Planning) e Stage 2 (Development)
 # ✅ 8 comandos documentados
+# ✅ Agente developer-increment documentado
 # ✅ Integração MCP langchain-docs incluída
-# ✅ 52 linhas adicionadas
+# ✅ 58 linhas adicionadas
 # ⏱️ Executado em 0.9s
 ```
 
@@ -179,6 +190,7 @@ Não remova links para documentação completa:
 - [ ] Seção "Agentc AI Developer" adicionada ou atualizada
 - [ ] Seção contém ≤60 linhas
 - [ ] Todos os 8 comandos listados (Stage 1: 4 comandos, Stage 2: 4 comandos)
+- [ ] Agente especializado `developer-increment` documentado
 - [ ] Integração MCP langchain-docs documentada
 - [ ] Link para documentação completa incluído
 - [ ] Conteúdo existente do CLAUDE.md preservado
