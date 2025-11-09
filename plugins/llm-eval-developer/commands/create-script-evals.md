@@ -36,6 +36,7 @@ Este comando gera um script Python completo que:
 Usar `Skill` tool para coletar conhecimento especializado:
 
 ```bash
+Skill(skill="llm-eval-developer:llm-as-a-judge")
 Skill(skill="llm-eval-developer:evals-automator")
 Skill(skill="llm-eval-developer:datasets-evals")
 Skill(skill="llm-eval-developer:quick-evals")
@@ -45,10 +46,12 @@ Skill(skill="llm-eval-developer:quick-evals")
 
 Das skills, extrair:
 
-- Como criar evaluators customizados
+- Como criar evaluators customizados (LLM-as-Judge, similarity-based, rule-based)
+- Quando usar cada tipo de evaluator
 - Integração com LangSmith API
 - Patterns de dataset upload
 - Métricas disponíveis (accuracy, relevance, latency, cost, errors)
+- Como analisar estrutura de datasets para selecionar evaluators apropriados
 
 ### Passo 2: Analisar Estrutura Atual
 
@@ -58,11 +61,35 @@ Das skills, extrair:
 - Criar diretório se não existir usando `Bash(mkdir -p evaluators/scripts/)`
 - Verificar se `datasets/` existe e contém arquivos
 
-2.2 **Escanear Datasets Existentes**
+2.2 **Escanear e Analisar Datasets Existentes**
 
 - Usar `Glob` para listar arquivos em `datasets/` (JSON, JSONL, CSV)
-- Usar `Read` para verificar formato e estrutura de 1-2 exemplos
+- **Para cada dataset**, usar `Read` para analisar estrutura completa:
+  - Ler primeiro exemplo do dataset
+  - Detectar campos de input e output
+  - Identificar tipo de tarefa (Q&A, summarization, classification, generation)
+  - Verificar se há reference outputs (ground truth)
+  - Analisar formato dos outputs esperados (texto livre, JSON estruturado, categorias)
+  - Determinar natureza da avaliação necessária (objetiva vs subjetiva)
 - Determinar schema necessário para LangSmith
+- **Para cada dataset, decidir tipo de evaluator apropriado**:
+  - **Similarity-based** (BLEU, ROUGE, embedding): Se há reference outputs exatos
+  - **Rule-based** (regex, exact match): Se outputs têm formato fixo/validável
+  - **LLM-as-Judge**: Se critérios são subjetivos, complexos ou sem ground truth
+  - **Composite**: Se precisa avaliar múltiplos aspectos
+
+2.3 **Documentar Decisões de Evaluators**
+
+- Criar dict mapeando cada dataset para seus evaluators recomendados
+- Exemplo:
+  ```python
+  dataset_evaluators = {
+      "qa-dataset": ["qa", "context_qa"],
+      "summary-dataset": ["rouge", "llm_as_judge"],
+      "generation-dataset": ["llm_as_judge", "embedding_distance"]
+  }
+  ```
+- Essa informação será usada para gerar o script `quick_evals.py` customizado
 
 ### Passo 3: Criar Script de Upload de Datasets
 
@@ -76,10 +103,19 @@ Upload Datasets para LangSmith
 Skip se dataset já existir no LangSmith.
 """
 
+import sys
 import os
 import json
 from pathlib import Path
+from dotenv import load_dotenv
 from langsmith import Client
+
+# Add project root to Python path for imports
+project_root = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(project_root))
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
 
 def upload_dataset_to_langsmith(dataset_path: Path, client: Client):
     """
@@ -158,9 +194,22 @@ Usar `Write` para criar `evaluators/scripts/upload_datasets.py`
 
 ### Passo 4: Criar Script de Quick Evals
 
-4.1 **Gerar `quick_evals.py`**
+4.1 **Preencher Configuração de Evaluators**
 
-Criar script que executa evaluations sobre golden datasets:
+Usar o mapeamento criado no Passo 2.3 (`dataset_evaluators`) para popular a constante `DATASET_EVALUATORS` no script.
+
+Exemplo de preenchimento:
+```python
+DATASET_EVALUATORS = {
+    "qa-golden-set": ["qa", "context_qa"],
+    "summary-eval": ["llm_as_judge"],
+    "code-generation": ["llm_as_judge", "embedding_distance"],
+}
+```
+
+4.2 **Gerar `quick_evals.py`**
+
+Criar script que executa evaluations sobre golden datasets usando a configuração de evaluators:
 
 ```python
 """
@@ -168,14 +217,24 @@ Quick Evaluations sobre Golden Datasets no LangSmith
 Executa evaluations e extrai métricas com ponderação customizada.
 """
 
+import sys
 import os
 from typing import Dict, List
+from pathlib import Path
+from dotenv import load_dotenv
 from langsmith import Client
 from langsmith.evaluation import evaluate, LangChainStringEvaluator
 from langchain_core.callbacks import BaseCallbackHandler
 import numpy as np
 import time
 import json
+
+# Add project root to Python path for imports
+project_root = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(project_root))
+
+# Carregar variáveis de ambiente do arquivo .env
+load_dotenv()
 
 # ==================== CONFIGURAÇÃO DE PESOS ====================
 
@@ -191,7 +250,99 @@ METRIC_WEIGHTS = {
 assert abs(sum(METRIC_WEIGHTS.values()) - 1.0) < 0.001, "Weights must sum to 1.0"
 
 
+# ==================== DATASET EVALUATOR CONFIGURATION ====================
+
+# Configuração de evaluators por dataset
+# Esta configuração é gerada automaticamente pelo comando /create-script-evals
+# baseado na análise dos datasets em datasets/
+DATASET_EVALUATORS = {
+    # Exemplo:
+    # "qa-dataset": ["qa", "context_qa"],
+    # "summary-dataset": ["llm_as_judge"],
+    # "generation-dataset": ["llm_as_judge", "embedding_distance"]
+}
+
 # ==================== EVALUATORS ====================
+
+# LLM-as-Judge Evaluator
+from langsmith.evaluation import evaluator as ls_evaluator
+from openai import OpenAI
+
+@ls_evaluator
+def llm_as_judge_evaluator(outputs: dict, inputs: dict = None, reference_outputs: dict = None) -> dict:
+    """
+    LLM-as-Judge para avaliar qualidade quando não há ground truth ou critérios são subjetivos.
+
+    Args:
+        outputs: Resposta gerada pelo LLM
+        inputs: Pergunta/contexto original
+        reference_outputs: Referência (opcional)
+
+    Returns:
+        dict: Score 0-1 e justificativa
+    """
+    answer = outputs.get("output", outputs.get("answer", ""))
+    question = inputs.get("input", inputs.get("question", "")) if inputs else ""
+    reference = reference_outputs.get("output", "") if reference_outputs else None
+
+    # Criar prompt para o judge
+    if reference:
+        eval_prompt = f"""
+Avalie a qualidade da RESPOSTA comparando com a REFERÊNCIA.
+
+PERGUNTA: {question}
+
+RESPOSTA: {answer}
+
+REFERÊNCIA: {reference}
+
+Critérios de avaliação:
+1. Precisão factual (comparado com referência)
+2. Completude da resposta
+3. Clareza e coerência
+
+Retorne JSON:
+{{
+  "score": 0.0-1.0,
+  "reason": "justificativa detalhada"
+}}
+"""
+    else:
+        eval_prompt = f"""
+Avalie a qualidade da RESPOSTA para a PERGUNTA.
+
+PERGUNTA: {question}
+
+RESPOSTA: {answer}
+
+Critérios de avaliação:
+1. Relevância para a pergunta
+2. Completude da resposta
+3. Clareza e coerência
+4. Ausência de alucinações (responda apenas com informações verificáveis)
+
+Retorne JSON:
+{{
+  "score": 0.0-1.0,
+  "reason": "justificativa detalhada"
+}}
+"""
+
+    client = OpenAI()
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": eval_prompt}],
+        response_format={"type": "json_object"},
+        temperature=0.0
+    )
+
+    result = json.loads(response.choices[0].message.content)
+
+    return {
+        "score": result["score"],
+        "comment": result["reason"]
+    }
+
 
 class LatencyCallback(BaseCallbackHandler):
     """Track latency metrics for P95 calculation"""
@@ -240,13 +391,78 @@ def normalize_score(value: float, min_val: float, max_val: float, invert: bool =
 
 # ==================== MAIN EVALUATION ====================
 
+def select_evaluators_for_dataset(dataset_name: str) -> List:
+    """
+    Seleciona evaluators apropriados baseado na configuração DATASET_EVALUATORS.
+
+    Esta configuração é gerada automaticamente pelo comando /create-script-evals
+    após analisar a estrutura de cada dataset.
+
+    Args:
+        dataset_name: Nome do dataset
+
+    Returns:
+        list: Lista de evaluators a serem usados
+    """
+    # Verificar se há configuração específica para este dataset
+    if dataset_name not in DATASET_EVALUATORS:
+        print(f"⚠️  Dataset '{dataset_name}' não encontrado na configuração")
+        print("   Usando evaluators padrão (QA + Context QA)...")
+        return [
+            LangChainStringEvaluator("qa"),
+            LangChainStringEvaluator("context_qa"),
+        ]
+
+    # Obter evaluators configurados
+    configured_evaluators = DATASET_EVALUATORS[dataset_name]
+
+    print(f"\n📊 Evaluators para Dataset '{dataset_name}':")
+
+    # Mapear strings de configuração para evaluators reais
+    evaluators = []
+
+    for evaluator_name in configured_evaluators:
+        if evaluator_name == "qa":
+            evaluators.append(LangChainStringEvaluator("qa"))
+            print(f"   ✅ LangSmith QA Evaluator")
+
+        elif evaluator_name == "context_qa":
+            evaluators.append(LangChainStringEvaluator("context_qa"))
+            print(f"   ✅ LangSmith Context QA Evaluator")
+
+        elif evaluator_name == "llm_as_judge":
+            evaluators.append(llm_as_judge_evaluator)
+            print(f"   ✅ LLM-as-Judge Evaluator (GPT-4o-mini)")
+
+        elif evaluator_name == "embedding_distance":
+            evaluators.append(LangChainStringEvaluator("embedding_distance"))
+            print(f"   ✅ Embedding Similarity")
+
+        elif evaluator_name == "rouge":
+            # ROUGE evaluator (seria implementado separadamente)
+            print(f"   ℹ️  ROUGE configurado mas não implementado")
+
+        else:
+            print(f"   ⚠️  Evaluator desconhecido: {evaluator_name}")
+
+    # Se nenhum evaluator válido foi adicionado, usar padrão
+    if not evaluators:
+        evaluators = [
+            LangChainStringEvaluator("qa"),
+            LangChainStringEvaluator("context_qa"),
+        ]
+        print("   ⚠️  Fallback para evaluators padrão")
+
+    return evaluators
+
+
 def run_quick_eval(
     target_function,
     dataset_name: str,
     experiment_prefix: str = "quick-eval"
 ) -> Dict[str, float]:
     """
-    Executa quick evaluation sobre golden dataset.
+    Executa quick evaluation sobre golden dataset com seleção automática de evaluators.
 
     Args:
         target_function: Função que implementa seu LLM app
@@ -268,15 +484,10 @@ def run_quick_eval(
         result = target_function(inputs, config=config)
         return result
 
-    # Evaluators nativos do LangSmith
-    evaluators = [
-        LangChainStringEvaluator("qa"),           # Accuracy
-        LangChainStringEvaluator("context_qa"),   # Relevance
-    ]
+    # Selecionar evaluators apropriados baseado no dataset
+    evaluators = select_evaluators_for_dataset(dataset_name)
 
     # Executar evaluation
-    print(f"🔍 Running evaluation on dataset '{dataset_name}'...")
-
     results = evaluate(
         predict_with_tracking,
         data=dataset_name,
@@ -433,9 +644,9 @@ if __name__ == "__main__":
     main()
 ```
 
-4.2 **Salvar Script**
+4.3 **Salvar Script**
 
-Usar `Write` para criar `evaluators/scripts/quick_evals.py`
+Usar `Write` para criar `evaluators/scripts/quick_evals.py` com a configuração `DATASET_EVALUATORS` preenchida
 
 ### Passo 5: Criar Script Orquestrador Principal
 
@@ -522,9 +733,67 @@ Scripts automatizados para upload de datasets e execução de quick evaluations 
 ## 📁 Estrutura
 
 - `upload_datasets.py`: Upload de datasets locais para LangSmith (skip se existir)
-- `quick_evals.py`: Executa evaluations com métricas ponderadas
+- `quick_evals.py`: Executa evaluations com evaluators customizados por dataset e métricas ponderadas
 - `run_all_evals.py`: Orquestrador principal (executa tudo em ordem)
 - `eval_results.json`: Resultados da última execução
+
+## 🎯 Configuração Automática de Evaluators
+
+O comando `/create-script-evals` analisa todos os datasets **durante sua execução** e gera o script `quick_evals.py` com a configuração `DATASET_EVALUATORS` pré-populada:
+
+### Análise de Dataset (Feita pelo Comando)
+
+Durante a execução do `/create-script-evals`, o comando:
+
+1. **Lê cada dataset** em `datasets/`
+2. **Analisa a estrutura** detectando:
+   - Tipo de tarefa (Q&A, summarization, classification, generation)
+   - Tipo de output (texto livre ou estruturado)
+   - Presença de referência (ground truth)
+   - Campos disponíveis (inputs/outputs)
+
+3. **Decide evaluators apropriados** para cada dataset
+4. **Gera `quick_evals.py`** com configuração fixa:
+
+```python
+DATASET_EVALUATORS = {
+    "qa-dataset": ["qa", "context_qa"],
+    "summary-dataset": ["llm_as_judge"],
+    "generation-dataset": ["llm_as_judge", "embedding_distance"]
+}
+```
+
+### Seleção de Evaluators (Feita pelo Comando)
+
+Baseado na análise, o **comando** seleciona automaticamente:
+
+| Cenário | Evaluator Selecionado | Razão |
+|---------|----------------------|-------|
+| **Dataset com referência exata** | Embedding Similarity | Compara semanticamente com ground truth |
+| **Tarefa de Summarization com referência** | ROUGE (se disponível) | Métrica padrão para summarization |
+| **Dataset sem referência** | LLM-as-Judge | Avalia critérios subjetivos (relevância, qualidade) |
+| **Tarefa de Q&A** | LangSmith QA Evaluator | Evaluator otimizado para Q&A |
+| **Output estruturado** | Schema Validator (se implementado) | Valida formato e estrutura |
+
+### LLM-as-Judge
+
+Quando não há ground truth ou critérios são subjetivos, o script usa **LLM-as-Judge** com GPT-4o-mini:
+
+**Critérios avaliados**:
+1. Relevância para a pergunta
+2. Completude da resposta
+3. Clareza e coerência
+4. Ausência de alucinações
+
+**Vantagens**:
+- ✅ Funciona sem ground truth
+- ✅ Avalia aspectos subjetivos
+- ✅ Fornece justificativa detalhada
+
+**Trade-offs**:
+- ⚠️ Custo adicional de API (GPT-4o-mini)
+- ⚠️ Latência maior que evaluators rule-based
+- ⚠️ Não determinístico (pode variar ligeiramente)
 
 ## 🚀 Como Usar
 
@@ -544,6 +813,22 @@ uv run evaluators/scripts/upload_datasets.py
 uv run evaluators/scripts/quick_evals.py
 ```
 
+## 📦 Dependências
+
+Os scripts requerem as seguintes bibliotecas Python:
+
+```bash
+pip install langsmith langchain langchain-openai openai python-dotenv numpy
+```
+
+Ou usando `uv`:
+
+```bash
+uv pip install langsmith langchain langchain-openai openai python-dotenv numpy
+```
+
+**Nota**: A biblioteca `openai` é necessária para o LLM-as-Judge evaluator que usa GPT-4o-mini para avaliar respostas quando não há ground truth ou critérios são subjetivos.
+
 ## ⚙️ Configuração
 
 ### 1. Variáveis de Ambiente
@@ -551,11 +836,22 @@ uv run evaluators/scripts/quick_evals.py
 Configure as seguintes variáveis no `.env`:
 
 ```bash
-LANGCHAIN_API_KEY=your-api-key
+LANGSMITH_API_KEY=your-api-key
 LANGCHAIN_PROJECT=your-project-name
 LANGCHAIN_TRACING_V2=true
 OPENAI_API_KEY=your-openai-key  # ou outro provider
 ```
+
+**Importante**: Os scripts utilizam `python-dotenv` para carregar automaticamente as variáveis do arquivo `.env`. Certifique-se de que:
+- O arquivo `.env` está na raiz do projeto
+- A variável `LANGSMITH_API_KEY` está configurada corretamente
+- A biblioteca `python-dotenv` está instalada (`pip install python-dotenv`)
+
+**Configuração de Python Path**: Os scripts automaticamente adicionam o diretório raiz do projeto ao `sys.path`:
+- Estrutura esperada: `project_root/evaluators/scripts/[script].py`
+- O script resolve o caminho com `.parents[2]` para alcançar o diretório raiz
+- Isso permite importar módulos do projeto sem conflitos de path
+- Se sua estrutura for diferente, ajuste o número em `.parents[N]` conforme necessário
 
 ### 2. Ajustar Pesos das Métricas
 
@@ -637,13 +933,33 @@ Os datasets em `datasets/` devem seguir o formato:
 
 Comportamento esperado! O script faz skip automático.
 
-### Erro: LangSmith API Key
+### Erro: LangSmith API Key (401 "Invalid token")
 
-Configure `LANGCHAIN_API_KEY` no `.env`.
+**Causa**: Variável `LANGSMITH_API_KEY` não está sendo carregada do arquivo `.env`.
+
+**Soluções**:
+1. Verifique se o arquivo `.env` existe na raiz do projeto
+2. Certifique-se de que a variável está definida corretamente: `LANGSMITH_API_KEY=your-api-key`
+3. Instale `python-dotenv`: `pip install python-dotenv`
+4. Verifique se `load_dotenv()` está sendo chamado no início dos scripts
+5. Teste manualmente: `python -c "from dotenv import load_dotenv; load_dotenv(); import os; print(os.getenv('LANGSMITH_API_KEY'))"`
 
 ### Erro: Nenhum dataset encontrado
 
 Verifique se há arquivos `.json` ou `.jsonl` em `datasets/`.
+
+### Erro: ModuleNotFoundError ao importar módulos do projeto
+
+**Causa**: Script não consegue importar módulos do projeto.
+
+**Soluções**:
+1. Verifique se a estrutura de diretórios está correta: `project_root/evaluators/scripts/`
+2. Ajuste `.parents[N]` se a estrutura for diferente:
+   - `.parents[1]`: Para `project_root/scripts/[script].py`
+   - `.parents[2]`: Para `project_root/evaluators/scripts/[script].py` (padrão)
+   - `.parents[3]`: Para `project_root/foo/evaluators/scripts/[script].py`
+3. Teste o path: Adicione `print(f"Project root: {project_root}")` após `project_root = ...`
+4. Verifique se os módulos que você quer importar existem no `project_root`
 
 ## 📖 Referências
 
@@ -725,10 +1041,22 @@ SCORE TOTAL               0.856        100%       0.856
 
 ## ✅ Critérios de Sucesso
 
-- [ ] Skills de evaluation consultadas (evaluation-developer, benchmark-runner)
+- [ ] Skills de evaluation consultadas (evaluation-developer, evals-automator, datasets-evals, quick-evals)
 - [ ] Diretório `evaluators/scripts/` criado (se não existia)
+- [ ] **Comando analisou** cada dataset em `datasets/` usando `Read`
+- [ ] **Comando detectou** para cada dataset: tipo de tarefa, tipo de output, presença de referência
+- [ ] **Comando decidiu** evaluators apropriados para cada dataset
+- [ ] **Comando criou** dict `dataset_evaluators` mapeando datasets → evaluators
 - [ ] Script `upload_datasets.py` criado com skip logic
+- [ ] `load_dotenv()` adicionado no início de `upload_datasets.py`
+- [ ] Configuração de `sys.path` adicionada em `upload_datasets.py`
 - [ ] Script `quick_evals.py` criado com 5 métricas ponderadas
+- [ ] `load_dotenv()` adicionado no início de `quick_evals.py`
+- [ ] Configuração de `sys.path` adicionada em `quick_evals.py`
+- [ ] **Constante `DATASET_EVALUATORS`** preenchida com mapeamento do Passo 2.3
+- [ ] LLM-as-Judge evaluator implementado no `quick_evals.py`
+- [ ] Função `select_evaluators_for_dataset()` usa configuração `DATASET_EVALUATORS`
+- [ ] Evaluators customizados por dataset baseado na análise feita pelo comando
 - [ ] Pesos das métricas configuráveis e somam 1.0
 - [ ] Métricas normalizadas para 0-1 corretamente
 - [ ] Score total calculado com ponderação
@@ -827,3 +1155,104 @@ except:
     dataset = client.create_dataset(dataset_name=name)
     print(f"📤 Created new dataset '{name}'")
 ```
+
+### ❌ Erro 5: Não carregar variáveis de ambiente do .env
+
+Não esquecer de carregar o arquivo `.env` no início dos scripts:
+
+```python
+# ❌ Errado - 401 "Invalid token" error
+from langsmith import Client
+# LANGSMITH_API_KEY não foi carregada do .env
+client = Client()
+
+# ✅ Correto - Carregar .env primeiro
+from dotenv import load_dotenv
+from langsmith import Client
+
+load_dotenv()  # Carrega LANGSMITH_API_KEY e outras variáveis
+client = Client()
+```
+
+**Consequências de não usar `load_dotenv()`**:
+- Erro 401 "Invalid token" ao autenticar com LangSmith
+- Variáveis do `.env` não são carregadas no ambiente
+- Scripts falham mesmo com `.env` configurado corretamente
+
+### ❌ Erro 6: Não configurar Python path para imports de projeto
+
+Não esquecer de adicionar o diretório raiz do projeto ao `sys.path`:
+
+```python
+# ❌ Errado - ModuleNotFoundError ao importar módulos do projeto
+from langsmith import Client
+# Tentando importar módulos do projeto, mas sys.path não configurado
+from my_project.utils import helper_function  # Falha!
+
+# ✅ Correto - Configurar sys.path primeiro
+import sys
+from pathlib import Path
+
+# Add project root to Python path for imports
+project_root = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(project_root))
+
+# Agora imports funcionam
+from langsmith import Client
+from my_project.utils import helper_function  # Sucesso!
+```
+
+**Por que `.parents[2]`?**
+- Script está em: `project_root/evaluators/scripts/upload_datasets.py`
+- `.parents[0]`: `evaluators/scripts/upload_datasets.py` (o próprio arquivo)
+- `.parents[1]`: `evaluators/scripts/` (diretório pai)
+- `.parents[2]`: `evaluators/` (diretório avô)
+- `.parents[3]`: `project_root/` (raiz do projeto) ← Este é o objetivo!
+
+**Ajuste conforme sua estrutura**:
+- `project_root/scripts/`: Use `.parents[1]`
+- `project_root/evaluators/scripts/`: Use `.parents[2]` (padrão)
+- `project_root/foo/bar/scripts/`: Use `.parents[3]`
+
+### ❌ Erro 7: Gerar script com evaluators fixos sem analisar datasets
+
+Não gere `quick_evals.py` com configuração vazia ou genérica:
+
+```python
+# ❌ Errado - Configuração vazia ou genérica
+DATASET_EVALUATORS = {
+    # Vazio ou todos usando os mesmos evaluators
+}
+
+# Ou pior:
+evaluators = [
+    LangChainStringEvaluator("qa"),
+    LangChainStringEvaluator("context_qa"),
+]
+# Sempre usa QA, pode não funcionar para summarization, generation, etc.
+
+# ✅ Correto - Comando analisa datasets ANTES de gerar o script
+# 1. Comando usa Read para ler cada dataset
+# 2. Comando detecta tipo de tarefa, presença de referência, etc.
+# 3. Comando decide evaluators apropriados
+# 4. Comando gera quick_evals.py com configuração customizada:
+
+DATASET_EVALUATORS = {
+    "qa-dataset": ["qa", "context_qa"],              # Q&A detectado
+    "summary-dataset": ["llm_as_judge"],             # Summarization sem referência
+    "code-gen": ["llm_as_judge", "embedding_distance"]  # Generation complexo
+}
+```
+
+**Por que o comando deve analisar datasets ANTES**:
+- Cada tipo de tarefa precisa de evaluators específicos
+- Datasets sem ground truth precisam de LLM-as-Judge
+- Outputs estruturados precisam de validação de schema
+- Análise em tempo de execução do comando é mais eficiente
+- Script gerado já vem customizado, sem lógica de análise em runtime
+
+**Consequências de não analisar no comando**:
+- Script gera avaliações com evaluators inapropriados
+- Scores sem sentido (ex: QA evaluator em summarization)
+- Falhas silenciosas (evaluator retorna 0.0 sem erro claro)
+- Usuário precisa editar manualmente a configuração

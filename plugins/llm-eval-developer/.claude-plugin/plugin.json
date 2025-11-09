@@ -7,5 +7,12 @@
   },
   "license": "MIT",
   "keywords": ["llm", "evaluation", "benchmark", "langchain", "langgraph", "langsmith", "testing", "ai"],
-  "repository": "https://github.com/anthropics/claude-code-marketplace"
+  "repository": "https://github.com/anthropics/claude-code-marketplace",
+  "skills": [
+    {
+      "name": "llm-as-a-judge",
+      "description": "LLM-as-a-Judge evaluation with LangSmith - datasets, judge prompts, criteria, and LLMOps workflow. Use when implementing LLM evaluators, designing judge prompts, creating evaluation datasets, running offline evaluations, or measuring subjective quality metrics (correctness, relevance, coherence). Essential for LangSmith evaluate() workflows.",
+      "path": "skills/llm-as-a-judge"
+    }
+  ]
 }
