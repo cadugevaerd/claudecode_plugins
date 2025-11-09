@@ -7,15 +7,16 @@ argument-hint: '[EVALUATORS_DIR] [DATASETS_DIR]'
 
 # Create Script Evals
 
-Cria script automatizado que coleta informações de skills, envia datasets para LangSmith, executa quick-evals em golden datasets, e extrai métricas com ponderação customizada.
+Cria script automatizado que coleta informações de skills, envia datasets para LangSmith, executa quick-evals usando **LLM-as-Judge com critérios integrados do LangSmith**, e extrai métricas com ponderação customizada.
 
 ## 🎯 Objetivo
 
 Este comando gera um script Python completo que:
 
-- 🔍 Coleta informações de skills necessárias do projeto
+- 🔍 Coleta informações de skills necessárias do projeto (incluindo `llm-as-a-judge`)
+- 📊 **Analisa datasets** e seleciona critérios LLM-as-Judge apropriados (CORRECTNESS, RELEVANCE, CONCISENESS, COHERENCE, HELPFULNESS, HARMFULNESS, MALICIOUSNESS, CONTROVERSIALITY)
 - 📤 Envia datasets da pasta `datasets/` para LangSmith (skip se já existir)
-- ⚡ Configura e executa quick-evals sobre golden datasets no LangSmith
+- ⚡ Configura e executa quick-evals usando `create_llm_as_judge` do LangSmith
 - 📊 Extrai métricas de execução com ponderação configurável
 - 🎯 Retorna score total baseado em pesos customizados
 
@@ -46,12 +47,14 @@ Skill(skill="llm-eval-developer:quick-evals")
 
 Das skills, extrair:
 
-- Como criar evaluators customizados (LLM-as-Judge, similarity-based, rule-based)
-- Quando usar cada tipo de evaluator
-- Integração com LangSmith API
+- **LLM-as-Judge com `create_llm_as_judge`**: Usar função helper do LangSmith
+- **Critérios integrados do LangSmith**: CORRECTNESS, RELEVANCE, CONCISENESS, COHERENCE, HELPFULNESS, HARMFULNESS, MALICIOUSNESS, CONTROVERSIALITY
+- **Mapeamento de chaves**: input_keys, reference_output_keys, prediction_key
+- Quando usar cada critério de avaliação
+- Integração com LangSmith API via `langsmith.evaluate()`
 - Patterns de dataset upload
 - Métricas disponíveis (accuracy, relevance, latency, cost, errors)
-- Como analisar estrutura de datasets para selecionar evaluators apropriados
+- Como analisar estrutura de datasets para selecionar critérios apropriados
 
 ### Passo 2: Analisar Estrutura Atual
 
@@ -78,18 +81,53 @@ Das skills, extrair:
   - **LLM-as-Judge**: Se critérios são subjetivos, complexos ou sem ground truth
   - **Composite**: Se precisa avaliar múltiplos aspectos
 
-2.3 **Documentar Decisões de Evaluators**
+2.3 **Documentar Decisões de Evaluators e Critérios LLM-as-Judge**
 
-- Criar dict mapeando cada dataset para seus evaluators recomendados
+- Criar dict mapeando cada dataset para seus evaluators e critérios LLM-as-Judge recomendados
+- **Para LLM-as-Judge**: Selecionar critério apropriado baseado na natureza do dataset
 - Exemplo:
   ```python
   dataset_evaluators = {
-      "qa-dataset": ["qa", "context_qa"],
-      "summary-dataset": ["rouge", "llm_as_judge"],
-      "generation-dataset": ["llm_as_judge", "embedding_distance"]
+      "qa-dataset": {
+          "type": "llm_as_judge",
+          "criteria": "CORRECTNESS",  # Precisão factual para Q&A
+          "input_keys": ["question"],
+          "reference_output_keys": ["expected_answer"],
+          "prediction_key": "answer"
+      },
+      "summary-dataset": {
+          "type": "llm_as_judge",
+          "criteria": "CONCISENESS",  # Brevidade para summarization
+          "input_keys": ["text"],
+          "reference_output_keys": ["summary"],
+          "prediction_key": "output"
+      },
+      "chatbot-dataset": {
+          "type": "llm_as_judge",
+          "criteria": "HELPFULNESS",  # Utilidade para assistentes
+          "input_keys": ["user_message"],
+          "reference_output_keys": None,  # Sem ground truth
+          "prediction_key": "response"
+      },
+      "safety-test": {
+          "type": "llm_as_judge",
+          "criteria": "HARMFULNESS",  # Teste de segurança
+          "input_keys": ["prompt"],
+          "reference_output_keys": None,
+          "prediction_key": "completion"
+      }
   }
   ```
-- Essa informação será usada para gerar o script `quick_evals.py` customizado
+- **Guia de Seleção de Critérios**:
+  - `CORRECTNESS`: Q&A, RAG, extração de fatos (requer ground truth)
+  - `RELEVANCE`: Verificar alinhamento com pergunta/contexto
+  - `CONCISENESS`: Summarization, chatbots (respostas breves)
+  - `COHERENCE`: Geração de texto longo, artigos
+  - `HELPFULNESS`: Assistentes, chatbots (avaliação geral)
+  - `HARMFULNESS`: Safety, guardrails (detectar conteúdo prejudicial)
+  - `MALICIOUSNESS`: Detectar intenção maliciosa ou enganosa
+  - `CONTROVERSIALITY`: Moderação de conteúdo
+- Essa informação será usada para gerar o script `quick_evals.py` customizado com `create_llm_as_judge`
 
 ### Passo 3: Criar Script de Upload de Datasets
 
@@ -264,84 +302,8 @@ DATASET_EVALUATORS = {
 
 # ==================== EVALUATORS ====================
 
-# LLM-as-Judge Evaluator
-from langsmith.evaluation import evaluator as ls_evaluator
-from openai import OpenAI
-
-@ls_evaluator
-def llm_as_judge_evaluator(outputs: dict, inputs: dict = None, reference_outputs: dict = None) -> dict:
-    """
-    LLM-as-Judge para avaliar qualidade quando não há ground truth ou critérios são subjetivos.
-
-    Args:
-        outputs: Resposta gerada pelo LLM
-        inputs: Pergunta/contexto original
-        reference_outputs: Referência (opcional)
-
-    Returns:
-        dict: Score 0-1 e justificativa
-    """
-    answer = outputs.get("output", outputs.get("answer", ""))
-    question = inputs.get("input", inputs.get("question", "")) if inputs else ""
-    reference = reference_outputs.get("output", "") if reference_outputs else None
-
-    # Criar prompt para o judge
-    if reference:
-        eval_prompt = f"""
-Avalie a qualidade da RESPOSTA comparando com a REFERÊNCIA.
-
-PERGUNTA: {question}
-
-RESPOSTA: {answer}
-
-REFERÊNCIA: {reference}
-
-Critérios de avaliação:
-1. Precisão factual (comparado com referência)
-2. Completude da resposta
-3. Clareza e coerência
-
-Retorne JSON:
-{{
-  "score": 0.0-1.0,
-  "reason": "justificativa detalhada"
-}}
-"""
-    else:
-        eval_prompt = f"""
-Avalie a qualidade da RESPOSTA para a PERGUNTA.
-
-PERGUNTA: {question}
-
-RESPOSTA: {answer}
-
-Critérios de avaliação:
-1. Relevância para a pergunta
-2. Completude da resposta
-3. Clareza e coerência
-4. Ausência de alucinações (responda apenas com informações verificáveis)
-
-Retorne JSON:
-{{
-  "score": 0.0-1.0,
-  "reason": "justificativa detalhada"
-}}
-"""
-
-    client = OpenAI()
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": eval_prompt}],
-        response_format={"type": "json_object"},
-        temperature=0.0
-    )
-
-    result = json.loads(response.choices[0].message.content)
-
-    return {
-        "score": result["score"],
-        "comment": result["reason"]
-    }
+# LLM-as-Judge usando create_llm_as_judge do LangSmith
+from langsmith.evaluation import create_llm_as_judge
 
 
 class LatencyCallback(BaseCallbackHandler):
@@ -396,7 +358,7 @@ def select_evaluators_for_dataset(dataset_name: str) -> List:
     Seleciona evaluators apropriados baseado na configuração DATASET_EVALUATORS.
 
     Esta configuração é gerada automaticamente pelo comando /create-script-evals
-    após analisar a estrutura de cada dataset.
+    após analisar a estrutura de cada dataset e escolher critérios LLM-as-Judge apropriados.
 
     Args:
         dataset_name: Nome do dataset
@@ -407,51 +369,58 @@ def select_evaluators_for_dataset(dataset_name: str) -> List:
     # Verificar se há configuração específica para este dataset
     if dataset_name not in DATASET_EVALUATORS:
         print(f"⚠️  Dataset '{dataset_name}' não encontrado na configuração")
-        print("   Usando evaluators padrão (QA + Context QA)...")
-        return [
-            LangChainStringEvaluator("qa"),
-            LangChainStringEvaluator("context_qa"),
-        ]
+        print("   Usando evaluator padrão (LLM-as-Judge CORRECTNESS)...")
 
-    # Obter evaluators configurados
-    configured_evaluators = DATASET_EVALUATORS[dataset_name]
+        # Fallback: LLM-as-Judge com critério CORRECTNESS
+        default_judge = create_llm_as_judge(
+            criteria="CORRECTNESS",
+            model="openai:gpt-4o-mini",
+            input_keys=["question"],
+            reference_output_keys=["expected_answer"],
+            prediction_key="answer"
+        )
+        return [default_judge]
+
+    # Obter configuração do dataset
+    config = DATASET_EVALUATORS[dataset_name]
 
     print(f"\n📊 Evaluators para Dataset '{dataset_name}':")
 
-    # Mapear strings de configuração para evaluators reais
     evaluators = []
 
-    for evaluator_name in configured_evaluators:
-        if evaluator_name == "qa":
-            evaluators.append(LangChainStringEvaluator("qa"))
-            print(f"   ✅ LangSmith QA Evaluator")
+    if config["type"] == "llm_as_judge":
+        # Criar LLM-as-Judge usando create_llm_as_judge do LangSmith
+        criteria = config["criteria"]
+        input_keys = config["input_keys"]
+        reference_output_keys = config.get("reference_output_keys")
+        prediction_key = config["prediction_key"]
 
-        elif evaluator_name == "context_qa":
-            evaluators.append(LangChainStringEvaluator("context_qa"))
-            print(f"   ✅ LangSmith Context QA Evaluator")
+        print(f"   ✅ LLM-as-Judge ({criteria})")
+        print(f"      - Model: openai:gpt-4o-mini")
+        print(f"      - Input Keys: {input_keys}")
+        print(f"      - Reference Keys: {reference_output_keys}")
+        print(f"      - Prediction Key: {prediction_key}")
 
-        elif evaluator_name == "llm_as_judge":
-            evaluators.append(llm_as_judge_evaluator)
-            print(f"   ✅ LLM-as-Judge Evaluator (GPT-4o-mini)")
-
-        elif evaluator_name == "embedding_distance":
-            evaluators.append(LangChainStringEvaluator("embedding_distance"))
-            print(f"   ✅ Embedding Similarity")
-
-        elif evaluator_name == "rouge":
-            # ROUGE evaluator (seria implementado separadamente)
-            print(f"   ℹ️  ROUGE configurado mas não implementado")
-
-        else:
-            print(f"   ⚠️  Evaluator desconhecido: {evaluator_name}")
+        judge = create_llm_as_judge(
+            criteria=criteria,
+            model="openai:gpt-4o-mini",
+            input_keys=input_keys,
+            reference_output_keys=reference_output_keys,
+            prediction_key=prediction_key
+        )
+        evaluators.append(judge)
 
     # Se nenhum evaluator válido foi adicionado, usar padrão
     if not evaluators:
-        evaluators = [
-            LangChainStringEvaluator("qa"),
-            LangChainStringEvaluator("context_qa"),
-        ]
-        print("   ⚠️  Fallback para evaluators padrão")
+        print("   ⚠️  Fallback para evaluator padrão (CORRECTNESS)")
+        default_judge = create_llm_as_judge(
+            criteria="CORRECTNESS",
+            model="openai:gpt-4o-mini",
+            input_keys=["question"],
+            reference_output_keys=["expected_answer"],
+            prediction_key="answer"
+        )
+        evaluators = [default_judge]
 
     return evaluators
 
@@ -763,32 +732,55 @@ DATASET_EVALUATORS = {
 }
 ```
 
-### Seleção de Evaluators (Feita pelo Comando)
+### Seleção de Critérios LLM-as-Judge (Feita pelo Comando)
 
-Baseado na análise, o **comando** seleciona automaticamente:
+Baseado na análise, o **comando** seleciona automaticamente o **critério LLM-as-Judge** apropriado:
 
-| Cenário | Evaluator Selecionado | Razão |
-|---------|----------------------|-------|
-| **Dataset com referência exata** | Embedding Similarity | Compara semanticamente com ground truth |
-| **Tarefa de Summarization com referência** | ROUGE (se disponível) | Métrica padrão para summarization |
-| **Dataset sem referência** | LLM-as-Judge | Avalia critérios subjetivos (relevância, qualidade) |
-| **Tarefa de Q&A** | LangSmith QA Evaluator | Evaluator otimizado para Q&A |
-| **Output estruturado** | Schema Validator (se implementado) | Valida formato e estrutura |
+| Tipo de Dataset | Critério Selecionado | Razão |
+|-----------------|---------------------|-------|
+| **Q&A com referência** | CORRECTNESS | Verifica precisão factual comparando com ground truth |
+| **Q&A sem referência** | RELEVANCE | Avalia alinhamento da resposta com a pergunta |
+| **Summarization** | CONCISENESS | Mede brevidade e objetividade |
+| **Geração de texto longo** | COHERENCE | Avalia fluxo lógico e consistência |
+| **Assistentes/Chatbots** | HELPFULNESS | Avalia utilidade geral da resposta |
+| **Safety/Guardrails** | HARMFULNESS | Detecta potencial de dano (físico ou emocional) |
+| **Moderação** | MALICIOUSNESS | Detecta intenção de causar dano ou enganar |
+| **Conteúdo sensível** | CONTROVERSIALITY | Avalia potencial para gerar desacordo |
 
-### LLM-as-Judge
+### LLM-as-Judge com `create_llm_as_judge`
 
-Quando não há ground truth ou critérios são subjetivos, o script usa **LLM-as-Judge** com GPT-4o-mini:
+O script usa **`create_llm_as_judge`** do LangSmith SDK com os **critérios integrados**:
 
-**Critérios avaliados**:
-1. Relevância para a pergunta
-2. Completude da resposta
-3. Clareza e coerência
-4. Ausência de alucinações
+**Critérios disponíveis**:
+1. **CORRECTNESS**: Precisão factual (requer ground truth)
+2. **RELEVANCE**: Alinhamento com pergunta/contexto
+3. **CONCISENESS**: Brevidade e objetividade
+4. **COHERENCE**: Fluxo lógico e consistência
+5. **HELPFULNESS**: Utilidade geral para o usuário
+6. **HARMFULNESS**: Detecção de conteúdo prejudicial
+7. **MALICIOUSNESS**: Detecção de intenção maliciosa
+8. **CONTROVERSIALITY**: Potencial para gerar controvérsia
+
+**Estrutura gerada**:
+```python
+from langsmith.evaluation import create_llm_as_judge
+
+judge = create_llm_as_judge(
+    criteria="CORRECTNESS",  # Ou outro critério apropriado
+    model="openai:gpt-4o-mini",
+    input_keys=["question"],
+    reference_output_keys=["expected_answer"],  # Opcional
+    prediction_key="answer"
+)
+```
 
 **Vantagens**:
-- ✅ Funciona sem ground truth
-- ✅ Avalia aspectos subjetivos
+- ✅ Usa helpers oficiais do LangSmith (mantido pela equipe LangChain)
+- ✅ Critérios pré-calibrados e validados
+- ✅ Funciona com ou sem ground truth
+- ✅ Avalia aspectos subjetivos com consistência
 - ✅ Fornece justificativa detalhada
+- ✅ Integração nativa com `langsmith.evaluate()`
 
 **Trade-offs**:
 - ⚠️ Custo adicional de API (GPT-4o-mini)
@@ -1044,19 +1036,19 @@ SCORE TOTAL               0.856        100%       0.856
 - [ ] Skills de evaluation consultadas (evaluation-developer, evals-automator, datasets-evals, quick-evals)
 - [ ] Diretório `evaluators/scripts/` criado (se não existia)
 - [ ] **Comando analisou** cada dataset em `datasets/` usando `Read`
-- [ ] **Comando detectou** para cada dataset: tipo de tarefa, tipo de output, presença de referência
-- [ ] **Comando decidiu** evaluators apropriados para cada dataset
-- [ ] **Comando criou** dict `dataset_evaluators` mapeando datasets → evaluators
+- [ ] **Comando detectou** para cada dataset: tipo de tarefa, tipo de output, presença de referência, campos de input/output
+- [ ] **Comando decidiu** critérios LLM-as-Judge apropriados para cada dataset (CORRECTNESS, RELEVANCE, CONCISENESS, etc.)
+- [ ] **Comando criou** dict `dataset_evaluators` mapeando datasets → configuração LLM-as-Judge (tipo, critério, chaves)
 - [ ] Script `upload_datasets.py` criado com skip logic
 - [ ] `load_dotenv()` adicionado no início de `upload_datasets.py`
 - [ ] Configuração de `sys.path` adicionada em `upload_datasets.py`
 - [ ] Script `quick_evals.py` criado com 5 métricas ponderadas
 - [ ] `load_dotenv()` adicionado no início de `quick_evals.py`
 - [ ] Configuração de `sys.path` adicionada em `quick_evals.py`
-- [ ] **Constante `DATASET_EVALUATORS`** preenchida com mapeamento do Passo 2.3
-- [ ] LLM-as-Judge evaluator implementado no `quick_evals.py`
-- [ ] Função `select_evaluators_for_dataset()` usa configuração `DATASET_EVALUATORS`
-- [ ] Evaluators customizados por dataset baseado na análise feita pelo comando
+- [ ] **Constante `DATASET_EVALUATORS`** preenchida com configuração completa de LLM-as-Judge (critérios + chaves)
+- [ ] LLM-as-Judge implementado usando `create_llm_as_judge` do LangSmith
+- [ ] Função `select_evaluators_for_dataset()` usa `create_llm_as_judge` com critérios do `DATASET_EVALUATORS`
+- [ ] Critérios LLM-as-Judge customizados por dataset baseado na análise feita pelo comando
 - [ ] Pesos das métricas configuráveis e somam 1.0
 - [ ] Métricas normalizadas para 0-1 corretamente
 - [ ] Score total calculado com ponderação
@@ -1214,45 +1206,76 @@ from my_project.utils import helper_function  # Sucesso!
 - `project_root/evaluators/scripts/`: Use `.parents[2]` (padrão)
 - `project_root/foo/bar/scripts/`: Use `.parents[3]`
 
-### ❌ Erro 7: Gerar script com evaluators fixos sem analisar datasets
+### ❌ Erro 7: Gerar script com critérios LLM-as-Judge fixos sem analisar datasets
 
-Não gere `quick_evals.py` com configuração vazia ou genérica:
+Não gere `quick_evals.py` com configuração vazia ou critérios genéricos:
 
 ```python
-# ❌ Errado - Configuração vazia ou genérica
+# ❌ Errado - Configuração vazia
+DATASET_EVALUATORS = {}
+
+# ❌ Errado - Todos datasets com mesmo critério genérico
 DATASET_EVALUATORS = {
-    # Vazio ou todos usando os mesmos evaluators
+    "qa-dataset": {"type": "llm_as_judge", "criteria": "CORRECTNESS", ...},
+    "summary-dataset": {"type": "llm_as_judge", "criteria": "CORRECTNESS", ...},
+    "safety-test": {"type": "llm_as_judge", "criteria": "CORRECTNESS", ...}
 }
+# CORRECTNESS pode não ser apropriado para summarization (CONCISENESS) ou safety (HARMFULNESS)
 
-# Ou pior:
-evaluators = [
-    LangChainStringEvaluator("qa"),
-    LangChainStringEvaluator("context_qa"),
-]
-# Sempre usa QA, pode não funcionar para summarization, generation, etc.
+# ✅ Correto - Comando analisa datasets ANTES e seleciona critérios apropriados
 
-# ✅ Correto - Comando analisa datasets ANTES de gerar o script
 # 1. Comando usa Read para ler cada dataset
-# 2. Comando detecta tipo de tarefa, presença de referência, etc.
-# 3. Comando decide evaluators apropriados
+# 2. Comando detecta:
+#    - Tipo de tarefa (Q&A, summarization, generation, chatbot, safety)
+#    - Presença de referência (ground truth)
+#    - Natureza da avaliação (precisão, brevidade, utilidade, segurança)
+#    - Campos de input/output
+# 3. Comando decide critério LLM-as-Judge apropriado
 # 4. Comando gera quick_evals.py com configuração customizada:
 
 DATASET_EVALUATORS = {
-    "qa-dataset": ["qa", "context_qa"],              # Q&A detectado
-    "summary-dataset": ["llm_as_judge"],             # Summarization sem referência
-    "code-gen": ["llm_as_judge", "embedding_distance"]  # Generation complexo
+    "qa-dataset": {
+        "type": "llm_as_judge",
+        "criteria": "CORRECTNESS",  # Q&A com referência → precisão factual
+        "input_keys": ["question"],
+        "reference_output_keys": ["expected_answer"],
+        "prediction_key": "answer"
+    },
+    "summary-dataset": {
+        "type": "llm_as_judge",
+        "criteria": "CONCISENESS",  # Summarization → brevidade
+        "input_keys": ["text"],
+        "reference_output_keys": ["summary"],
+        "prediction_key": "output"
+    },
+    "chatbot-dataset": {
+        "type": "llm_as_judge",
+        "criteria": "HELPFULNESS",  # Chatbot → utilidade
+        "input_keys": ["user_message"],
+        "reference_output_keys": None,
+        "prediction_key": "response"
+    },
+    "safety-test": {
+        "type": "llm_as_judge",
+        "criteria": "HARMFULNESS",  # Safety → detectar dano
+        "input_keys": ["prompt"],
+        "reference_output_keys": None,
+        "prediction_key": "completion"
+    }
 }
 ```
 
 **Por que o comando deve analisar datasets ANTES**:
-- Cada tipo de tarefa precisa de evaluators específicos
-- Datasets sem ground truth precisam de LLM-as-Judge
-- Outputs estruturados precisam de validação de schema
+- Cada tipo de tarefa precisa de critério LLM-as-Judge específico
+- CORRECTNESS não funciona para summarization (use CONCISENESS)
+- HELPFULNESS não funciona para safety tests (use HARMFULNESS)
+- Critério errado gera scores sem sentido ou avaliações incorretas
 - Análise em tempo de execução do comando é mais eficiente
-- Script gerado já vem customizado, sem lógica de análise em runtime
+- Script gerado já vem customizado por tipo de tarefa
 
 **Consequências de não analisar no comando**:
-- Script gera avaliações com evaluators inapropriados
-- Scores sem sentido (ex: QA evaluator em summarization)
-- Falhas silenciosas (evaluator retorna 0.0 sem erro claro)
+- Avaliações com critérios inapropriados (ex: CORRECTNESS para safety)
+- Scores sem sentido (ex: medir concisão em vez de segurança)
+- Falhas silenciosas ou resultados enganosos
 - Usuário precisa editar manualmente a configuração
+- Perda de tempo com avaliações irrelevantes
