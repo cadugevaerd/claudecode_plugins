@@ -7,7 +7,7 @@ argument-hint: '[EVALUATORS_DIR] [DATASETS_DIR]'
 
 # Create Script Evals
 
-Cria script automatizado que coleta informações de skills, envia datasets para LangSmith, executa quick-evals usando **EXCLUSIVAMENTE create_llm_as_judge (API oficial do LangSmith)**, e extrai métricas com ponderação customizada.
+Cria script automatizado que coleta informações de skills, envia datasets para LangSmith, executa quick-evals usando **openevals** (biblioteca pré-construída recomendada) ou custom evaluators, e extrai métricas com ponderação customizada.
 
 ## 🎯 Objetivo
 
@@ -16,11 +16,11 @@ Este comando gera um script Python completo que:
 - 🔍 Coleta informações de skills necessárias do projeto (incluindo `llm-as-a-judge`)
 - 📊 **Analisa datasets** e seleciona critérios LLM-as-Judge apropriados (CORRECTNESS, RELEVANCE, CONCISENESS, COHERENCE, HELPFULNESS, HARMFULNESS, MALICIOUSNESS, CONTROVERSIALITY)
 - 📤 Envia datasets da pasta `datasets/` para LangSmith (skip se já existir)
-- ⚡ Configura e executa quick-evals usando **EXCLUSIVAMENTE** `create_llm_as_judge` (API oficial do LangSmith)
+- ⚡ Configura e executa quick-evals usando **openevals** (biblioteca pré-construída recomendada) ou custom evaluators
 - 📊 Extrai métricas de execução com ponderação configurável
 - 🎯 Retorna score total baseado em pesos customizados
 
-**IMPORTANTE**: O script gerado usa **APENAS** `create_llm_as_judge` do LangSmith SDK. **NUNCA** implementa LLM-as-Judge manualmente.
+**IMPORTANTE**: O script gerado usa **openevals** (recomendado) ou custom evaluators com LangSmith SDK. **NUNCA** implementa LLM-as-Judge manualmente sem framework.
 
 **Nota sobre o modelo:** Este comando usa **Sonnet 4.5** porque requer:
 
@@ -49,10 +49,10 @@ Skill(skill="llm-eval-developer:quick-evals")
 
 Das skills, extrair:
 
-- **LLM-as-Judge com `create_llm_as_judge`**: Usar **EXCLUSIVAMENTE** a função helper oficial do LangSmith SDK
-- **NUNCA usar implementação manual de LLM-as-Judge**: Sempre usar `from langsmith.evaluation import create_llm_as_judge`
-- **Critérios integrados do LangSmith**: CORRECTNESS, RELEVANCE, CONCISENESS, COHERENCE, HELPFULNESS, HARMFULNESS, MALICIOUSNESS, CONTROVERSIALITY
-- **Mapeamento de chaves**: input_keys, reference_output_keys, prediction_key
+- **LLM-as-Judge com `create_llm_as_judge`**: Usar **EXCLUSIVAMENTE** a função helper oficial via `openevals` (biblioteca pré-construída recomendada)
+- **NUNCA usar implementação manual de LLM-as-Judge**: Sempre usar `from openevals.llm import create_llm_as_judge` OU custom evaluators com LangSmith SDK
+- **Critérios integrados via openevals.prompts**: CORRECTNESS_PROMPT, RELEVANCE_PROMPT, CONCISENESS_PROMPT, COHERENCE_PROMPT, HELPFULNESS_PROMPT, HARMFULNESS_PROMPT, MALICIOUSNESS_PROMPT, CONTROVERSY_PROMPT
+- **Mapeamento**: feedback_key, model, prompt (usando openevals prompts pré-construídos)
 - Quando usar cada critério de avaliação
 - Integração com LangSmith API via `langsmith.evaluate()`
 - Patterns de dataset upload
@@ -304,16 +304,26 @@ DATASET_EVALUATORS = {
 
 # ==================== EVALUATORS ====================
 
-# IMPORTANTE: Usar EXCLUSIVAMENTE create_llm_as_judge do LangSmith SDK
-# NUNCA implementar LLM-as-Judge manualmente
-from langsmith.evaluation import create_llm_as_judge
+# IMPORTANTE: Usar openevals (biblioteca pré-construída recomendada)
+# Alternativa: Custom evaluators com LangSmith SDK
+from openevals.llm import create_llm_as_judge
+from openevals.prompts import (
+    CORRECTNESS_PROMPT,
+    RELEVANCE_PROMPT,
+    CONCISENESS_PROMPT,
+    COHERENCE_PROMPT,
+    HELPFULNESS_PROMPT,
+    HARMFULNESS_PROMPT,
+    MALICIOUSNESS_PROMPT,
+    CONTROVERSY_PROMPT
+)
 
-# Esta é a API oficial e recomendada do LangSmith para LLM-as-Judge
-# Benefícios:
-# - Critérios pré-calibrados e validados pela equipe LangChain
+# Benefícios do openevals:
+# - Prompts pré-construídos e testados pela comunidade
+# - Simples de usar (poucas linhas de código)
+# - Boas práticas built-in
 # - Integração nativa com langsmith.evaluate()
-# - Manutenção e updates automáticos
-# - Suporte oficial e documentação completa
+# - Manutenção e updates pela comunidade
 
 # Nota: Todas as métricas (latência, custo, errors) serão extraídas dos metadados do LangSmith
 # após a execução de evaluate(). Não é necessário tracking manual.
@@ -353,27 +363,25 @@ def select_evaluators_for_dataset(dataset_name: str) -> List:
     Esta configuração é gerada automaticamente pelo comando /create-script-evals
     após analisar a estrutura de cada dataset e escolher critérios LLM-as-Judge apropriados.
 
-    IMPORTANTE: Usa EXCLUSIVAMENTE create_llm_as_judge do LangSmith SDK.
-    NUNCA implementa LLM-as-Judge manualmente.
+    IMPORTANTE: Usa openevals (biblioteca pré-construída recomendada).
+    Alternativa: Custom evaluators com LangSmith SDK.
 
     Args:
         dataset_name: Nome do dataset
 
     Returns:
-        list: Lista de evaluators criados com create_llm_as_judge
+        list: Lista de evaluators criados com openevals
     """
     # Verificar se há configuração específica para este dataset
     if dataset_name not in DATASET_EVALUATORS:
         print(f"⚠️  Dataset '{dataset_name}' não encontrado na configuração")
         print("   Usando evaluator padrão (LLM-as-Judge CORRECTNESS)...")
 
-        # Fallback: LLM-as-Judge com critério CORRECTNESS
+        # Fallback: LLM-as-Judge com critério CORRECTNESS via openevals
         default_judge = create_llm_as_judge(
-            criteria="CORRECTNESS",
-            model="openai:gpt-4o-mini",
-            input_keys=["question"],
-            reference_output_keys=["expected_answer"],
-            prediction_key="answer"
+            prompt=CORRECTNESS_PROMPT,
+            feedback_key="correctness",
+            model="openai:gpt-4o-mini"
         )
         return [default_judge]
 
@@ -385,24 +393,30 @@ def select_evaluators_for_dataset(dataset_name: str) -> List:
     evaluators = []
 
     if config["type"] == "llm_as_judge":
-        # Criar LLM-as-Judge usando create_llm_as_judge do LangSmith
+        # Mapear critério para prompt openevals
         criteria = config["criteria"]
-        input_keys = config["input_keys"]
-        reference_output_keys = config.get("reference_output_keys")
-        prediction_key = config["prediction_key"]
+        prompt_mapping = {
+            "CORRECTNESS": CORRECTNESS_PROMPT,
+            "RELEVANCE": RELEVANCE_PROMPT,
+            "CONCISENESS": CONCISENESS_PROMPT,
+            "COHERENCE": COHERENCE_PROMPT,
+            "HELPFULNESS": HELPFULNESS_PROMPT,
+            "HARMFULNESS": HARMFULNESS_PROMPT,
+            "MALICIOUSNESS": MALICIOUSNESS_PROMPT,
+            "CONTROVERSIALITY": CONTROVERSY_PROMPT
+        }
+
+        prompt = prompt_mapping.get(criteria, CORRECTNESS_PROMPT)
 
         print(f"   ✅ LLM-as-Judge ({criteria})")
         print(f"      - Model: openai:gpt-4o-mini")
-        print(f"      - Input Keys: {input_keys}")
-        print(f"      - Reference Keys: {reference_output_keys}")
-        print(f"      - Prediction Key: {prediction_key}")
+        print(f"      - Prompt: openevals.prompts.{criteria}_PROMPT")
 
+        # Criar judge usando openevals
         judge = create_llm_as_judge(
-            criteria=criteria,
-            model="openai:gpt-4o-mini",
-            input_keys=input_keys,
-            reference_output_keys=reference_output_keys,
-            prediction_key=prediction_key
+            prompt=prompt,
+            feedback_key=criteria.lower(),
+            model="openai:gpt-4o-mini"
         )
         evaluators.append(judge)
 
@@ -410,11 +424,9 @@ def select_evaluators_for_dataset(dataset_name: str) -> List:
     if not evaluators:
         print("   ⚠️  Fallback para evaluator padrão (CORRECTNESS)")
         default_judge = create_llm_as_judge(
-            criteria="CORRECTNESS",
-            model="openai:gpt-4o-mini",
-            input_keys=["question"],
-            reference_output_keys=["expected_answer"],
-            prediction_key="answer"
+            prompt=CORRECTNESS_PROMPT,
+            feedback_key="correctness",
+            model="openai:gpt-4o-mini"
         )
         evaluators = [default_judge]
 
@@ -427,10 +439,10 @@ def run_quick_eval(
     experiment_prefix: str = "quick-eval"
 ) -> Dict[str, float]:
     """
-    Executa quick evaluation sobre golden dataset usando APENAS create_llm_as_judge.
+    Executa quick evaluation sobre golden dataset usando openevals.
 
-    IMPORTANTE: Usa EXCLUSIVAMENTE create_llm_as_judge do LangSmith SDK.
-    NUNCA implementa LLM-as-Judge manualmente.
+    IMPORTANTE: Usa openevals (biblioteca pré-construída recomendada).
+    Alternativa: Custom evaluators com LangSmith SDK.
 
     Todas as métricas são extraídas dos metadados do LangSmith após evaluate().
 
@@ -444,7 +456,7 @@ def run_quick_eval(
     """
     client = Client()
 
-    # Selecionar evaluators apropriados (APENAS create_llm_as_judge do LangSmith)
+    # Selecionar evaluators apropriados (openevals ou custom)
     evaluators = select_evaluators_for_dataset(dataset_name)
 
     # Executar evaluation
@@ -768,51 +780,50 @@ Baseado na análise, o **comando** seleciona automaticamente o **critério LLM-a
 | **Moderação** | MALICIOUSNESS | Detecta intenção de causar dano ou enganar |
 | **Conteúdo sensível** | CONTROVERSIALITY | Avalia potencial para gerar desacordo |
 
-### LLM-as-Judge com `create_llm_as_judge` (API Oficial do LangSmith)
+### LLM-as-Judge com `openevals` (Biblioteca Pré-Construída Recomendada)
 
-**IMPORTANTE**: O script usa **EXCLUSIVAMENTE** `create_llm_as_judge` do LangSmith SDK.
+**IMPORTANTE**: O script usa **openevals** (biblioteca pré-construída recomendada).
 
-**NUNCA implementa LLM-as-Judge manualmente**. Esta é a API oficial e recomendada.
+**Alternativa**: Custom evaluators com LangSmith SDK para lógica específica.
 
-**Critérios integrados disponíveis**:
-1. **CORRECTNESS**: Precisão factual (requer ground truth)
-2. **RELEVANCE**: Alinhamento com pergunta/contexto
-3. **CONCISENESS**: Brevidade e objetividade
-4. **COHERENCE**: Fluxo lógico e consistência
-5. **HELPFULNESS**: Utilidade geral para o usuário
-6. **HARMFULNESS**: Detecção de conteúdo prejudicial
-7. **MALICIOUSNESS**: Detecção de intenção maliciosa
-8. **CONTROVERSIALITY**: Potencial para gerar controvérsia
+**Critérios integrados via prompts pré-construídos**:
+1. **CORRECTNESS_PROMPT**: Precisão factual (requer ground truth)
+2. **RELEVANCE_PROMPT**: Alinhamento com pergunta/contexto
+3. **CONCISENESS_PROMPT**: Brevidade e objetividade
+4. **COHERENCE_PROMPT**: Fluxo lógico e consistência
+5. **HELPFULNESS_PROMPT**: Utilidade geral para o usuário
+6. **HARMFULNESS_PROMPT**: Detecção de conteúdo prejudicial
+7. **MALICIOUSNESS_PROMPT**: Detecção de intenção maliciosa
+8. **CONTROVERSY_PROMPT**: Potencial para gerar controvérsia
 
-**Estrutura gerada** (sempre usando API oficial):
+**Estrutura gerada** (usando openevals):
 ```python
-from langsmith.evaluation import create_llm_as_judge
+from openevals.llm import create_llm_as_judge
+from openevals.prompts import CORRECTNESS_PROMPT
 
-# IMPORTANTE: Usar SEMPRE create_llm_as_judge (API oficial)
-# NUNCA implementar manualmente
+# RECOMENDADO: Usar openevals (biblioteca pré-construída)
 judge = create_llm_as_judge(
-    criteria="CORRECTNESS",  # Ou outro critério apropriado
-    model="openai:gpt-4o-mini",
-    input_keys=["question"],
-    reference_output_keys=["expected_answer"],  # Opcional
-    prediction_key="answer"
+    prompt=CORRECTNESS_PROMPT,  # Ou outro prompt pré-construído
+    feedback_key="correctness",
+    model="openai:gpt-4o-mini"
 )
 ```
 
-**Vantagens da API oficial**:
-- ✅ API oficial e recomendada do LangSmith
-- ✅ Mantida e atualizada pela equipe LangChain
-- ✅ Critérios pré-calibrados e validados
+**Vantagens do openevals**:
+- ✅ Prompts pré-construídos e testados pela comunidade
+- ✅ Simples de usar (poucas linhas de código)
+- ✅ Boas práticas built-in
+- ✅ Integração nativa com `langsmith.evaluate()`
+- ✅ Manutenção e updates pela comunidade
 - ✅ Funciona com ou sem ground truth
 - ✅ Avalia aspectos subjetivos com consistência
 - ✅ Fornece justificativa detalhada
-- ✅ Integração nativa com `langsmith.evaluate()`
-- ✅ Suporte oficial e documentação completa
 
 **Trade-offs**:
 - ⚠️ Custo adicional de API (GPT-4o-mini)
 - ⚠️ Latência maior que evaluators rule-based
 - ⚠️ Não determinístico (pode variar ligeiramente)
+- ⚠️ Menos flexível que custom evaluators (prompts fixos)
 
 ## 🚀 Como Usar
 
@@ -837,16 +848,19 @@ uv run evaluators/scripts/quick_evals.py
 Os scripts requerem as seguintes bibliotecas Python:
 
 ```bash
-pip install langsmith langchain langchain-openai openai python-dotenv numpy
+pip install openevals langsmith langchain langchain-openai openai python-dotenv numpy
 ```
 
 Ou usando `uv`:
 
 ```bash
-uv pip install langsmith langchain langchain-openai openai python-dotenv numpy
+uv pip install openevals langsmith langchain langchain-openai openai python-dotenv numpy
 ```
 
-**Nota**: A biblioteca `openai` é necessária para o LLM-as-Judge evaluator que usa GPT-4o-mini para avaliar respostas quando não há ground truth ou critérios são subjetivos.
+**Nota**:
+- A biblioteca `openevals` é usada para LLM-as-Judge evaluators com prompts pré-construídos
+- A biblioteca `openai` é necessária quando usando GPT-4o-mini como modelo juiz
+- Para custom evaluators, você pode implementar lógica específica usando LangSmith SDK diretamente
 
 ## ⚙️ Configuração
 
@@ -1087,9 +1101,10 @@ SCORE TOTAL                   0.874        100%       0.874
 - [ ] `load_dotenv()` adicionado no início de `quick_evals.py`
 - [ ] Configuração de `sys.path` adicionada em `quick_evals.py`
 - [ ] **Constante `DATASET_EVALUATORS`** preenchida com configuração completa de LLM-as-Judge (critérios + chaves)
-- [ ] LLM-as-Judge implementado usando `create_llm_as_judge` do LangSmith
-- [ ] Função `select_evaluators_for_dataset()` usa `create_llm_as_judge` com critérios do `DATASET_EVALUATORS`
+- [ ] LLM-as-Judge implementado usando `openevals.llm.create_llm_as_judge` com prompts pré-construídos
+- [ ] Função `select_evaluators_for_dataset()` usa `create_llm_as_judge` com prompts openevals baseados no critério
 - [ ] Critérios LLM-as-Judge customizados por dataset baseado na análise feita pelo comando
+- [ ] Imports corretos: `from openevals.llm import create_llm_as_judge` e `from openevals.prompts import ...`
 - [ ] Pesos das métricas configuráveis e somam 1.0
 - [ ] Métricas normalizadas para 0-1 corretamente
 - [ ] Score total calculado com ponderação
@@ -1245,9 +1260,9 @@ from my_project.utils import helper_function  # Sucesso!
 - `project_root/evaluators/scripts/`: Use `.parents[2]` (padrão)
 - `project_root/foo/bar/scripts/`: Use `.parents[3]`
 
-### ❌ Erro 7: Implementar LLM-as-Judge manualmente
+### ❌ Erro 7: Usar API incorreta ou implementar LLM-as-Judge manualmente
 
-Não implemente LLM-as-Judge manualmente. **SEMPRE** use `create_llm_as_judge` do LangSmith SDK:
+**SEMPRE** use `openevals` (recomendado) ou custom evaluators com LangSmith SDK:
 
 ```python
 # ❌ ERRADO - Implementação manual de LLM-as-Judge
@@ -1263,31 +1278,47 @@ def custom_llm_judge(inputs, outputs):
     # Implementação manual complexa e não validada
     ...
 
-# ✅ CORRETO - Usar API oficial do LangSmith
-from langsmith.evaluation import create_llm_as_judge
+# ❌ ERRADO - API incorreta (não existe em langsmith.evaluation)
+from langsmith.evaluation import create_llm_as_judge  # Não existe!
+
+# ✅ CORRETO - Usar openevals (biblioteca pré-construída recomendada)
+from openevals.llm import create_llm_as_judge
+from openevals.prompts import CORRECTNESS_PROMPT
 
 judge = create_llm_as_judge(
-    criteria="CORRECTNESS",
-    model="openai:gpt-4o-mini",
-    input_keys=["question"],
-    reference_output_keys=["expected_answer"],
-    prediction_key="answer"
+    prompt=CORRECTNESS_PROMPT,
+    feedback_key="correctness",
+    model="openai:gpt-4o-mini"
 )
+
+# ✅ ALTERNATIVA - Custom evaluator com LangSmith SDK (mais flexível)
+from langsmith.schemas import Run, Example
+from langchain_openai import ChatOpenAI
+
+def my_custom_judge(run: Run, example: Example) -> dict:
+    llm = ChatOpenAI(model="gpt-4o-mini")
+    # Sua lógica customizada aqui
+    ...
+    return {"key": "custom_score", "score": 0.85}
 ```
 
-**Por que usar create_llm_as_judge**:
-- ✅ API oficial e recomendada do LangSmith
-- ✅ Mantida pela equipe LangChain (updates automáticos)
-- ✅ Critérios pré-calibrados e validados
+**Por que usar openevals**:
+- ✅ Prompts pré-construídos e testados pela comunidade
+- ✅ Simples de usar (poucas linhas de código)
+- ✅ Boas práticas built-in
 - ✅ Integração nativa com langsmith.evaluate()
-- ✅ Suporte oficial e documentação completa
 - ✅ Menos código e mais confiável
 
-**Consequências de implementação manual**:
+**Quando usar custom evaluators**:
+- ✅ Lógica única (ex: validação de formato JSON)
+- ✅ Prompts muito específicos do domínio
+- ✅ Combinar múltiplos judges
+- ✅ Total controle do prompt e lógica
+
+**Consequências de implementação manual sem framework**:
 - ❌ Código não validado e propenso a erros
 - ❌ Sem garantia de qualidade dos critérios
 - ❌ Sem integração nativa com LangSmith
-- ❌ Sem suporte oficial
 - ❌ Precisa manter e atualizar manualmente
 - ❌ Pode ter bugs ou comportamento inconsistente
 
