@@ -277,9 +277,8 @@ load_dotenv()
 # ==================== CONFIGURAÇÃO DE PESOS ====================
 
 METRIC_WEIGHTS = {
-    "accuracy": 0.45,      # 45% - Precisão das respostas
-    "relevance": 0.20,     # 20% - Relevância do conteúdo
-    "latency": 0.15,       # 15% - Tempo de resposta (P95)
+    "accuracy": 0.60,      # 60% - Score do LLM-as-Judge (qualidade)
+    "latency": 0.20,       # 20% - Tempo de resposta (P95)
     "cost": 0.15,          # 15% - Custo por execução
     "errors": 0.05         # 5%  - Taxa de erro
 }
@@ -305,25 +304,8 @@ DATASET_EVALUATORS = {
 # LLM-as-Judge usando create_llm_as_judge do LangSmith
 from langsmith.evaluation import create_llm_as_judge
 
-
-class LatencyCallback(BaseCallbackHandler):
-    """Track latency metrics for P95 calculation"""
-    def __init__(self):
-        self.latencies = []
-        self.start = None
-
-    def on_llm_start(self, *args, **kwargs):
-        self.start = time.perf_counter()
-
-    def on_llm_end(self, *args, **kwargs):
-        if self.start:
-            latency_ms = (time.perf_counter() - self.start) * 1000
-            self.latencies.append(latency_ms)
-            self.start = None
-
-    def get_p95(self):
-        """Get P95 latency in milliseconds"""
-        return np.percentile(self.latencies, 95) if self.latencies else 0
+# Nota: Todas as métricas (latência, custo, errors) serão extraídas dos metadados do LangSmith
+# após a execução de evaluate(). Não é necessário tracking manual.
 
 
 def normalize_score(value: float, min_val: float, max_val: float, invert: bool = False) -> float:
@@ -431,7 +413,9 @@ def run_quick_eval(
     experiment_prefix: str = "quick-eval"
 ) -> Dict[str, float]:
     """
-    Executa quick evaluation sobre golden dataset com seleção automática de evaluators.
+    Executa quick evaluation sobre golden dataset usando APENAS LLM-as-Judge.
+
+    Todas as métricas são extraídas dos metadados do LangSmith após evaluate().
 
     Args:
         target_function: Função que implementa seu LLM app
@@ -439,42 +423,53 @@ def run_quick_eval(
         experiment_prefix: Prefixo para experimento
 
     Returns:
-        dict: Métricas extraídas e score total ponderado
+        dict: Métricas extraídas dos metadados do LangSmith e score total ponderado
     """
     client = Client()
 
-    # Callback para latency tracking
-    latency_cb = LatencyCallback()
-
-    # Wrapper para adicionar callback
-    def predict_with_tracking(inputs):
-        from langchain_core.runnables import RunnableConfig
-        config = RunnableConfig(callbacks=[latency_cb])
-        result = target_function(inputs, config=config)
-        return result
-
-    # Selecionar evaluators apropriados baseado no dataset
+    # Selecionar evaluators apropriados (APENAS LLM-as-Judge)
     evaluators = select_evaluators_for_dataset(dataset_name)
 
     # Executar evaluation
     results = evaluate(
-        predict_with_tracking,
+        target_function,
         data=dataset_name,
         evaluators=evaluators,
         experiment_prefix=experiment_prefix,
         max_concurrency=5
     )
 
-    # ==================== EXTRAIR MÉTRICAS ====================
+    # ==================== EXTRAIR MÉTRICAS DOS METADADOS DO LANGSMITH ====================
 
-    # 1. Accuracy (from LangSmith evaluator)
-    accuracy = results.get("qa", {}).get("mean", 0.0)
+    # Buscar experiment metadata do LangSmith
+    experiment_name = results.get("experiment_name")
 
-    # 2. Relevance (from LangSmith evaluator)
-    relevance = results.get("context_qa", {}).get("mean", 0.0)
+    # Obter runs do experiment para calcular métricas agregadas
+    runs = list(client.list_runs(
+        project_name=experiment_name,
+        execution_order=1,
+        is_root=True
+    ))
 
-    # 3. Latency P95 (from custom callback)
-    p95_latency = latency_cb.get_p95()
+    # 1. LLM-as-Judge Score (extraído do evaluator)
+    # O nome do evaluator depende do critério usado (ex: "correctness", "relevance", etc.)
+    # Vamos buscar pela primeira key de evaluator disponível
+    llm_judge_score = 0.0
+    for key in results.keys():
+        if key not in ["experiment_name", "experiment_url", "results"]:
+            # Pegar score médio do evaluator
+            llm_judge_score = results.get(key, {}).get("mean", 0.0)
+            break
+
+    # 2. Latency (extraída dos metadados dos runs)
+    latencies = []
+    for run in runs:
+        if run.latency:
+            latencies.append(run.latency / 1000)  # Converter para ms
+
+    p95_latency = np.percentile(latencies, 95) if latencies else 0
+    avg_latency = np.mean(latencies) if latencies else 0
+
     latency_score = normalize_score(
         p95_latency,
         min_val=0,
@@ -482,10 +477,15 @@ def run_quick_eval(
         invert=True
     )
 
-    # 4. Cost (from LangSmith tracking)
-    # Assumindo que LangSmith trackeia custo automaticamente
-    total_cost = results.get("total_cost", 0.0)
-    avg_cost_per_example = total_cost / max(results.get("example_count", 1), 1)
+    # 3. Cost (extraída dos metadados dos runs)
+    total_cost = 0.0
+    for run in runs:
+        if run.total_cost:
+            total_cost += run.total_cost
+
+    total_examples = len(runs)
+    avg_cost_per_example = total_cost / max(total_examples, 1)
+
     cost_score = normalize_score(
         avg_cost_per_example,
         min_val=0.0,
@@ -493,17 +493,15 @@ def run_quick_eval(
         invert=True
     )
 
-    # 5. Error Rate
-    error_count = results.get("error_count", 0)
-    total_examples = results.get("example_count", 1)
+    # 4. Error Rate (extraída dos metadados dos runs)
+    error_count = sum(1 for run in runs if run.error is not None)
     error_rate = error_count / max(total_examples, 1)
     error_score = 1.0 - error_rate  # Menos erros = melhor score
 
     # ==================== CALCULAR SCORE TOTAL ====================
 
     weighted_score = (
-        accuracy * METRIC_WEIGHTS["accuracy"] +
-        relevance * METRIC_WEIGHTS["relevance"] +
+        llm_judge_score * METRIC_WEIGHTS["accuracy"] +
         latency_score * METRIC_WEIGHTS["latency"] +
         cost_score * METRIC_WEIGHTS["cost"] +
         error_score * METRIC_WEIGHTS["errors"]
@@ -512,15 +510,19 @@ def run_quick_eval(
     # ==================== RETORNO ====================
 
     metrics = {
-        "accuracy": round(accuracy, 3),
-        "relevance": round(relevance, 3),
+        "llm_judge_score": round(llm_judge_score, 3),
         "p95_latency_ms": round(p95_latency, 0),
+        "avg_latency_ms": round(avg_latency, 0),
         "latency_score": round(latency_score, 3),
+        "total_cost": round(total_cost, 5),
         "avg_cost_per_example": round(avg_cost_per_example, 5),
         "cost_score": round(cost_score, 3),
+        "error_count": error_count,
+        "total_examples": total_examples,
         "error_rate": round(error_rate, 3),
         "error_score": round(error_score, 3),
         "weighted_total_score": round(weighted_score, 3),
+        "experiment_name": experiment_name,
         "experiment_url": results.get("experiment_url", "")
     }
 
@@ -574,12 +576,11 @@ def main():
     print("-" * 60)
 
     # Tabela de métricas
-    print(f"{'Métrica':<25} {'Score':<12} {'Peso':<10} {'Contribuição'}")
-    print("-" * 60)
+    print(f"{'Métrica':<30} {'Score':<12} {'Peso':<10} {'Contribuição'}")
+    print("-" * 65)
 
     metrics_display = [
-        ("Accuracy", metrics["accuracy"], METRIC_WEIGHTS["accuracy"]),
-        ("Relevance", metrics["relevance"], METRIC_WEIGHTS["relevance"]),
+        ("LLM-as-Judge Score", metrics["llm_judge_score"], METRIC_WEIGHTS["accuracy"]),
         ("Latency Score", metrics["latency_score"], METRIC_WEIGHTS["latency"]),
         ("Cost Score", metrics["cost_score"], METRIC_WEIGHTS["cost"]),
         ("Error Score", metrics["error_score"], METRIC_WEIGHTS["errors"])
@@ -587,17 +588,20 @@ def main():
 
     for name, score, weight in metrics_display:
         contribution = score * weight
-        print(f"{name:<25} {score:<12.3f} {weight*100:<9.0f}% {contribution:.3f}")
+        print(f"{name:<30} {score:<12.3f} {weight*100:<9.0f}% {contribution:.3f}")
 
-    print("-" * 60)
-    print(f"{'SCORE TOTAL':<25} {metrics['weighted_total_score']:<12.3f} {'100%':<10} {metrics['weighted_total_score']:.3f}")
-    print("=" * 60)
+    print("-" * 65)
+    print(f"{'SCORE TOTAL':<30} {metrics['weighted_total_score']:<12.3f} {'100%':<10} {metrics['weighted_total_score']:.3f}")
+    print("=" * 65)
 
-    # Detalhes adicionais
-    print(f"\n📈 Detalhes:")
+    # Detalhes adicionais extraídos dos metadados do LangSmith
+    print(f"\n📈 Detalhes (extraídos dos metadados do LangSmith):")
     print(f"  - P95 Latency: {metrics['p95_latency_ms']:.0f}ms")
+    print(f"  - Avg Latency: {metrics['avg_latency_ms']:.0f}ms")
+    print(f"  - Total Cost: ${metrics['total_cost']:.5f}")
     print(f"  - Avg Cost/Example: ${metrics['avg_cost_per_example']:.5f}")
-    print(f"  - Error Rate: {metrics['error_rate']*100:.1f}%")
+    print(f"  - Errors: {metrics['error_count']}/{metrics['total_examples']} ({metrics['error_rate']*100:.1f}%)")
+    print(f"  - Experiment: {metrics['experiment_name']}")
     print(f"  - LangSmith URL: {metrics['experiment_url']}")
 
     # Salvar resultados
@@ -851,15 +855,16 @@ Edite `quick_evals.py` para customizar os pesos:
 
 ```python
 METRIC_WEIGHTS = {
-    "accuracy": 0.45,      # 45% - Ajuste conforme necessário
-    "relevance": 0.20,     # 20%
-    "latency": 0.15,       # 15%
-    "cost": 0.15,          # 15%
-    "errors": 0.05         # 5%
+    "accuracy": 0.60,      # 60% - Score do LLM-as-Judge (ajuste conforme necessário)
+    "latency": 0.20,       # 20% - P95 latency
+    "cost": 0.15,          # 15% - Custo médio por exemplo
+    "errors": 0.05         # 5%  - Taxa de erro
 }
 ```
 
 **Importante**: A soma dos pesos deve ser 1.0 (100%)
+
+**Nota**: "accuracy" refere-se ao score do LLM-as-Judge (pode ser CORRECTNESS, RELEVANCE, CONCISENESS, etc., dependendo do critério selecionado para o dataset)
 
 ### 3. Configurar Sua Aplicação LLM
 
@@ -874,15 +879,16 @@ def my_llm_app(inputs, config=None):
 TARGET_FUNCTION = my_llm_app
 ```
 
-## 📊 Métricas Calculadas
+## 📊 Métricas Calculadas (Todas Extraídas dos Metadados do LangSmith)
 
 | Métrica | Descrição | Peso Padrão | Fonte |
 |---------|-----------|-------------|-------|
-| **Accuracy** | Precisão das respostas | 45% | LangSmith `qa` evaluator |
-| **Relevance** | Relevância do conteúdo | 20% | LangSmith `context_qa` evaluator |
-| **Latency** | P95 tempo de resposta | 15% | Custom callback |
-| **Cost** | Custo médio por exemplo | 15% | LangSmith tracking |
-| **Errors** | Taxa de erro (1 - error_rate) | 5% | LangSmith error tracking |
+| **LLM-as-Judge Score** | Score do critério LLM-as-Judge (CORRECTNESS, RELEVANCE, etc.) | 60% | LangSmith evaluator results |
+| **Latency** | P95 tempo de resposta | 20% | LangSmith run metadata (run.latency) |
+| **Cost** | Custo médio por exemplo | 15% | LangSmith run metadata (run.total_cost) |
+| **Errors** | Taxa de erro (1 - error_rate) | 5% | LangSmith run metadata (run.error) |
+
+**Nota**: Todas as métricas são extraídas dos metadados do LangSmith após `evaluate()`. Não há tracking manual ou callbacks customizados.
 
 ### Score Total
 
@@ -890,12 +896,11 @@ Score final = Σ (métrica × peso)
 
 Exemplo:
 
-- Accuracy: 0.85 × 0.45 = 0.3825
-- Relevance: 0.78 × 0.20 = 0.156
-- Latency: 0.92 × 0.15 = 0.138
+- LLM-as-Judge: 0.85 × 0.60 = 0.510
+- Latency: 0.92 × 0.20 = 0.184
 - Cost: 0.88 × 0.15 = 0.132
 - Errors: 0.95 × 0.05 = 0.0475
-- **Total: 0.856 (85.6%)**
+- **Total: 0.874 (87.4%)**
 
 ## 📁 Formato dos Datasets
 
@@ -986,29 +991,38 @@ uv run python -m py_compile evaluators/scripts/*.py
 
 ```text
 ============================================================
-🚀 QUICK EVALUATION - LANGSMITH
+🚀 QUICK EVALUATION - LANGSMITH (LLM-as-Judge Only)
 ============================================================
 
-🔍 Running evaluation on dataset 'golden-dataset'...
+📊 Evaluators para Dataset 'golden-dataset':
+   ✅ LLM-as-Judge (CORRECTNESS)
+      - Model: openai:gpt-4o-mini
+      - Input Keys: ['question']
+      - Reference Keys: ['expected_answer']
+      - Prediction Key: answer
+
+🔍 Running evaluation...
 ✅ Evaluation complete
 
 📊 MÉTRICAS EXTRAÍDAS:
-------------------------------------------------------------
-Métrica                   Score        Peso       Contribuição
-------------------------------------------------------------
-Accuracy                  0.850        45%        0.383
-Relevance                 0.780        20%        0.156
-Latency Score             0.920        15%        0.138
-Cost Score                0.880        15%        0.132
-Error Score               0.950        5%         0.048
-------------------------------------------------------------
-SCORE TOTAL               0.856        100%       0.856
-============================================================
+-----------------------------------------------------------------
+Métrica                        Score        Peso       Contribuição
+-----------------------------------------------------------------
+LLM-as-Judge Score            0.850        60%        0.510
+Latency Score                 0.920        20%        0.184
+Cost Score                    0.880        15%        0.132
+Error Score                   0.950        5%         0.048
+-----------------------------------------------------------------
+SCORE TOTAL                   0.874        100%       0.874
+=================================================================
 
-📈 Detalhes:
+📈 Detalhes (extraídos dos metadados do LangSmith):
   - P95 Latency: 450ms
+  - Avg Latency: 380ms
+  - Total Cost: $0.03750
   - Avg Cost/Example: $0.00125
-  - Error Rate: 5.0%
+  - Errors: 2/30 (6.7%)
+  - Experiment: quick-eval-abc123
   - LangSmith URL: https://smith.langchain.com/...
 
 💾 Resultados salvos em: evaluators/scripts/eval_results.json
@@ -1018,15 +1032,19 @@ SCORE TOTAL               0.856        100%       0.856
 
 ```json
 {
-  "accuracy": 0.850,
-  "relevance": 0.780,
+  "llm_judge_score": 0.850,
   "p95_latency_ms": 450,
+  "avg_latency_ms": 380,
   "latency_score": 0.920,
+  "total_cost": 0.03750,
   "avg_cost_per_example": 0.00125,
   "cost_score": 0.880,
-  "error_rate": 0.05,
-  "error_score": 0.950,
-  "weighted_total_score": 0.856,
+  "error_count": 2,
+  "total_examples": 30,
+  "error_rate": 0.067,
+  "error_score": 0.933,
+  "weighted_total_score": 0.874,
+  "experiment_name": "quick-eval-abc123",
   "experiment_url": "https://smith.langchain.com/..."
 }
 ```
@@ -1083,18 +1101,16 @@ Não configure pesos que não somam 1.0:
 ```python
 # ❌ Errado - Soma = 0.95
 METRIC_WEIGHTS = {
-    "accuracy": 0.45,
-    "relevance": 0.20,
-    "latency": 0.15,
+    "accuracy": 0.60,
+    "latency": 0.20,
     "cost": 0.10,
     "errors": 0.05
 }
 
 # ✅ Correto - Soma = 1.0
 METRIC_WEIGHTS = {
-    "accuracy": 0.45,
-    "relevance": 0.20,
-    "latency": 0.15,
+    "accuracy": 0.60,  # LLM-as-Judge score
+    "latency": 0.20,
     "cost": 0.15,
     "errors": 0.05
 }
