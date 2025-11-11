@@ -47,12 +47,14 @@ Guia completo de integração do LLM-as-Judge no ciclo de vida de desenvolviment
 **Definição**: Avaliação executada em dataset estático **antes** de deploy em produção.
 
 **Características:**
+
 - ✅ Dataset versionado e imutável
 - ✅ Execução batch (não real-time)
 - ✅ Resultados armazenados em Experiment
 - ✅ Comparável entre versões
 
 **Quando executar:**
+
 - 🔄 Final de cada sprint/iteração
 - 🔄 Antes de merge de PR
 - 🔄 Antes de deploy em staging
@@ -104,21 +106,25 @@ print(f"Experiment URL: {results.experiment_url}")
 ### 1.3 Métricas a Capturar
 
 **Qualidade (LLM-as-Judge):**
+
 - Score médio (0-1)
 - Distribuição de scores
 - Taxa de falha (score = 0)
 
 **Performance:**
+
 - Latência média (segundos)
 - P95 latency
 - Timeout rate
 
 **Custo:**
+
 - Custo por query (USD)
 - Custo total do experiment
 - Token usage (input + output)
 
 **Exemplo de log:**
+
 ```python
 # Resultados do experiment
 {
@@ -143,6 +149,7 @@ print(f"Experiment URL: {results.experiment_url}")
 ### 1.4 Quick Evals vs Full Evals
 
 **Quick Evals** (Iteração Rápida):
+
 - ✅ Subset pequeno (20-50 examples)
 - ✅ Executado frequentemente (a cada mudança)
 - ✅ Tempo: < 5 minutos
@@ -159,6 +166,7 @@ quick_eval = evaluate(
 ```
 
 **Full Evals** (Validação Formal):
+
 - ✅ Dataset completo (100-1000s examples)
 - ✅ Executado no final do sprint
 - ✅ Tempo: 10-60 minutos
@@ -174,6 +182,7 @@ full_eval = evaluate(
 ```
 
 **Estratégia recomendada:**
+
 ```
 Durante desenvolvimento:
 ├── Quick evals (frequentes)
@@ -191,6 +200,7 @@ Final do sprint:
 **Definição**: Registro de uma execução de avaliação, incluindo dataset, evaluators, target function e resultados.
 
 **Metadados armazenados:**
+
 - Dataset name + version
 - Evaluator configs
 - Timestamp
@@ -202,6 +212,7 @@ Final do sprint:
 **Regra de ouro**: Mudar APENAS 1 variável por experiment
 
 **Exemplo: Comparar 2 prompts**
+
 ```python
 # Experiment 1: Prompt V1
 results_v1 = evaluate(
@@ -224,6 +235,7 @@ results_v2 = evaluate(
 ```
 
 **Variáveis que podem ser testadas:**
+
 - Prompt template
 - Modelo LLM (gpt-4 vs gpt-3.5)
 - Temperatura
@@ -233,11 +245,13 @@ results_v2 = evaluate(
 ### 2.3 Análise Comparativa
 
 **Heatmap Comparison:**
+
 - Visualizar scores lado a lado
 - Identificar examples onde v2 > v1
 - Identificar regressions (v2 < v1)
 
 **Score delta:**
+
 ```python
 # Calcular diferença
 delta = results_v2.aggregate_score - results_v1.aggregate_score
@@ -251,6 +265,7 @@ else:  # Neutro
 ```
 
 **ROI Analysis:**
+
 ```python
 # Combinar qualidade + custo
 roi_v1 = results_v1.aggregate_score / results_v1.total_cost
@@ -272,6 +287,7 @@ if roi_v2 > roi_v1:
 | -10% | 0% | 0% | ❌ Não deploy (regressão) |
 
 **Checklist de decisão:**
+
 - [ ] Quality score melhorou OU manteve?
 - [ ] Não há regressions críticas (ex: 0% → 100% failure em categoria específica)?
 - [ ] Latência está dentro de SLA (ex: < 1s)?
@@ -283,17 +299,20 @@ if roi_v2 > roi_v1:
 ### 3.1 Ferramentas de Debug
 
 **Heatmap:**
+
 - Visualização de scores por example
 - Cores: verde (1.0), amarelo (0.5), vermelho (0.0)
 - Identificar patterns de falha
 
 **Traces:**
+
 - Detalhamento de cada run
 - Input → LLM calls → Output
 - Tempo de cada step
 - Prompt enviado ao modelo
 
 **Comments:**
+
 - Justificativas do LLM-as-Judge
 - Por que score foi X?
 
@@ -302,6 +321,7 @@ if roi_v2 > roi_v1:
 **Cenário**: Aggregate score = 0.7 (esperava > 0.85)
 
 **Passo 1: Identificar failures no Heatmap**
+
 ```
 Navigate to: Experiment → Heatmap
 Filter: score < 0.5
@@ -309,6 +329,7 @@ Result: 10 examples com score baixo
 ```
 
 **Passo 2: Analisar Traces de failures**
+
 ```
 Click em example com score = 0
 Ver Trace:
@@ -318,6 +339,7 @@ Ver Trace:
 ```
 
 **Passo 3: Categorizar erros**
+
 ```
 Erro 1: Prompt ambíguo (5 cases)
 Erro 2: Retrieval falhou (3 cases)
@@ -325,6 +347,7 @@ Erro 3: Modelo LLM alucinando (2 cases)
 ```
 
 **Passo 4: Priorizar fixes**
+
 ```
 Fix 1: Clarificar prompt (impacto: +12% score)
 Fix 2: Melhorar retrieval (impacto: +7% score)
@@ -332,6 +355,7 @@ Fix 3: Adicionar guardrails anti-alucinação (impacto: +5% score)
 ```
 
 **Passo 5: Implementar + Re-avaliar**
+
 ```python
 # Aplicar fix 1
 fixed_app = update_prompt(...)
@@ -354,11 +378,13 @@ results_fixed = evaluate(
 **Debug do judge:**
 
 **Passo 1: Ver prompt enviado ao judge**
+
 ```
 Trace → Judge LLM call → Input (prompt)
 ```
 
 **Passo 2: Verificar mapeamento de chaves**
+
 ```
 # Esperado:
 {question}: "Capital da França?"
@@ -371,6 +397,7 @@ Trace → Judge LLM call → Input (prompt)
 ```
 
 **Passo 3: Testar judge isoladamente**
+
 ```python
 # Teste unitário do judge
 test_input = {"question": "Capital da França?"}
@@ -388,6 +415,7 @@ judge_result = judge(
 ```
 
 **Passo 4: Calibrar judge**
+
 - Adicionar few-shot examples
 - Revisar prompt para ser mais crítico
 - Usar human corrections no LangSmith
@@ -397,6 +425,7 @@ judge_result = judge(
 ### 4.1 Por Que Combinar Métricas
 
 **Problema**: Score alto de qualidade pode vir com:
+
 - ❌ Latência inaceitável (5s+ por query)
 - ❌ Custo proibitivo ($1+ por query)
 
@@ -490,6 +519,7 @@ v2_weighted = calculate_weighted_score(
 **Definição**: Avaliação executada em **tempo real** em produção, aplicada a cada request de usuário.
 
 **Características:**
+
 - ✅ Aplica evaluators a production runs
 - ✅ Sem reference outputs (geralmente)
 - ✅ Detecta degradação de qualidade
@@ -528,6 +558,7 @@ client.create_online_evaluator(
 ```
 
 **Sampling rate trade-off:**
+
 - 1.0 (100%): Máxima cobertura, alto custo
 - 0.1 (10%): Amostra representativa, custo controlado
 - 0.01 (1%): Monitoramento básico, muito econômico
@@ -535,20 +566,24 @@ client.create_online_evaluator(
 ### 5.3 Casos de Uso de Online Eval
 
 **1. Quality Monitoring**
+
 - Detectar degradação gradual
 - Alertar se score médio cai abaixo de threshold
 
 **2. A/B Testing em Produção**
+
 - 50% tráfego → v1
 - 50% tráfego → v2
 - Comparar scores online
 
 **3. Human-in-the-Loop (HITL)**
+
 - LLM-as-Judge avalia automaticamente
 - Humanos revisam casos de baixo score
 - Feedback humano melhora judge
 
 **4. Safety Guardrails**
+
 - Online judge de harmfulness
 - Bloquear resposta se score alto de harmful
 - Log para revisão
@@ -569,6 +604,7 @@ client.create_alert(
 ```
 
 **Tipos de alerts:**
+
 - Quality degradation (score médio caindo)
 - High failure rate (% de score = 0)
 - Latency spike (P95 > threshold)
@@ -678,22 +714,26 @@ def pre_release_eval():
 ### 7.1 Checklist de Integração
 
 **Durante Desenvolvimento:**
+
 - [ ] Quick evals configurados (< 5min)?
 - [ ] Feedback rápido a cada mudança?
 
 **Final de Sprint:**
+
 - [ ] Full eval executado em dataset golden?
 - [ ] Experiment criado com nome descritivo?
 - [ ] Métricas combinadas calculadas (quality + latency + cost)?
 - [ ] Comparação A/B com versão anterior?
 
 **Antes de Deploy:**
+
 - [ ] Score acima de threshold (ex: > 0.80)?
 - [ ] Sem regressions críticas?
 - [ ] Stakeholders aprovaram?
 - [ ] Latência e custo aceitáveis?
 
 **Pós-Deploy:**
+
 - [ ] Online evaluators habilitados?
 - [ ] Alerts configurados (quality, latency, cost)?
 - [ ] Sampling rate apropriado (10-20%)?
@@ -702,12 +742,14 @@ def pre_release_eval():
 ### 7.2 Versionamento de Artifacts
 
 **O que versionar:**
+
 - ✅ Datasets (automático no LangSmith)
 - ✅ Prompt templates (Git)
 - ✅ Evaluator configs (Git)
 - ✅ Experiment results (LangSmith)
 
 **Exemplo de estrutura Git:**
+
 ```
 repo/
 ├── prompts/
@@ -728,6 +770,7 @@ repo/
 **Soluções:**
 
 **1. Múltiplos datasets:**
+
 ```python
 # Dataset 1: Curado (golden)
 eval_golden = evaluate(data="golden-dataset", ...)
@@ -739,6 +782,7 @@ eval_prod = evaluate(data="production-sample", ...)
 ```
 
 **2. Holdout set:**
+
 ```python
 # 80% training/dev (iteração)
 # 20% holdout (validação final)
@@ -751,6 +795,7 @@ holdout_results = evaluate(data="holdout-set", ...)
 ```
 
 **3. Refresh periódico:**
+
 ```
 A cada 3-6 meses:
 ├── Adicionar novos examples (edge cases de produção)
@@ -761,62 +806,75 @@ A cada 3-6 meses:
 ## 8. Troubleshooting LLMOps
 
 **Problema**: Eval passa em CI mas falha em produção
+
 - ✅ CI dataset muito fácil (não representa produção)
 - ✅ Solução: Usar production sample como dataset CI
 
 **Problema**: Online evals aumentam latência
+
 - ✅ Sampling rate muito alto (100%)
 - ✅ Solução: Reduzir para 10-20% ou async evaluation
 
 **Problema**: Alerts falsos (muito ruído)
+
 - ✅ Threshold muito sensível
 - ✅ Solução: Aumentar janela de tempo (1h → 4h)
 
 **Problema**: Experiments não comparáveis
+
 - ✅ Dataset mudou entre experiments
 - ✅ Solução: Pin dataset version nos experiments
 
 ## 9. Métricas de Sucesso LLMOps
 
 **Velocidade de Iteração:**
+
 - Tempo de feedback: < 5min (quick eval)
 - Frequency de evals: diária (durante dev)
 
 **Qualidade:**
+
 - Aggregate score: > 0.80 (threshold)
 - Regression rate: < 5% (comparado a baseline)
 
 **Eficiência:**
+
 - Custo de eval: < 10% do custo de produção
 - Tempo de debug: < 2h (de identificação a fix)
 
 **Confiabilidade:**
+
 - False positive rate (bad deploy): < 2%
 - Alert noise: < 10% (alertas falsos)
 
 ## 10. Roadmap de Adoção
 
 **Semana 1-2: Setup Básico**
+
 - [ ] Criar dataset golden (50 examples)
 - [ ] Implementar primeiro LLM-as-Judge
 - [ ] Executar eval manual
 
 **Semana 3-4: Automação**
+
 - [ ] Integrar eval em CI/CD
 - [ ] Configurar quick evals para dev
 - [ ] Estabelecer threshold de qualidade
 
 **Semana 5-6: Refinamento**
+
 - [ ] Adicionar métricas combinadas (weighted score)
 - [ ] Implementar A/B testing workflow
 - [ ] Calibrar judge com few-shot/human feedback
 
 **Semana 7-8: Produção**
+
 - [ ] Habilitar online evaluators
 - [ ] Configurar alerts de qualidade
 - [ ] HITL para casos de baixo score
 
 **Mês 3+: Otimização**
+
 - [ ] Expandir coverage de dataset (100+ examples)
 - [ ] Múltiplos judges (multi-aspect eval)
 - [ ] Regression testing automatizado

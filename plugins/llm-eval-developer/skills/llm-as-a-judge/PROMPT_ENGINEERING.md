@@ -64,6 +64,7 @@ LangSmith oferece critérios prontos via constantes:
 | Helpfulness | `HELPFULNESS` | Utilidade da resposta | ❌ Não |
 
 **Uso:**
+
 ```python
 from langsmith.evaluation import create_llm_as_judge
 
@@ -76,11 +77,13 @@ judge = create_llm_as_judge(
 ### 1.2 Critérios Customizados
 
 **Quando customizar:**
+
 - ✅ Domínio específico (médico, legal, técnico)
 - ✅ Rubrica complexa (escala 1-5 com descrições)
 - ✅ Múltiplas dimensões (tom + precisão + estrutura)
 
 **Como customizar:**
+
 ```python
 custom_criteria = """
 Avalie se a resposta é tecnicamente precisa E apropriada para público leigo.
@@ -106,11 +109,13 @@ judge = create_llm_as_judge(
 **Escalas comuns:**
 
 **Binary (0/1):**
+
 ```
 score: 1 se correto, 0 se incorreto
 ```
 
 **Likert (1-5):**
+
 ```
 score:
   5 - Excelente (completo e preciso)
@@ -121,6 +126,7 @@ score:
 ```
 
 **Percentage (0-100):**
+
 ```
 score: 0-100 (% de informação correta)
 ```
@@ -132,6 +138,7 @@ score: 0-100 (% de informação correta)
 ### 2.1 Nível 1: Prompt Básico (Zero-Shot)
 
 **Características:**
+
 - Sem exemplos
 - Instrução direta
 - Formato de saída claro
@@ -156,6 +163,7 @@ Retorne JSON:
 ```
 
 **Quando usar:**
+
 - ✅ Critérios simples (correção binária)
 - ✅ Domínio geral (não especializado)
 - ✅ Iteração rápida (sem calibração)
@@ -163,6 +171,7 @@ Retorne JSON:
 ### 2.2 Nível 2: Prompt com Rubrica Detalhada
 
 **Características:**
+
 - Rubrica explícita
 - Múltiplos aspectos
 - Escala clara
@@ -200,6 +209,7 @@ Retorne JSON:
 ```
 
 **Quando usar:**
+
 - ✅ Avaliação multidimensional
 - ✅ Feedback detalhado necessário
 - ✅ Domínio com múltiplos aspectos
@@ -207,6 +217,7 @@ Retorne JSON:
 ### 2.3 Nível 3: Prompt com Chain-of-Thought (CoT)
 
 **Características:**
+
 - Raciocínio explícito
 - Passo a passo
 - Conclusão justificada
@@ -245,6 +256,7 @@ Retorne JSON:
 ```
 
 **Quando usar:**
+
 - ✅ Alta precisão necessária
 - ✅ Debugging de decisões do juiz
 - ✅ Domínio complexo (médico, legal)
@@ -254,6 +266,7 @@ Retorne JSON:
 ### 2.4 Nível 4: Prompt com Few-Shot Examples
 
 **Características:**
+
 - Exemplos de julgamentos corretos
 - Calibração automática
 - Alinhamento com preferências
@@ -297,6 +310,7 @@ Retorne JSON:
 ```
 
 **Quando usar:**
+
 - ✅ Calibração necessária
 - ✅ Critérios subjetivos
 - ✅ Alinhamento com humanos
@@ -308,6 +322,7 @@ Retorne JSON:
 ### 3.1 O Problema do Mapeamento
 
 **Cenário comum:**
+
 - Dataset usa chaves: `{"question", "answer"}`
 - Target function retorna: `{"response"}`
 - Prompt usa variáveis: `{pergunta}`, `{resposta}`
@@ -329,6 +344,7 @@ judge = create_llm_as_judge(
 ```
 
 **Variáveis no prompt:**
+
 - `{question}` ← dataset.inputs["question"]
 - `{answer}` ← dataset.outputs["answer"]
 - `{response}` ← target_output["response"]
@@ -397,15 +413,18 @@ print("Prediction keys:", test_output.keys())
 ### 4.1 Modelos Disponíveis
 
 **OpenAI:**
+
 - `openai:gpt-4o` - Mais preciso, mais lento, mais caro
 - `openai:gpt-4o-mini` - Balanceado (recomendado)
 - `openai:gpt-3.5-turbo` - Mais rápido, menos preciso
 
 **Anthropic:**
+
 - `anthropic:claude-3-5-sonnet-20250219` - Alta qualidade
 - `anthropic:claude-3-haiku-20240307` - Rápido e econômico
 
 **Outros:**
+
 - `fireworks_ai:accounts/...` - Modelos open-source
 
 ### 4.2 Trade-offs de Modelo
@@ -443,17 +462,20 @@ judge = create_llm_as_judge(
 **Workflow automatizado:**
 
 1. **Executar avaliação inicial**
+
    ```python
    results = evaluate(data="dataset", evaluators=[judge])
    ```
 
-2. **Humanos corrigem scores no LangSmith UI**
+1. **Humanos corrigem scores no LangSmith UI**
+
    - Navegar para Experiment
    - Clicar em example
    - Modificar score (ex: 0 → 1)
    - Adicionar feedback
 
-3. **LangSmith auto-insere correções como few-shot**
+1. **LangSmith auto-insere correções como few-shot**
+
    - Correções viram exemplos no prompt
    - Judge aprende com feedback humano
 
@@ -493,6 +515,7 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ```
 
 **Quantos exemplos?**
+
 - ✅ 3-5 exemplos = Sweet spot
 - ❌ < 3 = Pouco contexto
 - ❌ > 10 = Token waste + confusion
@@ -500,14 +523,17 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ### 5.4 Estratégias de Seleção de Few-Shot
 
 **Opção 1: Edge Cases**
+
 - Casos difíceis onde judge errou
 - Exemplos ambíguos
 
 **Opção 2: Distribuição Balanceada**
+
 - 50% positivos (score=1)
 - 50% negativos (score=0)
 
 **Opção 3: Coverage de Tipos de Erro**
+
 - Erro factual
 - Omissão de informação
 - Informação extra irrelevante
@@ -518,24 +544,29 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ### 6.1 Tipos Comuns de Bias
 
 **1. Positivity Bias**
+
 - Judge tende a dar scores altos
 - Problema: Não detecta erros sutis
 
 **2. Length Bias**
+
 - Respostas longas recebem scores melhores
 - Problema: Verbosidade ≠ Qualidade
 
 **3. Format Bias**
+
 - Respostas bem formatadas (markdown, listas) pontuam alto
 - Problema: Formato ≠ Correção
 
 **4. Echo Chamber**
+
 - LLM avalia outro LLM favoravelmente
 - Problema: Bias sistêmico
 
 ### 6.2 Detectando Bias
 
 **Análise estatística:**
+
 ```python
 # Calcular distribuição de scores
 scores = [r.score for r in results.results]
@@ -548,6 +579,7 @@ mean_score = sum(scores) / len(scores)
 ```
 
 **Comparação com human judgments:**
+
 ```python
 # Correlação judge vs human
 # Se correlation < 0.7 → bias ou critérios mal definidos
@@ -556,6 +588,7 @@ mean_score = sum(scores) / len(scores)
 ### 6.3 Técnicas de Correção
 
 **Técnica 1: Prompt Engineering**
+
 ```python
 # Adicionar instrução explícita
 bias_aware_prompt = """
@@ -568,6 +601,7 @@ Foque apenas em correção factual.
 ```
 
 **Técnica 2: Few-Shot com Casos Negativos**
+
 ```python
 # Incluir exemplos de respostas longas mas incorretas
 negative_example = """
@@ -578,11 +612,13 @@ Score: 0 (Erro factual: Python é INTERPRETADA, não compilada)
 ```
 
 **Técnica 3: Human Corrections (LangSmith)**
+
 - Corrigir false positives no UI
 - LangSmith usa correções como few-shot
 - Bias reduz gradualmente
 
 **Técnica 4: Dual Judging**
+
 ```python
 # Usar 2 judges independentes
 judge_1 = create_llm_as_judge(model="openai:gpt-4o-mini", ...)
@@ -595,6 +631,7 @@ final_score = (score_1 + score_2) / 2
 ### 6.4 Validação de Calibração
 
 **Checklist:**
+
 - [ ] Distribuição de scores razoável (não só 0 ou 1)?
 - [ ] Correlação com human judgments > 0.7?
 - [ ] Respostas incorretas óbvias recebem score 0?
@@ -691,26 +728,31 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ### Checklist de Design de Prompt
 
 **Estrutura:**
+
 - [ ] Role claro (especialista em X)?
 - [ ] Dados mapeados corretamente (input, reference, prediction)?
 - [ ] Formato de saída explícito (JSON com score + comment)?
 
 **Critérios:**
+
 - [ ] Critério bem definido (não vago)?
 - [ ] Escala clara (0/1 ou 1-5 com descrições)?
 - [ ] Rubrica explícita (quando usar escala numérica)?
 
 **Calibração:**
+
 - [ ] Few-shot examples incluídos (3-5)?
 - [ ] Edge cases cobertos?
 - [ ] Distribuição balanceada (positivos + negativos)?
 
 **Bias:**
+
 - [ ] Instrução para ser crítico?
 - [ ] Exemplos de respostas longas mas incorretas?
 - [ ] Human corrections planejadas?
 
 **Performance:**
+
 - [ ] Modelo apropriado (gpt-4o-mini para iteração)?
 - [ ] Prompt conciso (< 1000 tokens)?
 - [ ] Chain-of-thought apenas quando necessário?
@@ -718,30 +760,35 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ## 9. Troubleshooting de Prompts
 
 **Problema**: Judge sempre dá score máximo
+
 ```python
 # Diagnóstico: Positivity bias
 # Solução: Adicionar few-shot com casos negativos + instrução crítica
 ```
 
 **Problema**: Scores inconsistentes
+
 ```python
 # Diagnóstico: Rubrica vaga ou modelo fraco
 # Solução: Definir rubrica detalhada OU usar modelo melhor (gpt-4o)
 ```
 
 **Problema**: Judge não usa reference output
+
 ```python
 # Diagnóstico: Prompt não menciona reference explicitamente
 # Solução: Adicionar "Compare Prediction vs Reference Output"
 ```
 
 **Problema**: JSON inválido retornado
+
 ```python
 # Diagnóstico: Modelo não segue formato
 # Solução: Enfatizar "Retorne APENAS JSON válido, sem texto adicional"
 ```
 
 **Problema**: Comentários vazios ou genéricos
+
 ```python
 # Diagnóstico: Prompt não exige justificativa específica
 # Solução: "comment deve mencionar QUAL fato está incorreto e POR QUÊ"
@@ -750,6 +797,7 @@ Retorne JSON: {{"score": ..., "comment": ...}}
 ## 10. Exemplos Completos
 
 ### Exemplo 1: Judge Básico (Zero-Shot)
+
 ```python
 from langsmith.evaluation import create_llm_as_judge
 
@@ -763,6 +811,7 @@ basic_judge = create_llm_as_judge(
 ```
 
 ### Exemplo 2: Judge Customizado (Rubrica Detalhada)
+
 ```python
 rubric = """
 Avalie resposta técnica em escala 1-5:
@@ -785,6 +834,7 @@ custom_judge = create_llm_as_judge(
 ```
 
 ### Exemplo 3: Judge com Few-Shot e CoT
+
 ```python
 few_shot_cot = """
 Você é avaliador com raciocínio explícito.

@@ -240,6 +240,7 @@ Usar `Write` para criar `evaluators/scripts/upload_datasets.py`
 Usar o mapeamento criado no Passo 2.3 (`dataset_evaluators`) para popular a constante `DATASET_EVALUATORS` no script.
 
 Exemplo de preenchimento:
+
 ```python
 DATASET_EVALUATORS = {
     "qa-golden-set": ["qa", "context_qa"],
@@ -858,6 +859,7 @@ uv pip install openevals langsmith langchain langchain-openai openai python-dote
 ```
 
 **Nota**:
+
 - A biblioteca `openevals` é usada para LLM-as-Judge evaluators com prompts pré-construídos
 - A biblioteca `openai` é necessária quando usando GPT-4o-mini como modelo juiz
 - Para custom evaluators, você pode implementar lógica específica usando LangSmith SDK diretamente
@@ -876,11 +878,13 @@ OPENAI_API_KEY=your-openai-key  # ou outro provider
 ```
 
 **Importante**: Os scripts utilizam `python-dotenv` para carregar automaticamente as variáveis do arquivo `.env`. Certifique-se de que:
+
 - O arquivo `.env` está na raiz do projeto
 - A variável `LANGSMITH_API_KEY` está configurada corretamente
 - A biblioteca `python-dotenv` está instalada (`pip install python-dotenv`)
 
 **Configuração de Python Path**: Os scripts automaticamente adicionam o diretório raiz do projeto ao `sys.path`:
+
 - Estrutura esperada: `project_root/evaluators/scripts/[script].py`
 - O script resolve o caminho com `.parents[2]` para alcançar o diretório raiz
 - Isso permite importar módulos do projeto sem conflitos de path
@@ -972,11 +976,12 @@ Comportamento esperado! O script faz skip automático.
 **Causa**: Variável `LANGSMITH_API_KEY` não está sendo carregada do arquivo `.env`.
 
 **Soluções**:
+
 1. Verifique se o arquivo `.env` existe na raiz do projeto
-2. Certifique-se de que a variável está definida corretamente: `LANGSMITH_API_KEY=your-api-key`
-3. Instale `python-dotenv`: `pip install python-dotenv`
-4. Verifique se `load_dotenv()` está sendo chamado no início dos scripts
-5. Teste manualmente: `python -c "from dotenv import load_dotenv; load_dotenv(); import os; print(os.getenv('LANGSMITH_API_KEY'))"`
+1. Certifique-se de que a variável está definida corretamente: `LANGSMITH_API_KEY=your-api-key`
+1. Instale `python-dotenv`: `pip install python-dotenv`
+1. Verifique se `load_dotenv()` está sendo chamado no início dos scripts
+1. Teste manualmente: `python -c "from dotenv import load_dotenv; load_dotenv(); import os; print(os.getenv('LANGSMITH_API_KEY'))"`
 
 ### Erro: Nenhum dataset encontrado
 
@@ -987,13 +992,14 @@ Verifique se há arquivos `.json` ou `.jsonl` em `datasets/`.
 **Causa**: Script não consegue importar módulos do projeto.
 
 **Soluções**:
+
 1. Verifique se a estrutura de diretórios está correta: `project_root/evaluators/scripts/`
-2. Ajuste `.parents[N]` se a estrutura for diferente:
+1. Ajuste `.parents[N]` se a estrutura for diferente:
    - `.parents[1]`: Para `project_root/scripts/[script].py`
    - `.parents[2]`: Para `project_root/evaluators/scripts/[script].py` (padrão)
    - `.parents[3]`: Para `project_root/foo/evaluators/scripts/[script].py`
-3. Teste o path: Adicione `print(f"Project root: {project_root}")` após `project_root = ...`
-4. Verifique se os módulos que você quer importar existem no `project_root`
+1. Teste o path: Adicione `print(f"Project root: {project_root}")` após `project_root = ...`
+1. Verifique se os módulos que você quer importar existem no `project_root`
 
 ## 📖 Referências
 
@@ -1221,6 +1227,7 @@ client = Client()
 ```
 
 **Consequências de não usar `load_dotenv()`**:
+
 - Erro 401 "Invalid token" ao autenticar com LangSmith
 - Variáveis do `.env` não são carregadas no ambiente
 - Scripts falham mesmo com `.env` configurado corretamente
@@ -1249,6 +1256,7 @@ from my_project.utils import helper_function  # Sucesso!
 ```
 
 **Por que `.parents[2]`?**
+
 - Script está em: `project_root/evaluators/scripts/upload_datasets.py`
 - `.parents[0]`: `evaluators/scripts/upload_datasets.py` (o próprio arquivo)
 - `.parents[1]`: `evaluators/scripts/` (diretório pai)
@@ -1256,6 +1264,7 @@ from my_project.utils import helper_function  # Sucesso!
 - `.parents[3]`: `project_root/` (raiz do projeto) ← Este é o objetivo!
 
 **Ajuste conforme sua estrutura**:
+
 - `project_root/scripts/`: Use `.parents[1]`
 - `project_root/evaluators/scripts/`: Use `.parents[2]` (padrão)
 - `project_root/foo/bar/scripts/`: Use `.parents[3]`
@@ -1303,6 +1312,7 @@ def my_custom_judge(run: Run, example: Example) -> dict:
 ```
 
 **Por que usar openevals**:
+
 - ✅ Prompts pré-construídos e testados pela comunidade
 - ✅ Simples de usar (poucas linhas de código)
 - ✅ Boas práticas built-in
@@ -1310,12 +1320,14 @@ def my_custom_judge(run: Run, example: Example) -> dict:
 - ✅ Menos código e mais confiável
 
 **Quando usar custom evaluators**:
+
 - ✅ Lógica única (ex: validação de formato JSON)
 - ✅ Prompts muito específicos do domínio
 - ✅ Combinar múltiplos judges
 - ✅ Total controle do prompt e lógica
 
 **Consequências de implementação manual sem framework**:
+
 - ❌ Código não validado e propenso a erros
 - ❌ Sem garantia de qualidade dos critérios
 - ❌ Sem integração nativa com LangSmith
@@ -1382,6 +1394,7 @@ DATASET_EVALUATORS = {
 ```
 
 **Por que o comando deve analisar datasets ANTES**:
+
 - Cada tipo de tarefa precisa de critério LLM-as-Judge específico
 - CORRECTNESS não funciona para summarization (use CONCISENESS)
 - HELPFULNESS não funciona para safety tests (use HARMFULNESS)
@@ -1390,6 +1403,7 @@ DATASET_EVALUATORS = {
 - Script gerado já vem customizado por tipo de tarefa
 
 **Consequências de não analisar no comando**:
+
 - Avaliações com critérios inapropriados (ex: CORRECTNESS para safety)
 - Scores sem sentido (ex: medir concisão em vez de segurança)
 - Falhas silenciosas ou resultados enganosos

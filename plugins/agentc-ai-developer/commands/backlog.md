@@ -1,180 +1,229 @@
 ---
-description: Create incremental backlog with isolated, independently deliverable slices following Brief Minimo specification
-allowed-tools: Read, Write
-argument-hint: '[create|view]'
+description: Manage LangGraph node development tasks tracking progress and state across nodes
+allowed-tools: Read, Write, Edit, Glob, Grep
+argument-hint: '[create|view|finalize]'
 model: claude-sonnet-4-5
 ---
 
-# Create Incremental Backlog
+# Manage LangGraph Node Development Backlog
 
-Generate increments as architecturally isolated slices with zero explicit dependencies.
+Track and manage task completion for developing individual LangGraph nodes with structured testing, debugging, and evaluation workflows.
 
 ## Prerequisites
 
-Verify README.md exists with complete Brief Minimo specification (from `/brief`).
+1. `ARQUITECTURE.md` exists with complete LangGraph node definition (from `/create-arquitecture`)
+1. Node structure documented: nodes, edges, state schema, flow diagram
 
-## Create Backlog
+## Create Node Development Backlog
 
-1. Read BRIEF_AGENTE_EMAIL.md and SPIKE.md to undestand the project and create Increments.
-1. Extract global success criteria from "What is SUCCESS?" section
-1. Assess impact level for each increment (HIGH/MEDIUM/LOW)
-1. Generate `docs/BACKLOG.md` with 3-5 increments (each linked to success criteria and impact)
-1. Apply isolation validation for each increment
-1. Report completion with file path and validation status
+1. **Validate or Create BACKLOG.md**
 
-## Isolation Validation Checklist
+   - Check if `BACKLOG.md` exists
+   - If not: Create with template and current node
+   - If exists: Load and analyze current state
 
-For each increment, verify **ALL** criteria below (YAGNI principle):
+1. **Analyze ARQUITECTURE.md**
 
-- **No explicit dependencies**: Increment does not require completion of other increments
-- **Standalone delivery**: Increment can be deployed/tested independently
-- **Clear boundaries**: Increment has defined inputs and outputs
-- **Decoupled logic**: Increment uses no shared state with other increments
-- **Self-contained scope**: All required code changes within increment scope
-- **Testable alone**: Increment can be unit tested without other increments
-- **No forward references**: Increment does not reference future features
+   - Read node definitions from `ARQUITECTURE.md`
+   - Extract nodes from "🏗️ Nodes Esperados" section
+   - Determine order: Start with entry nodes (START → first_node)
+   - Identify next node to develop (not yet started)
 
-## Backlog Template
+1. **Generate Node Development Tasks**
+
+   - For the current/next node, create 4-phase task structure:
+     - **Phase 1: Implementation** - Create Node, Edges, Reducers
+     - **Phase 2: Debug** - Visual debugging with LangSmith 🔍
+     - **Phase 3: Testing** - Validation tests + Coverage ✅
+     - **Phase 4: Evaluation** - Evals and Prompt/Model Engineering
+
+1. **Generate BACKLOG.md**
+
+   - Track current node in development
+   - List all tasks for current node
+   - Show progress indicator
+   - Document completed nodes
+
+## BACKLOG.md Template
 
 ```markdown
-# Backlog - [Agent Name]
+# Node Development Backlog
 
-Brief: [One-line agent purpose from README.md]
+**Projeto**: [Agent Name from ARQUITECTURE.md]
+**Data Criação**: [Date]
+**Último Update**: [Date]
 
-## Success Criteria (from Brief Minimo)
+## 🎯 Current Node Development
 
-- **Metric**: [Quantifiable metric from README]
-- **Target**: [Minimum target value]
-- **Measurement**: [How success will be measured]
-- **Validation**: [How/when will be validated]
+### Node: `[node-name]`
 
-## Increments
+**Responsabilidade**: [From ARQUITECTURE.md]
+**Input**: [State keys read]
+**Output**: [State keys written]
+**Status**: 🔄 Em Desenvolvimento
 
-### 1. [Increment Title]
+#### Phase 1: Implementation ⚙️
+- [ ] Create node function with proper type hints
+- [ ] Implement node logic based on ARQUITECTURE spec
+- [ ] Define edges (incoming and outgoing)
+- [ ] Update state schema if new fields needed
+- [ ] Add reducers for accumulated fields
+- [ ] Integration test node in isolation
 
-- **Status**: ⏳ Planejado
-- **Horas**: 3-6h
-- **Impacto**: HIGH / MEDIUM / LOW
-- **Objetivo**: [Specific deliverable in one sentence]
-- **Isolamento**: [How this increment is architecturally isolated]
-- **Sucesso**: [How this increment contributes to global success criteria]
-- **Tarefas**:
-  - [ ] Task 1
-  - [ ] Task 2
-  - [ ] Task 3
+**Estimated Time**: 1.5h
+**Progress**: X/6 tasks complete
 
-### 2. [Increment Title]
+#### Phase 2: Debug 🔍
+- [ ] Configure LangSmith observability
+- [ ] Run node with sample inputs
+- [ ] Visualize state flow in LangSmith
+- [ ] Validate edge routing logic
+- [ ] Check state mutations (no side effects)
+- [ ] Document debug findings
 
-- **Status**: ⏳ Planejado
-- **Horas**: 3-6h
-- **Impacto**: HIGH / MEDIUM / LOW
-- **Objetivo**: [Specific deliverable in one sentence]
-- **Isolamento**: [How this increment is architecturally isolated]
-- **Sucesso**: [How this increment contributes to global success criteria]
-- **Tarefas**:
-  - [ ] Task 1
-  - [ ] Task 2
-  - [ ] Task 3
+**Estimated Time**: 1h
+**Progress**: X/6 tasks complete
 
-### 3. [Increment Title]
+#### Phase 3: Testing ✅
+- [ ] Write unit tests (happy path + edge cases)
+- [ ] Test state input validation
+- [ ] Test output formatting
+- [ ] Validate edge conditions
+- [ ] Achieve 80%+ coverage for node module
+- [ ] All tests passing
 
-- **Status**: ⏳ Planejado
-- **Horas**: 3-6h
-- **Impacto**: HIGH / MEDIUM / LOW
-- **Objetivo**: [Specific deliverable in one sentence]
-- **Isolamento**: [How this increment is architecturally isolated]
-- **Sucesso**: [How this increment contributes to global success criteria]
-- **Tarefas**:
-  - [ ] Task 1
-  - [ ] Task 2
-  - [ ] Task 3
+**Estimated Time**: 1h
+**Progress**: X/6 tasks complete
 
-## Summary
+#### Phase 4: Evaluation 📊
+- [ ] Create evaluation dataset (5-10 examples)
+- [ ] Run LangSmith evals on node outputs
+- [ ] Assess prompt quality (if LLM node)
+- [ ] Test model performance if applicable
+- [ ] Document evaluation results
+- [ ] Iterate on prompt/model if needed
 
-- **Total Increments**: 3
-- **Total Hours**: ~9-18h
-- **Impact Distribution**: X HIGH / Y MEDIUM / Z LOW
-- **Success Aligned**: All increments contribute to Brief Minimo metrics
-- **Next Increment**: Start with Increment 1
+**Estimated Time**: 1h
+**Progress**: X/6 tasks complete
+
+---
+
+## ✅ Completed Nodes
+
+### Node: `[previous-node-name]`
+- **Status**: ✅ Concluído
+- **Completed**: [Date]
+- **Total Time**: Xh
+
+### Node: `[previous-node-name-2]`
+- **Status**: ✅ Concluído
+- **Completed**: [Date]
+- **Total Time**: Xh
+
+---
+
+## 📊 Progress Summary
+
+- **Total Nodes**: [X nodes from ARQUITECTURE.md]
+- **Nodes Completed**: [X]
+- **Nodes In Progress**: 1 (`[current-node]`)
+- **Nodes Pending**: [X]
+- **Estimated Time Remaining**: Xh
+- **Overall Progress**: X%
+
+## 📋 Node Sequence
+
+[Based on ARQUITECTURE.md flow, list order of nodes to develop]
+
+1. `node-name` - [Responsabilidade]
+2. `node-name-2` - [Responsabilidade]
+3. `node-name-3` - [Responsabilidade]
 ```
 
-## View Backlog
+## View Backlog Status
 
-1. Read `docs/BACKLOG.md`
+1. Read `BACKLOG.md` from current directory
 1. Display:
-   - All increments and current status
-   - Total estimated hours
-   - Next recommended increment
-1. Flag any increments violating isolation criteria
+   - Current node in development
+   - Tasks completed/remaining for current node
+   - Progress bars for each phase
+   - List of completed nodes
+   - Next node to develop
+   - Estimated time remaining
+1. Flag any tasks with issues or blockers
 
-## Impact Assessment Rules
+## Finalize Node
 
-Assign impact level to each increment based on its contribution to agent goals:
+When all 4 phases completed for a node:
 
-### HIGH Impact
+1. Mark current node as ✅ Concluído
+1. Identify next node from BACKLOG.md sequence
+1. Create new BACKLOG.md section for next node
+1. Update progress summary
+1. Report completion with metrics
 
-- Delivers core agent functionality
-- Enables critical workflows required by Brief Minimo
-- Foundational feature without which agent cannot operate
-- Example: "Implement core classifier algorithm" for email prioritizer agent
+Usage: `/backlog finalize`
 
-### MEDIUM Impact
+## Node Development Task Rules
 
-- Enhances existing features
-- Important workflow improvement
-- Extends core functionality with important capabilities
-- Example: "Add edge case handling" for email prioritizer agent
+Each node must complete ALL 4 phases before finalization:
 
-### LOW Impact
+### Phase 1: Implementation (1.5h)
 
-- Polish and refinement
-- Utilities and helper features
-- Optional improvements for better UX/DX
-- Non-blocking features
-- Example: "Add formatted output options" for email prioritizer agent
+- Node function implements ARQUITECTURE spec exactly
+- Proper type hints on inputs/outputs
+- Edges correctly routed (incoming + outgoing)
+- State schema supports new fields with reducers
+- Passes isolated unit test
 
-## Time Calculation
+### Phase 2: Debug (1h)
 
-When generating backlog, calculate total development time:
+- LangSmith integration configured
+- Sample inputs tested end-to-end
+- State mutations visible and correct
+- Edge routing verified
+- All outputs formatted correctly
 
-### Per-Increment Estimation
+### Phase 3: Testing (1h)
 
-For each increment, estimate hours based on scope:
+- Unit tests cover happy path + 3+ edge cases
+- Input validation tested
+- Output validation tested
+- Edge conditions verified
+- Coverage ≥ 80% for node code
 
-- **3 hours** - Simple, well-defined work (add functionality to existing component, simple tests)
-- **4 hours** - Medium complexity (API integration, moderate logic, comprehensive tests)
-- **5 hours** - Higher complexity (multi-step workflow, state management, edge cases)
-- **6 hours** - Maximum complexity (maximum scope for single session, multiple integrations)
+### Phase 4: Evaluation (1h)
 
-### Total Time Calculation
+- Evaluation dataset created (5-10 examples)
+- LangSmith evals run and documented
+- If LLM node: prompt quality assessed
+- If tool node: output correctness verified
+- Results documented and acceptable
 
-Calculate backlog totals:
+## Task Completion Criteria
 
-1. **Sum all increment hours**: Add hours from each increment
-1. **Buffer factor**: Add 10-15% buffer for discoveries and refinements
-1. **Example**:
-   - Increment 1: 4h
-   - Increment 2: 5h
-   - Increment 3: 3h
-   - Subtotal: 12h
-   - Buffer (15%): +1.8h
-   - **Total estimated: ~14h (2 full days of development)**
+Each task must satisfy:
 
-### Time-to-Value Analysis
+- ✅ Code is implemented and working
+- ✅ Tests passing (where applicable)
+- ✅ No console errors or warnings
+- ✅ Type hints complete
+- ✅ Documentation clear
+- ✅ Changes follow project conventions
+- ✅ No breaking changes to existing nodes
 
-Calculate and report:
+## Time Tracking
 
-- **Time to MVP** (HIGH impact increments only): ~10h
-- **Time to V1** (HIGH + MEDIUM): ~18h
-- **Time to Polish** (ALL increments): ~20h
+Per node estimated breakdown:
 
-## Increment Design Rules
+- Phase 1 (Implementation): 1.5h
+- Phase 2 (Debug): 1h
+- Phase 3 (Testing): 1h
+- Phase 4 (Evaluation): 1h
+- **Total per node**: ~4.5h
 
-- **Duration**: 3-6 hours maximum (one development session)
-- **Delivery**: Each increment produces working, testable code
-- **Isolation**: Zero dependencies on other increments
-- **Coupling**: No shared mutable state with other increments
-- **Reordering**: Increments can be executed in any order without side effects
-- **Testing**: Each increment has standalone test coverage
-- **Impact**: Each increment assigned HIGH/MEDIUM/LOW based on contribution to agent goals
-- **Time**: Each increment estimated 3-6h with buffer for total backlog calculation
+Adjust based on node complexity:
+
+- Simple utility nodes: 3-4h
+- LLM nodes: 5-6h
+- Complex conditional nodes: 4-5h

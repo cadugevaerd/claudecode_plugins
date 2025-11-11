@@ -7,8 +7,8 @@ Documentação técnica completa da infraestrutura LangSmith necessária para ex
 Qualquer avaliação offline no LangSmith, incluindo LLM-as-Judge, requer **três componentes fundamentais**:
 
 1. **Dataset** - Coleção versionada de Examples
-2. **Target Function** - Aplicação sob teste
-3. **Evaluator(s)** - Funções de scoring (incluindo LLM-as-Judge)
+1. **Target Function** - Aplicação sob teste
+1. **Evaluator(s)** - Funções de scoring (incluindo LLM-as-Judge)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -41,6 +41,7 @@ Qualquer avaliação offline no LangSmith, incluindo LLM-as-Judge, requer **trê
 **Definição**: Dataset é uma coleção estável e versionada de **Examples** usada para avaliar aplicações de forma reproduzível.
 
 **Características:**
+
 - ✅ Versionamento automático (imutabilidade)
 - ✅ Armazenado no LangSmith (cloud)
 - ✅ Compartilhável entre equipe
@@ -77,11 +78,13 @@ Cada Example contém **dois componentes principais**:
 **⚠️ CRÍTICO para LLM-as-Judge**: Reference outputs são a **resposta correta esperada** que o modelo juiz usa para avaliar a prediction.
 
 **Sem reference outputs:**
+
 - ❌ Judge não tem baseline para comparação
 - ❌ Avaliação de correção impossível
 - ❌ Apenas critérios sem ground truth (ex: concisão) funcionam
 
 **Com reference outputs:**
+
 - ✅ Judge compara prediction vs reference
 - ✅ Avaliação factual precisa
 - ✅ Critérios como CORRECTNESS funcionam
@@ -105,16 +108,19 @@ Cada Example contém **dois componentes principais**:
 ### 1.4 Versionamento de Datasets
 
 **Por que versionar?**
+
 - ✅ Reprodutibilidade: mesma versão = mesmos resultados
 - ✅ Rastreabilidade: qual dataset gerou qual experiment
 - ✅ Evolução: adicionar examples sem quebrar histórico
 
 **Como funciona:**
+
 - Cada modificação cria nova versão
 - Experiments referenciam versão específica
 - UI mostra histórico de versões
 
 **Exemplo:**
+
 ```python
 # Versão 1: 50 examples
 dataset_v1 = client.create_dataset("qa-eval", examples=[...])
@@ -184,6 +190,7 @@ client.create_dataset_from_runs(
 ### 1.6 Golden Datasets vs Production Datasets
 
 **Golden Datasets** (Curado):
+
 - ✅ Examples cuidadosamente selecionados
 - ✅ Reference outputs validados por humanos
 - ✅ Cobertura de edge cases
@@ -191,6 +198,7 @@ client.create_dataset_from_runs(
 - ✅ Uso: Quick Evals, regression testing
 
 **Production Datasets** (Real):
+
 - ✅ Examples de runs reais
 - ✅ Distribuição realista de inputs
 - ✅ Sem reference outputs (geralmente)
@@ -198,12 +206,14 @@ client.create_dataset_from_runs(
 - ✅ Uso: A/B testing, backtesting
 
 **Best Practice**: Usar ambos!
+
 - Golden dataset para iteração rápida (< 5min)
 - Production dataset para validação final
 
 ### 1.7 Estratégias de Curation
 
 **Abordagem 1: Manual Curation**
+
 ```python
 # Criar examples à mão
 examples = [
@@ -213,6 +223,7 @@ examples = [
 ```
 
 **Abordagem 2: Sample from Production**
+
 ```python
 # Filtrar runs por critério
 runs = client.list_runs(
@@ -228,6 +239,7 @@ dataset = client.create_dataset_from_runs(
 ```
 
 **Abordagem 3: Hybrid (Production + Human Annotation)**
+
 ```python
 # 1. Capturar production runs
 # 2. Humanos anotam reference outputs
@@ -241,6 +253,7 @@ dataset = client.create_dataset_from_runs(
 **Definição**: Função Python `Callable` que representa sua aplicação sob avaliação.
 
 **Contrato:**
+
 - **Input**: Dicionário de inputs (do dataset example)
 - **Output**: Dicionário de predictions
 
@@ -264,12 +277,14 @@ def my_qa_app(inputs: dict) -> dict:
 ### 2.2 Requisitos da Target Function
 
 **Obrigatórios:**
+
 - ✅ Aceita `dict` como input
 - ✅ Retorna `dict` como output
 - ✅ É `Callable` (função ou objeto com `__call__`)
 - ✅ Determinística (mesmo input = mesmo output) - idealmente
 
 **Opcionais mas recomendados:**
+
 - ✅ Type hints para clareza
 - ✅ Docstring explicando I/O
 - ✅ Error handling robusto
@@ -278,12 +293,14 @@ def my_qa_app(inputs: dict) -> dict:
 ### 2.3 Tipos de Target Functions
 
 #### Função Simples
+
 ```python
 def simple_app(inputs: dict) -> dict:
     return {"output": f"Processed: {inputs['input']}"}
 ```
 
 #### LangChain Chain
+
 ```python
 from langchain_core.runnables import RunnableLambda
 
@@ -295,6 +312,7 @@ def chain_app(inputs: dict) -> dict:
 ```
 
 #### LangGraph Graph
+
 ```python
 from langgraph.graph import StateGraph
 
@@ -306,6 +324,7 @@ def graph_app(inputs: dict) -> dict:
 ```
 
 #### Classe com __call__
+
 ```python
 class MyApp:
     def __init__(self, model):
@@ -346,6 +365,7 @@ Resposta Gerada: {resposta}           # De prediction
 ```
 
 **Chaves mapeadas via create_llm_as_judge:**
+
 ```python
 judge = create_llm_as_judge(
     input_keys=["pergunta"],              # inputs do dataset
@@ -359,6 +379,7 @@ judge = create_llm_as_judge(
 ### 3.1 Função Central: evaluate()
 
 **Assinatura:**
+
 ```python
 from langsmith.evaluation import evaluate
 
@@ -455,6 +476,7 @@ evaluate(..., max_concurrency=10)  # 10 examples simultâneos
 ```
 
 **Trade-offs:**
+
 - ✅ Maior concurrency = mais rápido
 - ❌ Maior concurrency = mais custo (API calls simultâneas)
 - ❌ Rate limits de modelos podem limitar
@@ -466,6 +488,7 @@ evaluate(..., max_concurrency=10)  # 10 examples simultâneos
 **Objeto retornado**: `EvaluationResults`
 
 **Campos principais:**
+
 ```python
 results = evaluate(...)
 
@@ -487,11 +510,13 @@ results.experiment_url  # Link direto para LangSmith UI
 ### 4.1 Por Que Versionamento Importa
 
 **Problema sem versionamento:**
+
 - ❌ Dataset muda, resultados não comparáveis
 - ❌ Impossível reproduzir experiment
 - ❌ A/B testing inválido
 
 **Solução com versionamento:**
+
 - ✅ Dataset imutável por versão
 - ✅ Experiment referencia versão específica
 - ✅ Resultados reproduzíveis
@@ -501,8 +526,8 @@ results.experiment_url  # Link direto para LangSmith UI
 LangSmith versiona automaticamente quando você:
 
 1. Cria dataset inicial (versão 1)
-2. Adiciona/modifica examples (versão 2, 3, ...)
-3. Cada versão tem ID único
+1. Adiciona/modifica examples (versão 2, 3, ...)
+1. Cada versão tem ID único
 
 ```python
 # Versão 1
@@ -515,6 +540,7 @@ client.create_examples(dataset_id=dataset.id, examples=[...])
 ### 4.3 Experiment Linking
 
 Cada experiment armazena:
+
 - Dataset name
 - Dataset version
 - Timestamp
@@ -542,17 +568,20 @@ pip install langsmith
 ### 5.2 Autenticação
 
 **Opção 1: Environment variable**
+
 ```bash
 export LANGSMITH_API_KEY="lsv2_pt_..."
 ```
 
 **Opção 2: .env file**
+
 ```bash
 # .env
 LANGSMITH_API_KEY=lsv2_pt_...
 ```
 
 **Opção 3: Código**
+
 ```python
 import os
 os.environ["LANGSMITH_API_KEY"] = "lsv2_pt_..."
@@ -646,6 +675,7 @@ client.create_examples(dataset_id=dataset.id, examples=[...])
 ## 7. Troubleshooting
 
 ### Problema: Dataset não encontrado
+
 ```python
 # ❌ Erro
 evaluate(data="non-existent-dataset", ...)
@@ -656,6 +686,7 @@ print([d.name for d in datasets])
 ```
 
 ### Problema: Target function não retorna dict
+
 ```python
 # ❌ Errado
 def bad_target(inputs):
@@ -667,6 +698,7 @@ def good_target(inputs):
 ```
 
 ### Problema: Chaves não existem no example
+
 ```python
 # ❌ Dataset
 {"inputs": {"question": "..."}}  # "question"
@@ -685,6 +717,7 @@ judge = create_llm_as_judge(
 ## 8. Checklist de Infraestrutura
 
 **Antes de executar evaluate():**
+
 - [ ] LangSmith API key configurada?
 - [ ] Dataset criado e versionado?
 - [ ] Examples têm reference outputs (para CORRECTNESS)?
@@ -694,10 +727,12 @@ judge = create_llm_as_judge(
 - [ ] Conexão com LangSmith validada?
 
 **Para Quick Evals:**
+
 - [ ] Subset dataset criado (< 50 examples)?
 - [ ] upload_results=False configurado (opcional)?
 
 **Para Reprodutibilidade:**
+
 - [ ] Dataset versionado?
 - [ ] Experiment prefix descritivo?
 - [ ] Timestamp registrado?
