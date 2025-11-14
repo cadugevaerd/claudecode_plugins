@@ -1,5 +1,5 @@
 ---
-description: Setup kubernetes-specialist plugin by updating README with agents, commands, and MCP info, plus creating .env.example
+description: Setup kubernetes-specialist plugin by updating CLAUDE.md with agents, commands, and MCP info, plus creating .env.example
 allowed-tools: [Read, Write, Edit, Glob, Bash]
 model: claude-sonnet-4-5
 argument-hint: ''
@@ -7,7 +7,7 @@ argument-hint: ''
 
 # Setup Kubernetes Specialist Plugin
 
-Configura o plugin kubernetes-specialist atualizando README.md com informações completas sobre agentes, comandos e MCP kubernetes-toolkit, e criando/atualizando .env.example com variáveis de ambiente necessárias.
+Configura o plugin kubernetes-specialist atualizando CLAUDE.md com informações completas sobre agentes, comandos e MCP kubernetes-toolkit, e criando/atualizando .env.example com variáveis de ambiente necessárias.
 
 ## 🎯 Objetivo
 
@@ -15,7 +15,7 @@ Configura o plugin kubernetes-specialist atualizando README.md com informações
 - Documentar todos os comandos slash disponíveis com sintaxe e exemplos
 - Adicionar informações sobre integração com MCP kubernetes-toolkit
 - Criar ou atualizar `.env.example` com todas as variáveis de ambiente necessárias para o MCP
-- Garantir que README.md esteja completo e navegável para novos usuários
+- Garantir que CLAUDE.md esteja completo e navegável para novos usuários
 
 ## 🔧 Instruções
 
@@ -52,11 +52,11 @@ Configura o plugin kubernetes-specialist atualizando README.md com informações
 - Identificar nome do servidor MCP (ex: kubernetes-toolkit)
 - Listar variáveis de ambiente necessárias (env section)
 
-### 2. **Atualizar README.md do Plugin**
+### 2. **Atualizar CLAUDE.md do Projeto**
 
-2.1 **Ler README.md existente**
+2.1 **Ler CLAUDE.md existente**
 
-- Usar `Read` para ler: `plugins/kubernetes-specialist/README.md`
+- Usar `Read` para ler: `CLAUDE.md` (arquivo raiz do projeto)
 - Identificar seções existentes (se houver)
 - Determinar se precisa criar novas seções ou atualizar existentes
 
@@ -153,10 +153,10 @@ Este plugin integra com o MCP server **kubernetes-toolkit** para acesso direto �
 \`\`\`
 ```
 
-2.5 **Executar atualização do README**
+2.5 **Executar atualização do CLAUDE.md**
 
 - Se seções existem: Usar `Edit` para atualizar conteúdo
-- Se seções não existem: Usar `Edit` para adicionar ao final do README
+- Se seções não existem: Usar `Edit` para adicionar ao final do CLAUDE.md
 - Preservar formatação e estrutura existente
 - Garantir markdown válido
 
@@ -213,9 +213,9 @@ KUBECONFIG=~/.kube/config
 
 ### 4. **Validar Resultado**
 
-4.1 **Verificar README.md**
+4.1 **Verificar CLAUDE.md**
 
-- Usar `Read` para reler README.md atualizado
+- Usar `Read` para reler CLAUDE.md atualizado
 - Confirmar presença de seções:
   - Agentes Disponíveis
   - Comandos Disponíveis
@@ -230,7 +230,7 @@ KUBECONFIG=~/.kube/config
 
 4.3 **Reportar resultado**
 
-- Listar arquivos modificados ou criados
+- Listar arquivos modificados ou criados (CLAUDE.md e .env.example)
 - Resumir mudanças aplicadas
 - Indicar próximos passos para usuário
 
@@ -243,7 +243,7 @@ KUBECONFIG=~/.kube/config
 
 📝 Arquivos atualizados:
 
-1. README.md
+1. CLAUDE.md
    ✅ Seção "Agentes Disponíveis" - [X agentes documentados]
    ✅ Seção "Comandos Disponíveis" - [Y comandos documentados]
    ✅ Seção "MCP Integration" - kubernetes-toolkit configurado
@@ -266,7 +266,7 @@ KUBECONFIG=~/.kube/config
    - Status: Configurado
 
 📖 Próximos passos:
-   1. Revisar README.md em: plugins/kubernetes-specialist/README.md
+   1. Revisar CLAUDE.md atualizado
    2. Copiar .env.example para .env e preencher valores
    3. Reiniciar Claude Code para ativar MCP
    4. Verificar com: /mcp
@@ -277,7 +277,7 @@ KUBECONFIG=~/.kube/config
 - [ ] Todos os agentes do plugin catalogados
 - [ ] Todos os comandos slash catalogados
 - [ ] Configuração MCP identificada e documentada
-- [ ] README.md atualizado com seções obrigatórias:
+- [ ] CLAUDE.md atualizado com seções obrigatórias:
   - [ ] Agentes Disponíveis (com exemplos de invocação)
   - [ ] Comandos Disponíveis (com sintaxe e exemplos)
   - [ ] MCP Integration (com configuração e variáveis)
@@ -332,16 +332,16 @@ KUBECONFIG=~/.kube/config
 # KUBERNETES_CONTEXT=my-cluster-context
 ```
 
-### ❌ Erro 3: Sobrescrever README Existente
+### ❌ Erro 3: Sobrescrever CLAUDE.md Existente
 
-Não substitua todo o README se ele já tem conteúdo:
+Não substitua todo o CLAUDE.md se ele já tem conteúdo:
 
 ```markdown
 ❌ Errado:
-[Ler README → Ignorar conteúdo → Criar do zero]
+[Ler CLAUDE.md → Ignorar conteúdo → Criar do zero]
 
 ✅ Correto:
-[Ler README → Identificar seções → Edit/adicionar apenas o necessário]
+[Ler CLAUDE.md → Identificar seções → Edit/adicionar apenas o necessário]
 ```
 
 ### ❌ Erro 4: Variáveis de Ambiente Hardcoded
@@ -400,7 +400,7 @@ Este plugin integra com o MCP server **kubernetes-toolkit** para acesso direto �
    - Encontra 2 comandos em `commands/`
    - Encontra `.mcp.json` com kubernetes-toolkit
 
-1. 📝 Atualiza README.md
+1. 📝 Atualiza CLAUDE.md
 
    - Adiciona seção "Agentes Disponíveis" com 3 agentes
    - Adiciona seção "Comandos Disponíveis" com 2 comandos
@@ -415,12 +415,12 @@ Este plugin integra com o MCP server **kubernetes-toolkit** para acesso direto �
 
 1. ✅ Valida resultado
 
-   - README.md completo e formatado
+   - CLAUDE.md completo e formatado
    - .env.example válido e documentado
    - Reporta resumo das mudanças
 
 **Resultado esperado**:
 
-- README.md atualizado com documentação completa
+- CLAUDE.md atualizado com documentação completa
 - .env.example criado e pronto para copiar
 - Usuário tem todas as informações para usar o plugin
