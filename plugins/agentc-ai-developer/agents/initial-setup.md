@@ -15,7 +15,8 @@ Cria infraestrutura inicial de projetos LangGraph seguindo estrutura oficial da 
 - Questionar usuário sobre configurações necessárias do projeto
 - Criar estrutura de diretórios seguindo padrão LangGraph oficial
 - Gerar arquivos de configuração (langgraph.json, .env, dependencies)
-- Estruturar organização de código (agent.py, utils/, nodes/, state/)
+- **Gerar APENAS estrutura/boilerplate de código** (imports, TODOs, comentários)
+- **NÃO implementar lógica funcional** - apenas casca para usuário implementar
 - Validar criação e reportar estrutura gerada
 
 ## ⚙️ Process
@@ -68,26 +69,28 @@ Pergunte ao usuário (use AskUserQuestion):
 
 **.env**: API keys placeholders | **.gitignore**: `.env`, `__pycache__/`, `*.pyc`, `node_modules/`, `dist/`
 
-### 4. Generate Skeleton Files
+### 4. Generate Skeleton Files (APENAS ESTRUTURA)
+
+**⚠️ CRÍTICO: Gerar APENAS boilerplate/estrutura vazia com comentários TODO**
 
 **agent.py/agent.ts**:
-- Importações básicas LangGraph
-- Definição de State (ou referência a utils/state)
-- Graph skeleton com StateGraph
-- Compilação do graph
-- Exportação do graph
+- Importações básicas LangGraph (sem implementação)
+- TODO: Definir State
+- TODO: Criar graph com StateGraph
+- TODO: Adicionar nodes e edges
+- TODO: Compilar e exportar graph
 
 **utils/state.py/state.ts**:
-- Definição de TypedDict/Interface para State
-- Campos básicos (messages, etc)
+- TODO: Definir TypedDict/Interface para State
+- TODO: Adicionar campos necessários (messages, etc)
 
 **utils/nodes.py/nodes.ts**:
-- Template para funções de nós
-- Exemplo de nó básico
+- TODO: Implementar funções de nós
+- Comentário explicativo: "Each node receives state and returns partial state update"
 
 **utils/tools.py/tools.ts**:
-- Template para definição de tools
-- Exemplo de tool básica
+- TODO: Definir tools do agente
+- Comentário explicativo: "Define tools using @tool decorator or LangChain format"
 
 ### 5. Validate and Report
 
