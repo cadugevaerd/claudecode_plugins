@@ -19,6 +19,89 @@ Configura o plugin kubernetes-specialist atualizando CLAUDE.md com informações
 
 ## 🔧 Instruções
 
+### 0. **VALIDAR REQUISITOS DO MCP** (⚡ NOVO)
+
+**Objetivo**: Verificar se o ambiente está configurado corretamente para usar MCP kubernetes-toolkit.
+
+**Validações a executar**:
+
+0.1 **Verificar kubectl instalado**
+   - Executar: `which kubectl`
+   - Se não encontrado, oferecer instruções de instalação (Linux, Mac, Windows)
+
+0.2 **Verificar kubeconfig existe**
+   - Executar: `ls -la ~/.kube/config`
+   - Se não existe, verificar `$KUBECONFIG`
+   - Se ambos inválidos, oferecer instruções para obter kubeconfig
+
+0.3 **Verificar Node.js/npx disponível**
+   - Executar: `which npx`
+   - Se não encontrado, oferecer instruções de instalação
+
+0.4 **Testar mcp-server-kubernetes**
+   - Executar: `npx -y mcp-server-kubernetes --help`
+   - Se falhar, oferecer soluções (cache, permissions)
+
+0.5 **Verificar contexto Kubernetes ativo**
+   - Executar: `kubectl config current-context`
+   - Se houver erro, oferecer lista de contextos disponíveis
+
+0.6 **Resultado da validação**
+
+**Se TODAS validações passarem**:
+```text
+🔍 Validando requisitos do MCP kubernetes-toolkit...
+
+✅ kubectl: Instalado (v1.31.2-eks)
+✅ kubeconfig: Encontrado em ~/.kube/config
+✅ Node.js/npx: Disponível (Node v20.11.0)
+✅ mcp-server-kubernetes: Acessível via npx
+✅ Contexto Kubernetes: Ativo (my-cluster)
+
+✅ Todos os requisitos atendidos! Prosseguindo com setup...
+```
+
+**Se ALGUMA validação falhar**:
+```text
+🔍 Validando requisitos do MCP kubernetes-toolkit...
+
+✅ kubectl: Instalado (v1.31.2-eks)
+❌ kubeconfig: Não encontrado em ~/.kube/config
+✅ Node.js/npx: Disponível (Node v20.11.0)
+⚠️  mcp-server-kubernetes: [ERRO DE CONEXÃO]
+
+⚠️  Requisitos pendentes detectados!
+
+📋 Ações necessárias:
+
+1️⃣  Configurar kubeconfig:
+   • Obtenha kubeconfig do seu cluster
+   • Salve em ~/.kube/config
+   • Ou defina: export KUBECONFIG=/path/to/config
+
+   Exemplos por provedor:
+   - AWS EKS: aws eks update-kubeconfig --name <cluster-name>
+   - GKE: gcloud container clusters get-credentials <cluster-name>
+   - Azure AKS: az aks get-credentials --resource-group <rg> --name <cluster>
+
+2️⃣  Resolver mcp-server-kubernetes:
+   • Tentar: npx cache clean --force
+   • Tentar: npx -y mcp-server-kubernetes --help
+
+❌ Setup interrompido. Corrija os requisitos acima e execute novamente.
+```
+
+**Solução para cada erro potencial**:
+
+| Erro | Causa | Solução |
+|------|-------|---------|
+| `kubectl not found` | kubectl não instalado | Instalar: apt, snap, brew, ou https://kubernetes.io/docs/tasks/tools/ |
+| `kubeconfig not found` | ~/.kube/config não existe | Obter do cluster (EKS, GKE, AKS) |
+| `npx not found` | Node.js não instalado | Instalar Node.js via nvm, apt, snap, ou brew |
+| `mcp-server-kubernetes failed` | Pode ser erro de cache npm | `npx cache clean --force` |
+| `No context` | Nenhum contexto Kubernetes configurado | `kubectl config use-context <name>` |
+| `Permission denied` | kubeconfig inacessível | `chmod 600 ~/.kube/config` |
+
 ### 1. **Descobrir Estrutura do Plugin**
 
 1.1 **Localizar diretórios do plugin**
@@ -236,9 +319,17 @@ KUBECONFIG=~/.kube/config
 
 ## 📊 Formato de Saída
 
-### Saída Padrão
+### Saída com Validação Completa (Quando todos requisitos OK)
 
 ```text
+🔍 Validando requisitos do MCP kubernetes-toolkit...
+
+✅ kubectl: Instalado (v1.31.2-eks)
+✅ kubeconfig: Encontrado em ~/.kube/config
+✅ Node.js/npx: Disponível (Node v20.11.0)
+✅ mcp-server-kubernetes: Acessível via npx
+✅ Contexto Kubernetes: Ativo (my-cluster)
+
 ✅ Setup do plugin kubernetes-specialist concluído!
 
 📝 Arquivos atualizados:
@@ -263,20 +354,66 @@ KUBECONFIG=~/.kube/config
 🔌 MCP Integration:
    - Servidor: kubernetes-toolkit
    - Tools: 40+ ferramentas diagnósticas
-   - Status: Configurado
+   - Status: ✅ Validado e funcionando
 
 📖 Próximos passos:
    1. Revisar CLAUDE.md atualizado
-   2. Copiar .env.example para .env e preencher valores
+   2. Copiar .env.example para .env e preencher valores (se necessário)
    3. Reiniciar Claude Code para ativar MCP
-   4. Verificar com: /mcp
+   4. Verificar status com: /mcp
+```
+
+### Saída com Erro de Requisitos (Quando algum requisito falha)
+
+```text
+🔍 Validando requisitos do MCP kubernetes-toolkit...
+
+✅ kubectl: Instalado (v1.31.2-eks)
+❌ kubeconfig: Não encontrado em ~/.kube/config
+✅ Node.js/npx: Disponível (Node v20.11.0)
+⚠️  mcp-server-kubernetes: Inacessível via npx
+
+⚠️  Requisitos pendentes detectados!
+
+📋 Ações necessárias para corrigir:
+
+1️⃣  Configurar kubeconfig:
+   Problema: ~/.kube/config não encontrado
+
+   Solução: Obtenha kubeconfig do seu cluster
+   - AWS EKS: aws eks update-kubeconfig --name <cluster-name>
+   - GKE: gcloud container clusters get-credentials <cluster-name>
+   - Azure AKS: az aks get-credentials --resource-group <rg> --name <cluster>
+
+   Ou defina caminho customizado:
+   export KUBECONFIG=/path/to/your/kubeconfig
+
+2️⃣  Resolver mcp-server-kubernetes:
+   Problema: Erro ao executar npx -y mcp-server-kubernetes
+
+   Soluções:
+   - Limpar cache: npx cache clean --force
+   - Verificar Node.js: node --version (precisa v14+)
+   - Tentar novamente: npx -y mcp-server-kubernetes --help
+
+❌ Setup foi interrompido. Corrija os requisitos acima e execute novamente.
 ```
 
 ## ✅ Critérios de Sucesso
 
+### Fase 0: Validação de Requisitos
+- [ ] ✅ kubectl instalado e testado
+- [ ] ✅ kubeconfig existe e é válido
+- [ ] ✅ Node.js/npx disponível
+- [ ] ✅ mcp-server-kubernetes acessível
+- [ ] ✅ Contexto Kubernetes ativo
+
+### Fase 1: Descoberta de Plugin
 - [ ] Todos os agentes do plugin catalogados
 - [ ] Todos os comandos slash catalogados
 - [ ] Configuração MCP identificada e documentada
+
+### Fase 2: Documentação
 - [ ] CLAUDE.md atualizado com seções obrigatórias:
   - [ ] Agentes Disponíveis (com exemplos de invocação)
   - [ ] Comandos Disponíveis (com sintaxe e exemplos)
@@ -285,9 +422,12 @@ KUBECONFIG=~/.kube/config
   - [ ] Todas as variáveis necessárias para MCP
   - [ ] Comentários explicativos para cada variável
   - [ ] Exemplos de valores
+
+### Fase 3: Validação Final
 - [ ] Markdown válido (sem erros de sintaxe)
 - [ ] Formatação consistente e navegável
 - [ ] Próximos passos documentados para usuário
+- [ ] Se Phase 0 falhar: Instruções de correção foram fornecidas
 
 ## ❌ Anti-Patterns
 

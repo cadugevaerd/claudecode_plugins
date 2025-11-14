@@ -436,6 +436,152 @@ Ensure plugin is installed:
 /plugin list | grep kubernetes
 ```
 
+## 🔌 MCP Troubleshooting
+
+### MCP Server Connection Failed
+
+**Error:** `plugin:kubernetes-specialist:kubernetes-toolkit: npx -y mcp-server-kubernetes - ✗ Failed to connect`
+
+**Cause:** MCP server cannot be initialized via stdio transport.
+
+**Solutions:**
+
+1. **Verify kubectl installation:**
+   ```bash
+   which kubectl
+   kubectl version --client
+   ```
+   If not found, install via package manager or https://kubernetes.io/docs/tasks/tools/
+
+2. **Verify kubeconfig exists:**
+   ```bash
+   ls -la ~/.kube/config
+   kubectl config current-context
+   ```
+   If missing, obtain kubeconfig from your cluster:
+   - **AWS EKS:** `aws eks update-kubeconfig --name <cluster-name>`
+   - **Google GKE:** `gcloud container clusters get-credentials <cluster-name>`
+   - **Azure AKS:** `az aks get-credentials --resource-group <rg> --name <cluster>`
+
+3. **Verify Node.js and npx:**
+   ```bash
+   node --version
+   which npx
+   npx -y mcp-server-kubernetes --help
+   ```
+   If Node.js not found, install via nvm, apt, snap, or brew
+
+4. **Test MCP server directly:**
+   ```bash
+   npx -y mcp-server-kubernetes --help
+   ```
+   Should show help output without errors
+
+5. **Restart Claude Code:**
+   - Close all Claude Code instances
+   - Clear cache: Remove `.claude-code` directory if needed
+   - Reopen Claude Code
+   - Run `/plugin refresh`
+
+**Still not working?** Run `/setup-kubernetes-specialist` which will validate all requirements and provide specific fixes.
+
+### "No kubeconfig" Error
+
+**Error:** MCP server starts but cannot authenticate to cluster
+
+**Solutions:**
+
+```bash
+# Set KUBECONFIG environment variable if using custom path
+export KUBECONFIG=/path/to/your/kubeconfig
+
+# Or create .env file in plugin directory
+echo "KUBECONFIG=/path/to/your/kubeconfig" > .env
+
+# Then restart Claude Code
+```
+
+### "Context not found" Error
+
+**Error:** Specified Kubernetes context doesn't exist
+
+**Solutions:**
+
+```bash
+# List available contexts
+kubectl config get-contexts
+
+# Switch to desired context
+kubectl config use-context <context-name>
+
+# Or set via environment variable
+export KUBERNETES_CONTEXT=<context-name>
+```
+
+### "Permission denied" Errors
+
+**Cause:** Kubeconfig user lacks required permissions
+
+**Solutions:**
+
+1. Verify kubeconfig has proper permissions:
+   ```bash
+   ls -la ~/.kube/config
+   # Should be: -rw------- (600)
+   chmod 600 ~/.kube/config
+   ```
+
+2. Check cluster RBAC permissions:
+   ```bash
+   kubectl auth can-i list deployments -n default
+   kubectl auth can-i list pods -n default
+   ```
+
+3. Enable read-only mode for safer operations:
+   ```bash
+   export ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS=true
+   ```
+
+### MCP Server Hangs or Times Out
+
+**Symptoms:** Commands start but never complete
+
+**Solutions:**
+
+1. Check cluster connectivity:
+   ```bash
+   kubectl cluster-info
+   kubectl get nodes
+   ```
+
+2. Verify network access to Kubernetes API:
+   ```bash
+   curl -k https://$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
+   ```
+
+3. Increase timeouts (if available):
+   ```bash
+   export LOG_LEVEL=debug
+   # Restart Claude Code to see detailed logs
+   ```
+
+### Validate MCP Setup
+
+Run the setup command to automatically validate all requirements:
+
+```bash
+/setup-kubernetes-specialist
+```
+
+This will check:
+- ✅ kubectl installed and version
+- ✅ kubeconfig exists and valid
+- ✅ Node.js/npx available
+- ✅ mcp-server-kubernetes accessible
+- ✅ Kubernetes context active
+
+And provide step-by-step fixes for any issues found.
+
 ## 📈 Performance Expectations
 
 | Command | Typical Duration | Resource Usage |

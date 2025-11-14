@@ -1,19 +1,8 @@
 {
   "mcpServers": {
     "kubernetes-toolkit": {
-      "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-kubernetes"
-      ],
-      "env": {
-        "KUBECONFIG_PATH": "${KUBECONFIG_PATH:-~/.kube/config}",
-        "K8S_CONTEXT": "${K8S_CONTEXT}",
-        "K8S_NAMESPACE": "${K8S_NAMESPACE:-default}",
-        "ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS": "${ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS:-false}",
-        "LOG_LEVEL": "${LOG_LEVEL:-info}"
-      }
+      "args": ["-y", "mcp-server-kubernetes"]
     }
   }
 }
