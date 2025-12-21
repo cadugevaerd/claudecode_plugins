@@ -447,37 +447,47 @@ Ensure plugin is installed:
 **Solutions:**
 
 1. **Verify kubectl installation:**
+
    ```bash
    which kubectl
    kubectl version --client
    ```
+
    If not found, install via package manager or https://kubernetes.io/docs/tasks/tools/
 
-2. **Verify kubeconfig exists:**
+1. **Verify kubeconfig exists:**
+
    ```bash
    ls -la ~/.kube/config
    kubectl config current-context
    ```
+
    If missing, obtain kubeconfig from your cluster:
+
    - **AWS EKS:** `aws eks update-kubeconfig --name <cluster-name>`
    - **Google GKE:** `gcloud container clusters get-credentials <cluster-name>`
    - **Azure AKS:** `az aks get-credentials --resource-group <rg> --name <cluster>`
 
-3. **Verify Node.js and npx:**
+1. **Verify Node.js and npx:**
+
    ```bash
    node --version
    which npx
    npx -y mcp-server-kubernetes --help
    ```
+
    If Node.js not found, install via nvm, apt, snap, or brew
 
-4. **Test MCP server directly:**
+1. **Test MCP server directly:**
+
    ```bash
    npx -y mcp-server-kubernetes --help
    ```
+
    Should show help output without errors
 
-5. **Restart Claude Code:**
+1. **Restart Claude Code:**
+
    - Close all Claude Code instances
    - Clear cache: Remove `.claude-code` directory if needed
    - Reopen Claude Code
@@ -525,19 +535,22 @@ export KUBERNETES_CONTEXT=<context-name>
 **Solutions:**
 
 1. Verify kubeconfig has proper permissions:
+
    ```bash
    ls -la ~/.kube/config
    # Should be: -rw------- (600)
    chmod 600 ~/.kube/config
    ```
 
-2. Check cluster RBAC permissions:
+1. Check cluster RBAC permissions:
+
    ```bash
    kubectl auth can-i list deployments -n default
    kubectl auth can-i list pods -n default
    ```
 
-3. Enable read-only mode for safer operations:
+1. Enable read-only mode for safer operations:
+
    ```bash
    export ALLOW_ONLY_NON_DESTRUCTIVE_TOOLS=true
    ```
@@ -549,17 +562,20 @@ export KUBERNETES_CONTEXT=<context-name>
 **Solutions:**
 
 1. Check cluster connectivity:
+
    ```bash
    kubectl cluster-info
    kubectl get nodes
    ```
 
-2. Verify network access to Kubernetes API:
+1. Verify network access to Kubernetes API:
+
    ```bash
    curl -k https://$(kubectl config view -o jsonpath='{.clusters[0].cluster.server}')
    ```
 
-3. Increase timeouts (if available):
+1. Increase timeouts (if available):
+
    ```bash
    export LOG_LEVEL=debug
    # Restart Claude Code to see detailed logs
@@ -574,6 +590,7 @@ Run the setup command to automatically validate all requirements:
 ```
 
 This will check:
+
 - ✅ kubectl installed and version
 - ✅ kubeconfig exists and valid
 - ✅ Node.js/npx available

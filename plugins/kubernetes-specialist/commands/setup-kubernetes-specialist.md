@@ -26,29 +26,35 @@ Configura o plugin kubernetes-specialist atualizando CLAUDE.md com informações
 **Validações a executar**:
 
 0.1 **Verificar kubectl instalado**
-   - Executar: `which kubectl`
-   - Se não encontrado, oferecer instruções de instalação (Linux, Mac, Windows)
+
+- Executar: `which kubectl`
+- Se não encontrado, oferecer instruções de instalação (Linux, Mac, Windows)
 
 0.2 **Verificar kubeconfig existe**
-   - Executar: `ls -la ~/.kube/config`
-   - Se não existe, verificar `$KUBECONFIG`
-   - Se ambos inválidos, oferecer instruções para obter kubeconfig
+
+- Executar: `ls -la ~/.kube/config`
+- Se não existe, verificar `$KUBECONFIG`
+- Se ambos inválidos, oferecer instruções para obter kubeconfig
 
 0.3 **Verificar Node.js/npx disponível**
-   - Executar: `which npx`
-   - Se não encontrado, oferecer instruções de instalação
+
+- Executar: `which npx`
+- Se não encontrado, oferecer instruções de instalação
 
 0.4 **Testar mcp-server-kubernetes**
-   - Executar: `npx -y mcp-server-kubernetes --help`
-   - Se falhar, oferecer soluções (cache, permissions)
+
+- Executar: `npx -y mcp-server-kubernetes --help`
+- Se falhar, oferecer soluções (cache, permissions)
 
 0.5 **Verificar contexto Kubernetes ativo**
-   - Executar: `kubectl config current-context`
-   - Se houver erro, oferecer lista de contextos disponíveis
+
+- Executar: `kubectl config current-context`
+- Se houver erro, oferecer lista de contextos disponíveis
 
 0.6 **Resultado da validação**
 
 **Se TODAS validações passarem**:
+
 ```text
 🔍 Validando requisitos do MCP kubernetes-toolkit...
 
@@ -62,6 +68,7 @@ Configura o plugin kubernetes-specialist atualizando CLAUDE.md com informações
 ```
 
 **Se ALGUMA validação falhar**:
+
 ```text
 🔍 Validando requisitos do MCP kubernetes-toolkit...
 
@@ -402,6 +409,7 @@ KUBECONFIG=~/.kube/config
 ## ✅ Critérios de Sucesso
 
 ### Fase 0: Validação de Requisitos
+
 - [ ] ✅ kubectl instalado e testado
 - [ ] ✅ kubeconfig existe e é válido
 - [ ] ✅ Node.js/npx disponível
@@ -409,11 +417,13 @@ KUBECONFIG=~/.kube/config
 - [ ] ✅ Contexto Kubernetes ativo
 
 ### Fase 1: Descoberta de Plugin
+
 - [ ] Todos os agentes do plugin catalogados
 - [ ] Todos os comandos slash catalogados
 - [ ] Configuração MCP identificada e documentada
 
 ### Fase 2: Documentação
+
 - [ ] CLAUDE.md atualizado com seções obrigatórias:
   - [ ] Agentes Disponíveis (com exemplos de invocação)
   - [ ] Comandos Disponíveis (com sintaxe e exemplos)
@@ -424,6 +434,7 @@ KUBECONFIG=~/.kube/config
   - [ ] Exemplos de valores
 
 ### Fase 3: Validação Final
+
 - [ ] Markdown válido (sem erros de sintaxe)
 - [ ] Formatação consistente e navegável
 - [ ] Próximos passos documentados para usuário
