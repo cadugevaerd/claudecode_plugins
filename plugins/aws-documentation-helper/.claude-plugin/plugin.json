@@ -1,0 +1,22 @@
+{
+  "name": "aws-documentation-helper",
+  "version": "0.1.0",
+  "description": "Comprehensive AWS documentation access and knowledge assistant powered by AWS Knowledge MCP Server with service search, comparison, and best practices guidance",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": [
+    "aws",
+    "documentation",
+    "mcp",
+    "knowledge-base",
+    "services",
+    "best-practices",
+    "troubleshooting",
+    "examples",
+    "cloud"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
