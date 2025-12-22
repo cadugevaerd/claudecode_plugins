@@ -40,6 +40,17 @@
       },
       "category": "cloud",
       "tags": ["aws", "amazon-web-services", "documentation", "cloud", "mcp", "knowledge-base", "services", "best-practices", "well-architected", "troubleshooting", "examples", "ec2", "s3", "lambda", "rds", "dynamodb", "vpc", "iam", "cloudformation", "terraform"]
+    },
+    {
+      "name": "langchain-ecosystem-helper",
+      "description": "Comprehensive LangChain ecosystem helper for LangGraph agent development, LangChain orchestration, and LangSmith observability. Features: 3 commands (/langchain-search, /langgraph-agent, /langsmith-setup) for documentation search, agent generation and tracing setup; 1 autonomous agent for natural language queries about the ecosystem; 3 skills covering LangGraph 0.3+ development, LangChain architecture patterns, and LangSmith evaluation; HTTP MCP integration with LangChain Documentation API.",
+      "source": "./plugins/langchain-ecosystem-helper",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "ai",
+      "tags": ["langchain", "langgraph", "langsmith", "agents", "llm", "mcp", "ai-agents", "orchestration", "observability", "tracing", "evaluation", "react-agent", "multi-agent", "state-management", "streaming", "rag", "lcel"]
     }
   ]
 }
