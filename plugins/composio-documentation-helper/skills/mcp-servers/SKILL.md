@@ -218,11 +218,15 @@ Claude: "Connected! Creating your issue now..."
 npx -y @composio/mcp@latest serve --apps github --debug
 ```
 
-## Documentation URLs
+## Documentation Sources
 
-- MCP Overview: https://docs.composio.dev/docs/mcp-overview
-- MCP Quickstart: https://docs.composio.dev/docs/mcp-quickstart
-- Claude Integration: https://docs.composio.dev/mcp/claude
-- Provider Integrations: https://docs.composio.dev/docs/mcp-providers
+> **Note**: Use GitHub sources as `docs.composio.dev` may block automated requests.
 
-Fetch latest documentation with WebFetch for current MCP setup instructions.
+### Primary Sources (GitHub - Always Works)
+- **README**: https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md
+- **SDK Guide**: https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md
+
+### Search for Specific Docs
+Use WebSearch: `Composio MCP setup site:docs.composio.dev`
+
+Fetch latest documentation from GitHub for current MCP setup instructions.

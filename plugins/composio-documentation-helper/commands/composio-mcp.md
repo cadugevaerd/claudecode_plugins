@@ -16,14 +16,17 @@ Get instructions to set up Composio MCP servers for use with Claude Desktop, Cur
 2. **Fetch Documentation**: Get latest MCP setup guide
 3. **Provide Configuration**: Show exact config for the user's client
 
-## Documentation URLs
+## Documentation Sources
 
-Base: `https://docs.composio.dev/`
+> **IMPORTANT**: The `docs.composio.dev` site blocks automated requests. Use alternatives:
 
-- `/docs/mcp-overview` - MCP overview
-- `/docs/mcp-quickstart` - Quick setup
-- `/docs/mcp-providers` - Provider integrations
-- `/mcp/claude` - Claude Desktop specific
+### Primary Sources (GitHub)
+- **Main README**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md`
+- **SDK Guide**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md`
+
+### Search Strategy
+- Use WebSearch: `Composio MCP setup site:docs.composio.dev`
+- Use GitHub API: `https://api.github.com/repos/ComposioHQ/composio/contents/`
 
 ## What is Composio MCP?
 

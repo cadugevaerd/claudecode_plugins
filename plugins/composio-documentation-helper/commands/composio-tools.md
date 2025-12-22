@@ -17,12 +17,17 @@ Explore available tools and actions for a specific Composio toolkit.
 2. **Fetch Toolkit Info**: Get available actions and their parameters
 3. **Provide Examples**: Show how to use the tools
 
-## Documentation URLs
+## Documentation Sources
 
-Base: `https://docs.composio.dev/`
+> **IMPORTANT**: The `docs.composio.dev` site blocks automated requests. Use alternatives:
 
-- `/docs/tools` - Tools catalog overview
-- `/robots-only/tools.json` - Machine-readable toolkit data
+### Primary Sources (GitHub)
+- **Main README**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md`
+- **Python SDK**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md`
+
+### Search Strategy
+- Use WebSearch: `Composio toolkit <name> site:docs.composio.dev`
+- Use GitHub API: `https://api.github.com/repos/ComposioHQ/composio/contents/`
 
 ## Popular Toolkits
 

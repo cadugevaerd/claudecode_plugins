@@ -234,10 +234,15 @@ webhook_url = toolset.get_trigger_webhook_url(
 print(f"Add this webhook to GitHub: {webhook_url}")
 ```
 
-## Documentation URLs
+## Documentation Sources
 
-- Triggers Overview: https://docs.composio.dev/docs/triggers
-- Webhook Setup: https://docs.composio.dev/docs/webhooks
-- Event Reference: https://docs.composio.dev/api-reference/triggers
+> **Note**: Use GitHub sources as `docs.composio.dev` may block automated requests.
 
-Fetch latest documentation with WebFetch for current trigger availability.
+### Primary Sources (GitHub - Always Works)
+- **README**: https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md
+- **Python SDK**: https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md
+
+### Search for Specific Docs
+Use WebSearch: `Composio triggers webhooks site:docs.composio.dev`
+
+Fetch latest documentation from GitHub for current trigger availability.

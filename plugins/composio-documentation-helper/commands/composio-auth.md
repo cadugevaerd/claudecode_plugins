@@ -17,17 +17,18 @@ Get detailed authentication setup instructions for a specific app or service.
 2. **Fetch Auth Documentation**: Get authentication details
 3. **Provide Setup Guide**: Step-by-step instructions
 
-## Documentation URLs
+## Documentation Sources
 
-Base: `https://docs.composio.dev/`
+> **IMPORTANT**: The `docs.composio.dev` site blocks automated requests. Use alternatives:
 
-### Auth-Related Pages
-- `/docs/managed-authentication` - Overview
-- `/docs/custom-auth-configs` - Custom OAuth/API Key
-- `/docs/programmatic-auth-configs` - Programmatic setup
-- `/docs/custom-auth-params` - Custom parameters
-- `/docs/connected-accounts` - Managing connections
-- `/docs/user-management` - Multi-user auth
+### Primary Sources (GitHub)
+- **Main README**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md`
+- **Python SDK**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md`
+- **SDK Guide**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md`
+
+### Search Strategy
+- Use WebSearch: `Composio authentication <app> site:docs.composio.dev`
+- Use GitHub API: `https://api.github.com/repos/ComposioHQ/composio/contents/`
 
 ## Auth Types in Composio
 

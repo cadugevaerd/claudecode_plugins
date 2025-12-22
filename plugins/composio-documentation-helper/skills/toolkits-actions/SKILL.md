@@ -224,10 +224,15 @@ tools = toolset.get_tools(
 4. **Error Handling**: Handle tool execution failures gracefully
 5. **Rate Limits**: Be aware of API rate limits
 
-## Documentation URLs
+## Documentation Sources
 
-- Tools Catalog: https://docs.composio.dev/docs/tools
-- Action Reference: https://docs.composio.dev/api-reference/
-- Machine-readable: https://docs.composio.dev/robots-only/tools.json
+> **Note**: Use GitHub sources as `docs.composio.dev` may block automated requests.
 
-Fetch latest documentation with WebFetch for current action lists and parameters.
+### Primary Sources (GitHub - Always Works)
+- **README**: https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md
+- **Python SDK**: https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md
+
+### Search for Specific Docs
+Use WebSearch: `Composio toolkit <name> site:docs.composio.dev`
+
+Fetch latest documentation from GitHub for current action lists and parameters.

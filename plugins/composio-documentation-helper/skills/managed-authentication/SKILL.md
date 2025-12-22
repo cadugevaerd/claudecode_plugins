@@ -171,12 +171,17 @@ for app in apps:
     print(f"{app}: {request.redirect_url}")
 ```
 
-## Documentation URLs
+## Documentation Sources
 
-- Main: https://docs.composio.dev/docs/managed-authentication
-- Custom Auth: https://docs.composio.dev/docs/custom-auth-configs
-- Programmatic: https://docs.composio.dev/docs/programmatic-auth-configs
-- Connected Accounts: https://docs.composio.dev/docs/connected-accounts
+> **Note**: Use GitHub sources as `docs.composio.dev` may block automated requests.
+
+### Primary Sources (GitHub - Always Works)
+- **README**: https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md
+- **Python SDK**: https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md
+- **SDK Guide**: https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md
+
+### Search for Specific Docs
+Use WebSearch: `Composio authentication site:docs.composio.dev`
 
 ## Troubleshooting
 

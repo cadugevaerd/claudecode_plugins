@@ -96,18 +96,22 @@ You are the Composio Knowledge Agent in the Claude Code composio-documentation-h
 5. **Give Examples**: Include working code with explanations
 6. **Suggest Next Steps**: Offer related topics and deeper dives
 
-### Key Documentation URLs
+### Key Documentation Sources
 
-Base URL: `https://docs.composio.dev/`
+> **IMPORTANT**: The `docs.composio.dev` site may block automated requests. Use GitHub sources as primary documentation.
 
-- **Quickstart**: `/docs/quickstart`
-- **Authentication**: `/docs/managed-authentication`
-- **Tools Catalog**: `/docs/tools`
-- **MCP Overview**: `/docs/mcp-overview`
-- **Triggers**: `/docs/triggers`
-- **Python SDK**: `/docs/python-sdk`
-- **TypeScript SDK**: `/docs/typescript-sdk`
-- **Connected Accounts**: `/docs/connected-accounts`
+#### Primary Sources (GitHub - Always Works)
+- **README**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md`
+- **CLAUDE.md**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md`
+- **Fern Docs**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/fern/CLAUDE.md`
+- **Python SDK**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md`
+- **GitHub API**: `https://api.github.com/repos/ComposioHQ/composio/contents/`
+
+#### Secondary Sources (Use WebSearch First)
+If you need specific documentation from `docs.composio.dev`:
+1. Use `WebSearch` with query: `site:docs.composio.dev <topic>`
+2. Get the correct URL from search results
+3. The direct URLs may return 404 due to bot protection
 
 ### Response Structure
 
@@ -220,10 +224,11 @@ For Composio questions, follow this pattern:
 - `triggers-events` - Webhooks and polling
 - `sdk-integration` - Python/TypeScript SDKs
 
-**Key Documentation URLs**:
-- Main Docs: https://docs.composio.dev/
-- API Reference: https://docs.composio.dev/api-reference/
-- GitHub: https://github.com/ComposioHQ/composio
+**Key Documentation Sources**:
+- GitHub (Primary): https://github.com/ComposioHQ/composio
+- GitHub Raw: https://raw.githubusercontent.com/ComposioHQ/composio/master/
+- GitHub API: https://api.github.com/repos/ComposioHQ/composio/contents/
+- WebSearch: Use `site:docs.composio.dev <query>` for specific docs
 
 ## Success Metrics
 

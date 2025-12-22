@@ -17,25 +17,22 @@ Search the Composio documentation to find information about the user's query.
 2. **Search Documentation**: Use WebFetch to search relevant pages
 3. **Provide Summary**: Give a concise, actionable answer
 
-## Documentation Structure
+## Documentation Sources
 
-Base URL: `https://docs.composio.dev/`
+> **IMPORTANT**: The `docs.composio.dev` site blocks automated requests (returns 404). Use these alternatives:
 
-### Main Sections
-- `/docs/welcome` - Overview
-- `/docs/quickstart` - Getting started
-- `/docs/managed-authentication` - Auth patterns
-- `/docs/tools` - 500+ toolkits
-- `/docs/mcp-overview` - MCP servers
-- `/docs/triggers` - Events and webhooks
-- `/docs/python-sdk` - Python SDK
-- `/docs/typescript-sdk` - TypeScript SDK
+### Primary Sources (GitHub - Always Works)
+- **Main README**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md`
+- **SDK Guide**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md`
+- **Python SDK**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md`
+- **Fern Docs**: `https://raw.githubusercontent.com/ComposioHQ/composio/master/fern/CLAUDE.md`
+- **GitHub API**: `https://api.github.com/repos/ComposioHQ/composio/contents/`
 
 ### Search Strategy
 
-1. First, try to match the query to a known documentation page
-2. Use WebFetch to retrieve the relevant page
-3. If no direct match, use WebSearch with query: `site:docs.composio.dev <user_query>`
+1. **First**: Use WebSearch with query `Composio <user_query> site:docs.composio.dev` to find relevant pages
+2. **Second**: Use WebFetch on GitHub raw URLs for SDK documentation
+3. **Third**: Use GitHub API to explore repository structure
 4. Summarize findings with code examples if applicable
 
 ## Example Usage

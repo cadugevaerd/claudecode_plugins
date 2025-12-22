@@ -291,12 +291,17 @@ for result in results:
     print(f"Tool: {result.tool_name}, Result: {result.output}")
 ```
 
-## Documentation URLs
+## Documentation Sources
 
-- Python SDK: https://docs.composio.dev/docs/python-sdk
-- TypeScript SDK: https://docs.composio.dev/docs/typescript-sdk
-- OpenAI Integration: https://docs.composio.dev/docs/providers/openai
-- LangChain Integration: https://docs.composio.dev/docs/providers/langchain
-- API Reference: https://docs.composio.dev/api-reference/
+> **Note**: Use GitHub sources as `docs.composio.dev` may block automated requests.
 
-Fetch latest documentation with WebFetch for current SDK versions and APIs.
+### Primary Sources (GitHub - Always Works)
+- **README**: https://raw.githubusercontent.com/ComposioHQ/composio/master/README.md
+- **Python SDK**: https://raw.githubusercontent.com/ComposioHQ/composio/master/python/README.md
+- **SDK Guide**: https://raw.githubusercontent.com/ComposioHQ/composio/master/CLAUDE.md
+- **Fern Docs**: https://raw.githubusercontent.com/ComposioHQ/composio/master/fern/CLAUDE.md
+
+### Search for Specific Docs
+Use WebSearch: `Composio SDK <framework> site:docs.composio.dev`
+
+Fetch latest documentation from GitHub for current SDK versions and APIs.
