@@ -1,0 +1,24 @@
+{
+  "name": "langchain-ecosystem-helper",
+  "version": "1.0.0",
+  "description": "Comprehensive LangChain ecosystem helper for LangGraph agents development, LangChain orchestration, and LangSmith observability. Powered by LangChain Documentation MCP Server.",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": [
+    "langchain",
+    "langgraph",
+    "langsmith",
+    "agents",
+    "llm",
+    "mcp",
+    "ai-agents",
+    "orchestration",
+    "observability",
+    "tracing",
+    "evaluation"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
