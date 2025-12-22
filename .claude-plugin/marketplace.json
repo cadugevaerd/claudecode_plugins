@@ -51,6 +51,17 @@
       },
       "category": "ai",
       "tags": ["langchain", "langgraph", "langsmith", "agents", "llm", "mcp", "ai-agents", "orchestration", "observability", "tracing", "evaluation", "react-agent", "multi-agent", "state-management", "streaming", "rag", "lcel"]
+    },
+    {
+      "name": "composio-documentation-helper",
+      "description": "Comprehensive Composio documentation helper for AI agent integrations, managed authentication, 500+ toolkits, MCP servers, and event-driven workflows. Features: 4 commands (/composio-search, /composio-auth, /composio-tools, /composio-mcp) for documentation search, auth setup, toolkit exploration and MCP configuration; 1 autonomous agent for natural language queries; 5 skills covering authentication, toolkits, MCP servers, triggers, and SDK integration.",
+      "source": "./plugins/composio-documentation-helper",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "ai",
+      "tags": ["composio", "ai-agents", "integrations", "oauth", "authentication", "toolkits", "mcp", "triggers", "webhooks", "sdk", "python", "typescript", "openai", "anthropic", "langchain", "crewai", "github", "slack", "gmail", "notion"]
     }
   ]
 }

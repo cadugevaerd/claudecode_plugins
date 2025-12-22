@@ -1,0 +1,25 @@
+{
+  "name": "composio-documentation-helper",
+  "version": "1.0.0",
+  "description": "Comprehensive Composio documentation helper for AI agent integrations, managed authentication, 500+ toolkits, MCP servers, and triggers. Access Composio docs directly in Claude Code.",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": [
+    "composio",
+    "ai-agents",
+    "integrations",
+    "oauth",
+    "authentication",
+    "toolkits",
+    "mcp",
+    "triggers",
+    "webhooks",
+    "sdk",
+    "python",
+    "typescript"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
