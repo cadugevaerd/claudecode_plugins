@@ -87,8 +87,9 @@
             "timeout": 15
           },
           {
-            "type": "prompt",
-            "message": "**CRITICAL**: Before starting any task, call `mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions` to load the Serena Instructions Manual. This is ESSENTIAL for using Serena MCP tools correctly."
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/serena_init_context.sh",
+            "timeout": 5
           }
         ]
       }
