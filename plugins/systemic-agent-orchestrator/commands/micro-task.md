@@ -128,6 +128,58 @@ Use Serena symbolic editing or Claude Code native tools:
 - `insert_before_symbol` for imports
 - `Edit` for precise line changes
 
+### 5.5 Add Debug Logs (1 min) - REQUIRED FOR FIXES
+
+**After implementing a fix, add strategic logging to facilitate future debugging.**
+
+#### When to Add Logs
+- ✅ Bug fixes (errors, edge cases, validation issues)
+- ✅ Complex logic changes
+- ✅ Integration points (API calls, external services)
+- ❌ Skip for trivial changes (typos, formatting)
+
+#### Logging Pattern
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+
+def fixed_function(state: AgentState) -> AgentState:
+    # Log entry with context
+    logger.info(f"[fixed_function] called with {len(state.get('messages', []))} messages")
+
+    # Log critical decision points
+    if some_condition:
+        logger.info(f"[fixed_function] condition met: {some_value}")
+
+    # Log before potential failure points
+    logger.info(f"[fixed_function] processing: {key_variable}")
+
+    # Log exit with result summary
+    logger.info(f"[fixed_function] completed, returning {len(result)} items")
+    return result
+```
+
+#### Log Placement Guidelines
+1. **Entry point**: Log function call with key input values
+2. **Decision branches**: Log which path was taken and why
+3. **Before risky operations**: Log state before potential failures
+4. **Exit point**: Log success with result summary
+5. **Catch blocks**: Log error details with context
+
+#### Format Standard
+```
+[function_name] <action>: <relevant_values>
+```
+
+Examples:
+```python
+logger.info(f"[validate_input] checking messages: count={len(messages)}")
+logger.info(f"[process_node] routing to: {next_node}")
+logger.info(f"[api_call] response received: status={response.status_code}")
+logger.warning(f"[parse_result] unexpected format: {type(data)}")
+```
+
 ### 6. Verify (2 min)
 Run quick validation:
 ```bash
@@ -195,6 +247,9 @@ Knowledge Saved:
 
 Changes:
 - src/nodes/planner.py: Added null check in validate_input()
+
+Debug Logs Added:
+- src/nodes/planner.py:validate_input() - entry/exit + error context
 
 Verification:
 [PASS] Syntax valid

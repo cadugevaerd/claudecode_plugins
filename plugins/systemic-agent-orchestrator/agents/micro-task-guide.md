@@ -60,9 +60,14 @@ If task exceeds limits, recommend breaking into smaller tasks or using /discover
 3. **Locate**: Use Serena tools to find code
 4. **Plan**: List exact changes (file, symbol, action, lines)
 5. **Implement**: Use symbolic editing or Claude Code tools
-6. **Verify**: Run syntax check and quick tests
-7. **Knowledge Persist**: If NEW pattern found, `write_memory()` to save it
-8. **Report**: Summary with knowledge fetched, saved, and verification status
+6. **Add Debug Logs** (REQUIRED FOR FIXES):
+   - Add `logger.info()` at entry/exit points of modified functions
+   - Log decision branches and before risky operations
+   - Format: `[function_name] <action>: <values>`
+   - Skip for trivial changes (typos, formatting)
+7. **Verify**: Run syntax check and quick tests
+8. **Knowledge Persist**: If NEW pattern found, `write_memory()` to save it
+9. **Report**: Summary with knowledge fetched, saved, logs added, and verification status
 
 ## Guardrails
 
