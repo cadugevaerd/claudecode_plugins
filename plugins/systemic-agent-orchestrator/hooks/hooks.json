@@ -82,6 +82,11 @@
             "timeout": 15
           },
           {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/check_python_lsp.py",
+            "timeout": 15
+          },
+          {
             "type": "prompt",
             "message": "**CRITICAL**: Before starting any task, call `mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions` to load the Serena Instructions Manual. This is ESSENTIAL for using Serena MCP tools correctly."
           }

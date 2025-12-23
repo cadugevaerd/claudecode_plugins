@@ -1,6 +1,6 @@
 {
   "name": "systemic-agent-orchestrator",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Enforces architectural guardrails, validates stack consistency, guides structured development workflows, and runs automated tests with coverage validation on task completion.",
   "author": {
     "name": "Carlos Araujo",

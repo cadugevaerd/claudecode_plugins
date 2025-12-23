@@ -61,6 +61,25 @@ uv add --dev ruff pytest pytest-cov pytest-asyncio
 ```
 Skip packages already in pyproject.toml.
 
+### Step 4b: Install Python LSP (Pyright)
+
+Check if Pyright is installed:
+```bash
+if ! command -v pyright &> /dev/null; then
+    echo "[INSTALLING] Pyright LSP..."
+    uv tool install pyright
+    echo "[INSTALLED] Pyright LSP"
+else
+    echo "[OK] Pyright already installed: $(pyright --version)"
+fi
+```
+
+Pyright provides:
+- Go to definition (LSP goToDefinition)
+- Find references (LSP findReferences)
+- Hover documentation (LSP hover)
+- Type checking
+
 ### Step 5: Create Project Structure
 
 Create standard agent project directories if they don't exist:
@@ -116,6 +135,36 @@ AI Agent project using LangGraph Graph API.
 
 ### Commits
 - Use `/git-commit-helper:quick-commit`
+
+## LSP Tool Usage
+
+Use the LSP tool for Python code navigation and analysis:
+
+### When to Use LSP
+- **goToDefinition**: Find where a function/class/variable is defined
+- **findReferences**: Find all usages of a symbol in the codebase
+- **hover**: Get type info and documentation for a symbol
+- **documentSymbol**: List all symbols in a file (functions, classes)
+
+### LSP Examples
+```
+# Find where a function is defined
+LSP(operation="goToDefinition", filePath="src/graph.py", line=25, character=10)
+
+# Find all references to AgentState
+LSP(operation="findReferences", filePath="src/state.py", line=8, character=7)
+
+# Get type info for a variable
+LSP(operation="hover", filePath="src/nodes/planner.py", line=15, character=5)
+
+# List all functions in a file
+LSP(operation="documentSymbol", filePath="src/graph.py", line=1, character=1)
+```
+
+### LSP Best Practices
+- Use goToDefinition before modifying imported functions
+- Use findReferences before renaming or removing code
+- Use hover to understand types without reading full files
 
 ## Commands
 - `/systemic-agent-orchestrator:validate-stack` - Validate project
