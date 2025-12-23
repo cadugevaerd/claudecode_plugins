@@ -107,12 +107,7 @@ def main():
 
         if not is_valid:
             providers_list = ', '.join(VALID_PROVIDERS)
-            result = {
-                "hookSpecificOutput": {
-                    "hookEventName": "PreToolUse",
-                    "permissionDecision": "deny"
-                },
-                "systemMessage": f"""BLOCKED: Invalid models.yaml configuration.
+            reason = f"""BLOCKED: Invalid models.yaml configuration.
 
 Errors:
 {chr(10).join(f'  - {e}' for e in errors)}
@@ -121,32 +116,16 @@ CORRECT FORMAT:
 ```yaml
 # LLM Configuration for Agent Nodes
 nodes:
-  # ---------------------------------------------------------------------------
-  # Node: planner
-  # Orchestrates workflow decisions with deterministic routing
-  # ---------------------------------------------------------------------------
   planner:
     model: "anthropic:claude-3-5-sonnet-20241022"
     temperature: 0.0
     max_tokens: 2048
 
-  # ---------------------------------------------------------------------------
-  # Node: executor
-  # Performs actions and tool calls
-  # ---------------------------------------------------------------------------
   executor:
     model: "anthropic_bedrock:anthropic.claude-3-sonnet-20240229-v1:0"
     temperature: 0.3
     max_tokens: 4096
     timeout: 60
-
-  # ---------------------------------------------------------------------------
-  # Node: reviewer
-  # Validates and critiques outputs
-  # ---------------------------------------------------------------------------
-  reviewer:
-    model: "openai:gpt-4o"
-    temperature: 0.0
 ```
 
 VALID PROVIDERS: {providers_list}
@@ -160,22 +139,21 @@ OPTIONAL FIELDS:
   - max_tokens: positive integer
   - timeout: positive integer (seconds)
   - top_p: 0.0-1.0"""
+
+            result = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": reason
+                }
             }
             print(json.dumps(result))
             sys.exit(0)
 
-        # Pass with warnings if any
-        if warnings:
-            print(json.dumps({
-                "systemMessage": "models.yaml validation passed with notes:\n" + "\n".join(f"  - {w}" for w in warnings)
-            }))
-        else:
-            print(json.dumps({}))
+        print(json.dumps({}))
 
     except Exception as e:
-        print(json.dumps({
-            "systemMessage": f"Warning: models.yaml validation skipped: {str(e)}"
-        }))
+        print(json.dumps({}))
 
 
 if __name__ == "__main__":

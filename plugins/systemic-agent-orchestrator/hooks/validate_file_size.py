@@ -30,12 +30,7 @@ def main():
         line_count = len(lines)
 
         if line_count > MAX_LINES:
-            result = {
-                "hookSpecificOutput": {
-                    "hookEventName": "PreToolUse",
-                    "permissionDecision": "deny"
-                },
-                "systemMessage": f"""BLOCKED: File exceeds {MAX_LINES}-line limit.
+            reason = f"""BLOCKED: File exceeds {MAX_LINES}-line limit.
 
 File: {file_path}
 Current lines: {line_count}
@@ -46,9 +41,6 @@ RECOMMENDATIONS - Split into smaller modules:
 1. **Separate by concern:**
    - state.py - State definitions (TypedDict, Annotated fields)
    - nodes/ - Directory with individual node files
-     - nodes/__init__.py
-     - nodes/planner.py
-     - nodes/executor.py
    - graph.py - Graph builder only
    - utils.py - Utility functions
    - config.py - Configuration loading
@@ -64,40 +56,23 @@ RECOMMENDATIONS - Split into smaller modules:
    - Node function (< 50 lines ideally)
    - Helper functions if needed
 
-EXAMPLE structure:
-```
-src/
-├── __init__.py
-├── state.py          # ~30-50 lines
-├── config.py         # ~50-80 lines
-├── graph.py          # ~50-100 lines
-├── nodes/
-│   ├── __init__.py   # exports all nodes
-│   ├── planner.py    # ~50-100 lines
-│   ├── executor.py   # ~50-100 lines
-│   └── reviewer.py   # ~50-100 lines
-└── utils/
-    ├── __init__.py
-    └── helpers.py
-```
-
 Smaller files = better maintainability, testing, and code review."""
+
+            result = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": reason
+                }
             }
             print(json.dumps(result))
             sys.exit(0)
 
-        # Warning when approaching limit
-        if line_count > WARNING_THRESHOLD:
-            print(json.dumps({
-                "systemMessage": f"Note: {file_path} has {line_count} lines (limit: {MAX_LINES}). Consider splitting soon."
-            }))
-        else:
-            print(json.dumps({}))
+        # Warning when approaching limit (non-blocking)
+        print(json.dumps({}))
 
     except Exception as e:
-        print(json.dumps({
-            "systemMessage": f"Warning: File size validation skipped: {str(e)}"
-        }))
+        print(json.dumps({}))
 
 
 if __name__ == "__main__":

@@ -71,12 +71,7 @@ def main():
                 violations.append(description)
 
         if violations:
-            result = {
-                "hookSpecificOutput": {
-                    "hookEventName": "PreToolUse",
-                    "permissionDecision": "deny"
-                },
-                "systemMessage": f"""BLOCKED: Local prompt definitions detected.
+            reason = f"""BLOCKED: Local prompt definitions detected.
 
 Violations found:
 {chr(10).join(f'  - {v}' for v in violations)}
@@ -113,6 +108,13 @@ BENEFITS of Langsmith Prompts:
 - Easy rollback to previous versions
 
 Please move your prompts to Langsmith and reference them by name."""
+
+            result = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": reason
+                }
             }
             print(json.dumps(result))
             sys.exit(0)
@@ -120,9 +122,7 @@ Please move your prompts to Langsmith and reference them by name."""
         print(json.dumps({}))
 
     except Exception as e:
-        print(json.dumps({
-            "systemMessage": f"Warning: Local prompt validation skipped: {str(e)}"
-        }))
+        print(json.dumps({}))
 
 
 if __name__ == "__main__":

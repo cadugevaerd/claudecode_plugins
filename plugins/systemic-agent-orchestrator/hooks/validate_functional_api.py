@@ -40,12 +40,7 @@ def main():
                 violations.append(description)
 
         if violations:
-            result = {
-                "hookSpecificOutput": {
-                    "hookEventName": "PreToolUse",
-                    "permissionDecision": "deny"
-                },
-                "systemMessage": f"""BLOCKED: LangGraph Functional API usage detected.
+            reason = f"""BLOCKED: LangGraph Functional API usage detected.
 
 Violations found:
 {chr(10).join(f'  - {v}' for v in violations)}
@@ -79,6 +74,13 @@ WHY Graph API instead of Functional API:
 - Better tooling and visualization support
 
 Please rewrite using StateGraph instead of @entrypoint/@task decorators."""
+
+            result = {
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": reason
+                }
             }
             print(json.dumps(result))
             sys.exit(0)
@@ -87,9 +89,7 @@ Please rewrite using StateGraph instead of @entrypoint/@task decorators."""
 
     except Exception as e:
         # Non-blocking on error - allow operation to proceed
-        print(json.dumps({
-            "systemMessage": f"Warning: Functional API validation skipped: {str(e)}"
-        }))
+        print(json.dumps({}))
 
 
 if __name__ == "__main__":
