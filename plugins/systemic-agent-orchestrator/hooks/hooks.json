@@ -1,5 +1,5 @@
 {
-  "description": "Guardrail hooks for Systemic Agent Orchestrator - enforces Graph API, models.yaml, Langsmith prompts, and code quality standards",
+  "description": "Guardrail hooks for Systemic Agent Orchestrator - enforces Graph API, models.yaml, Langsmith prompts, code quality, and test validation",
   "hooks": {
     "PreToolUse": [
       {
@@ -46,6 +46,18 @@
             "type": "command",
             "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/run_ruff.py",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/run_tests_on_stop.py",
+            "timeout": 180
           }
         ]
       }

@@ -1,7 +1,7 @@
 {
   "name": "systemic-agent-orchestrator",
-  "version": "2.0.0",
-  "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Enforces architectural guardrails, validates stack consistency, and guides structured development workflows.",
+  "version": "2.1.0",
+  "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Enforces architectural guardrails, validates stack consistency, guides structured development workflows, and runs automated tests with coverage validation on task completion.",
   "author": {
     "name": "Carlos Araujo",
     "email": "cadu.gevaerd@gmail.com"
@@ -21,7 +21,12 @@
     "step-functions",
     "ci-cd",
     "monitoring",
-    "serena"
+    "serena",
+    "pytest",
+    "coverage",
+    "tflint",
+    "tfsec",
+    "micro-tasks"
   ],
   "license": "MIT",
   "homepage": "https://github.com/cadugevaerd/claudecode_plugins"

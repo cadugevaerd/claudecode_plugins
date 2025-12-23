@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "git-commit-helper",
-      "description": "Automatiza commits Git com validações completas, conventional commits e integração com CI/CD. Suporte automático para projetos Python com uv (universal virtualenv). NOVO: /quick-commit para commits rápidos sem validações extensivas",
+      "description": "Automatiza commits Git com validacoes completas, conventional commits e integracao com CI/CD. Suporte automatico para projetos Python com uv (universal virtualenv). NOVO: /quick-commit para commits rapidos sem validacoes extensivas",
       "source": "./plugins/git-commit-helper",
       "version": "1.2.0",
       "author": {
@@ -21,58 +21,58 @@
     },
     {
       "name": "kubernetes-specialist",
-      "description": "Advanced plugin for Kubernetes resource management, troubleshooting, and best practices implementation with MCP integration. Features: diagnostic commands for pod failures, resource optimization for cost reduction, manifest generation with security hardening, 2 agents with MCP kubernetes-toolkit integration and skill-first knowledge loading, 2 comprehensive skills for best practices and troubleshooting patterns, and MCP server for direct Kubernetes API access. 2025 best practices addressing 99.94% industry over-provisioning issue.",
+      "description": "Advanced plugin for Kubernetes resource management, troubleshooting, and best practices implementation with MCP integration.",
       "source": "./plugins/kubernetes-specialist",
       "version": "1.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "devops",
-      "tags": ["kubernetes", "k8s", "containers", "orchestration", "devops", "troubleshooting", "resource-management", "cost-optimization", "best-practices", "production", "reliability", "diagnostics", "manifest-generation", "security-hardening", "rbac", "resource-quotas", "health-checks", "observability", "mcp", "model-context-protocol", "api-integration", "2025-patterns"]
+      "tags": ["kubernetes", "k8s", "containers", "orchestration", "devops", "troubleshooting", "mcp"]
     },
     {
       "name": "aws-documentation-helper",
-      "description": "Comprehensive AWS documentation access and knowledge assistant powered by AWS Knowledge MCP Server. Features: 3 commands (/aws-docs, /aws-compare, /aws-examples) for service search, comparison and code examples; 1 autonomous agent for natural language AWS queries; 2 skills covering 200+ AWS services and Well-Architected Framework best practices; HTTP MCP integration with AWS Knowledge API.",
+      "description": "Comprehensive AWS documentation access and knowledge assistant powered by AWS Knowledge MCP Server.",
       "source": "./plugins/aws-documentation-helper",
       "version": "0.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "cloud",
-      "tags": ["aws", "amazon-web-services", "documentation", "cloud", "mcp", "knowledge-base", "services", "best-practices", "well-architected", "troubleshooting", "examples", "ec2", "s3", "lambda", "rds", "dynamodb", "vpc", "iam", "cloudformation", "terraform"]
+      "tags": ["aws", "amazon-web-services", "documentation", "cloud", "mcp", "knowledge-base"]
     },
     {
       "name": "langchain-ecosystem-helper",
-      "description": "Comprehensive LangChain ecosystem helper for LangGraph agent development, LangChain orchestration, and LangSmith observability. Features: 3 commands (/langchain-search, /langgraph-agent, /langsmith-setup) for documentation search, agent generation and tracing setup; 1 autonomous agent for natural language queries about the ecosystem; 3 skills covering LangGraph 0.3+ development, LangChain architecture patterns, and LangSmith evaluation; HTTP MCP integration with LangChain Documentation API.",
+      "description": "Comprehensive LangChain ecosystem helper for LangGraph agent development, LangChain orchestration, and LangSmith observability.",
       "source": "./plugins/langchain-ecosystem-helper",
       "version": "1.0.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "ai",
-      "tags": ["langchain", "langgraph", "langsmith", "agents", "llm", "mcp", "ai-agents", "orchestration", "observability", "tracing", "evaluation", "react-agent", "multi-agent", "state-management", "streaming", "rag", "lcel"]
+      "tags": ["langchain", "langgraph", "langsmith", "agents", "llm", "mcp", "ai-agents"]
     },
     {
       "name": "composio-documentation-helper",
-      "description": "Comprehensive Composio documentation helper for AI agent integrations, managed authentication, 500+ toolkits, MCP servers, and event-driven workflows. Features: 4 commands (/composio-search, /composio-auth, /composio-tools, /composio-mcp) for documentation search, auth setup, toolkit exploration and MCP configuration; 1 autonomous agent for natural language queries; 5 skills covering authentication, toolkits, MCP servers, triggers, and SDK integration.",
+      "description": "Comprehensive Composio documentation helper for AI agent integrations, managed authentication, 500+ toolkits, MCP servers, and event-driven workflows.",
       "source": "./plugins/composio-documentation-helper",
       "version": "1.0.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "ai",
-      "tags": ["composio", "ai-agents", "integrations", "oauth", "authentication", "toolkits", "mcp", "triggers", "webhooks", "sdk", "python", "typescript", "openai", "anthropic", "langchain", "crewai", "github", "slack", "gmail", "notion"]
+      "tags": ["composio", "ai-agents", "integrations", "oauth", "authentication", "toolkits", "mcp"]
     },
     {
       "name": "systemic-agent-orchestrator",
-      "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Enforces architectural guardrails (Graph API only, Langsmith prompts, models.yaml), validates stack consistency, and guides structured development workflows. Features: 6 commands (discovery, init-agent, add-node, validate-stack, resume-project, check-deps); 1 guardrail agent; 11 skills covering LangGraph, AWS infrastructure, Terraform, CI/CD, and monitoring; 8 validation hooks; Serena MCP integration for semantic code operations and persistent memory.",
+      "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Features: 7 commands (discovery, init-agent, add-node, validate-stack, resume-project, check-deps, micro-task); 2 agents (guardrail-enforcer, micro-task-guide); 11 skills; 9 validation hooks including Stop hook for automated test execution with 70% coverage requirement; Serena MCP integration.",
       "source": "./plugins/systemic-agent-orchestrator",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "author": {
         "name": "Carlos Araujo"
       },
       "category": "ai",
-      "tags": ["langgraph", "ai-agents", "bedrock", "terraform", "guardrails", "langsmith", "aws", "orchestrator", "graph-api", "aurora-serverless", "step-functions", "ci-cd", "monitoring", "serena", "mcp", "production-ready", "enterprise", "state-management", "hybrid-workflow"]
+      "tags": ["langgraph", "ai-agents", "bedrock", "terraform", "guardrails", "langsmith", "aws", "orchestrator", "graph-api", "serena", "mcp", "pytest", "coverage", "tflint", "tfsec", "micro-tasks", "test-automation"]
     }
   ]
 }

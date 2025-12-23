@@ -2,12 +2,11 @@
 description: Validate entire agent project against all guardrail rules
 argument-hint: "[path]"
 allowed-tools:
-  - mcp__plugin_serena_serena__read_file
-  - mcp__plugin_serena_serena__list_dir
-  - mcp__plugin_serena_serena__search_for_pattern
-  - mcp__plugin_serena_serena__find_symbol
-  - mcp__plugin_serena_serena__get_symbols_overview
-  - mcp__plugin_serena_serena__execute_shell_command
+  - mcp__plugin_systemic-agent-orchestrator_serena__list_dir
+  - mcp__plugin_systemic-agent-orchestrator_serena__search_for_pattern
+  - mcp__plugin_systemic-agent-orchestrator_serena__find_symbol
+  - mcp__plugin_systemic-agent-orchestrator_serena__get_symbols_overview
+  - Bash
 ---
 
 # Validate Agent Stack
@@ -81,9 +80,50 @@ Verify src/state.py:
 - Uses `Annotated` for list fields
 - Has `messages` field
 
-### 10. Test Coverage (if tests exist)
-Run: `uv run pytest --cov=src tests/ -q`
-Report coverage percentage.
+### 10. Python Test Coverage (CRITICAL)
+Run: `uv run pytest --cov=src --cov-fail-under=70 tests/ -q`
+- FAIL if coverage < 70%
+- Report coverage percentage per module
+- List uncovered lines if below threshold
+
+### 11. Terraform Validation (if infra/ exists)
+Run these validations in sequence:
+
+#### 11a. Terraform Format
+```bash
+terraform fmt -check -recursive infra/
+```
+FAIL if files not formatted.
+
+#### 11b. Terraform Validate
+```bash
+cd infra/ && terraform init -backend=false && terraform validate
+```
+FAIL if syntax errors.
+
+#### 11c. TFLint
+```bash
+tflint --recursive infra/
+```
+FAIL if linting errors. Check for:
+- Deprecated syntax
+- Invalid resource references
+- Missing required attributes
+
+#### 11d. TFSec Security Scan
+```bash
+tfsec infra/ --minimum-severity HIGH
+```
+FAIL if HIGH or CRITICAL vulnerabilities. Report:
+- Security issue description
+- Affected resource
+- Remediation steps
+
+#### 11e. Terraform Test (if tests exist)
+```bash
+cd infra/ && terraform test
+```
+Run integration tests if `*.tftest.hcl` files exist.
 
 ## Output Format
 
@@ -109,11 +149,21 @@ CODE QUALITY:
 INTEGRATION:
 [PASS] Langsmith: Prompt integration verified
 
-TESTING:
-[INFO] Coverage: 78% (target: 70%)
+PYTHON TESTING:
+[PASS] Coverage: 78% (minimum: 70%)
+  - src/nodes/planner.py: 85%
+  - src/nodes/executor.py: 72%
+  - src/state.py: 100%
+
+TERRAFORM VALIDATION:
+[PASS] Format: All files formatted
+[PASS] Validate: Syntax valid
+[PASS] TFLint: No linting errors
+[PASS] TFSec: No HIGH/CRITICAL vulnerabilities
+[PASS] Terraform Test: 3/3 tests passed
 
 === Summary ===
-Passed: 9/10
+Passed: 14/15
 Warnings: 1
 Failed: 0
 
@@ -124,11 +174,19 @@ Status: READY FOR DEPLOYMENT
 
 - All passed: Display success message
 - Warnings only: Display warnings with suggestions
-- Any failures: Display failures with fix instructions
+- Any failures: Display failures with fix instructions, DO NOT PROCEED
+
+## Failure Actions
+
+When validation fails:
+1. **Coverage < 70%**: List uncovered functions, suggest tests to write
+2. **TFSec HIGH/CRITICAL**: Show exact resource and remediation
+3. **TFLint errors**: Show exact line and fix
+4. **Functional API found**: Show file:line and correct pattern
 
 ## Next Steps
 
 Based on results, suggest:
-- For failures: Specific fix instructions
+- For failures: Specific fix instructions (MUST FIX BEFORE PROCEEDING)
 - For warnings: Improvement suggestions
 - For success: Deployment readiness confirmation
