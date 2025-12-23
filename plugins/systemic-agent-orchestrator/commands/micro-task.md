@@ -17,10 +17,11 @@ allowed-tools:
   - mcp__plugin_systemic-agent-orchestrator_serena__replace_symbol_body
   - mcp__plugin_systemic-agent-orchestrator_serena__insert_after_symbol
   - mcp__plugin_systemic-agent-orchestrator_serena__insert_before_symbol
-  # Serena memories
+  # Serena memories (read + write)
   - mcp__plugin_systemic-agent-orchestrator_serena__list_memories
   - mcp__plugin_systemic-agent-orchestrator_serena__read_memory
-  # Knowledge MCPs
+  - mcp__plugin_systemic-agent-orchestrator_serena__write_memory
+  # Knowledge MCPs - MUST USE
   - mcp__plugin_langchain-ecosystem-helper_langchain-docs__SearchDocsByLangChain
   - mcp__plugin_aws-documentation-helper_aws-knowledge-mcp-server__aws___search_documentation
 ---
@@ -51,36 +52,59 @@ If task exceeds these limits, STOP and suggest breaking into smaller tasks.
 - Verify scope is micro (≤3 files, ≤100 lines)
 - Extract keywords for knowledge search
 
-### 2. Knowledge Fetch (2 min) - PARALLEL
-**ALWAYS run before coding.** Search in parallel for relevant knowledge:
+### 2. Knowledge Fetch (2 min) - PARALLEL & MANDATORY
+**⚠️ ALWAYS execute ALL searches before coding. Never skip MCPs.**
 
-#### 2.1 Serena Memories
-```
-list_memories -> read_memory (relevant ones)
-```
-Look for memories matching task keywords (e.g., "langgraph", "agents", "hooks").
+Execute these searches IN PARALLEL:
 
-#### 2.2 MCP Documentation Search
-Based on task keywords, query relevant MCPs in parallel:
+#### 2.1 Serena Memories (REQUIRED)
+```python
+# Step 1: List all memories
+list_memories()
 
-| Keywords | MCP to Search |
-|----------|---------------|
-| LangGraph, node, edge, state, agent, LangChain, LCEL, prompt | `SearchDocsByLangChain` |
-| AWS, Lambda, S3, DynamoDB, Bedrock, CloudFormation | `aws___search_documentation` |
-
-**Search query format**: Extract the core problem/pattern from task description.
-```
-Example task: "fix conditional edge routing in planner"
-Search query: "conditional edges routing LangGraph"
+# Step 2: Read relevant ones based on task keywords
+read_memory("langgraph-langchain-langsmith-agents-2025")  # if LangGraph/agent task
+read_memory("claude-code-hooks-format")                    # if hooks task
 ```
 
-#### 2.3 Project Skills
-Check if task relates to existing skills:
-- `langgraph-graph-api/` - StateGraph patterns
-- `langsmith-prompts/` - Prompt management
-- `models-yaml-config/` - Model configuration
+#### 2.2 MCP LangChain Docs (REQUIRED for Python/Agent tasks)
+**MUST call `SearchDocsByLangChain` for any task involving:**
+- LangGraph, nodes, edges, state, agents
+- LangChain, LCEL, chains, prompts
+- Any Python agent code
 
-**Output**: Use fetched knowledge silently as implementation context.
+```python
+# ALWAYS execute - extract search query from task
+SearchDocsByLangChain(query="<extracted-problem-pattern>")
+
+# Examples:
+SearchDocsByLangChain(query="conditional edges routing LangGraph")
+SearchDocsByLangChain(query="StateGraph add node pattern")
+SearchDocsByLangChain(query="LangGraph state reducer")
+```
+
+#### 2.3 MCP AWS Docs (REQUIRED for AWS tasks)
+**MUST call `aws___search_documentation` for any task involving:**
+- AWS services (Lambda, S3, DynamoDB, Bedrock, etc.)
+- Terraform AWS resources
+- CloudFormation
+
+```python
+# ALWAYS execute for AWS tasks
+aws___search_documentation(search_phrase="<aws-topic>", topics=["general"])
+
+# Examples:
+aws___search_documentation(search_phrase="Bedrock agent memory", topics=["general"])
+aws___search_documentation(search_phrase="Aurora Serverless Data API", topics=["reference_documentation"])
+```
+
+#### 2.4 Project Skills (Check if applicable)
+Read relevant skill files:
+- `langgraph-graph-api/SKILL.md` - StateGraph patterns
+- `langsmith-prompts/SKILL.md` - Prompt management
+- `models-yaml-config/SKILL.md` - Model configuration
+
+**Output**: Use ALL fetched knowledge silently as implementation context.
 
 ### 3. Locate Code (2 min)
 Use Serena tools to find relevant code:
@@ -114,16 +138,60 @@ uv run python -m py_compile <modified_files>
 uv run pytest tests/ -x -q --tb=short
 ```
 
-### 7. Report
+### 7. Knowledge Persistence (1 min) - REQUIRED
+**After implementing, save learnings to memory for future tasks.**
+
+Evaluate what was learned and save if valuable:
+
+```python
+# Only save if NEW knowledge was acquired (not already in memories)
+write_memory(
+    memory_file_name="<topic>-patterns",  # e.g., "langgraph-routing-patterns"
+    content="""# <Topic> Patterns
+
+## Problem Solved
+<Brief description of the problem>
+
+## Solution Pattern
+<Code pattern or approach that worked>
+
+## Source
+- MCP: LangChain docs / AWS docs
+- Date: <today>
+
+## Example
+```python
+<minimal working example>
+```
+"""
+)
+```
+
+**When to save:**
+- ✅ Found a new pattern not in existing memories
+- ✅ Discovered a gotcha or edge case
+- ✅ Found better approach than existing memory
+- ❌ Skip if knowledge already exists in memories
+- ❌ Skip if trivial fix (typo, simple bug)
+
+**Memory naming convention:**
+- `<domain>-<topic>-patterns` (e.g., `langgraph-routing-patterns`)
+- `<domain>-gotchas` (e.g., `bedrock-gotchas`)
+
+### 8. Report
 ```
 === Micro-Task Complete ===
 Task: {description}
 Files: {count} modified
 Lines: {count} changed
 
-Knowledge Used:
+Knowledge Fetched:
 - Memory: langgraph-langchain-langsmith-agents-2025
-- MCP: LangChain docs (conditional routing pattern)
+- MCP LangChain: "conditional edges routing" (3 results)
+- MCP AWS: (not applicable)
+
+Knowledge Saved:
+- NEW: langgraph-routing-patterns.md (conditional edge pattern)
 
 Changes:
 - src/nodes/planner.py: Added null check in validate_input()
@@ -137,37 +205,53 @@ Next: Run /validate-stack for full validation
 
 ## Examples
 
-### Example 1: Fix failing tests
+### Example 1: Fix failing tests (LangGraph)
 ```
 /micro-task fix test_planner_handles_empty_messages
 ```
-1. **Knowledge Fetch**: Search LangChain docs for "empty messages handling"
-2. Read test file, understand failure
-3. Locate tested function
-4. Apply pattern from docs, fix bug
-5. Re-run test to confirm
+**Step 2 - Knowledge Fetch (PARALLEL):**
+```python
+list_memories()
+read_memory("langgraph-langchain-langsmith-agents-2025")
+SearchDocsByLangChain(query="empty messages handling LangGraph state")
+```
+**Steps 3-8:**
+- Locate tested function, apply pattern from docs
+- Fix bug, re-run tests
+- Save pattern to `langgraph-message-handling.md` if new
 
 ### Example 2: Add validation to LangGraph node
 ```
 /micro-task add input validation to executor node
 ```
-1. **Knowledge Fetch** (parallel):
-   - Memory: `langgraph-langchain-langsmith-agents-2025`
-   - MCP: `SearchDocsByLangChain("node input validation LangGraph")`
-2. Find executor node function
-3. Apply validation pattern from fetched knowledge
-4. Add test for validation
-5. Run tests
+**Step 2 - Knowledge Fetch (PARALLEL):**
+```python
+list_memories()
+read_memory("langgraph-langchain-langsmith-agents-2025")
+SearchDocsByLangChain(query="node input validation LangGraph TypedDict")
+```
+**Steps 3-8:**
+- Find executor node function
+- Apply validation pattern from MCP docs
+- Add test, run tests
+- Save to `langgraph-validation-patterns.md` if new pattern found
 
-### Example 3: Refactor function
+### Example 3: AWS Bedrock integration
 ```
-/micro-task extract API call logic from planner to separate function
+/micro-task add Bedrock model invocation to analyzer node
 ```
-1. **Knowledge Fetch**: Check skill `langgraph-graph-api/` for patterns
-2. Identify code to extract
-3. Create new function following patterns
-4. Update original to call new function
-5. Update tests if needed
+**Step 2 - Knowledge Fetch (PARALLEL):**
+```python
+list_memories()
+read_memory("langgraph-langchain-langsmith-agents-2025")
+SearchDocsByLangChain(query="ChatBedrock LangChain invoke")
+aws___search_documentation(search_phrase="Bedrock invoke model", topics=["reference_documentation"])
+```
+**Steps 3-8:**
+- Find analyzer node
+- Apply Bedrock invocation pattern from AWS + LangChain docs
+- Test, verify
+- Save to `bedrock-integration-patterns.md` if new
 
 ## Guardrails
 

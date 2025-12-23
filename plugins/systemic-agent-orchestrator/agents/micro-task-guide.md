@@ -21,10 +21,11 @@ tools:
   - mcp__plugin_systemic-agent-orchestrator_serena__replace_symbol_body
   - mcp__plugin_systemic-agent-orchestrator_serena__insert_after_symbol
   - mcp__plugin_systemic-agent-orchestrator_serena__insert_before_symbol
-  # Serena memories
+  # Serena memories (read + write)
   - mcp__plugin_systemic-agent-orchestrator_serena__list_memories
   - mcp__plugin_systemic-agent-orchestrator_serena__read_memory
-  # Knowledge MCPs
+  - mcp__plugin_systemic-agent-orchestrator_serena__write_memory
+  # Knowledge MCPs - MUST USE
   - mcp__plugin_langchain-ecosystem-helper_langchain-docs__SearchDocsByLangChain
   - mcp__plugin_aws-documentation-helper_aws-knowledge-mcp-server__aws___search_documentation
 ---
@@ -51,16 +52,17 @@ If task exceeds limits, recommend breaking into smaller tasks or using /discover
 ## Workflow
 
 1. **Understand**: Parse task, identify files/symbols, extract keywords
-2. **Knowledge Fetch** (ALWAYS, parallel):
-   - `list_memories` → `read_memory` for relevant project memories
-   - `SearchDocsByLangChain` for LangGraph/LangChain tasks
-   - `aws___search_documentation` for AWS tasks
-   - Check project skills (`langgraph-graph-api/`, etc.)
+2. **Knowledge Fetch** (MANDATORY, PARALLEL):
+   - `list_memories()` → `read_memory()` for relevant memories
+   - **MUST** call `SearchDocsByLangChain(query="<problem>")` for Python/agent tasks
+   - **MUST** call `aws___search_documentation()` for AWS tasks
+   - Read relevant skills if applicable
 3. **Locate**: Use Serena tools to find code
 4. **Plan**: List exact changes (file, symbol, action, lines)
 5. **Implement**: Use symbolic editing or Claude Code tools
 6. **Verify**: Run syntax check and quick tests
-7. **Report**: Summary of changes, knowledge used, and verification status
+7. **Knowledge Persist**: If NEW pattern found, `write_memory()` to save it
+8. **Report**: Summary with knowledge fetched, saved, and verification status
 
 ## Guardrails
 
