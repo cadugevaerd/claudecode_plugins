@@ -27,26 +27,65 @@ BASH_WRITE_REGEX = re.compile("|".join(BASH_WRITE_PATTERNS), re.IGNORECASE)
 
 def main() -> None:
     """Block native file tools and Bash file writes, suggest Serena alternatives."""
-    tool_input = os.environ.get("TOOL_INPUT", "{}")
-    tool_name = os.environ.get("TOOL_NAME", "")
-
-    # Tools to block completely
-    blocked_tools = {"Write", "Edit", "Read", "MultiEdit", "Search", "Glob", "Grep"}
-
     try:
-        input_data = json.loads(tool_input)
+        input_data = json.load(sys.stdin)
     except json.JSONDecodeError:
-        input_data = {}
+        # Allow if we can't parse input
+        print(json.dumps({}))
+        return
 
-    # Check if it's a blocked native tool
-    if tool_name in blocked_tools:
-        file_path = input_data.get("file_path", "unknown")
-        block_with_message(f"Tool '{tool_name}' bloqueada!", f"Arquivo: {file_path}")
+    tool_name = input_data.get("tool_name", "")
+    tool_input = input_data.get("tool_input", {})
+
+    # Tools to block for reading (force Serena semantic search)
+    read_tools = {"Read", "Search", "Glob", "Grep"}
+    
+    # Tools to block for writing (force Serena symbolic editing)
+    write_tools = {"Edit", "MultiEdit"}
+    
+    # Write tool - allow for new files, block for existing
+    # (Serena can't create new files, only edit symbols)
+    
+    # Whitelisted file patterns for Write (documentation, config, etc.)
+    write_whitelist = [
+        "CLAUDE.md", "README.md", "LICENSE", 
+        ".md", ".json", ".yaml", ".yml", ".toml",
+        ".gitignore", ".env.example", "Makefile",
+        "pyproject.toml", "requirements.txt"
+    ]
+
+    file_path = tool_input.get("file_path", "") or tool_input.get("pattern", "")
+
+    # Check Write tool - allow whitelisted files
+    if tool_name == "Write":
+        if any(file_path.endswith(ext) for ext in write_whitelist):
+            print(json.dumps({}))  # Allow
+            return
+        block_with_message(
+            f"Tool 'Write' bloqueada para arquivos .py!",
+            f"Arquivo: {file_path}\nUse Serena para edição semântica de código Python."
+        )
+        return
+
+    # Check if it's a blocked read tool
+    if tool_name in read_tools:
+        block_with_message(
+            f"Tool '{tool_name}' bloqueada para forçar busca semântica!",
+            f"Arquivo/Pattern: {file_path}"
+        )
+        return
+
+    # Check if it's a blocked write/edit tool
+    if tool_name in write_tools:
+        block_with_message(
+            f"Tool '{tool_name}' bloqueada para forçar edição semântica!",
+            f"Arquivo: {file_path}"
+        )
         return
 
     # Check if it's a Bash command trying to write files
     if tool_name == "Bash":
-        command = input_data.get("command", "")
+        command = tool_input.get("command", "")
         if BASH_WRITE_REGEX.search(command):
             block_with_message(
                 "Comando Bash de escrita bloqueado!",
@@ -55,40 +94,39 @@ def main() -> None:
             return
 
     # Allow other tools/commands
-    return
+    print(json.dumps({}))
 
 
 def block_with_message(title: str, context: str) -> None:
-    """Print block message and exit."""
+    """Print block message with proper hook format and exit."""
     serena_alternatives = """
 **Alternativas Serena MCP:**
 
 | Operacao | Tool Serena |
 |----------|-------------|
-| Ler arquivo | `mcp__plugin_serena_serena__read_file` |
-| Criar/sobrescrever | `mcp__plugin_serena_serena__create_text_file` |
-| Substituir texto | `mcp__plugin_serena_serena__replace_content` |
-| Substituir simbolo | `mcp__plugin_serena_serena__replace_symbol_body` |
-| Inserir apos simbolo | `mcp__plugin_serena_serena__insert_after_symbol` |
-| Inserir antes simbolo | `mcp__plugin_serena_serena__insert_before_symbol` |
-| Buscar simbolo | `mcp__plugin_serena_serena__find_symbol` |
-| Overview simbolos | `mcp__plugin_serena_serena__get_symbols_overview` |
-| Buscar arquivos | `mcp__plugin_serena_serena__find_file` |
-| Buscar padrao/regex | `mcp__plugin_serena_serena__search_for_pattern` |
-| Listar diretorio | `mcp__plugin_serena_serena__list_dir` |
+| Overview simbolos | `mcp__plugin_systemic-agent-orchestrator_serena__get_symbols_overview` |
+| Buscar simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__find_symbol` |
+| Buscar padrao/regex | `mcp__plugin_systemic-agent-orchestrator_serena__search_for_pattern` |
+| Buscar arquivos | `mcp__plugin_systemic-agent-orchestrator_serena__find_file` |
+| Listar diretorio | `mcp__plugin_systemic-agent-orchestrator_serena__list_dir` |
+| Substituir simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__replace_symbol_body` |
+| Inserir apos simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__insert_after_symbol` |
+| Inserir antes simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__insert_before_symbol` |
 
 **Por que usar Serena?**
-- Edicao semantica baseada em simbolos (funcoes, classes, metodos)
+- Busca semantica baseada em simbolos (funcoes, classes, metodos)
 - Melhor controle de contexto e menos tokens
-- Refatoracao mais precisa com `replace_content` (suporta regex)
+- Refatoracao precisa com edicao por simbolo
 - Rename automatico com `rename_symbol`
 """
 
     result = {
-        "decision": "block",
-        "reason": f"{title}\n\n{context}\n{serena_alternatives}",
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "deny"
+        },
+        "systemMessage": f"{title}\n\n{context}\n{serena_alternatives}"
     }
-
     print(json.dumps(result))
     sys.exit(0)
 
