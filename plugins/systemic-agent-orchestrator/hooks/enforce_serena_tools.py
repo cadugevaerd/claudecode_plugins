@@ -120,12 +120,14 @@ def block_with_message(title: str, context: str) -> None:
 - Rename automatico com `rename_symbol`
 """
 
+    reason = f"{title}\n\n{context}\n{serena_alternatives}"
+    
     result = {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
-            "permissionDecision": "deny"
-        },
-        "systemMessage": f"{title}\n\n{context}\n{serena_alternatives}"
+            "permissionDecision": "deny",
+            "permissionDecisionReason": reason
+        }
     }
     print(json.dumps(result))
     sys.exit(0)
