@@ -2,12 +2,14 @@
 # /// script
 # requires-python = ">=3.10"
 # ///
-"""Hook to block native Write/Edit/Read tools and Bash file writes, enforcing Serena MCP tools."""
+"""Hook to block native tools for .py and .tf files, enforcing Serena MCP tools."""
 
 import json
-import os
 import re
 import sys
+
+# File extensions that MUST use Serena tools
+ENFORCED_EXTENSIONS = {".py", ".tf"}
 
 # Patterns that indicate Bash is being used to write files
 BASH_WRITE_PATTERNS = [
@@ -25,8 +27,30 @@ BASH_WRITE_PATTERNS = [
 BASH_WRITE_REGEX = re.compile("|".join(BASH_WRITE_PATTERNS), re.IGNORECASE)
 
 
+def is_enforced_file(file_path: str) -> bool:
+    """Check if file extension requires Serena tools."""
+    if not file_path:
+        return False
+    return any(file_path.endswith(ext) for ext in ENFORCED_EXTENSIONS)
+
+
+def extract_file_from_bash(command: str) -> str | None:
+    """Extract target file from Bash write command."""
+    # Match patterns like: > file.py, >> file.tf, tee file.py
+    patterns = [
+        r">\s*(\S+\.(?:py|tf))",      # > file.py or >> file.tf
+        r"tee\s+(\S+\.(?:py|tf))",    # tee file.py
+        r"cat\s*>\s*(\S+\.(?:py|tf))", # cat > file.py
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, command, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    return None
+
+
 def main() -> None:
-    """Block native file tools and Bash file writes, suggest Serena alternatives."""
+    """Block native tools for .py/.tf files, suggest Serena alternatives."""
     try:
         input_data = json.load(sys.stdin)
     except json.JSONDecodeError:
@@ -37,83 +61,81 @@ def main() -> None:
     tool_name = input_data.get("tool_name", "")
     tool_input = input_data.get("tool_input", {})
 
-    # Tools to block for reading (force Serena semantic search)
-    read_tools = {"Read", "Search", "Glob", "Grep"}
-    
-    # Tools to block for writing (force Serena symbolic editing)
-    write_tools = {"Edit", "MultiEdit"}
-    
-    # Write tool - allow for new files, block for existing
-    # (Serena can't create new files, only edit symbols)
-    
-    # Whitelisted file patterns for Write (documentation, config, etc.)
-    write_whitelist = [
-        "CLAUDE.md", "README.md", "LICENSE", 
-        ".md", ".json", ".yaml", ".yml", ".toml",
-        ".gitignore", ".env.example", "Makefile",
-        "pyproject.toml", "requirements.txt"
-    ]
-
+    # Extract file path from tool input
     file_path = tool_input.get("file_path", "") or tool_input.get("pattern", "")
 
-    # Check Write tool - allow whitelisted files
-    if tool_name == "Write":
-        if any(file_path.endswith(ext) for ext in write_whitelist):
-            print(json.dumps({}))  # Allow
+    # Tools that operate on files
+    file_tools = {"Read", "Write", "Edit", "MultiEdit"}
+    
+    # Search tools - only block if pattern explicitly targets .py/.tf
+    search_tools = {"Search", "Glob", "Grep"}
+
+    # Check file-based tools
+    if tool_name in file_tools:
+        if is_enforced_file(file_path):
+            block_with_message(
+                f"Tool '{tool_name}' bloqueada para arquivos .py/.tf!",
+                f"Arquivo: {file_path}"
+            )
             return
-        block_with_message(
-            f"Tool 'Write' bloqueada para arquivos .py!",
-            f"Arquivo: {file_path}\nUse Serena para edição semântica de código Python."
-        )
+        # Allow for non-.py/.tf files
+        print(json.dumps({}))
         return
 
-    # Check if it's a blocked read tool
-    if tool_name in read_tools:
-        block_with_message(
-            f"Tool '{tool_name}' bloqueada para forçar busca semântica!",
-            f"Arquivo/Pattern: {file_path}"
-        )
+    # Check search tools - only block if pattern explicitly targets .py/.tf
+    if tool_name in search_tools:
+        # Check if pattern explicitly targets .py or .tf files
+        pattern = tool_input.get("pattern", "")
+        if pattern.endswith(".py") or pattern.endswith(".tf") or \
+           "*.py" in pattern or "*.tf" in pattern:
+            block_with_message(
+                f"Tool '{tool_name}' bloqueada para busca de arquivos .py/.tf!",
+                f"Pattern: {pattern}"
+            )
+            return
+        # Allow general searches
+        print(json.dumps({}))
         return
 
-    # Check if it's a blocked write/edit tool
-    if tool_name in write_tools:
-        block_with_message(
-            f"Tool '{tool_name}' bloqueada para forçar edição semântica!",
-            f"Arquivo: {file_path}"
-        )
-        return
-
-    # Check if it's a Bash command trying to write files
+    # Check Bash commands writing to .py/.tf files
     if tool_name == "Bash":
         command = tool_input.get("command", "")
         if BASH_WRITE_REGEX.search(command):
-            block_with_message(
-                "Comando Bash de escrita bloqueado!",
-                f"Comando: {command[:100]}..."
-            )
-            return
+            target_file = extract_file_from_bash(command)
+            if target_file and is_enforced_file(target_file):
+                block_with_message(
+                    "Comando Bash de escrita bloqueado para arquivos .py/.tf!",
+                    f"Comando: {command[:100]}..."
+                )
+                return
+        # Allow other Bash commands
+        print(json.dumps({}))
+        return
 
-    # Allow other tools/commands
+    # Allow all other tools
     print(json.dumps({}))
 
 
 def block_with_message(title: str, context: str) -> None:
     """Print block message with proper hook format and exit."""
     serena_alternatives = """
-**Alternativas Serena MCP:**
+**Alternativas Serena MCP (para .py e .tf):**
 
 | Operacao | Tool Serena |
 |----------|-------------|
-| Overview simbolos | `mcp__plugin_systemic-agent-orchestrator_serena__get_symbols_overview` |
-| Buscar simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__find_symbol` |
-| Buscar padrao/regex | `mcp__plugin_systemic-agent-orchestrator_serena__search_for_pattern` |
-| Buscar arquivos | `mcp__plugin_systemic-agent-orchestrator_serena__find_file` |
-| Listar diretorio | `mcp__plugin_systemic-agent-orchestrator_serena__list_dir` |
-| Substituir simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__replace_symbol_body` |
-| Inserir apos simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__insert_after_symbol` |
-| Inserir antes simbolo | `mcp__plugin_systemic-agent-orchestrator_serena__insert_before_symbol` |
+| Ler arquivo | `mcp__plugin_serena_serena__read_file` |
+| Overview simbolos | `mcp__plugin_serena_serena__get_symbols_overview` |
+| Buscar simbolo | `mcp__plugin_serena_serena__find_symbol` |
+| Buscar padrao/regex | `mcp__plugin_serena_serena__search_for_pattern` |
+| Buscar arquivos | `mcp__plugin_serena_serena__find_file` |
+| Listar diretorio | `mcp__plugin_serena_serena__list_dir` |
+| Criar arquivo | `mcp__plugin_serena_serena__create_text_file` |
+| Substituir conteudo | `mcp__plugin_serena_serena__replace_content` |
+| Substituir simbolo | `mcp__plugin_serena_serena__replace_symbol_body` |
+| Inserir apos simbolo | `mcp__plugin_serena_serena__insert_after_symbol` |
+| Inserir antes simbolo | `mcp__plugin_serena_serena__insert_before_symbol` |
 
-**Por que usar Serena?**
+**Por que usar Serena para .py/.tf?**
 - Busca semantica baseada em simbolos (funcoes, classes, metodos)
 - Melhor controle de contexto e menos tokens
 - Refatoracao precisa com edicao por simbolo
