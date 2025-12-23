@@ -28,8 +28,14 @@ BASH_WRITE_REGEX = re.compile("|".join(BASH_WRITE_PATTERNS), re.IGNORECASE)
 
 
 def is_enforced_file(file_path: str) -> bool:
-    """Check if file extension requires Serena tools."""
+    """Check if file extension requires Serena tools.
+    
+    Excludes files in claudecode_plugins directory (plugin development).
+    """
     if not file_path:
+        return False
+    # Allow plugin development in claudecode_plugins
+    if "claudecode_plugins" in file_path or "plugins/" in file_path:
         return False
     return any(file_path.endswith(ext) for ext in ENFORCED_EXTENSIONS)
 
@@ -64,13 +70,13 @@ def main() -> None:
     # Extract file path from tool input
     file_path = tool_input.get("file_path", "") or tool_input.get("pattern", "")
 
-    # Tools that operate on files
-    file_tools = {"Read", "Write", "Edit", "MultiEdit"}
+    # File tools - all allowed (Read, Write, Edit, MultiEdit)
+    file_tools = set()  # No file tools blocked
     
     # Search tools - only block if pattern explicitly targets .py/.tf
     search_tools = {"Search", "Glob", "Grep"}
 
-    # Check file-based tools
+    # Check file-based tools (currently all allowed)
     if tool_name in file_tools:
         if is_enforced_file(file_path):
             block_with_message(

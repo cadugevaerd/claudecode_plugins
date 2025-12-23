@@ -65,9 +65,9 @@
     },
     {
       "name": "systemic-agent-orchestrator",
-      "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Features: 7 commands (discovery, init-agent, add-node, validate-stack, resume-project, check-deps, micro-task); 2 agents (guardrail-enforcer, micro-task-guide); 11 skills; 9 validation hooks including Stop hook for automated test execution with 70% coverage requirement; Serena MCP integration.",
+      "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Features: 8 commands (setup, discovery, init-agent, add-node, validate-stack with auto-fix, resume-project, check-deps, micro-task); 2 agents (guardrail-enforcer, micro-task-guide); 11 skills; 11 hooks including SessionStart with Serena initial_instructions, Stop hooks for tests (70% coverage) and CLAUDE.md validation (max 200 lines); Serena MCP integration.",
       "source": "./plugins/systemic-agent-orchestrator",
-      "version": "2.1.0",
+      "version": "2.3.0",
       "author": {
         "name": "Carlos Araujo"
       },

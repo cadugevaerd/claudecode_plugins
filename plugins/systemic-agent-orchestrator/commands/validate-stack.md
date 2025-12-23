@@ -7,11 +7,12 @@ allowed-tools:
   - mcp__plugin_systemic-agent-orchestrator_serena__find_symbol
   - mcp__plugin_systemic-agent-orchestrator_serena__get_symbols_overview
   - Bash
+  - Skill
 ---
 
 # Validate Agent Stack
 
-Run comprehensive validation against all project guardrails.
+Run comprehensive validation against all project guardrails with automatic fix capability.
 
 ## Arguments
 
@@ -19,7 +20,13 @@ Run comprehensive validation against all project guardrails.
 
 ## Instructions
 
-Perform these validations in order:
+Perform these validations in order, collecting all failures:
+
+### 0. CLAUDE.md Line Count (CRITICAL)
+Check CLAUDE.md file size:
+- Count total lines in CLAUDE.md
+- **FAIL if > 200 lines**
+- Warn if > 180 lines (approaching limit)
 
 ### 1. Functional API Check (CRITICAL)
 Search for prohibited patterns in all .py files:
@@ -125,7 +132,7 @@ cd infra/ && terraform test
 ```
 Run integration tests if `*.tftest.hcl` files exist.
 
-## Output Format
+## Output Format - Initial Validation
 
 ```
 === Stack Validation Report ===
@@ -133,6 +140,7 @@ Project: {project_path}
 Timestamp: {timestamp}
 
 CRITICAL CHECKS:
+[PASS] CLAUDE.md: 145 lines (limit: 200)
 [PASS] Functional API: No prohibited patterns found
 [PASS] Local Prompts: All prompts from Langsmith
 
@@ -163,30 +171,105 @@ TERRAFORM VALIDATION:
 [PASS] Terraform Test: 3/3 tests passed
 
 === Summary ===
-Passed: 14/15
+Passed: 15/16
 Warnings: 1
 Failed: 0
 
 Status: READY FOR DEPLOYMENT
 ```
 
+## Auto-Fix Flow
+
+When failures are detected, automatically trigger fixes using `/systemic-agent-orchestrator:micro-task`:
+
+### Step 1: Collect All Failures
+After running all validations, compile a list of failures with:
+- Check name
+- File path (if applicable)
+- Line number (if applicable)
+- Specific issue description
+- Expected fix
+
+### Step 2: Execute Auto-Fix for Each Failure
+
+For each failure, invoke the micro-task skill:
+
+```
+Skill: systemic-agent-orchestrator:micro-task
+Args: Fix {check_name} issue in {file_path}: {issue_description}
+```
+
+**Auto-fix mapping by check type:**
+
+| Check | Micro-task Description |
+|-------|----------------------|
+| CLAUDE.md > 200 lines | Refactor CLAUDE.md to be under 200 lines, consolidating redundant sections |
+| Functional API | Replace @entrypoint/@task with StateGraph pattern in {file} |
+| Local Prompts | Move inline prompt to Langsmith and use client.pull_prompt in {file} |
+| models.yaml missing | Create models.yaml entry for node {node_name} |
+| File > 500 lines | Split {file} into smaller modules under 500 lines each |
+| Ruff errors | Fix ruff linting errors in {file}: {errors} |
+| Missing imports | Add required imports to {file}: {imports} |
+| State definition | Fix AgentState in src/state.py: {issue} |
+| Coverage < 70% | Add tests for uncovered code in {module} |
+| Terraform format | Run terraform fmt on {file} |
+| TFLint errors | Fix TFLint issue in {file}: {error} |
+| TFSec vulnerabilities | Fix security issue in {file}: {vulnerability} |
+
+### Step 3: Re-validate After Fixes
+
+After all micro-tasks complete, run the full validation again:
+
+```
+=== Re-validation After Auto-Fix ===
+
+Fixes Applied: 3
+1. [FIXED] Functional API in src/nodes/planner.py
+2. [FIXED] Ruff errors in src/utils/helpers.py
+3. [FIXED] Missing tests for src/nodes/executor.py
+
+Re-running validation...
+
+[Results of second validation pass]
+
+=== Final Status ===
+Original Failures: 3
+Fixed: 3
+Remaining: 0
+
+Status: READY FOR DEPLOYMENT
+```
+
+### Step 4: Handle Persistent Failures
+
+If any issues remain after auto-fix:
+
+```
+=== Persistent Issues (Manual Intervention Required) ===
+
+1. [FAIL] TFSec: S3 bucket lacks encryption
+   File: infra/storage.tf:45
+   Reason: Auto-fix could not determine encryption key
+   Action: Manually add aws_kms_key resource and reference in bucket
+
+2. [FAIL] Coverage: src/nodes/complex.py at 45%
+   Reason: Complex branching logic requires manual test design
+   Action: Write tests for handle_edge_cases() and process_special_input()
+
+Please fix these manually and run /systemic-agent-orchestrator:validate-stack again.
+```
+
 ## Exit Codes
 
-- All passed: Display success message
+- All passed (first run): Display success message
+- All passed (after fix): Display fixes applied and success
 - Warnings only: Display warnings with suggestions
-- Any failures: Display failures with fix instructions, DO NOT PROCEED
+- Persistent failures: Display what could not be auto-fixed with manual instructions
 
-## Failure Actions
+## Important Notes
 
-When validation fails:
-1. **Coverage < 70%**: List uncovered functions, suggest tests to write
-2. **TFSec HIGH/CRITICAL**: Show exact resource and remediation
-3. **TFLint errors**: Show exact line and fix
-4. **Functional API found**: Show file:line and correct pattern
-
-## Next Steps
-
-Based on results, suggest:
-- For failures: Specific fix instructions (MUST FIX BEFORE PROCEEDING)
-- For warnings: Improvement suggestions
-- For success: Deployment readiness confirmation
+1. **Automatic execution**: Fixes are applied without user confirmation
+2. **Idempotency**: Running validation multiple times is safe
+3. **Atomic fixes**: Each micro-task fixes one specific issue
+4. **Re-validation**: Always re-run full validation after fixes
+5. **Fail-safe**: If a fix introduces new issues, they will be caught in re-validation

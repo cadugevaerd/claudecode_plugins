@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat:*)",
+      "mcp__plugin_serena_serena__activate_project",
+      "mcp__plugin_serena_serena__replace_content",
+      "Bash(uv run:*)",
+      "Skill(plugin-dev:plugin-structure)",
+      "Skill(plugin-dev:command-development)",
+      "mcp__plugin_serena_serena__write_memory",
+      "mcp__plugin_serena_serena__list_dir",
+      "mcp__plugin_serena_serena__read_file",
+      "WebFetch(domain:docs.composio.dev)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "mcp__plugin_serena_serena__search_for_pattern",
+      "mcp__plugin_serena_serena__list_memories",
+      "mcp__plugin_serena_serena__initial_instructions",
+      "mcp__plugin_serena_serena__check_onboarding_performed",
+      "mcp__plugin_serena_serena__read_memory",
+      "mcp__plugin_serena_serena__create_text_file",
+      "WebFetch(domain:oraios.github.io)",
+      "Skill(plugin-dev:mcp-integration)",
+      "mcp__plugin_systemic-agent-orchestrator_serena__list_dir",
+      "mcp__plugin_systemic-agent-orchestrator_serena__search_for_pattern",
+      "mcp__plugin_systemic-agent-orchestrator_serena__get_symbols_overview",
+      "mcp__plugin_systemic-agent-orchestrator_serena__replace_symbol_body",
+      "mcp__plugin_systemic-agent-orchestrator_serena__find_file"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "BLOQUEADO: Use Serena MCP!\n\nTool bloqueada. Alternativas:\n- Ler: mcp__plugin_serena_serena__read_file\n- Criar: mcp__plugin_serena_serena__create_text_file\n- Editar: mcp__plugin_serena_serena__replace_content"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "plugin-dev@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "systemic-agent-orchestrator": true
+  }
+}
