@@ -1,0 +1,33 @@
+"""Agent state definition.
+
+This module defines the state schema for the LangGraph agent.
+All nodes receive and return partial updates to this state.
+"""
+from typing import TypedDict, Annotated
+from operator import add
+
+
+class AgentState(TypedDict):
+    """State schema for the agent workflow.
+    
+    Attributes:
+        messages: Conversation history. Uses add reducer to accumulate messages.
+        current_step: Current workflow phase/step name.
+        context: Retrieved context or additional data for processing.
+        errors: List of errors encountered during processing.
+    """
+    # Accumulating field: new messages are appended to existing
+    messages: Annotated[list, add]
+    
+    # Replacing fields: each update overwrites previous value
+    current_step: str
+    context: dict
+    errors: list[str]
+
+
+# Optional: Add more specific state types for subgraphs
+class DocumentState(TypedDict):
+    """State for document processing subgraph."""
+    documents: list
+    summaries: Annotated[list, add]
+    metadata: dict

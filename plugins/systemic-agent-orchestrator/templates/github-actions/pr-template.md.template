@@ -1,0 +1,44 @@
+## Description
+
+Brief description of changes.
+
+## Type of Change
+
+- [ ] Bug fix (non-breaking change that fixes an issue)
+- [ ] New feature (non-breaking change that adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to change)
+- [ ] Infrastructure change (Terraform)
+- [ ] Documentation update
+
+## Checklist
+
+### Code Quality
+- [ ] No Functional API usage (@entrypoint, @task)
+- [ ] All prompts stored in Langsmith (no local prompts)
+- [ ] All models configured in models.yaml
+- [ ] All Python files under 500 lines
+- [ ] Ruff linting passes
+
+### Testing
+- [ ] Unit tests added/updated
+- [ ] Test coverage >= 70%
+- [ ] Tests pass locally
+
+### Infrastructure (if applicable)
+- [ ] Terraform validate passes
+- [ ] Terraform plan reviewed
+- [ ] Tags follow UPPERCASE convention
+- [ ] Log retention set correctly
+
+### Documentation
+- [ ] README updated (if needed)
+- [ ] Langsmith prompts documented
+- [ ] models.yaml comments added
+
+## Related Issues
+
+Fixes #(issue number)
+
+## Screenshots (if applicable)
+
+## Notes for Reviewers

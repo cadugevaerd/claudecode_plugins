@@ -1,0 +1,44 @@
+# models.yaml - LLM Configuration for Agent Nodes
+# Each node that uses an LLM MUST be configured here.
+#
+# Valid providers:
+#   - anthropic: Direct Anthropic API
+#   - anthropic_bedrock: AWS Bedrock
+#   - openai: OpenAI API
+#   - google_genai: Google AI
+#   - xai: xAI Grok
+#
+# Required fields: model, temperature
+# Optional fields: max_tokens, top_p, timeout
+
+nodes:
+  # ---------------------------------------------------------------------------
+  # Node: planner
+  # Orchestrates workflow decisions with deterministic routing
+  # Temperature 0 for consistent, predictable routing
+  # ---------------------------------------------------------------------------
+  planner:
+    model: "anthropic:claude-3-5-sonnet-20241022"
+    temperature: 0.0
+    max_tokens: 2048
+
+  # ---------------------------------------------------------------------------
+  # Node: executor
+  # Performs actions and tool calls based on planner decisions
+  # Slightly higher temperature for natural responses
+  # ---------------------------------------------------------------------------
+  executor:
+    model: "anthropic:claude-3-5-sonnet-20241022"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+  # ---------------------------------------------------------------------------
+  # Node: reviewer
+  # Validates and critiques outputs before final response
+  # Temperature 0 for deterministic validation
+  # ---------------------------------------------------------------------------
+  reviewer:
+    model: "anthropic:claude-3-5-sonnet-20241022"
+    temperature: 0.0
+    max_tokens: 2048

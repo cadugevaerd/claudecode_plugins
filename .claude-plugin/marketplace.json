@@ -62,6 +62,17 @@
       },
       "category": "ai",
       "tags": ["composio", "ai-agents", "integrations", "oauth", "authentication", "toolkits", "mcp", "triggers", "webhooks", "sdk", "python", "typescript", "openai", "anthropic", "langchain", "crewai", "github", "slack", "gmail", "notion"]
+    },
+    {
+      "name": "systemic-agent-orchestrator",
+      "description": "Development orchestrator for production-ready AI Agents using LangGraph Graph API, AWS Bedrock Agent Core, Terraform, and Langsmith. Enforces architectural guardrails (Graph API only, Langsmith prompts, models.yaml), validates stack consistency, and guides structured development workflows. Features: 6 commands (discovery, init-agent, add-node, validate-stack, resume-project, check-deps); 1 guardrail agent; 11 skills covering LangGraph, AWS infrastructure, Terraform, CI/CD, and monitoring; 8 validation hooks; Serena MCP integration for semantic code operations and persistent memory.",
+      "source": "./plugins/systemic-agent-orchestrator",
+      "version": "2.0.0",
+      "author": {
+        "name": "Carlos Araujo"
+      },
+      "category": "ai",
+      "tags": ["langgraph", "ai-agents", "bedrock", "terraform", "guardrails", "langsmith", "aws", "orchestrator", "graph-api", "aurora-serverless", "step-functions", "ci-cd", "monitoring", "serena", "mcp", "production-ready", "enterprise", "state-management", "hybrid-workflow"]
     }
   ]
 }

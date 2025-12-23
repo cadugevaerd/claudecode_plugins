@@ -1,0 +1,74 @@
+# Input variables for {project_name} agent infrastructure
+
+# General
+variable "project_name" {
+  description = "Name of the agent project"
+  type        = string
+}
+
+variable "environment" {
+  description = "Deployment environment (dev, homolog, prod)"
+  type        = string
+  validation {
+    condition     = contains(["dev", "homolog", "prod"], var.environment)
+    error_message = "Environment must be dev, homolog, or prod."
+  }
+}
+
+variable "aws_region" {
+  description = "AWS region"
+  type        = string
+  default     = "us-east-1"
+}
+
+# Aurora Serverless v2
+variable "aurora_min_capacity" {
+  description = "Minimum Aurora capacity units"
+  type        = number
+  default     = 0.5
+}
+
+variable "aurora_max_capacity" {
+  description = "Maximum Aurora capacity units"
+  type        = number
+  default     = 2
+}
+
+# ECS Fargate
+variable "ecs_cpu" {
+  description = "CPU units for ECS task (256, 512, 1024, 2048, 4096)"
+  type        = number
+  default     = 256
+}
+
+variable "ecs_memory" {
+  description = "Memory for ECS task in MB"
+  type        = number
+  default     = 512
+}
+
+# API Gateway
+variable "allowed_origins" {
+  description = "CORS allowed origins"
+  type        = list(string)
+  default     = ["*"]
+}
+
+variable "throttling_burst" {
+  description = "API Gateway throttling burst limit"
+  type        = number
+  default     = 100
+}
+
+variable "throttling_rate" {
+  description = "API Gateway throttling rate limit"
+  type        = number
+  default     = 50
+}
+
+# Secrets (passed at runtime, not stored in .tfvars)
+variable "langsmith_api_key" {
+  description = "Langsmith API key"
+  type        = string
+  sensitive   = true
+}

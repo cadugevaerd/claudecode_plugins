@@ -1,0 +1,20 @@
+# Development environment configuration
+
+environment  = "dev"
+project_name = "{project_name}"
+aws_region   = "us-east-1"
+
+# Aurora Serverless v2 - minimal for dev
+aurora_min_capacity = 0.5
+aurora_max_capacity = 2
+
+# ECS Fargate - minimal for dev
+ecs_cpu    = 256
+ecs_memory = 512
+
+# API Gateway - relaxed throttling for dev
+throttling_burst = 100
+throttling_rate  = 50
+
+# CORS - localhost for development
+allowed_origins = ["http://localhost:3000", "http://localhost:8000"]

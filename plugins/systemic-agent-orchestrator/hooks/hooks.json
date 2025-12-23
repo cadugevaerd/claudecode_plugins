@@ -1,0 +1,71 @@
+{
+  "description": "Guardrail hooks for Systemic Agent Orchestrator - enforces Graph API, models.yaml, Langsmith prompts, and code quality standards",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Read|MultiEdit|Bash|Search|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/enforce_serena_tools.py",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/validate_functional_api.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/validate_local_prompts.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/validate_file_size.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/validate_models_yaml.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/run_ruff.py",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/check_uv_installed.py",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "uv run ${CLAUDE_PLUGIN_ROOT}/hooks/check_mcp_dependencies.py",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

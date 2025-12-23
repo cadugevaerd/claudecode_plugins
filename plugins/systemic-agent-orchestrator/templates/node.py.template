@@ -1,0 +1,38 @@
+"""Node: {node_name} - {purpose}
+
+This node {description}.
+"""
+from langsmith import Client
+from ..state import AgentState
+from ..config import get_model_for_node
+
+# Initialize Langsmith client for prompt retrieval
+client = Client()
+
+
+def {node_name}_node(state: AgentState) -> dict:
+    """{purpose}
+    
+    Args:
+        state: Current agent state with messages and context.
+        
+    Returns:
+        Partial state update with new messages or data.
+    """
+    # Load model configuration from models.yaml
+    model = get_model_for_node("{node_name}")
+    
+    # Pull prompt from Langsmith (NOT defined locally)
+    prompt = client.pull_prompt("my-org/{node_name}-prompt")
+    
+    # Format prompt with state data
+    formatted = prompt.format(
+        messages=state['messages'],
+        context=state.get('context', {}),
+    )
+    
+    # Invoke model
+    response = model.invoke(formatted)
+    
+    # Return partial state update
+    return {"messages": [response]}

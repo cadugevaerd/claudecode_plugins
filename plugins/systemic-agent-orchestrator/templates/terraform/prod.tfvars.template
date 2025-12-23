@@ -1,0 +1,20 @@
+# Production environment configuration
+
+environment  = "prod"
+project_name = "{project_name}"
+aws_region   = "us-east-1"
+
+# Aurora Serverless v2 - production scale
+aurora_min_capacity = 0.5
+aurora_max_capacity = 8
+
+# ECS Fargate - production capacity
+ecs_cpu    = 1024
+ecs_memory = 2048
+
+# API Gateway - stricter throttling for production
+throttling_burst = 500
+throttling_rate  = 200
+
+# CORS - production domains only
+allowed_origins = ["https://app.example.com"]

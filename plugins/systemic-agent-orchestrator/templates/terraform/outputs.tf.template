@@ -1,0 +1,42 @@
+# Output values for {project_name} agent
+
+output "api_endpoint" {
+  description = "API Gateway endpoint URL"
+  value       = module.api.endpoint_url
+}
+
+output "aurora_cluster_arn" {
+  description = "Aurora cluster ARN for Data API"
+  value       = module.database.cluster_arn
+}
+
+output "aurora_secret_arn" {
+  description = "Aurora secret ARN for authentication"
+  value       = module.database.secret_arn
+  sensitive   = true
+}
+
+output "ecr_repository_url" {
+  description = "ECR repository URL for agent image"
+  value       = module.agent_runtime.ecr_repository_url
+}
+
+output "ecs_cluster_name" {
+  description = "ECS cluster name"
+  value       = module.agent_runtime.cluster_name
+}
+
+output "ecs_service_name" {
+  description = "ECS service name"
+  value       = module.agent_runtime.service_name
+}
+
+output "cloudwatch_log_group" {
+  description = "CloudWatch log group for agent logs"
+  value       = module.monitoring.agent_log_group
+}
+
+output "ssm_parameter_prefix" {
+  description = "SSM parameter prefix for this agent"
+  value       = "/${var.environment}/agent/${var.project_name}"
+}

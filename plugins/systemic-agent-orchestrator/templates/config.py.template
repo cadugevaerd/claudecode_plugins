@@ -1,0 +1,100 @@
+"""Configuration loader for models.yaml.
+
+This module provides utilities to load LLM configurations
+from models.yaml and instantiate the appropriate model classes.
+"""
+import yaml
+from pathlib import Path
+from functools import lru_cache
+from typing import Any
+
+
+@lru_cache(maxsize=1)
+def load_models_config() -> dict:
+    """Load and cache models.yaml configuration.
+    
+    Returns:
+        Dictionary with models configuration.
+        
+    Raises:
+        FileNotFoundError: If models.yaml doesn't exist.
+        yaml.YAMLError: If YAML is invalid.
+    """
+    config_path = Path(__file__).parent.parent / "config" / "models.yaml"
+    with open(config_path) as f:
+        return yaml.safe_load(f)
+
+
+def get_node_config(node_name: str) -> dict:
+    """Get configuration for a specific node.
+    
+    Args:
+        node_name: Name of the node as defined in models.yaml.
+        
+    Returns:
+        Dictionary with model, temperature, and optional fields.
+        
+    Raises:
+        KeyError: If node not found in configuration.
+    """
+    config = load_models_config()
+    if node_name not in config['nodes']:
+        raise KeyError(f"Node '{node_name}' not found in models.yaml")
+    return config['nodes'][node_name]
+
+
+def get_model_for_node(node_name: str) -> Any:
+    """Get configured model instance for a specific node.
+    
+    Args:
+        node_name: Name of the node as defined in models.yaml.
+        
+    Returns:
+        Instantiated chat model with configured parameters.
+        
+    Raises:
+        ValueError: If provider is not supported.
+    """
+    node_config = get_node_config(node_name)
+    
+    provider, model_name = node_config['model'].split(':')
+    temperature = node_config['temperature']
+    max_tokens = node_config.get('max_tokens')
+    
+    if provider == 'anthropic':
+        from langchain_anthropic import ChatAnthropic
+        return ChatAnthropic(
+            model=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+    elif provider == 'anthropic_bedrock':
+        from langchain_aws import ChatBedrockConverse
+        return ChatBedrockConverse(
+            model=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+    elif provider == 'openai':
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+    elif provider == 'google_genai':
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        return ChatGoogleGenerativeAI(
+            model=model_name,
+            temperature=temperature,
+            max_output_tokens=max_tokens
+        )
+    elif provider == 'xai':
+        from langchain_xai import ChatXAI
+        return ChatXAI(
+            model=model_name,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+    else:
+        raise ValueError(f"Unsupported provider: {provider}")
