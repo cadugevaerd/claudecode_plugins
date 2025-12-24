@@ -46,6 +46,142 @@ Micro-tasks are LIMITED to:
 
 If task exceeds these limits, STOP and suggest breaking into smaller tasks.
 
+## Infrastructure Context (Production Requirements)
+
+**⚠️ CRITICAL: All agents run on AgentCore Runtime in production.**
+
+### AgentCore Runtime Rules
+
+1. **Runtime Environment**: Every agent will be deployed and executed in the **Bedrock AgentCore Runtime**
+   - Entry point must be `main.py` with `create_agent()` function
+   - Use `AgentCoreRuntime` wrapper for the graph
+   - Configure `RuntimeConfig` for dev/prod environments
+
+2. **Memory via MCP Gateway ONLY**: Any task involving memory operations **MUST use tools registered in the MCP Gateway**
+   - ❌ **NEVER** implement memory directly in nodes
+   - ❌ **NEVER** access databases directly from agent code
+   - ✅ **ALWAYS** use `MCPGateway.register_tool()` for memory operations
+   - ✅ **ALWAYS** define memory tools as `@tool` decorated functions
+
+3. **Memory Architecture**:
+
+   ```text
+   Node → calls tool → MCP Gateway → Memory Storage
+   ```
+
+   - Short-term memory: Session-based, managed by AgentCore
+   - Long-term memory: Must be a registered tool in MCP Gateway
+   - User profiles: Access via `get_user_profile` tool
+   - Entity storage: Access via `store_entity` / `retrieve_entity` tools
+
+4. **Systemic Persistence (Aurora Serverless + DATA_API)**:
+   - All systemic data (non-memory) uses **Aurora Serverless v2**
+   - All database operations MUST use **DATA_API** (RDS Data API)
+   - ❌ **NEVER** use direct psycopg2/pg8000 connections
+   - ✅ **ALWAYS** use `boto3.client('rds-data')` for queries
+   - Connection strings stored in SSM Parameter Store
+
+### Example: Memory Tool Pattern
+
+```python
+# ✅ CORRECT: Memory as MCP Gateway Tool
+from agent_core.tools import AgentCoreTool
+from langchain_core.tools import tool
+
+@tool
+def store_user_preference(user_id: str, key: str, value: str) -> str:
+    """Store a user preference in long-term memory."""
+    # Implementation via Aurora/DynamoDB
+    return f"Stored {key}={value} for user {user_id}"
+
+@tool
+def retrieve_user_context(user_id: str) -> dict:
+    """Retrieve user context from long-term memory."""
+    # Implementation via Aurora/DynamoDB
+    return {"preferences": {...}, "history": [...]}
+
+# Register with gateway
+gateway.register_tool(store_user_preference)
+gateway.register_tool(retrieve_user_context)
+```
+
+```python
+# ❌ WRONG: Direct memory access in node
+def planner_node(state: AgentState) -> dict:
+    # WRONG - direct DB access
+    conn = psycopg2.connect(...)  # ❌ NEVER DO THIS
+    user_data = conn.execute("SELECT * FROM users...")  # ❌
+
+    # WRONG - in-memory storage
+    global user_cache  # ❌ NEVER DO THIS
+    user_cache[user_id] = data  # ❌
+```
+
+### Example: Systemic Persistence (DATA_API)
+
+```python
+# ✅ CORRECT: Using Aurora DATA_API
+import boto3
+
+rds_data = boto3.client('rds-data')
+
+@tool
+def query_system_data(entity_type: str, entity_id: str) -> dict:
+    """Query systemic data from Aurora via DATA_API."""
+    response = rds_data.execute_statement(
+        resourceArn='arn:aws:rds:us-east-1:123456789:cluster:my-cluster',
+        secretArn='arn:aws:secretsmanager:us-east-1:123456789:secret:my-secret',
+        database='agent_db',
+        sql='SELECT * FROM entities WHERE type = :type AND id = :id',
+        parameters=[
+            {'name': 'type', 'value': {'stringValue': entity_type}},
+            {'name': 'id', 'value': {'stringValue': entity_id}},
+        ]
+    )
+    return response['records']
+
+@tool
+def store_system_data(entity_type: str, entity_id: str, data: dict) -> str:
+    """Store systemic data to Aurora via DATA_API."""
+    rds_data.execute_statement(
+        resourceArn='arn:aws:rds:us-east-1:123456789:cluster:my-cluster',
+        secretArn='arn:aws:secretsmanager:us-east-1:123456789:secret:my-secret',
+        database='agent_db',
+        sql='INSERT INTO entities (type, id, data) VALUES (:type, :id, :data)',
+        parameters=[
+            {'name': 'type', 'value': {'stringValue': entity_type}},
+            {'name': 'id', 'value': {'stringValue': entity_id}},
+            {'name': 'data', 'value': {'stringValue': json.dumps(data)}},
+        ]
+    )
+    return f"Stored {entity_type}/{entity_id}"
+```
+
+```python
+# ❌ WRONG: Direct psycopg2 connection
+import psycopg2  # ❌ NEVER import this
+
+conn = psycopg2.connect(
+    host="my-aurora-cluster.cluster-xyz.us-east-1.rds.amazonaws.com",
+    database="agent_db",
+    user="admin",
+    password="secret"  # ❌ Hardcoded credentials!
+)
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM entities")  # ❌ Direct connection
+```
+
+### Infrastructure Checklist
+
+Before implementing any micro-task, verify:
+
+- [ ] Does this task involve memory? → Must use MCP Gateway tool
+- [ ] Does this task need user context? → Use `retrieve_user_context` tool
+- [ ] Does this task store data? → Use appropriate MCP Gateway tool
+- [ ] Does this task need database access? → Must use DATA_API (rds-data)
+- [ ] Is the code compatible with AgentCore Runtime?
+- [ ] Are ARNs stored in SSM/Secrets Manager (not hardcoded)?
+
 ## Workflow
 
 ### 0. Load Serena Manual (REQUIRED - First Step)
@@ -326,11 +462,79 @@ aws___search_documentation(search_phrase="Bedrock invoke model", topics=["refere
 
 All micro-tasks MUST follow:
 
+### Code Quality
+
 1. **Graph API Only**: No @entrypoint, @task decorators
 2. **Langsmith Prompts**: No inline prompt strings
 3. **File Size**: Keep files under 500 lines
 4. **Coverage**: New code needs tests (aim for 70%+)
 5. **Symbolic Editing**: Use Serena tools, not raw file edits
+
+### Infrastructure (AgentCore)
+
+1. **AgentCore Runtime**: All code must be compatible with Bedrock AgentCore Runtime
+2. **Memory via MCP Gateway**: Any memory operation MUST be implemented as a tool in MCP Gateway
+3. **No Direct DB Access**: Never access databases directly from nodes
+4. **Entry Point**: Project must have `main.py` with `create_agent()` function
+5. **DATA_API Only**: All Aurora Serverless access MUST use RDS Data API (`boto3.client('rds-data')`)
+6. **No Hardcoded Secrets**: ARNs, connection strings stored in SSM/Secrets Manager
+
+## Evaluation Criteria
+
+Before marking a micro-task as complete, verify these criteria:
+
+### Code Quality Evaluation
+
+| Criterion  | Check                                     | Pass/Fail |
+| ---------- | ----------------------------------------- | --------- |
+| Graph API  | No `@entrypoint`, `@task` decorators      |           |
+| Prompts    | Uses `hub.pull()` or `client.pull_prompt()` |           |
+| File Size  | Modified files < 500 lines                |           |
+| Tests      | New code has tests (70%+ coverage)        |           |
+
+### Infrastructure Evaluation (AgentCore)
+
+| Criterion           | Check                                                  | Pass/Fail |
+| ------------------- | ------------------------------------------------------ | --------- |
+| Memory Pattern      | Memory ops use MCP Gateway tools                       |           |
+| No Direct DB        | No `psycopg2`, `pg8000`, direct connections in nodes   |           |
+| Tool Registration   | Memory tools use `@tool` + `gateway.register_tool()`   |           |
+| Runtime Compatible  | Code works with `AgentCoreRuntime` wrapper             |           |
+| DATA_API Usage      | Aurora access uses `boto3.client('rds-data')`          |           |
+| Secrets Management  | ARNs from SSM/Secrets Manager, no hardcoded values     |           |
+
+### Evaluation Report Format
+
+Add to the micro-task report:
+
+```text
+=== Infrastructure Evaluation ===
+[PASS] Memory via MCP Gateway: Uses store_user_preference tool
+[PASS] No Direct DB Access: No database imports in node code
+[PASS] Tool Registration: All memory tools registered in gateway
+[PASS] Runtime Compatible: Entry point follows AgentCore pattern
+[PASS] DATA_API Usage: Uses boto3.client('rds-data') for Aurora
+[PASS] Secrets Management: ARNs loaded from SSM Parameter Store
+
+AgentCore Compliance: ✅ APPROVED
+```
+
+Or if failing:
+
+```text
+=== Infrastructure Evaluation ===
+[FAIL] Memory via MCP Gateway: Direct psycopg2 connection in planner_node
+[PASS] No Direct DB Access: -
+[FAIL] Tool Registration: Memory function not decorated with @tool
+[FAIL] DATA_API Usage: Uses psycopg2.connect() instead of rds-data
+[FAIL] Secrets Management: Hardcoded database password in code
+
+AgentCore Compliance: ❌ REQUIRES FIXES
+Fixes Required:
+1. Convert memory access to MCP Gateway tool pattern
+2. Replace psycopg2 with boto3.client('rds-data')
+3. Move credentials to SSM/Secrets Manager
+```
 
 ## When to Escalate
 

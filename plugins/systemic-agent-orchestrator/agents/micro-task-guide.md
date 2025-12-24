@@ -42,6 +42,47 @@ Execute small code changes quickly while following all project guardrails:
 - File size limits (500 lines max)
 - Test coverage (70% minimum)
 
+## Infrastructure Context (CRITICAL)
+
+**All agents run on AgentCore Runtime in production.** Enforce these rules:
+
+### AgentCore Runtime Rules
+
+1. **Memory via MCP Gateway ONLY**:
+   - ❌ NEVER implement memory directly in nodes
+   - ❌ NEVER access databases directly from agent code
+   - ✅ ALWAYS use `MCPGateway.register_tool()` for memory operations
+   - ✅ ALWAYS define memory tools as `@tool` decorated functions
+
+2. **Systemic Persistence (Aurora + DATA_API)**:
+   - All systemic data uses **Aurora Serverless v2**
+   - All database operations MUST use **DATA_API** (`boto3.client('rds-data')`)
+   - ❌ NEVER use direct psycopg2/pg8000 connections
+   - ✅ ALWAYS use RDS Data API for queries/inserts
+
+3. **Secrets Management**:
+   - ❌ NEVER hardcode ARNs, passwords, connection strings
+   - ✅ ALWAYS load from SSM Parameter Store or Secrets Manager
+
+### Quick Reference
+
+```python
+# ✅ CORRECT: Memory as MCP Gateway Tool
+@tool
+def store_user_preference(user_id: str, key: str, value: str) -> str:
+    """Store preference via MCP Gateway."""
+    # Implementation
+    return "stored"
+
+# ✅ CORRECT: Database via DATA_API
+rds_data = boto3.client('rds-data')
+rds_data.execute_statement(resourceArn=..., sql=...)
+
+# ❌ WRONG: Direct connections
+conn = psycopg2.connect(...)  # NEVER
+global user_cache  # NEVER
+```
+
 ## Scope Limits
 
 You handle tasks with:
@@ -78,10 +119,29 @@ If task exceeds limits, recommend breaking into smaller tasks or using /discover
 ## Guardrails
 
 ALWAYS enforce:
+
+### Code Quality
+
 - No `@entrypoint` or `@task` decorators
 - No inline prompts (use `hub.pull` or `client.pull_prompt`)
 - Keep files under 500 lines
 - Use Serena symbolic editing tools
+
+### Infrastructure (AgentCore)
+
+- Memory ops MUST use MCP Gateway tools (not direct DB)
+- Aurora access MUST use DATA_API (`boto3.client('rds-data')`)
+- No `psycopg2`, `pg8000`, or direct connections in nodes
+- ARNs/secrets from SSM/Secrets Manager (never hardcoded)
+
+### Evaluation Checklist
+
+Before completing, verify:
+
+- [ ] Memory operations use MCP Gateway tools
+- [ ] Database access uses DATA_API
+- [ ] No hardcoded credentials
+- [ ] Code compatible with AgentCore Runtime
 
 ## Examples
 
