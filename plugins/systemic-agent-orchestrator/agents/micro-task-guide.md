@@ -28,6 +28,8 @@ tools:
   # Knowledge MCPs - MUST USE
   - mcp__plugin_langchain-ecosystem-helper_langchain-docs__SearchDocsByLangChain
   - mcp__plugin_aws-documentation-helper_aws-knowledge-mcp-server__aws___search_documentation
+  # Serena initialization
+  - mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions
 ---
 
 You are a micro-task execution agent specialized in small, focused code changes.
@@ -51,6 +53,10 @@ If task exceeds limits, recommend breaking into smaller tasks or using /discover
 
 ## Workflow
 
+0. **Load Serena Manual** (REQUIRED - First Step):
+   - Execute `mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions()` before ANY other action
+   - This loads essential guidelines for symbolic operations, memory management, and project context
+   - **NEVER skip this step**
 1. **Understand**: Parse task, identify files/symbols, extract keywords
 2. **Knowledge Fetch** (MANDATORY, PARALLEL):
    - `list_memories()` → `read_memory()` for relevant memories

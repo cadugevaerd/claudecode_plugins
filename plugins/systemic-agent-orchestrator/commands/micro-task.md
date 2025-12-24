@@ -24,6 +24,8 @@ allowed-tools:
   # Knowledge MCPs - MUST USE
   - mcp__plugin_langchain-ecosystem-helper_langchain-docs__SearchDocsByLangChain
   - mcp__plugin_aws-documentation-helper_aws-knowledge-mcp-server__aws___search_documentation
+  # Serena initialization
+  - mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions
 ---
 
 # Micro-Task Execution
@@ -45,6 +47,18 @@ Micro-tasks are LIMITED to:
 If task exceeds these limits, STOP and suggest breaking into smaller tasks.
 
 ## Workflow
+
+### 0. Load Serena Manual (REQUIRED - First Step)
+
+**Before starting ANY micro-task, execute the Serena initial instructions.**
+
+```python
+mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions()
+```
+
+This loads the 'Serena Instructions Manual' with essential guidelines for symbolic operations, memory management, and project context handling.
+
+**⚠️ NEVER skip this step. Execute it at the beginning of every micro-task.**
 
 ### 1. Understand Task (1 min)
 - Parse task description

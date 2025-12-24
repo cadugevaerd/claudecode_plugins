@@ -10,6 +10,7 @@ allowed-tools:
   - mcp__plugin_systemic-agent-orchestrator_serena__check_onboarding_performed
   - mcp__plugin_systemic-agent-orchestrator_serena__onboarding
   - mcp__plugin_systemic-agent-orchestrator_serena__write_memory
+  - mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions
 ---
 
 # Setup Systemic Agent Orchestrator
@@ -23,6 +24,22 @@ Automated setup that installs all dependencies and creates project structure for
 ## Instructions
 
 Execute all steps automatically. Skip steps where dependencies are already installed.
+
+### Step 0: Load Serena Manual (REQUIRED)
+
+**Before starting ANY task, execute the Serena initial instructions.**
+
+```python
+mcp__plugin_systemic-agent-orchestrator_serena__initial_instructions()
+```
+
+This loads the 'Serena Instructions Manual' with essential information on how to use the Serena toolbox correctly. The manual contains critical guidelines for:
+
+- Symbolic operations (find_symbol, replace_symbol_body, etc.)
+- Memory management
+- Project context handling
+
+**⚠️ NEVER skip this step. Execute it at the beginning of every setup session.**
 
 ### Step 1: Check and Install uv
 
