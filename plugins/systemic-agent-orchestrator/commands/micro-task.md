@@ -50,6 +50,37 @@ If task exceeds these limits, STOP and suggest breaking into smaller tasks.
 
 **⚠️ CRITICAL: All agents run on AgentCore Runtime in production.**
 
+### Data Types: Agent Memory vs Systemic Data
+
+**Understanding the difference is CRITICAL for choosing the right access pattern.**
+
+| Aspect | Agent Memory | Systemic Data |
+| ------ | ------------ | ------------- |
+| **What** | User/session context managed by AgentCore | Business/operational data of the application |
+| **Examples** | User preferences, conversation history, user profile, mentioned entities | Products, orders, configurations, logs, business entities |
+| **Persistence** | AgentCore Memory Service | Aurora Serverless v2 |
+| **Access** | MCP Gateway tools | DATA_API (`boto3.client('rds-data')`) |
+| **Scope** | Per-user, per-session | Application-wide |
+
+**Decision Rule:**
+
+- If it's about **the user or the conversation** → **Agent Memory** (MCP Gateway)
+- If it's about **the business or system** → **Systemic Data** (DATA_API)
+
+**Concrete Examples:**
+
+```python
+# AGENT MEMORY - User/conversation context
+store_user_preference(user_id, "response_style", "concise")  # User prefers short answers
+store_entity(user_id, "travel_date", "January 2025")         # User mentioned travel plans
+retrieve_user_context(user_id)                                # Get user profile + history
+
+# SYSTEMIC DATA - Business/operational data
+query_products(category="electronics")                        # Query product catalog
+create_order(user_id, items=[...])                           # Create business transaction
+get_system_config("feature_flags")                           # Application configuration
+```
+
 ### AgentCore Runtime Rules
 
 1. **Runtime Environment**: Every agent will be deployed and executed in the **Bedrock AgentCore Runtime**

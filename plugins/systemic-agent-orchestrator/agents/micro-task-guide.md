@@ -46,6 +46,18 @@ Execute small code changes quickly while following all project guardrails:
 
 **All agents run on AgentCore Runtime in production.** Enforce these rules:
 
+### Data Types: Agent Memory vs Systemic Data
+
+| Type | What | Access |
+| ---- | ---- | ------ |
+| **Agent Memory** | User/session context (preferences, history, profile) | MCP Gateway tools |
+| **Systemic Data** | Business/operational data (products, orders, configs) | DATA_API |
+
+**Decision Rule:**
+
+- **User/conversation** → Agent Memory (MCP Gateway)
+- **Business/system** → Systemic Data (DATA_API)
+
 ### AgentCore Runtime Rules
 
 1. **Memory via MCP Gateway ONLY**:
