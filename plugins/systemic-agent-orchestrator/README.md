@@ -10,8 +10,9 @@ This plugin enforces architectural guardrails and best practices for building en
 - **Langsmith Prompts**: All prompts stored in Langsmith, not in code
 - **models.yaml**: Centralized LLM configuration
 - **Code Quality**: 500-line limit, ruff linting, proper structure
-- **Serena Integration**: Semantic code operations and persistent memory
 - **AWS Infrastructure**: Full Terraform patterns for production deployment
+
+> **Note**: For Serena MCP integration (symbolic code operations and persistent memory), install the separate [serena-mcp-helper](../serena-mcp-helper) plugin.
 
 ---
 
@@ -29,7 +30,6 @@ This plugin enforces architectural guardrails and best practices for building en
 | `validate_file_size` | Enforce 500-line limit | Block |
 | `run_ruff` | Linting check | Warn |
 | `check_mcp_dependencies` | Verify required MCPs | Info |
-| `enforce_serena_tools` | Suggest Serena tools | Info |
 
 #### Skills
 
@@ -37,7 +37,6 @@ This plugin enforces architectural guardrails and best practices for building en
 - **models-yaml-config**: LLM configuration, providers, loading patterns
 - **hybrid-workflow-pattern**: Defined steps + LLM decisions architecture
 - **langsmith-prompts**: Prompt versioning, retrieval, best practices
-- **serena-onboarding**: Memory management, symbolic code operations
 
 ### Phase 2: AWS + Terraform (Complete)
 
@@ -112,7 +111,10 @@ claude plugin add systemic-agent-orchestrator
 ### Required MCP Plugins
 
 - **langchain-ecosystem-helper**: LangGraph/LangChain documentation
-- **serena**: Semantic code analysis (highly recommended)
+
+### Recommended Plugins
+
+- **serena-mcp-helper**: Serena MCP for symbolic code operations and persistent memory
 
 ### Optional MCP Plugins
 
@@ -142,11 +144,12 @@ export AWS_ACCOUNT_ID="123456789012"
 /discovery
 
 # This will:
-# - Run Serena onboarding
 # - Interview about agent purpose
-# - Create memories in .serena/memories/
+# - Analyze existing codebase
 # - Update CLAUDE.md with references
 ```
+
+> **Tip**: If you have `serena-mcp-helper` installed, run `/serena-mcp-helper:init` first to set up persistent memory.
 
 ### 2. Create Agent
 
@@ -382,9 +385,11 @@ tags = {
 
 ---
 
-## Memory & Documentation (Serena MCP)
+## Memory & Documentation
 
-### Creating Memories
+For persistent memory across sessions, install the [serena-mcp-helper](../serena-mcp-helper) plugin.
+
+### With serena-mcp-helper
 
 ```python
 # Store API documentation
@@ -442,10 +447,11 @@ The plugin ensures:
 4. ✅ All LLM configs in models.yaml
 5. ✅ Test coverage ≥ 70%
 6. ✅ Infrastructure via Terraform
-7. ✅ Knowledge preserved in Serena memories
-8. ✅ External APIs documented before integration
-9. ✅ MCP servers evaluated for features
-10. ✅ Hooks enforce all validation rules
+7. ✅ External APIs documented before integration
+8. ✅ MCP servers evaluated for features
+9. ✅ Hooks enforce all validation rules
+
+> **Note**: For persistent knowledge across sessions, install `serena-mcp-helper` plugin.
 
 ---
 

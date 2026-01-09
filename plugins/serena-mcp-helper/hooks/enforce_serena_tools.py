@@ -29,7 +29,7 @@ BASH_WRITE_REGEX = re.compile("|".join(BASH_WRITE_PATTERNS), re.IGNORECASE)
 
 def is_enforced_file(file_path: str) -> bool:
     """Check if file extension requires Serena tools.
-    
+
     Excludes files in claudecode_plugins directory (plugin development).
     """
     if not file_path:
@@ -72,7 +72,7 @@ def main() -> None:
 
     # File tools - all allowed (Read, Write, Edit, MultiEdit)
     file_tools = set()  # No file tools blocked
-    
+
     # Search tools - only block if pattern explicitly targets .py/.tf
     search_tools = {"Search", "Glob", "Grep"}
 
@@ -129,17 +129,17 @@ def block_with_message(title: str, context: str) -> None:
 
 | Operacao | Tool Serena |
 |----------|-------------|
-| Ler arquivo | `mcp__plugin_serena_serena__read_file` |
-| Overview simbolos | `mcp__plugin_serena_serena__get_symbols_overview` |
-| Buscar simbolo | `mcp__plugin_serena_serena__find_symbol` |
-| Buscar padrao/regex | `mcp__plugin_serena_serena__search_for_pattern` |
-| Buscar arquivos | `mcp__plugin_serena_serena__find_file` |
-| Listar diretorio | `mcp__plugin_serena_serena__list_dir` |
-| Criar arquivo | `mcp__plugin_serena_serena__create_text_file` |
-| Substituir conteudo | `mcp__plugin_serena_serena__replace_content` |
-| Substituir simbolo | `mcp__plugin_serena_serena__replace_symbol_body` |
-| Inserir apos simbolo | `mcp__plugin_serena_serena__insert_after_symbol` |
-| Inserir antes simbolo | `mcp__plugin_serena_serena__insert_before_symbol` |
+| Ler arquivo | `mcp__plugin_serena-mcp-helper_serena__read_file` |
+| Overview simbolos | `mcp__plugin_serena-mcp-helper_serena__get_symbols_overview` |
+| Buscar simbolo | `mcp__plugin_serena-mcp-helper_serena__find_symbol` |
+| Buscar padrao/regex | `mcp__plugin_serena-mcp-helper_serena__search_for_pattern` |
+| Buscar arquivos | `mcp__plugin_serena-mcp-helper_serena__find_file` |
+| Listar diretorio | `mcp__plugin_serena-mcp-helper_serena__list_dir` |
+| Criar arquivo | `mcp__plugin_serena-mcp-helper_serena__create_text_file` |
+| Substituir conteudo | `mcp__plugin_serena-mcp-helper_serena__replace_content` |
+| Substituir simbolo | `mcp__plugin_serena-mcp-helper_serena__replace_symbol_body` |
+| Inserir apos simbolo | `mcp__plugin_serena-mcp-helper_serena__insert_after_symbol` |
+| Inserir antes simbolo | `mcp__plugin_serena-mcp-helper_serena__insert_before_symbol` |
 
 **Por que usar Serena para .py/.tf?**
 - Busca semantica baseada em simbolos (funcoes, classes, metodos)
@@ -149,7 +149,7 @@ def block_with_message(title: str, context: str) -> None:
 """
 
     reason = f"{title}\n\n{context}\n{serena_alternatives}"
-    
+
     result = {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",

@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash hooks/serena_init_context.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Read|MultiEdit|Bash|Search|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python hooks/enforce_serena_tools.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

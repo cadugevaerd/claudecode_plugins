@@ -1,0 +1,20 @@
+{
+  "name": "serena-mcp-helper",
+  "version": "1.0.0",
+  "description": "Serena MCP integration for symbolic code operations and persistent memory management",
+  "author": {
+    "name": "Carlos Eduardo Gevaerd",
+    "email": "carlos@civilmaster.com.br"
+  },
+  "keywords": [
+    "serena",
+    "mcp",
+    "symbolic-code",
+    "memory",
+    "code-analysis",
+    "python",
+    "terraform"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/oraios/serena"
+}
