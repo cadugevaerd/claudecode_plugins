@@ -73,6 +73,17 @@
       },
       "category": "ai",
       "tags": ["langgraph", "ai-agents", "bedrock", "terraform", "guardrails", "langsmith", "aws", "orchestrator", "graph-api", "serena", "mcp", "pytest", "coverage", "tflint", "tfsec", "micro-tasks", "test-automation"]
+    },
+    {
+      "name": "serena-mcp-helper",
+      "description": "Serena MCP integration for symbolic code operations and persistent memory management.",
+      "source": "./plugins/serena-mcp-helper",
+      "version": "1.0.0",
+      "author": {
+        "name": "Carlos Eduardo Gevaerd"
+      },
+      "category": "ai",
+      "tags": ["serena", "mcp", "symbolic-code", "memory", "code-analysis", "python", "terraform"]
     }
   ]
 }
