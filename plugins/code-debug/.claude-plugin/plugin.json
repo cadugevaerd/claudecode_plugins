@@ -1,0 +1,19 @@
+{
+  "name": "code-debug",
+  "version": "1.0.0",
+  "description": "Root-cause code debugging assistant: reproduce commands, analyze logs, add instrumentation, avoid speculation, and report verified cause plus fix suggestion.",
+  "author": {
+    "name": "Carlos Araujo",
+    "email": "cadu.gevaerd@gmail.com"
+  },
+  "keywords": [
+    "debug",
+    "root-cause",
+    "logs",
+    "instrumentation",
+    "bugfix",
+    "troubleshooting"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/cadugevaerd/claudecode_plugins"
+}
